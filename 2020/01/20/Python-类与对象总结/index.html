@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="YWH">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="YWH">
+    
+    <meta name="keywords" content="ywh 的生活笔记 - hexo - 'hexo-theme' - 'hexo-blog'">
+    
+    <meta name="description" content="">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Python 类与对象总结 · ywh 的生活笔记</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ywh 的生活笔记</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Python 类与对象总结</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ywh 的生活笔记</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/index-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Python 类与对象总结
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">4,462</span>Reading time: <span class="post-count reading-time">21 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/01/20</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p> 这是一篇旧文，搬运自简书：<a href="https://www.jianshu.com/p/28216703f7a1" target="_blank" rel="noopener">https://www.jianshu.com/p/28216703f7a1</a></p>
+</blockquote>
+<h2 id="1-对象和类型"><a href="#1-对象和类型" class="headerlink" title="1. 对象和类型"></a>1. 对象和类型</h2><p>Python 中的一切皆对象，包括 class、function 等，具体表现在：</p>
+<ul>
+<li>可赋值给变量</li>
+<li>可添加到集合</li>
+<li>可作为函数参数</li>
+<li>可作为函数返回值</li>
+</ul>
+<p>其中对象的特征：身份（即对象在内存中的地址，id）、类型、值。</p>
+<h3 id="type、object、class"><a href="#type、object、class" class="headerlink" title="type、object、class"></a>type、object、class</h3><p>type：</p>
+<ul>
+<li>可以创建所有对象（类、函数、集合）的类，或返回对象的类型（<code>type(Object) == type</code>）</li>
+<li>type 也是对象（自身类的对象），且作为类时 type 继承于 object：<code>type.__bases__ == (object, )</code></li>
+</ul>
+<p>object：</p>
+<ul>
+<li>object 是 type 的实例，type 是 object 的类：<code>type(object) == type</code></li>
+<li>object 是所有类的基类（<code>xxx.__bases__</code>），自定义类默认继承 object：<code>object.__bases__ == ()</code></li>
+</ul>
+<h3 id="常见内置类型"><a href="#常见内置类型" class="headerlink" title="常见内置类型"></a>常见内置类型</h3><ul>
+<li>None：全局只有一个</li>
+<li>数值：int、float、complex、bool</li>
+<li>迭代：for … in …</li>
+<li>序列：list、bytes、range、tuple、str、array</li>
+<li>映射：dict</li>
+<li>集合：set、fronzenset</li>
+<li>上下文：with</li>
+<li>其他：模块（import）、class 和 object、函数、方法、代码、object、type、elipsis、notimplemented</li>
+</ul>
+<h3 id="isinstance-与-type"><a href="#isinstance-与-type" class="headerlink" title="isinstance 与 type"></a>isinstance 与 type</h3><p>使用 isinstance 与 type 都可以判断对象的类型，但更推荐使用 isinstance，会检查对象类的继承链。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span><span class="params">(A)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">b = B()</span><br><span class="line"></span><br><span class="line">print(isinstance(b, B))</span><br><span class="line">print(isinstance(b, A))     <span class="comment"># b属于B类也属于A类</span></span><br><span class="line"></span><br><span class="line">print(type(b) <span class="keyword">is</span> B)         <span class="comment"># 判读的是id，要使用is</span></span><br><span class="line">print(type(b) <span class="keyword">is</span> A)         <span class="comment"># b不是A类，所以是false</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-魔法函数"><a href="#2-魔法函数" class="headerlink" title="2. 魔法函数"></a>2. 魔法函数</h2><ul>
+<li>在 Python 中使类获得某种功能不必通过继承基类、实现方法，而是实现魔法函数（协议）；</li>
+<li>魔法函数属于数据模型的一种特性，可以在任何对象中定义；</li>
+<li>魔法函数对 Python 原生的类型支持更好，应尽量使用原生；</li>
+<li>可迭代对象 <code>__iter__</code> 会优先于 <code>__getitem__</code> 且性能更好。</li>
+</ul>
+<p>常用魔法函数及其实现特性</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Company</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, employee_list)</span>:</span></span><br><span class="line">        self.employee = employee_list</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.employee[item]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.employee)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"is Company"</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"is Company(dev)"</span>)</span><br><span class="line"></span><br><span class="line">obj = Company()</span><br></pre></td></tr></table></figure>
+
+<p><code>__getitem__</code>：可遍历、切片</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> obj:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line">print(obj[:<span class="number">2</span>])</span><br></pre></td></tr></table></figure>
+
+<p><code>__len__</code>：取长度</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">len(obj)</span><br></pre></td></tr></table></figure>
+
+<p><code>__str__</code>：输出类信息（<code>__repr__</code>于交互式环境自动调用）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(obj)</span><br></pre></td></tr></table></figure>
+<p>另外更多魔法函数用法见：<a href="https://rszalski.github.io/magicmethods/" target="_blank" rel="noopener">https://rszalski.github.io/magicmethods/</a></p>
+<h3 id="类的比较操作"><a href="#类的比较操作" class="headerlink" title="类的比较操作"></a>类的比较操作</h3><p>和其他语言（Java、C++ 的运算符重载）类似，Python 也可以通过重写魔法函数使任意类型支持运算和比较操作，下面以比较不同图形的面积大小为例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> total_ordering</span><br><span class="line"><span class="keyword">from</span> abc <span class="keyword">import</span> abstractmethod</span><br><span class="line"></span><br><span class="line"><span class="comment"># 抽象基类</span></span><br><span class="line"><span class="comment"># 只需实现其中两种判断的魔法函数即可（自动推测出其他的比较方法）</span></span><br><span class="line"><span class="meta">@total_ordering</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Shape</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, radius)</span>:</span></span><br><span class="line">        self.radius = radius</span><br><span class="line">        self.pi = <span class="number">3.14</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 定义抽象方法（抽象基类 + 抽象方法 -&gt; 接口）</span></span><br><span class="line"><span class="meta">    @abstractmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">area</span><span class="params">(self)</span>:</span>     </span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 小于 &lt;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__lt__</span><span class="params">(self, obj)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(obj, Shape):</span><br><span class="line">            <span class="keyword">raise</span> TypeError(<span class="string">"Obj is not Shape!"</span>)</span><br><span class="line">        <span class="keyword">return</span> self.area() &lt; obj.area()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 等于 =</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__eq__</span><span class="params">(self, obj)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(obj, Shape):</span><br><span class="line">            <span class="keyword">raise</span> TypeError(<span class="string">"Obj is not Shape!"</span>)</span><br><span class="line">        <span class="keyword">return</span> self.area() == obj.area()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 长方形</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span><span class="params">(Shape)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, width, height)</span>:</span></span><br><span class="line">        self.width = width</span><br><span class="line">        self.height = height</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">area</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.width * self.height</span><br><span class="line"></span><br><span class="line"><span class="comment"># 圆形</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Circle</span><span class="params">(Shape)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, radius)</span>:</span></span><br><span class="line">        self.radius = radius</span><br><span class="line">        self.pi = <span class="number">3.14</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">area</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.radius ** <span class="number">2</span> * self.pi</span><br><span class="line"></span><br><span class="line">rectangle = Rectangle(<span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line">circle = Circle(<span class="number">2</span>)</span><br><span class="line">print(rectangle &gt; circle, rectangle == circle, rectangle &lt; circle)    <span class="comment"># (False, False, True)</span></span><br></pre></td></tr></table></figure>
+<p>加减乘除等运算也支持这样的操作，感兴趣的朋友可以试试。</p>
+<h2 id="3-鸭子类型"><a href="#3-鸭子类型" class="headerlink" title="3. 鸭子类型"></a>3. 鸭子类型</h2><ul>
+<li>变量可以指向任何类型的对象（不需要继承，也不必考虑多态）；</li>
+<li>定义了相同方法（包括魔法函数）的类，可以归为同一种类型（比如 list、set 都是可迭代对象，都可以调用 <code>extend</code>），以相同的方式调用该方法、也可以 <code>for</code> 循环迭代；</li>
+<li>缺陷是作为动态语言无法在编译时发现错误。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">say</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"i am a cat"</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">say</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"i am a fish"</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Duck</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">say</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"i am a duck"</span>)</span><br><span class="line">        </span><br><span class="line">animal_list = [Cat, Dog, Duck]</span><br><span class="line"><span class="keyword">for</span> animal <span class="keyword">in</span> animal_list:</span><br><span class="line">    animal().say()    <span class="comment"># 都可以“叫”，都可以当它是动物来用，而不必区分是哪种动物</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-抽象基类"><a href="#4-抽象基类" class="headerlink" title="4. 抽象基类"></a>4. 抽象基类</h2><ul>
+<li>类似 Java 中的接口（定义子类共有的方法且必须被实现），不能实例化；</li>
+<li>当希望判定某个对象的类型，或强制某个子类必须实现某方法时，可以通过定义抽象基类让子类继承；</li>
+<li><code>collections.abc</code> 模块包含了内部定义的抽象基类，也可以直接导入 abc 自己实现；</li>
+<li>虽然提供了抽象基类功能，但还是应该尽可能重用鸭子类型。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections.abc <span class="keyword">import</span> Sized    <span class="comment"># Sized表示实现了__len__的类型</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Company</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, employee_list)</span>:</span></span><br><span class="line">        self.employee = employee_list</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.employee)</span><br><span class="line"></span><br><span class="line">com = Company([<span class="string">"b1"</span>, <span class="string">"b2"</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果没有基类，就需要hasattr来判断对象是否存在某个方法</span></span><br><span class="line">hasattr(com, <span class="string">"__len__"</span>)  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 继承抽象基类的类，只需要根据对象其基类即可判断是否存在某方法</span></span><br><span class="line">isinstance(com, Sized)  <span class="comment"># Sized抽象基类肯定存在 __len__ 方法，所以可以放心调用 len</span></span><br></pre></td></tr></table></figure>
+
+<p>实例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> abc</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CacheBase</span><span class="params">(metaclass=abc.ABCMeta)</span>:</span></span><br><span class="line">    </span><br><span class="line"><span class="meta">    @abc.abstractmethod     # 如果子类没有实现该方法，则会抛出异常</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, key)</span>:</span>     </span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line"><span class="meta">    @abc.abstractmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set</span><span class="params">(self, key, value)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RedisCache</span><span class="params">(CacheBase)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">r = RedisCache()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-类属性和实例属性"><a href="#4-类属性和实例属性" class="headerlink" title="4. 类属性和实例属性"></a>4. 类属性和实例属性</h2><p>定义在类和实例中的变量与方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    aa = <span class="number">1</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, x, y)</span>:</span></span><br><span class="line">        self.x = x</span><br><span class="line">        self.y = y</span><br><span class="line"></span><br><span class="line">a = A(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">a.aa = <span class="number">100</span>      <span class="comment"># 修改的是实例变量，不会影响类变量</span></span><br><span class="line">print(a.x, a.y, a.aa)</span><br><span class="line">print(A.aa)</span><br><span class="line"></span><br><span class="line">b = A(<span class="number">3</span>,<span class="number">5</span>)</span><br><span class="line">print(b.aa)</span><br></pre></td></tr></table></figure>
+
+<p>查找顺序：</p>
+<ul>
+<li>由下而上，先检查实例是否存在该属性，不存在再从类中查找；</li>
+<li>多继承时，采用 C3 算法在父类中查找。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">D</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">E</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span><span class="params">(E)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span><span class="params">(D)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span><span class="params">(B, C)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">print(A.__mro__)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="5-静态方法、类方法、对象方法"><a href="#5-静态方法、类方法、对象方法" class="headerlink" title="5. 静态方法、类方法、对象方法"></a>5. 静态方法、类方法、对象方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span>:</span></span><br><span class="line">    <span class="comment"># 构造函数</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, year, month, day)</span>:</span></span><br><span class="line">        self.year = year</span><br><span class="line">        self.month = month</span><br><span class="line">        self.day = day</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 实例方法</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">tomorrow</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.day += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_from_string</span><span class="params">(date_str)</span>:</span></span><br><span class="line">        year, month, day = tuple(date_str.split(<span class="string">"-"</span>))</span><br><span class="line">        <span class="keyword">return</span> Date(int(year), int(month), int(day))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 静态方法（与普通函数没什么区别，只是封装在类中，与类交互时要指定类名）</span></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">valid_str</span><span class="params">(date_str)</span>:</span></span><br><span class="line">        year, month, day = tuple(date_str.split(<span class="string">"-"</span>))</span><br><span class="line">        <span class="keyword">return</span> int(year)&gt;<span class="number">0</span> <span class="keyword">and</span> (int(month) &gt;<span class="number">0</span> <span class="keyword">and</span> int(month)&lt;=<span class="number">12</span>) <span class="keyword">and</span> (int(day) &gt;<span class="number">0</span> <span class="keyword">and</span> int(day)&lt;=<span class="number">31</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 类方法（隐含参数为类本身，不依赖于类名）</span></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_string</span><span class="params">(cls, date_str)</span>:</span></span><br><span class="line">        year, month, day = tuple(date_str.split(<span class="string">"-"</span>))</span><br><span class="line">        <span class="keyword">return</span> cls(int(year), int(month), int(day))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 实例方法</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"&#123;year&#125;/&#123;month&#125;/&#123;day&#125;"</span>.format(year=self.year, month=self.month, day=self.day)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    new_day = Date(<span class="number">2018</span>, <span class="number">12</span>, <span class="number">31</span>)</span><br><span class="line">    new_day.tomorrow()</span><br><span class="line">    print(new_day)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2018-12-31</span></span><br><span class="line">    date_str = <span class="string">"2018-12-31"</span></span><br><span class="line">    year, month, day = tuple(date_str.split(<span class="string">"-"</span>))</span><br><span class="line">    new_day = Date(int(year), int(month), int(day))</span><br><span class="line">    <span class="keyword">print</span> (new_day)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 用 staticmethod 完成初始化</span></span><br><span class="line">    new_day = Date.parse_from_string(date_str)</span><br><span class="line">    print(new_day)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 用 classmethod 完成初始化</span></span><br><span class="line">    new_day = Date.from_string(date_str)</span><br><span class="line">    print(new_day)</span><br><span class="line">    print(Date.valid_str(<span class="string">"2018-12-32"</span>))</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="6-数据封装与私有属性"><a href="#6-数据封装与私有属性" class="headerlink" title="6. 数据封装与私有属性"></a>6. 数据封装与私有属性</h2><ul>
+<li>以双下划线开头的私有属性不可以直接通过对象直接访问，而应该定义 get、set 方法进行有条件的读写；</li>
+<li>以单下划线开头的私有属性不能用 <code>from module import *</code> 导入，其他方面和公有属性访问方式一样；</li>
+<li>私有属性仍然可以通过 <code>obj._classname__field</code> 访问，所以不是绝对安全的；</li>
+<li>利用这个机制，可以解决类继承后私有变量重名的问题。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> x.class_method <span class="keyword">import</span> Date</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, birthday)</span>:</span></span><br><span class="line">        self.__birthday = birthday     </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_age</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">2018</span> - self.__birthday.year    <span class="comment"># 返回年龄</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    user = User(Date(<span class="number">1990</span>,<span class="number">2</span>,<span class="number">1</span>))</span><br><span class="line">    print(user._Student__birthday)</span><br><span class="line">    print(user.__birthday)    <span class="comment"># 报错</span></span><br><span class="line">    print(user.get_age())</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-自省机制"><a href="#7-自省机制" class="headerlink" title="7. 自省机制"></a>7. 自省机制</h2><p>自省是指对象创建后可以通过一定的机制查询和修改其内部结构（如运行时能够获得对象的类型、为对象添加方法）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> x.class_method <span class="keyword">import</span> Date</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>:</span></span><br><span class="line">    name = <span class="string">"user"</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span><span class="params">(Person)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, scool_name)</span>:</span></span><br><span class="line">        self.scool_name = scool_name</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    user = Student(<span class="string">"ywh"</span>)</span><br><span class="line"></span><br><span class="line">    print(user.__dict__)    <span class="comment"># 通过__dict__查询实例具有的属性（C实现，性能很高）</span></span><br><span class="line">    user.__dict__[<span class="string">"school_addr"</span>] = <span class="string">"北京市"</span>      <span class="comment"># 动态修改对象</span></span><br><span class="line">    print(user.school_addr)</span><br><span class="line">    print(Person.__dict__)</span><br><span class="line">    print(user.name)      <span class="comment"># 自动向上查找</span></span><br><span class="line">    a = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">    print(dir(a))</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="8-super-函数"><a href="#8-super-函数" class="headerlink" title="8. super 函数"></a>8. super 函数</h2><ul>
+<li>子类继承自父类，有时不需要在子类中执行变量赋值：<code>self.name = name</code>，只需要执行父类初始化方法即可；</li>
+<li>super 执行顺序：MRO 顺序（而不是调用父类构造方法）</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> threading <span class="keyword">import</span> Thread</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThread</span><span class="params">(Thread)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, user)</span>:</span></span><br><span class="line">        self.user = user</span><br><span class="line">        super().__init__(name=name)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> (<span class="string">"A"</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span><span class="params">(A)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> (<span class="string">"B"</span>)</span><br><span class="line">        super().__init__()      <span class="comment"># 获取父类，调用其初始化方法</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span><span class="params">(A)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> (<span class="string">"C"</span>)</span><br><span class="line">        super().__init__()</span><br><span class="line">        </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">D</span><span class="params">(B, C)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> (<span class="string">"D"</span>)</span><br><span class="line">        super(D, self).__init__()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    print(D.__mro__)</span><br><span class="line">    d = D()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="9-多继承设计"><a href="#9-多继承设计" class="headerlink" title="9. 多继承设计"></a>9. 多继承设计</h2><p>建议使用 Mixin 模式：可以更合理地组织代码、复用代码</p>
+<ul>
+<li>Mixin 类表示一种功能，功能应尽量单一（表示这个父类作为功能添加到子类，而不起父类作用，类似 Java 的 Interface）；</li>
+<li>不和基类关联，可以和任意基类组合，基类可以不和 Mixin 关联就能初始化成功；</li>
+<li>Mixin 类不依赖于子类的实现；</li>
+<li>子类没有基础 Mixin 类也可以照常工作，只是缺少部分功能；</li>
+<li>在 Mixin 中不要使用 super 这种用法（不能按照 MRO 顺序）。</li>
+</ul>
+<p>例如此处的 Airplane 继承了 Vehicle 和 PlaneMixin，但从含义上 PlaneMixin 表示混入，Airplane 实际上只是属于 Vehicle 的一种。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vehicle</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PlaneMixin</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fly</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'I am flying'</span></span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Airplane</span><span class="params">(Vehicle, PlaneMixin)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="10-扩展内置数据结构"><a href="#10-扩展内置数据结构" class="headerlink" title="10. 扩展内置数据结构"></a>10. 扩展内置数据结构</h2><p>通过继承和重写构造方法的方式可以对 Python 内置的数据结构进行功能扩展，如下面正整数元组的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IntTuple</span><span class="params">(tuple)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__new__</span><span class="params">(cls, tup)</span>:</span>      </span><br><span class="line">        new_tup = (x <span class="keyword">for</span> x <span class="keyword">in</span> tup <span class="keyword">if</span> isinstance(x, int) <span class="keyword">and</span> x &gt; <span class="number">0</span>)</span><br><span class="line">        <span class="comment"># 把新的元组传入父类的构造方法并实例化</span></span><br><span class="line">        <span class="keyword">return</span> super(IntTuple, cls).__new__(cls, new_tup)</span><br><span class="line"></span><br><span class="line">tup = IntTuple([<span class="number">-1</span>, <span class="number">1</span>, <span class="string">"asgag"</span>, <span class="string">"1"</span>, <span class="number">99</span>, <span class="number">-5.1</span>])</span><br><span class="line">print(tup)</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1</span>, <span class="number">99</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="11-使用-slots-节省内存"><a href="#11-使用-slots-节省内存" class="headerlink" title="11. 使用 __slots__ 节省内存"></a>11. 使用 <code>__slots__</code> 节省内存</h2><p>需要创建大量实例时，定义 <code>__slots__</code> 可以限制类实例的属性（定义后不支持动态绑定属性）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student1</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, sid, name, age)</span>:</span></span><br><span class="line">        self.sid = sid</span><br><span class="line">        self.name = name</span><br><span class="line">        self.age = age</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student2</span><span class="params">(object)</span>:</span></span><br><span class="line">    __slots__ = [<span class="string">"sid"</span>, <span class="string">"name"</span>, <span class="string">"age"</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, sid, name, age)</span>:</span></span><br><span class="line">        self.sid = sid</span><br><span class="line">        self.name = name</span><br><span class="line">        self.age = age</span><br><span class="line"></span><br><span class="line">s1 = Student1(<span class="string">"1"</span>, <span class="string">"ywh"</span>, <span class="string">"22"</span>)</span><br><span class="line">s2 = Student2(<span class="string">"2"</span>, <span class="string">"hwy"</span>, <span class="string">"12"</span>)</span><br><span class="line"></span><br><span class="line">s1.sex = <span class="string">"male"</span></span><br><span class="line">print(s1.sex)</span><br><span class="line">s2.sex = <span class="string">"female"</span> </span><br><span class="line">print(s2.sex)</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">male</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"E:/Projects/PythonLearning/Notes/data_model.py"</span>, line <span class="number">37</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    s2.sex = <span class="string">"female"</span></span><br><span class="line">AttributeError: <span class="string">'Student2'</span> object has no attribute <span class="string">'sex'</span></span><br></pre></td></tr></table></figure>
+<p>除此之外对比 <code>dir(s1)</code> 和 <code>dir(s2)</code> 也可以发现可见 s2 少了 <code>__dict__</code>（实现动态绑定、解除属性）和 <code>__weakref__</code>（弱引用，引用时不增加引用计数），因此能节省大量内存。</p>
+<h2 id="11-实现上下文管理对象"><a href="#11-实现上下文管理对象" class="headerlink" title="11. 实现上下文管理对象"></a>11. 实现上下文管理对象</h2><p>在我们进行文件读写操作时常会用到 with 语句，作用是进入上下文作用域，作用域内可使用 with 语句返回的对象：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">"/tmp/file.txt"</span>, <span class="string">"r+b"</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(<span class="string">"xxx"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>退出作用域时不需要使用 <code>f.close()</code> 手动关闭文件对象，这在 <code>open</code> 类型已经内部定义好：当退出作用域时自动关闭文件对象。   </p>
+<p>实现 <code>__enter__</code> 和 <code>__exit__</code> 方法后，可用 <code>with</code> 语句划分作用域，使任意类型都支持这种上下文管理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">else</span>:         <span class="comment"># 没有抛出异常时执行</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">finally</span>:      <span class="comment"># 不管是否抛出异常都会执行，资源释放操作（关闭文件、关闭数据库连接等）</span></span><br><span class="line">    <span class="keyword">pass</span>      <span class="comment"># 如果 finally 中包括 return 语句，则会以 finally 中的 return 返回（从上到下入栈、出栈执行）</span></span><br><span class="line">    </span><br><span class="line"><span class="comment"># 上下文管理器协议</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sample</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__enter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> (<span class="string">"enter"</span>)</span><br><span class="line">        <span class="comment"># 获取资源</span></span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__exit__</span><span class="params">(self, exc_type, exc_val, exc_tb)</span>:</span></span><br><span class="line">        <span class="comment"># 释放资源</span></span><br><span class="line">        <span class="keyword">print</span> (<span class="string">"exit"</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_something</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> (<span class="string">"doing something"</span>)</span><br><span class="line">        </span><br><span class="line"><span class="keyword">with</span> Sample() <span class="keyword">as</span> sample:</span><br><span class="line">    sample.do_something()</span><br></pre></td></tr></table></figure>
+
+<p>又如下面建立 SSH 连接远程执行命令的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> paramiko     <span class="comment"># paramiko 是基于 SSH2 协议的第三方模块，可建立 SSH 连接</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SSH</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, hostname, port, username, password)</span>:</span></span><br><span class="line">        self.hostname = hostname</span><br><span class="line">        self.port = port</span><br><span class="line">        self.username = username</span><br><span class="line">        self.password = password</span><br><span class="line">        self.connection = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 远程执行命令</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">execute</span><span class="params">(self, cmd)</span>:</span></span><br><span class="line">        stdin, stdout, stderr = self.connection.exec_command(cmd)</span><br><span class="line">        print(stdout.read())</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 进入作用域时自动执行</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__enter__</span><span class="params">(self)</span>:</span>                            <span class="comment"># 返回的对象即为“with a as b”的 b</span></span><br><span class="line">        self.connection = paramiko.SSHClient()      <span class="comment"># 创建一个连接对象</span></span><br><span class="line">        self.connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())  </span><br><span class="line">        self.connection.connect(                    <span class="comment"># 使用用户名-密码的方式登录，也可以使用密钥登录</span></span><br><span class="line">            hostname=self.hostname,</span><br><span class="line">            port=self.port,</span><br><span class="line">            username=self.username,</span><br><span class="line">            password=self.password</span><br><span class="line">        )</span><br><span class="line">        print(<span class="string">"\nConnecting to &#123;&#125;:&#123;&#125;...\n"</span>.format(self.hostname, self.port))</span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 退出作用域时自动执行</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__exit__</span><span class="params">(self, exc_type, exc_val, exc_tb)</span>:</span>  <span class="comment"># 三个参数分别用于处理异常、执行清理工作和执行回调函数</span></span><br><span class="line">        self.connection.close()</span><br><span class="line">        print(<span class="string">"Bye."</span>)</span><br><span class="line"></span><br><span class="line">config = &#123;</span><br><span class="line">    <span class="string">"hostname"</span>: <span class="string">"localhost"</span>, <span class="string">"port"</span>: <span class="number">22</span>, <span class="string">"username"</span>: <span class="string">"root"</span>, <span class="string">"password"</span>: <span class="string">"123456"</span>        </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> SSH(**config) <span class="keyword">as</span> ssh:</span><br><span class="line">    ssh.execute(<span class="string">"ls /etc | head -5"</span>)</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Connecting to <span class="number">123.207</span><span class="number">.226</span><span class="number">.173</span>:<span class="number">22.</span>..</span><br><span class="line"></span><br><span class="line">DIR_COLORS</span><br><span class="line">DIR_COLORS<span class="number">.256</span>color</span><br><span class="line">DIR_COLORS.lightbgcolor</span><br><span class="line">GeoIP.conf</span><br><span class="line">NetworkManager</span><br><span class="line"></span><br><span class="line">Bye.</span><br></pre></td></tr></table></figure>
+
+<p>另外通过 contextlib 模块可实现上下文管理器的简化</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> contextlib    <span class="comment"># contextlib.contextmanager 装饰器的函数自带上下文管理器功能</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@contextlib.contextmanager</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">file_open</span><span class="params">(file_name)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> (<span class="string">"file open"</span>)</span><br><span class="line">    <span class="keyword">yield</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">"file end"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> file_open(<span class="string">"bobby.txt"</span>) <span class="keyword">as</span> f_opened:</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">"file processing"</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="12-管理对象属性"><a href="#12-管理对象属性" class="headerlink" title="12. 管理对象属性"></a>12. 管理对象属性</h2><p>在类中实现内置的 <code>property</code> 方法可以动态地获取、设置、删除类/对象属性：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Circle</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, radius)</span>:</span></span><br><span class="line">        self.radius = radius</span><br><span class="line">        self.pi = <span class="number">3.14</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 获取圆半径</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_radius</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.radius</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置圆半径</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set_radius</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(value, (int, long, float)):</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"Wrong type."</span>)</span><br><span class="line">        self.radius = float(value)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 获取圆面积</span></span><br><span class="line"><span class="meta">    @ property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">area</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.radius ** <span class="number">2</span> * self.pi</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 四个参数分别为get、set、del、doc，实现后可以获取、设置、删除属性</span></span><br><span class="line">    R = property(get_radius, set_radius)        <span class="comment"># 也可以作为装饰器使用</span></span><br><span class="line"></span><br><span class="line">c = Circle(<span class="number">3.0</span>)</span><br><span class="line">print(c.R)</span><br><span class="line">c.R = <span class="number">4.0</span></span><br><span class="line">print(c.R)</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3.0</span></span><br><span class="line"><span class="number">4.0</span></span><br></pre></td></tr></table></figure>
+<p>其中 <code>property</code> 方法也可以通过装饰器的方式实现，加入 <code>property</code> 装饰器的方法将转变为特性，可以使该方法支持以字段的方式访问），但默认只可读：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> c.area    <span class="comment"># 50.24</span></span><br></pre></td></tr></table></figure>
+
+<p>要使属性可写，只需再实现 <code>setter</code> 装饰器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Circle</span><span class="params">(object)</span>:</span></span><br><span class="line">    ...</span><br><span class="line"><span class="meta">    @area.setter</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">area</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="13-使用描述符做类型检查"><a href="#13-使用描述符做类型检查" class="headerlink" title="13. 使用描述符做类型检查"></a>13. 使用描述符做类型检查</h2><p>使用描述符（定义 getter、setter 方法）可以限制类属性可接收的类型，判断失败抛出异常：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Attr</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, val, attr)</span>:</span></span><br><span class="line">        self.val = val</span><br><span class="line">        self.attr = attr</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 获取属性</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__get__</span><span class="params">(self, instance, cls)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> instance.__dict__[self.val]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 修改属性：使用描述符作类型检查</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__set__</span><span class="params">(self, instance, value)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(value, self.attr):</span><br><span class="line">            <span class="keyword">raise</span> TypeError(<span class="string">"Expected an &#123;&#125;"</span>.format(self.attr))</span><br><span class="line">        instance.__dict__[self.val] = value</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 析构：自动清除对象</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__delete__</span><span class="params">(self, instance)</span>:</span></span><br><span class="line">        <span class="keyword">del</span> instance.__dict__[self.val]</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span><span class="params">(object)</span>:</span></span><br><span class="line">    sid = Attr(<span class="string">"sid"</span>, str)</span><br><span class="line">    name = Attr(<span class="string">"name"</span>, str)</span><br><span class="line">    age = Attr(<span class="string">"age"</span>, int)</span><br><span class="line"></span><br><span class="line">s1 = Student()</span><br><span class="line">s1.age = <span class="number">5</span></span><br><span class="line">print(s1.age)</span><br><span class="line">s1.age = <span class="string">"6"</span></span><br><span class="line">print(s1.age)</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">5</span></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"E:/Projects/PythonLearning/Notes/data_model.py"</span>, line <span class="number">196</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    s1.age = <span class="string">"6"</span></span><br><span class="line">  File <span class="string">"E:/Projects/PythonLearning/Notes/data_model.py"</span>, line <span class="number">181</span>, <span class="keyword">in</span> __set__</span><br><span class="line">    <span class="keyword">raise</span> TypeError(<span class="string">"Expected an &#123;&#125;"</span>.format(self.attr))</span><br><span class="line">TypeError: Expected an &lt;type <span class="string">'int'</span>&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="14-通过名称调用方法"><a href="#14-通过名称调用方法" class="headerlink" title="14. 通过名称调用方法"></a>14. 通过名称调用方法</h2><p>有些时候我们获取到方法的名称（例如客户端 get 或 post 传来的字符串数据），要根据这个名称在后端调用相应的方法，一般的做法是使用 if…else 判断。但当程序规模变大，使用 if…elif…else 的判断逻辑就会线性递增，既不方便也不美观。    </p>
+<p>使用 <strong>hasattr</strong>、<strong>getattr</strong> 的方法（也有人称之为“反射”）可以<strong>通过字符串在当前的类或模块中获取函数对象</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Circle</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, radius)</span>:</span></span><br><span class="line">        self.radius = radius</span><br><span class="line">        self.pi = <span class="number">3.14</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_value</span><span class="params">(self, key)</span>:</span></span><br><span class="line">        <span class="comment"># getattr表示从self中取名为 "get_" + key 的方法，返回该方法的对象</span></span><br><span class="line">        <span class="keyword">if</span> hasattr(self, <span class="string">"get_"</span>+key):</span><br><span class="line">            <span class="keyword">return</span> getattr(self, <span class="string">"get_"</span> + key)()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_radius</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.radius</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_perimeter</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.pi * self.radius * <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_area</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.pi * self.radius ** <span class="number">2</span></span><br><span class="line"></span><br><span class="line">c1 = Circle(<span class="number">3</span>)</span><br><span class="line">print(c1.get_value(<span class="string">"radius"</span>))    <span class="comment"># 3</span></span><br><span class="line">print(c1.get_value(<span class="string">"area"</span>))    <span class="comment"># 28.26</span></span><br><span class="line">print(c1.get_value(<span class="string">"perimeter"</span>))    <span class="comment"># 18.84</span></span><br></pre></td></tr></table></figure>
+
+<p>其中 hasattr 是判断 self（即当前对象）中是否有名为 “get_” + key 的方法，getattr 则获取该方法的对象来执行。 </p>
+<p>当要从 <strong>当前模块中</strong> 获取函数对象，可以这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> hasattr(sys.modules[__name__], func_name):</span><br><span class="line">    func = getattr(sys.modules[__name__], func_name)</span><br><span class="line">    func()</span><br></pre></td></tr></table></figure>
+
+
+
+<p>以上。</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>Author：<a href="https://yipwinghong.github.io">YWH</a>
+            <p>原文链接：<a href="https://yipwinghong.github.io/2020/01/20/Python-%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E6%80%BB%E7%BB%93/">https://yipwinghong.github.io/2020/01/20/Python-%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E6%80%BB%E7%BB%93/</a>
+            <p>发表日期：<a href="https://yipwinghong.github.io/2020/01/20/Python-%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E6%80%BB%E7%BB%93/">January 20th 2020, 11:30:04 pm</a>
+            <p>更新日期：<a href="https://yipwinghong.github.io/2020/01/20/Python-%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E6%80%BB%E7%BB%93/">January 20th 2020, 11:44:30 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2020/01/20/Kafka-%E4%B8%BB%E9%A2%98%E7%AE%A1%E7%90%86/" title= "Kafka 主题管理">
+                    <div class="prevTitle">Kafka 主题管理</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/Wechat.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-对象和类型"><span class="toc-number">1.</span> <span class="toc-text">1. 对象和类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#type、object、class"><span class="toc-number">1.1.</span> <span class="toc-text">type、object、class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见内置类型"><span class="toc-number">1.2.</span> <span class="toc-text">常见内置类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#isinstance-与-type"><span class="toc-number">1.3.</span> <span class="toc-text">isinstance 与 type</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-魔法函数"><span class="toc-number">2.</span> <span class="toc-text">2. 魔法函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#类的比较操作"><span class="toc-number">2.1.</span> <span class="toc-text">类的比较操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-鸭子类型"><span class="toc-number">3.</span> <span class="toc-text">3. 鸭子类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-抽象基类"><span class="toc-number">4.</span> <span class="toc-text">4. 抽象基类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-类属性和实例属性"><span class="toc-number">5.</span> <span class="toc-text">4. 类属性和实例属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-静态方法、类方法、对象方法"><span class="toc-number">6.</span> <span class="toc-text">5. 静态方法、类方法、对象方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-数据封装与私有属性"><span class="toc-number">7.</span> <span class="toc-text">6. 数据封装与私有属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-自省机制"><span class="toc-number">8.</span> <span class="toc-text">7. 自省机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-super-函数"><span class="toc-number">9.</span> <span class="toc-text">8. super 函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-多继承设计"><span class="toc-number">10.</span> <span class="toc-text">9. 多继承设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-扩展内置数据结构"><span class="toc-number">11.</span> <span class="toc-text">10. 扩展内置数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-使用-slots-节省内存"><span class="toc-number">12.</span> <span class="toc-text">11. 使用 __slots__ 节省内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-实现上下文管理对象"><span class="toc-number">13.</span> <span class="toc-text">11. 实现上下文管理对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-管理对象属性"><span class="toc-number">14.</span> <span class="toc-text">12. 管理对象属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-使用描述符做类型检查"><span class="toc-number">15.</span> <span class="toc-text">13. 使用描述符做类型检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-通过名称调用方法"><span class="toc-number">16.</span> <span class="toc-text">14. 通过名称调用方法</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 4
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Kafka-%E4%B8%BB%E9%A2%98%E7%AE%A1%E7%90%86/" >Kafka 主题管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Python-%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E6%80%BB%E7%BB%93/" >Python 类与对象总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Python-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%80%BB%E7%BB%93/" >Python 装饰器总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/19</span><a class="archive-post-title" href= "/2020/01/19/2020-%E7%9A%84%E7%BA%A6%E5%AE%9A/" >2020 的约定</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "YWH"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+
