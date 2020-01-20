@@ -354,6 +354,7 @@
             
  这是一篇旧文，搬运自简书：https://www.jianshu.com/p/28216703f7a1
 
+
 对象和类型Python 中的一切皆对象，包括 class、function 等，具体表现在：
 
 可赋值给变量
@@ -365,7 +366,7 @@
 type、object、classtype：
 
 可以创建所有对象（类、函数、集合）的类，或返回对象的类型（type(Object) == type）
-type 也是对象（自身类的对象），且作为类时 type 继承于 object：type.__bases__ ...
+type 也是对象（自身类的对象），且作为类时 type 继承于 object：type.__bases__...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -399,12 +400,13 @@ type 也是对象（自身类的对象），且作为类时 type 继承于 objec
             
 最近的项目中用到 Kafka，在初步了解之下发现相关的配置还挺多的，打算最近整理一些与 Kafka 运维监控相关的笔记，留作后续学习、项目上线后运维使用。
 
+
 主题创建指定分区、副本个数和主题名称
 1bin/kafka-topics.sh --bootstrap-server broker_host:port --create --topic my_topic_name  --partitions 1 --replication-factor 1
 
 
 
-Kafka 2.2 版本开始，社区推荐用 --bootstrap-server 参数替换 --zookeeper 参数（详见官方文档： ...
+Kafka 2.2 版本开始，社区推荐用 --bootstrap-server 参数替换 --zookeeper 参数（详见官方文档：...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -439,11 +441,12 @@ Kafka 2.2 版本开始，社区推荐用 --bootstrap-server 参数替换 --zooke
 这是一篇旧文，搬运自简书：https://www.jianshu.com/p/84ae6d657007
 
 装饰器是函数闭包最重要的应用，在面试中经常会被问到，今天总结的用法是我参加面试/刷面试题时候遇到的。
+
 如何为被装饰函数保存元数据？元数据（MetaData）是关于数据的数据，是用来描述数据信息。
 查看这些元数据的函数是 dir(func)：
 123def func():    passdir(func)
 执行结果：
-1['__annotations__', '__call__', '__class__', '__closure__', '__code__', '__defaults...
+1['__annotations__', '__call__', '__class__', '__closure__', '__code__', '__default...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -639,11 +642,11 @@ Kafka 2.2 版本开始，社区推荐用 --bootstrap-server 参数替换 --zooke
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
