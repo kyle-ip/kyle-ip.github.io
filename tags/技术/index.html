@@ -346,6 +346,84 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2020/01/21/Kafka-%E4%BD%8D%E7%A7%BB%E9%87%8D%E7%BD%AE/" >
+            
+                <span>Kafka 位移重置</span>
+        </a>
+        <div class="abstract-content">
+            
+与其他传统消息中间件不同，Kafka 是基于日志结构（log-based）的消息引擎，消费者在消费消息时，只是从磁盘文件上读取数据，因此消费者不会删除消息数据。而且由于消息的位移是由消费者控制的，因此可以通过修改位移的值，重复消费历史数据（replayable）。
+
+重设位移策略位移策略直接把消费者的位移值重设成期望的位移值
+
+Earliest：调整到当前最早位移处，即 重新消费主题所有消息；
+Latest：调整到当前最新位移处，即 跳过所有历史消息；
+Current：调整到当前最新提交位移处，一般用于 回滚变更前重设到消费者重启时的位置；
+Specified-Offset：调整为指定...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/21</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2020/01/21/Kafka-%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/" >
+            
+                <span>Kafka 动态配置</span>
+        </a>
+        <div class="abstract-content">
+            
+Kafka 社区于 1.1.0 版本中正式引入了动态 Broker 参数（Dynamic Broker Configs）。即修改后无需重启 Broker 就能立即生效，而之前在 server.properties 中配置的参数则称为静态参数（Static Configs），详情参考官方文档： http://kafka.apache.org/11/documentation.html 
+
+动态配置的应用场景一般有以下几种：
+
+修改Broker 端各种线程池大小，实时应对突发流量（或减少资源浪费）；
+调整 Broker 端连接信息或安全配置信息；
+更新 SSL Keystore 有效期；
+...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/21</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2020/01/20/Python-%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E6%80%BB%E7%BB%93/" >
             
                 <span>Python 类与对象总结</span>
@@ -392,7 +470,7 @@ type 也是对象（自身类的对象），且作为类时 type 继承于 objec
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2020/01/20/Kafka-%E4%B8%BB%E9%A2%98%E7%AE%A1%E7%90%86/" >
+        <a class="abstract-title" href = "/2020/01/20/Kafka-%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/" >
             
                 <span>Kafka 主题管理</span>
         </a>
@@ -400,13 +478,24 @@ type 也是对象（自身类的对象），且作为类时 type 继承于 objec
             
 最近的项目中用到 Kafka，在初步了解之下发现相关的配置还挺多的，打算最近整理一些与 Kafka 运维监控相关的笔记，留作后续学习、项目上线后运维使用。
 
-
-主题创建指定分区、副本个数和主题名称
-1bin/kafka-topics.sh --bootstrap-server broker_host:port --create --topic my_topic_name  --partitions 1 --replication-factor 1
+常用脚本说明Kafka 部署包中提供了数十个脚本（Windows 的 bat 和 Linux 的 Shell），直接运行会提示基本用法，比较常用的有：
 
 
 
-Kafka 2.2 版本开始，社区推荐用 --bootstrap-server 参数替换 --zookeeper 参数（详见官方文档：...
+序号
+名称
+描述
+
+
+
+1
+connect-standaloneconnect-distributed
+Kafka Connect 组件的启动脚本，分别为单节点 Standalone 模式和多节点 Distributed 模式。
+
+
+2
+kafka-acls
+设置 Kafka...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -601,9 +690,29 @@ Kafka 2.2 版本开始，社区推荐用 --bootstrap-server 参数替换 --zooke
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 4
+        Total : 6
         </div>
         <!-- search  -->
         
@@ -619,7 +728,17 @@ Kafka 2.2 版本开始，社区推荐用 --bootstrap-server 参数替换 --zooke
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Kafka-%E4%B8%BB%E9%A2%98%E7%AE%A1%E7%90%86/" >Kafka 主题管理</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/" >Kafka 动态配置</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-%E4%BD%8D%E7%A7%BB%E9%87%8D%E7%BD%AE/" >Kafka 位移重置</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Kafka-%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/" >Kafka 主题管理</a>
         </li>
     
     
