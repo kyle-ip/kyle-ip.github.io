@@ -346,6 +346,45 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2020/01/23/Python-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%BA%94%E7%94%A8/" >
+            
+                <span>Python 数据结构应用</span>
+        </a>
+        <div class="abstract-content">
+            
+ 这是一篇旧文，搬运自简书：https://www.jianshu.com/p/6d8c3face1b7
+
+当初能快速上手 Python 最重要的一点是其内置的数据结构非常强大，关于数据类型的差别（例如可修改对象与不可修改对象）作为基础的知识点在其他教程中已经有非常详细的介绍，所以这里就不再赘述了。这次主要分享一些（也许算是换一种思路的）能提升开发效率的使用心得。
+按特性对 Python 集合容器分类：
+
+容器序列：list，tuple，deque（可存放任意类型）
+扁平序列：str，bytes，bytearray，array.array（可for循环遍历，存放单一类型）
+可变序列：l...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/23</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2020/01/20/Python-%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E6%80%BB%E7%BB%93/" >
             
                 <span>Python 类与对象总结</span>
@@ -355,18 +394,8 @@
  这是一篇旧文，搬运自简书：https://www.jianshu.com/p/28216703f7a1
 
 
-对象和类型Python 中的一切皆对象，包括 class、function 等，具体表现在：
-
-可赋值给变量
-可添加到集合
-可作为函数参数
-可作为函数返回值
-
-其中对象的特征：身份（即对象在内存中的地址，id）、类型、值。
-type、object、classtype：
-
-可以创建所有对象（类、函数、集合）的类，或返回对象的类型（type(Object) == type）
-type 也是对象（自身类的对象），且作为类时 type 继承于 object：type.__bases__...
+变量的本质在 Python 中变量的本质是一个指针（类比为可贴在任何物品上的标签，Java 中则可以类比为盒子）。
+123456789101112131415161718192021222324a = 1           # 生成对象，把 a 指向该对象a = "abc"       # 把 a 指向别的对象a = [1,2,3]b = aprint (id(a), id(b))print (a is b)b.append(4)       # 相当于在列表上贴上 a、b ...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -577,9 +606,22 @@ type 也是对象（自身类的对象），且作为类时 type 继承于 objec
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 6
+        Total : 7
         </div>
         <!-- search  -->
         
@@ -592,6 +634,11 @@ type 也是对象（自身类的对象），且作为类时 type 继承于 objec
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2020/01/23/Python-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%BA%94%E7%94%A8/" >Python 数据结构应用</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -628,13 +675,13 @@ type 也是对象（自身类的对象），且作为类时 type 继承于 objec
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
