@@ -468,13 +468,11 @@ height:50vh;
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Java HotSpot(TM) 64-Bit Server VM (25.181-b13) for windows-amd64 JRE (1.8.0_181-b13), built on Jul  7 2018 04:01:33 by &quot;java_re&quot; with MS VC++ 10.0 (VS2010)</span><br><span class="line">Memory: 4k page, physical 16658532k(7782036k free), swap 17707108k(3801772k free)</span><br><span class="line">CommandLine flags: -XX:InitialHeapSize&#x3D;10485760 -XX:MaxHeapSize&#x3D;10485760 -XX:MaxNewSize&#x3D;5242880 -XX:NewSize&#x3D;5242880 -XX:OldPLABSize&#x3D;16 -XX:PretenureSizeThreshold&#x3D;10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio&#x3D;8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:-UseLargePagesIndividualAllocation -XX:+UseParNewGC </span><br><span class="line">0.113: [GC (Allocation Failure) 0.114: [ParNew: 3892K-&gt;440K(4608K), 0.0011414 secs] 3892K-&gt;1466K(9728K), 0.0018413 secs] [Times: user&#x3D;0.00 sys&#x3D;0.00, real&#x3D;0.00 secs] </span><br><span class="line">Heap</span><br><span class="line"> par new generation   total 4608K, used 3674K [0x00000000ff600000, 0x00000000ffb00000, 0x00000000ffb00000)</span><br><span class="line">  eden space 4096K,  78% used [0x00000000ff600000, 0x00000000ff928650, 0x00000000ffa00000)</span><br><span class="line">  from space 512K,  86% used [0x00000000ffa80000, 0x00000000ffaee310, 0x00000000ffb00000)</span><br><span class="line">  to   space 512K,   0% used [0x00000000ffa00000, 0x00000000ffa00000, 0x00000000ffa80000)</span><br><span class="line"> concurrent mark-sweep generation total 5120K, used 1026K [0x00000000ffb00000, 0x0000000100000000, 0x0000000100000000)</span><br><span class="line"> Metaspace       used 3322K, capacity 4496K, committed 4864K, reserved 1056768K</span><br><span class="line">  class space    used 365K, capacity 388K, committed 512K, reserved 1048576K</span><br></pre></td></tr></table></figure>
 
 <p>以上日志分为三个部分：</p>
+<p>第一部分为 JVM 的基本信息，包括 JVM 版本，JRE 版本，发行时间，运行的平台、页大小、物理内存、交换空间的最大值和空闲值等。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Java HotSpot(TM) 64-Bit Server VM (25.181-b13) for windows-amd64 JRE (1.8.0_181-b13), built on Jul  7 2018 04:01:33 by &quot;java_re&quot; with MS VC++ 10.0 (VS2010)</span><br><span class="line">Memory: 4k page, physical 16658532k(7782036k free), swap 17707108k(3801772k free)</span><br></pre></td></tr></table></figure>
 
-<p>第一部分为 JVM 的基本信息，包括 JVM 版本，JRE 版本，发行时间，运行的平台、页大小、物理内存、交换空间的最大值和空闲值等。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CommandLine flags: -XX:InitialHeapSize&#x3D;10485760 -XX:MaxHeapSize&#x3D;10485760 -XX:MaxNewSize&#x3D;5242880 -XX:NewSize&#x3D;5242880 -XX:OldPLABSize&#x3D;16 -XX:PretenureSizeThreshold&#x3D;10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio&#x3D;8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:-UseLargePagesIndividualAllocation -XX:+UseParNewGC</span><br></pre></td></tr></table></figure>
-
 <p>第二部分为 JVM 的配置参数，在上一节已有说明。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.113: [GC (Allocation Failure) 0.114: [ParNew: 3892K-&gt;440K(4608K), 0.0011414 secs] 3892K-&gt;1466K(9728K), 0.0018413 secs] [Times: user&#x3D;0.00 sys&#x3D;0.00, real&#x3D;0.00 secs]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CommandLine flags: -XX:InitialHeapSize&#x3D;10485760 -XX:MaxHeapSize&#x3D;10485760 -XX:MaxNewSize&#x3D;5242880 -XX:NewSize&#x3D;5242880 -XX:OldPLABSize&#x3D;16 -XX:PretenureSizeThreshold&#x3D;10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio&#x3D;8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:-UseLargePagesIndividualAllocation -XX:+UseParNewGC</span><br></pre></td></tr></table></figure>
 
 <p>第三部分提示堆内存分配失败（Allocation Failure）、触发 GC：</p>
 <ul>
@@ -485,7 +483,7 @@ height:50vh;
 <li>最后提示本次 GC 消耗的时间：用户态 CPU 时间 0.00、内核态 CPU 时间 0.00、墙钟时间 0.00（包括各种非运算的等待耗时，如 IO 等待、线程阻塞）。</li>
 </ul>
 <p>需要注意的是代码中分配 3MB的数组（即 3072KB），实际占用 3892KB，因为除了存储数组还附带其他元信息，以及一些“其他对象”（将会被迁到 To Survivor）。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Heap</span><br><span class="line"> par new generation   total 4608K, used 3674K [0x00000000ff600000, 0x00000000ffb00000, 0x00000000ffb00000)</span><br><span class="line">  eden space 4096K,  78% used [0x00000000ff600000, 0x00000000ff928650, 0x00000000ffa00000)</span><br><span class="line">  from space 512K,  86% used [0x00000000ffa80000, 0x00000000ffaee310, 0x00000000ffb00000)</span><br><span class="line">  to   space 512K,   0% used [0x00000000ffa00000, 0x00000000ffa00000, 0x00000000ffa80000)</span><br><span class="line"> concurrent mark-sweep generation total 5120K, used 1026K [0x00000000ffb00000, 0x0000000100000000, 0x0000000100000000)</span><br><span class="line"> Metaspace       used 3322K, capacity 4496K, committed 4864K, reserved 1056768K</span><br><span class="line">  class space    used 365K, capacity 388K, committed 512K, reserved 1048576K</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.113: [GC (Allocation Failure) 0.114: [ParNew: 3892K-&gt;440K(4608K), 0.0011414 secs] 3892K-&gt;1466K(9728K), 0.0018413 secs] [Times: user&#x3D;0.00 sys&#x3D;0.00, real&#x3D;0.00 secs]</span><br></pre></td></tr></table></figure>
 
 <p>第四部分是 JVM 退出前堆具体使用情况：</p>
 <ul>
@@ -494,6 +492,8 @@ height:50vh;
 <li>使用 CMS 收集器，管理老年代共 5120KB，此时使用 1026KB；</li>
 <li>元空间与类空间（存放类信息、常量池等）的使用情况，总容量、使用内存等。</li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Heap</span><br><span class="line"> par new generation   total 4608K, used 3674K [0x00000000ff600000, 0x00000000ffb00000, 0x00000000ffb00000)</span><br><span class="line">  eden space 4096K,  78% used [0x00000000ff600000, 0x00000000ff928650, 0x00000000ffa00000)</span><br><span class="line">  from space 512K,  86% used [0x00000000ffa80000, 0x00000000ffaee310, 0x00000000ffb00000)</span><br><span class="line">  to   space 512K,   0% used [0x00000000ffa00000, 0x00000000ffa00000, 0x00000000ffa80000)</span><br><span class="line"> concurrent mark-sweep generation total 5120K, used 1026K [0x00000000ffb00000, 0x0000000100000000, 0x0000000100000000)</span><br><span class="line"> Metaspace       used 3322K, capacity 4496K, committed 4864K, reserved 1056768K</span><br><span class="line">  class space    used 365K, capacity 388K, committed 512K, reserved 1048576K</span><br></pre></td></tr></table></figure>
+
 <h2 id="Young-GC：GC-后进入老年代"><a href="#Young-GC：GC-后进入老年代" class="headerlink" title="Young GC：GC 后进入老年代"></a>Young GC：GC 后进入老年代</h2><p>触发 Young GC 清理垃圾，对于存活时间足够长的对象迁入老年代。</p>
 <h3 id="JVM-参数-1"><a href="#JVM-参数-1" class="headerlink" title="JVM 参数"></a>JVM 参数</h3><p>参考上面章节，其中有以下改动：</p>
 <table>
@@ -678,7 +678,7 @@ height:50vh;
             <p>Author：<a href="https://yipwinghong.github.io">YWH</a>
             <p>原文链接：<a href="https://yipwinghong.github.io/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">https://yipwinghong.github.io/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/</a>
             <p>发表日期：<a href="https://yipwinghong.github.io/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">February 1st 2020, 10:48:17 pm</a>
-            <p>更新日期：<a href="https://yipwinghong.github.io/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">February 2nd 2020, 1:39:20 pm</a>
+            <p>更新日期：<a href="https://yipwinghong.github.io/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">February 2nd 2020, 1:44:06 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -931,12 +931,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/" >Kafka 动态配置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-%E4%BD%8D%E7%A7%BB%E9%87%8D%E7%BD%AE/" >Kafka 位移重置</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-%E4%BD%8D%E7%A7%BB%E9%87%8D%E7%BD%AE/" >Kafka 位移重置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/" >Kafka 动态配置</a>
         </li>
     
     
