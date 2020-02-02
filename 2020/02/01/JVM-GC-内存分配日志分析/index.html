@@ -274,7 +274,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,276</span>Reading time: <span class="post-count reading-time">16 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3,259</span>Reading time: <span class="post-count reading-time">16 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -637,7 +637,6 @@ height:50vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/fgc-log-01.png" alt="image-20200202125424292"></p>
 <p>（注意此处 array1 已经置为 null，忘记改成虚线了）创建 array2 ~ array5，直接在 Eden 区分配内存：</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/fgc-log-02.png" alt="image-20200202125744738"></p>
-<p>（注意此处 array1 已经置为 null，忘记改成虚线了）</p>
 <p>创建 array6 时 Eden 不足，触发 Young GC。但由于 Survivor 不足、老年代也不足，因此还需要触发 Full GC。</p>
 <ul>
 <li>首先在 Young GC 会把两个 2MB 数组迁入老年代；</li>
@@ -679,7 +678,7 @@ height:50vh;
             <p>Author：<a href="https://yipwinghong.github.io">YWH</a>
             <p>原文链接：<a href="https://yipwinghong.github.io/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">https://yipwinghong.github.io/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/</a>
             <p>发表日期：<a href="https://yipwinghong.github.io/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">February 1st 2020, 10:48:17 pm</a>
-            <p>更新日期：<a href="https://yipwinghong.github.io/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">February 2nd 2020, 1:31:25 pm</a>
+            <p>更新日期：<a href="https://yipwinghong.github.io/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">February 2nd 2020, 1:39:20 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -932,12 +931,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-%E4%BD%8D%E7%A7%BB%E9%87%8D%E7%BD%AE/" >Kafka 位移重置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/" >Kafka 动态配置</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/" >Kafka 动态配置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-%E4%BD%8D%E7%A7%BB%E9%87%8D%E7%BD%AE/" >Kafka 位移重置</a>
         </li>
     
     
@@ -965,15 +964,15 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
