@@ -346,15 +346,17 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2020/02/01/JVM-GC-%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" >
+        <a class="abstract-title" href = "/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" >
             
-                <span>JVM GC 日志分析</span>
+                <span>JVM 内存分配日志分析</span>
         </a>
         <div class="abstract-content">
             
-本文写于肺炎疫情爆发 10 天后的二月第一天，同时纪念第三个被炸的微博号。
+本文写于肺炎疫情爆发、宅在家 10 天后的二月第一天，顺便纪念第三个被炸的微博号，Fuck you Sina Weibo!
 
-Young GC：对象进入 SurvivorJVM 参数
+本文旨在记录采用 ParNew + CMS 收集器模拟各种 GC 发生场景、通过日志分析内存分配与回收的过程。
+Young GC：GC 后对象进入 Survivor当为对象分配内存时 Eden 不足，触发 Young GC，清理垃圾并把存活对象迁入 To Survivor。
+JVM 参数
 
 
 序号
@@ -369,18 +371,7 @@ Young GC：对象进入 SurvivorJVM 参数
 
 
 2
--XX:InitialHeapSize=10485760-XX:MaxHeapSize=10485760
-堆初始值和最大值：10MB
-
-
-3
--XX:PretenureSizeThreshold=10485760
-进入老年代的对象内存阈值：10MB
-
-
-4
--XX:SurvivorRatio=8
-新生...
+-XX:Initial...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -391,9 +382,9 @@ Young GC：对象进入 SurvivorJVM 参数
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags = "Java">Java</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
     
 </div>
             
@@ -469,9 +460,9 @@ Specified-Offset：调整为指定...
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
     
 </div>
             
@@ -508,9 +499,9 @@ Kafka 社区于 1.1.0 版本中正式引入了动态 Broker 参数（Dynamic Bro
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
     
 </div>
             
@@ -595,9 +586,9 @@ kafka-acls
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
     
 </div>
             
@@ -855,6 +846,8 @@ kafka-acls
     
     
     
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 8
@@ -873,7 +866,7 @@ kafka-acls
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/JVM-GC-%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" >JVM GC 日志分析</a>
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/JVM-GC-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" >JVM 内存分配日志分析</a>
         </li>
     
     
@@ -916,15 +909,15 @@ kafka-acls
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
