@@ -78,8 +78,6 @@
     <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
     
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -203,8 +201,10 @@
 <meta name="generator" content="Hexo 4.2.0"></head>
 
     
+        <body class="home-body">
     
-<header class="header">
+    
+<header class="header index-header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
@@ -220,21 +220,32 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 文章页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/index-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
+            ywh 的生活笔记
+            <!-- 文章页  -->
+            
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
+            
+            
+            <!-- 文章页  -->
             
         </p>
         <!-- 文章页meta -->
@@ -346,250 +357,6 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2020/01/23/Python-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%BA%94%E7%94%A8/" >
-            
-                <span>Python 数据结构应用</span>
-        </a>
-        <div class="abstract-content">
-            
- 这是一篇旧文，搬运自简书：https://www.jianshu.com/p/6d8c3face1b7
-
-当初能快速上手 Python 最重要的一点是其内置的数据结构非常强大，关于数据类型的差别（例如可修改对象与不可修改对象）作为基础的知识点在其他教程中已经有非常详细的介绍，所以这里就不再赘述了。这次主要分享一些（也许算是换一种思路的）能提升开发效率的使用心得。
-按特性对 Python 集合容器分类：
-
-容器序列：list，tuple，deque（可存放任意类型）
-扁平序列：str，bytes，bytearray，array.array（可for循环遍历，存放单一类型）
-可变序列：l...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/23</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2020/01/21/Kafka-%E4%BD%8D%E7%A7%BB%E9%87%8D%E7%BD%AE/" >
-            
-                <span>Kafka 位移重置</span>
-        </a>
-        <div class="abstract-content">
-            
-与其他传统消息中间件不同，Kafka 是基于日志结构（log-based）的消息引擎，消费者在消费消息时，只是从磁盘文件上读取数据，因此消费者不会删除消息数据。而且由于消息的位移是由消费者控制的，因此可以通过修改位移的值，重复消费历史数据（replayable）。
-
-重设位移策略位移策略直接把消费者的位移值重设成期望的位移值
-
-Earliest：调整到当前最早位移处，即 重新消费主题所有消息；
-Latest：调整到当前最新位移处，即 跳过所有历史消息；
-Current：调整到当前最新提交位移处，一般用于 回滚变更前重设到消费者重启时的位置；
-Specified-Offset：调整为指定...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/21</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2020/01/21/Kafka-%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/" >
-            
-                <span>Kafka 动态配置</span>
-        </a>
-        <div class="abstract-content">
-            
-Kafka 社区于 1.1.0 版本中正式引入了动态 Broker 参数（Dynamic Broker Configs）。即修改后无需重启 Broker 就能立即生效，而之前在 server.properties 中配置的参数则称为静态参数（Static Configs），详情参考官方文档： http://kafka.apache.org/11/documentation.html 
-
-动态配置的应用场景一般有以下几种：
-
-修改Broker 端各种线程池大小，实时应对突发流量（或减少资源浪费）；
-调整 Broker 端连接信息或安全配置信息；
-更新 SSL Keystore 有效期；
-...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/21</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2020/01/20/Python-%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E6%80%BB%E7%BB%93/" >
-            
-                <span>Python 类与对象总结</span>
-        </a>
-        <div class="abstract-content">
-            
- 这是一篇旧文，搬运自简书：https://www.jianshu.com/p/28216703f7a1
-
-
-变量的本质在 Python 中变量的本质是一个指针（类比为可贴在任何物品上的标签，Java 中则可以类比为盒子）。
-123456789101112131415161718192021222324a = 1           # 生成对象，把 a 指向该对象a = "abc"       # 把 a 指向别的对象a = [1,2,3]b = aprint (id(a), id(b))print (a is b)b.append(4)       # 相当于在列表上贴上 a、b ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2020/01/20/Kafka-%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/" >
-            
-                <span>Kafka 常用脚本</span>
-        </a>
-        <div class="abstract-content">
-            
-最近的项目中用到 Kafka，在初步了解之下发现相关的配置还挺多的，打算最近整理一些与 Kafka 运维监控相关的笔记，留作后续学习、项目上线后运维使用。
-
-常用脚本说明Kafka 部署包中提供了数十个脚本（Windows 的 bat 和 Linux 的 Shell），直接运行会提示基本用法，比较常用的有：
-
-
-
-序号
-名称
-描述
-
-
-
-1
-connect-standaloneconnect-distributed
-Kafka Connect 组件的启动脚本，分别为单节点 Standalone 模式和多节点 Distributed 模式。
-
-
-2
-kafka-acls
-设置 Kafka...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2020/01/20/Python-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%80%BB%E7%BB%93/" >
-            
-                <span>Python 装饰器总结</span>
-        </a>
-        <div class="abstract-content">
-            
-这是一篇旧文，搬运自简书：https://www.jianshu.com/p/84ae6d657007
-
-装饰器是函数闭包最重要的应用，在面试中经常会被问到，今天总结的用法是我参加面试/刷面试题时候遇到的。
-
-如何为被装饰函数保存元数据？元数据（MetaData）是关于数据的数据，是用来描述数据信息。
-查看这些元数据的函数是 dir(func)：
-123def func():    passdir(func)
-执行结果：
-1['__annotations__', '__call__', '__class__', '__closure__', '__code__', '__default...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
         <a class="abstract-title" href = "/2020/01/19/2020-%E7%9A%84%E7%BA%A6%E5%AE%9A/" >
             
                 <span>2020 的约定</span>
@@ -622,8 +389,93 @@ kafka-acls
     
     <!-- paginator  -->
     
+    <nav class="page-nav">
+        <a class="extend prev" rel="prev" href="/">&amp;#60; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
+    
 </main>
             <!-- profile -->
+            
+            <div class="profile">
+    <img class="profile-avatar" alt="avatar" src= https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/deku.png >
+    <div class="profile-name">ywh</div>
+    
+    <div class="profile-signature">
+        哈？
+    </div>
+    
+    
+    <div class="profile-social">
+        
+    
+        
+            
+                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/Wechat.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    
+        <div class="friends">
+            <div>FRIENDS</div>
+            
+                
+            
+        </div>
+    
+    
+</div>
             
         </div>
         <footer class="footer footer-unloaded">
