@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>YWH 的生活笔记</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://yipwinghong.github.io/"/>
+  <updated>2020-02-15T12:11:17.212Z</updated>
+  <id>https://yipwinghong.github.io/</id>
+  
+  <author>
+    <name>YWH</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>数据仓库设计基础</title>
+    <link href="https://yipwinghong.github.io/2020/02/15/Data-Warehouse-design-basic/"/>
+    <id>https://yipwinghong.github.io/2020/02/15/Data-Warehouse-design-basic/</id>
+    <published>2020-02-15T08:32:11.000Z</published>
+    <updated>2020-02-15T12:11:17.212Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Git Cheat Sheet</title>
+    <link href="https://yipwinghong.github.io/2020/02/15/Git-Cheat-Sheet/"/>
+    <id>https://yipwinghong.github.io/2020/02/15/Git-Cheat-Sheet/</id>
+    <published>2020-02-15T04:37:06.000Z</published>
+    <updated>2020-02-15T08:17:41.091Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Git" scheme="https://yipwinghong.github.io/tags/Git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker &amp; K8S Cheat Sheet</title>
+    <link href="https://yipwinghong.github.io/2020/02/15/Docker-K8S-Cheat-Sheet/"/>
+    <id>https://yipwinghong.github.io/2020/02/15/Docker-K8S-Cheat-Sheet/</id>
+    <published>2020-02-15T04:30:21.000Z</published>
+    <updated>2020-02-15T08:17:41.091Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Docker" scheme="https://yipwinghong.github.io/tags/Docker/"/>
+    
+      <category term="Kubernetes" scheme="https://yipwinghong.github.io/tags/Kubernetes/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>疫情过后最想做的事</title>
+    <link href="https://yipwinghong.github.io/2020/02/15/2020-02-15_diary/"/>
+    <id>https://yipwinghong.github.io/2020/02/15/2020-02-15_diary/</id>
+    <published>2020-02-14T16:21:38.000Z</published>
+    <updated>2020-02-15T12:36:24.071Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python 异步编程总结</title>
+    <link href="https://yipwinghong.github.io/2020/02/06/Python-async_programming/"/>
+    <id>https://yipwinghong.github.io/2020/02/06/Python-async_programming/</id>
+    <published>2020-02-06T13:01:15.000Z</published>
+    <updated>2020-02-15T12:13:20.761Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Python" scheme="https://yipwinghong.github.io/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JVM jstat 监控分析</title>
+    <link href="https://yipwinghong.github.io/2020/02/03/JVM-jstat-monitor_analysis/"/>
+    <id>https://yipwinghong.github.io/2020/02/03/JVM-jstat-monitor_analysis/</id>
+    <published>2020-02-03T06:41:50.000Z</published>
+    <updated>2020-02-15T08:17:41.093Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JVM GC 日志分析</title>
+    <link href="https://yipwinghong.github.io/2020/02/01/JVM-GC-log_analysis/"/>
+    <id>https://yipwinghong.github.io/2020/02/01/JVM-GC-log_analysis/</id>
+    <published>2020-02-01T14:48:17.000Z</published>
+    <updated>2020-02-15T08:17:41.092Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python 数据结构应用</title>
+    <link href="https://yipwinghong.github.io/2020/01/23/Python-data_structure/"/>
+    <id>https://yipwinghong.github.io/2020/01/23/Python-data_structure/</id>
+    <published>2020-01-23T15:30:04.000Z</published>
+    <updated>2020-02-15T08:17:41.100Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Python" scheme="https://yipwinghong.github.io/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kafka 位移重置</title>
+    <link href="https://yipwinghong.github.io/2020/01/21/Kafka-offset_reset/"/>
+    <id>https://yipwinghong.github.io/2020/01/21/Kafka-offset_reset/</id>
+    <published>2020-01-21T07:32:33.000Z</published>
+    <updated>2020-02-15T08:17:41.098Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Kafka" scheme="https://yipwinghong.github.io/tags/Kafka/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kafka 动态配置</title>
+    <link href="https://yipwinghong.github.io/2020/01/21/Kafka-dynamic_config/"/>
+    <id>https://yipwinghong.github.io/2020/01/21/Kafka-dynamic_config/</id>
+    <published>2020-01-21T07:31:23.000Z</published>
+    <updated>2020-02-15T08:17:41.097Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Kafka" scheme="https://yipwinghong.github.io/tags/Kafka/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python 类与对象总结</title>
+    <link href="https://yipwinghong.github.io/2020/01/20/Python-OOP/"/>
+    <id>https://yipwinghong.github.io/2020/01/20/Python-OOP/</id>
+    <published>2020-01-20T15:30:04.000Z</published>
+    <updated>2020-02-15T08:17:41.099Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Python" scheme="https://yipwinghong.github.io/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kafka 常用脚本</title>
+    <link href="https://yipwinghong.github.io/2020/01/20/Kafka-common_scripts/"/>
+    <id>https://yipwinghong.github.io/2020/01/20/Kafka-common_scripts/</id>
+    <published>2020-01-20T15:26:29.000Z</published>
+    <updated>2020-02-15T08:17:41.096Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Kafka" scheme="https://yipwinghong.github.io/tags/Kafka/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python 装饰器总结</title>
+    <link href="https://yipwinghong.github.io/2020/01/20/Python-decorator/"/>
+    <id>https://yipwinghong.github.io/2020/01/20/Python-decorator/</id>
+    <published>2020-01-19T16:01:52.000Z</published>
+    <updated>2020-02-15T13:05:28.668Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Python" scheme="https://yipwinghong.github.io/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2020 的约定</title>
+    <link href="https://yipwinghong.github.io/2020/01/19/2020-01-19_diary/"/>
+    <id>https://yipwinghong.github.io/2020/01/19/2020-01-19_diary/</id>
+    <published>2020-01-19T13:36:27.000Z</published>
+    <updated>2020-02-15T08:17:41.089Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
+    
+  </entry>
+  
+</feed>
