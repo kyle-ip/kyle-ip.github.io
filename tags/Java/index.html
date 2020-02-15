@@ -351,15 +351,7 @@
                 <span>JVM jstat 监控分析</span>
         </a>
         <div class="abstract-content">
-            
- 在开发及测试阶段需要对程序进行部分预估性的优化，这时候可以使用 JDK 提供的一些脚本和工具，本文主要讲述 jstat 命令的基本用法和使用场景。
-
-jstat 基本用法jstat 是 JDK 提供的 JVM 统计信息监控工具，可用于查看各 JVM 内存占用与垃圾收集的统计信息。
-如每 250ms 查询一次 2764 进程的统计信息、共 20 次，可执行：
-1jstat -gc 2764 250 20
-
-运行输出：
-123S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    ...
+            在开发及测试阶段需要对程序进行部分预估性的优化，这时候可以使用 JDK 提供的一些脚本和工具，本文主要讲述 jstat 命令的基本用法和使用场景。
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -370,9 +362,9 @@ jstat 基本用法jstat 是 JDK 提供的 JVM 统计信息监控工具，可用�
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags = "Java">Java</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
     
 </div>
             
@@ -390,27 +382,7 @@ jstat 基本用法jstat 是 JDK 提供的 JVM 统计信息监控工具，可用�
                 <span>JVM GC 日志分析</span>
         </a>
         <div class="abstract-content">
-            
-本文写于肺炎疫情爆发、宅在家 10 天后的二月第一天，顺便纪念第三个被炸的微博号，Fuck you Sina Weibo!
-本文旨在记录采用 ParNew + CMS 收集器模拟各种 GC 发生场景、通过日志分析内存分配与回收的过程。
-
-Young GC：GC 后对象进入 Survivor当为对象分配内存时 Eden 不足，触发 Young GC，清理垃圾并把存活对象迁入 To Survivor。
-JVM 参数
-
-
-序号
-参数
-备注
-
-
-
-1
--XX:NewSize=5242880-XX:MaxNewSize=5242880
-新生代初始值和最大值：5MB
-
-
-2
--XX:Initial...
+            在开发及测试阶段需要对程序进行部分预估性的优化，这时候可以使用 JDK 提供的一些脚本和工具，本文主要讲述 jstat 命令的基本用法和使用场景。
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -421,9 +393,9 @@ JVM 参数
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags = "Java">Java</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
     
 </div>
             
@@ -718,11 +690,11 @@ JVM 参数
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
