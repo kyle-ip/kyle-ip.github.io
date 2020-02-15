@@ -291,7 +291,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2,218</span>Reading time: <span class="post-count reading-time">11 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2,203</span>Reading time: <span class="post-count reading-time">11 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -421,13 +421,10 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <blockquote>
-<p>Docker、K8S 一些基本用法，便于日常运维及</p>
-</blockquote>
-<blockquote>
 <p>总结 Docker、K8S 一些基本用法，便于日常运维时使用。</p>
 </blockquote>
 <h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><h2 id="容器管理"><a href="#容器管理" class="headerlink" title="容器管理"></a>容器管理</h2><p>启动容器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d jenkins:v1			<span class="comment"># 后台进程</span></span><br><span class="line">docker run -it ubuntu bash			<span class="comment"># 交互式 Shell（）</span></span><br><span class="line">docker run --rm ubuntu bash			<span class="comment"># 自动删除</span></span><br><span class="line">docker run -p 8080:80 -d nginx		<span class="comment"># 端口映射，宿主机端口:容器端口</span></span><br><span class="line">docker run --name mydb redis		<span class="comment"># 命名</span></span><br><span class="line">docker run -d label=traefik.backend=jenkins jenkins		<span class="comment"># 添加标签</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d jenkins:v1			<span class="comment"># 后台进程</span></span><br><span class="line">docker run -it ubuntu bash			<span class="comment"># 交互式 Shell</span></span><br><span class="line">docker run --rm ubuntu bash			<span class="comment"># 自动删除</span></span><br><span class="line">docker run -p 8080:80 -d nginx		<span class="comment"># 端口映射，宿主机端口:容器端口</span></span><br><span class="line">docker run --name mydb redis		<span class="comment"># 命名</span></span><br><span class="line">docker run -d label=traefik.backend=jenkins jenkins		<span class="comment"># 添加标签</span></span><br></pre></td></tr></table></figure>
 
 <p>进入容器（运行 Shell）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it container_id /bin/bash       			# 对 Container 执行命令，进入其所在的命名空间并开启一个 shell</span><br></pre></td></tr></table></figure>
@@ -721,7 +718,7 @@ height:50vh;
             <p>Author：<a href="https://yipwinghong.github.io">YWH</a>
             <p>原文链接：<a href="https://yipwinghong.github.io/2020/02/15/Docker-K8S-Cheat-Sheet/">https://yipwinghong.github.io/2020/02/15/Docker-K8S-Cheat-Sheet/</a>
             <p>发表日期：<a href="https://yipwinghong.github.io/2020/02/15/Docker-K8S-Cheat-Sheet/">February 15th 2020, 12:30:21 pm</a>
-            <p>更新日期：<a href="https://yipwinghong.github.io/2020/02/15/Docker-K8S-Cheat-Sheet/">February 15th 2020, 12:38:43 pm</a>
+            <p>更新日期：<a href="https://yipwinghong.github.io/2020/02/15/Docker-K8S-Cheat-Sheet/">February 15th 2020, 12:45:12 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1008,6 +1005,8 @@ top:50vh;
     
     
     
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 13
@@ -1098,13 +1097,13 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
