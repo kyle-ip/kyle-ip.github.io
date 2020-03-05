@@ -17,12 +17,12 @@
     <meta name="renderer" content="webkit">
     <meta name="copyright" content="YWH">
     
-    <meta name="keywords" content="千反田爱瑠爱好者的生活笔记 - hexo - 'hexo-theme' - 'hexo-blog'">
+    <meta name="keywords" content="千反田爱瑠爱好者的生活笔记,YWH">
     
     <meta name="description" content="千反田爱瑠爱好者">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Kafka 动态配置 · 千反田爱瑠爱好者的生活笔记</title>
+    <title>個人信息安全保護指南（初級篇） · undefined</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -233,7 +233,7 @@
                 <a href="/" >千反田爱瑠爱好者的生活笔记</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">Kafka 动态配置</a>
+                <a href="#" class="post-name">個人信息安全保護指南（初級篇）</a>
             </div>
     </div>
     
@@ -263,7 +263,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Kafka 动态配置
+            個人信息安全保護指南（初級篇）
             <!-- 404 -->
             
         </h1>
@@ -282,20 +282,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "信息安全">信息安全</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">1,162</span>Reading time: <span class="post-count reading-time">5 min</span></span>
+                        <span>Word count: <span class="post-count word-count">8</span>Reading time: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2020/01/21</span>
+                    <span class="post-intro-time">2020/03/06</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -419,88 +417,23 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <blockquote>
-<p>Kafka 社区于 1.1.0 版本中正式引入了动态 Broker 参数（Dynamic Broker Configs）。即修改后无需重启 Broker 就能立即生效，而之前在 server.properties 中配置的参数则称为静态参数（Static Configs），详情参考官方文档： <a href="http://kafka.apache.org/11/documentation.html" target="_blank" rel="noopener">http://kafka.apache.org/11/documentation.html</a> </p>
-</blockquote>
-<p>动态配置的应用场景一般有以下几种：</p>
-<ul>
-<li>修改Broker 端各种线程池大小，实时应对突发流量（或减少资源浪费）；</li>
-<li>调整 Broker 端连接信息或安全配置信息；</li>
-<li>更新 SSL Keystore 有效期；</li>
-<li>调整 Broker 端 Compact 操作性能；</li>
-<li>实时变更 JMX 指标收集器（JMX Metrics Reporter）。</li>
-</ul>
-<hr>
-<h2 id="参数保存"><a href="#参数保存" class="headerlink" title="参数保存"></a>参数保存</h2><p>在 Broker 配置表中有一列  DYNAMIC UPDATE MODE（更新模式），共有以下三种：</p>
-<ul>
-<li>read-only：静态配置，需要重启 Broker 才能生效。</li>
-<li>per-broker：动态配置，修改后只会在对应的 Broker 上生效。</li>
-<li>cluster-wide：动态配置，修改后会在整个集群上生效。</li>
-</ul>
-<p>Kafka 将动态 Broker 参数保存在 ZooKeeper 的 <code>/config</code> 路径中（都是持久化节点）：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/config</span><br><span class="line">	changes		<span class="comment"># changes 实时监测动态参数变更，不保存参数值</span></span><br><span class="line">	topics		<span class="comment"># 主题级别参数</span></span><br><span class="line">	users		<span class="comment"># 动态调整客户端配额（Quota）</span></span><br><span class="line">	clients			<span class="comment"># 即限制连入集群的客户端的吞吐量或者是限定使用的 CPU 资源</span></span><br><span class="line">    /brokers</span><br><span class="line">    	&lt;default&gt;	<span class="comment"># cluster-wide 范围的动态参数</span></span><br><span class="line">        broker.id	<span class="comment"># 特定 Broker 的 per-broker 范围参数（可能存在多个）</span></span><br></pre></td></tr></table></figure>
-
-<p>配置的优先级为：per-broker 参数 &gt; cluster-wide 参数 &gt; static 参数 &gt; Kafka 默认值。</p>
-<hr>
-<h2 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置"></a>参数配置</h2><p>使用 Kafka 自带的 kafka-configs 脚本，以配置 cluster-wide 范围参数为例：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-default --alter --add-config unclean.leader.election.enable=true</span><br><span class="line"><span class="meta">#</span><span class="bash"> unclean.leader.election.enable</span></span><br></pre></td></tr></table></figure>
-
-<p>要设置 cluster-wide 范围的动态参数，即在集群层面设置全局值，需要显式指定 <code>entity-default</code>，检查配置是否成功：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-default --describe</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 有以下输出，表示成功地在全局层面上设置该参数值为 <span class="literal">true</span>（其中 sensitive=<span class="literal">false</span> 表明要调整的参数不是敏感数据）：</span></span><br><span class="line">Default config for brokers in the cluster are:</span><br><span class="line">  unclean.leader.election.enable=true sensitive=false synonyms=&#123;DYNAMIC_DEFAULT_BROKER_CONFIG:unclean.leader.election.enable=true&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如要设置 per-broker 范围（ID 为 1 的 Broker）参数，则执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-name 1 --alter --add-config unclean.leader.election.enable=false</span><br></pre></td></tr></table></figure>
-
-<p>检查配置是否成功：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-name 1 --describe</span><br><span class="line"></span><br><span class="line">Configs for broker 1 are:</span><br><span class="line">  unclean.leader.election.enable=false sensitive=false synonyms=&#123;DYNAMIC_BROKER_CONFIG:unclean.leader.election.enable=false, DYNAMIC_DEFAULT_BROKER_CONFIG:unclean.leader.election.enable=true, DEFAULT_CONFIG:unclean.leader.election.enable=false&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在 Broker 1 层面上，该参数被设置成了 false，表明配置成功；</li>
-<li>在全局层面上，该参数值依然是 true，表明之前设置的 cluster-wide 范围参数值依然有效。</li>
-</ul>
-<p>最后需要分别从 Broker 和全局层面删除配置：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除cluster-wide范围参数</span></span><br><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-default --alter --delete-config unclean.leader.election.enable</span><br><span class="line">Completed updating default config for brokers in the cluster,</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除per-broker范围参数</span></span><br><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-name 1 --alter --delete-config unclean.leader.election.enable</span><br><span class="line">Completed updating config for broker: 1.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看cluster-wide范围参数</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> bin/kafka-configs.sh --bootstrap-server kafka-host:port  --entity-type brokers --entity-default --describe</span></span><br><span class="line">Default config for brokers in the cluster are:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看Broker 1上的动态参数配置</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> bin/kafka-configs.sh --bootstrap-server kafka-host:port  --entity-type brokers --entity-name 1 --describe</span></span><br><span class="line">Configs for broker 1 are:</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="常用参数"><a href="#常用参数" class="headerlink" title="常用参数"></a>常用参数</h2><table>
-<thead>
-<tr>
-<th>序号</th>
-<th>参数名称</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>log.retention.ms</td>
-<td>由于不可能完美地预估所有业务的消息留存时长，修改日志留存时间是一个比较高频的操作。可以设置对应的主题级别或在全局层面上动态变更参数。</td>
-</tr>
-<tr>
-<td>2</td>
-<td>num.io.threads<br />num.network.threads</td>
-<td>磁盘与网络 IO 线程池。在实际生产环境中，Broker 端请求处理能力经常要按需扩容。</td>
-</tr>
-<tr>
-<td>3</td>
-<td>ssl.keystore.type<br />ssl.keystore.location<br />ssl.keystore.password<br /> ssl.key.password</td>
-<td>由于允许动态实时调整 SSL 相关参数，就能创建过期时间很短的 SSL 证书。每当调整时，Kafka 底层会重新配置 Socket 连接通道并更新 Keystore。新的连接会使用新的 Keystore，阶段性地调整这组参数，有利于增加安全性。</td>
-</tr>
-<tr>
-<td>4</td>
-<td>num.replica.fetchers</td>
-<td>Follower 副本拉取速度慢常见的做法是增加该参数值，确保有充足的线程可以执行 Follower 副本向 Leader 副本的拉取。使用动态参数，则不需要重启 Broker 就能立即在 Follower 端生效。</td>
-</tr>
-</tbody></table>
-<p>以上。</p>
-
+        <div id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <div class="hbe-input-container">
+  <input type="password" id="hbePass" placeholder="" />
+    <label for="hbePass">Please input the password to read this article.</label>
+    <div class="bottom-line"></div>
+  </div>
+  <script id="hbeData" type="hbeData" data-hmacdigest="19cb3ba70b2f1b4009e094e6cdd313b5d5d96ac6a30c6226d3b3eec03ef91d4e">e18296b82cfbb562795775d74ae4f57920fba4d00c6790c868c808cde0d6b75cbdafd02b39fddd9e5331af5773d942bcc9f2aec68f60016b49d3021a39a48260652ed5ed26a60213b70a13821880f69d2bfe0764a309f0ed782a3eb99955e636e7d8cc3c3d4c0d1c570af9f7bd5204217d9bea70f364c1b9214e28b8b33ea355f29b104774fe08dbd57bd7d62f34d9cd24de9b1e5cddc266446d2a16724018cc1c5ceb5554cd31e876964b00c1657d7247a1e3fda7ba7bec812b22c038fac3fa33092aaf8e9f9f11596b600231612c99f778816ef37b6b0821a30f9869e615389ef0c39ddeb857466d41deebdc322f2a52d3d9a68036f8fdc9267d184002535a57fdb66f67aee0580f992e6d9315dee31e7809d323e80e50c5b38b879ecd21fc158a341b24406b2b7b1ed93dc59050ce8911965a7d5a8b5031f28b64c9ec58788f0acd4b7665b2c47a4ac2ad25f63aff0aa652aa59b65f7b78ffb557cdfaf2a4277d256550d36dfef7d5df624d51e58c69da9618d88fe6dafac377eece2faa737a86711f858b32e9c6b77c09599a369a7215ee4c56693bf0aab8d6f9d881aee3be04cd103c6cebc5cc7a6bd713a40a33cb856d987d1643cd7ad5029920f45864628c59ff878a5e33600fb96fb71f9c67696743f4b3ad13fedc6802da2b04e8f692456c91ac5af872f96720b2ddf3b418fb3d5fbf0c7e772790033fe14d785dc71e61896e97faec9527d2548576500cef6c7df9bf7b741cdf9cce94839517d4b40bfcfdb466106e2bcfa278748317e1eacc03cce16e86860138c92c067391cb04b30938aa54f8d7b467585fe56f95b8f8d3f9a8bb90ad354ee8f30e6210295e4aaf8d6741d13d3622ce5bfb48ee8a57f53b0aa5b1b99af02234be64a003f023550d8542b9abba85c2560cb674bf9370382e00878b115c00dd0dbadd393ff22fbc4146f382f44d6b343c703ccaf006c40a6415396295e2604c898de87c6ca74ada96d069a8798fd3c86488a20bda9fc1bb2aeafff694ea61a7e4592c116052109781697d368495d9f7f3738134002ec6f5d9a44054afb1b43b3f6f3cf4607dc744360d542f7933b8cd3c35c55372c68189d9858fba32c91cc787e5a813db10b283663451c8f0ea75c890ef0533ba0446f5ea4fae4dab3848bf88c6da2dcd19299e2ed2326eb093eb5647cd2c0ad0fca0b5b1a05652ad9f733e59a4ed56635e41d9c9b6406b6a9dae2ff6d64cee62d375cc6679e5e4e7a7ffc4b744130ff5323a3598fded1aa2176b80c404c5fcd44db0f072a143f2fee213fef11f84b53284fa8f1b1b1cef67abcdd6b8a560e62007173491b00e675aa881aba3b536b40f43db386208b500c43f3d96e7ce11471ca75656d2b4b7008a67d76f7bfcc0e030bff3e9c30a0fc93eaab937f00417910890d054165e26769ae4bb8a2cd6b05d63991f07d28aae7fd76a5055a1919e66abc8bc24d60ece0a40e2a22b301b02e270c7bfc141be3f53d2e60dcec747a2a167795275ffb96df616a6df706f8c3f49a8400093154f2aa80e74f5290eb276bbe64d3f3cb075a61186828beb5b000d5ba477028f3edf7841bb1fa935ce31deaf46d0d7ea66d84c7070e89b0ca9eb601d6ea59f3cdc2fe900bacf09618f68801539f5b877bc9e4b9052a67f27ab7b8cfca6056c5c14dce305764fec2b33b508fdbd257854a5c46b08ad04771db80ec29fd325ae761e9b286ae14619b39784f4e7c9cbe90553e8c2f7c28d05289fab570ea834e77115bae809ad1076c454dcf4a91145e3dcdf19cefb8c5dc12ffbaa9e77bb977e1a57a17c65b3649472cae82c69821dd64366226fc078559b12726f9b8f700371a4e28097ccf98747c266e00094b2dbe89b5a30ce852908fceb10327d49ad0e2e2c29bdd43a5ea30f62d54eb2ea057987d16861e6a2241ab6b6178ec1b6790f355b0eb170ab60e297c36a098689f5aa7dc1754f43d70ad932f53a7126a13fb8613832348d7a31d42f7fff1e436f7335b689d1fae0b405d82fcbacbed87f412cb1e5911586bb64904a0c2b049a90feadf18d5e0d51870ceafb4f871c6f49b4227ff8d3749043032d47db27c9be002be757a193b76453c9cd8667d766cdfa0940ef1e035525c0caf5cbc272eadda5ad991abcec79638187e2244830d6bedc680e07a0a33bec1127e2cac584d8655a2fc42902dc2edd1e60602a0fb783b6324913121aba077d9ce2f96beec55611e53229b986176b328a7ef2b3d29e9115854616cd194f0021240e04bdf6593c85fe9ddd9bb2613f6457d08372aacf999b5289c45b859b26364d694afe547e49f7bf4cbcd9cd7925dbabd0bf141ea89fd7b9e775d529334643a30c0b90578fc1a6fe48c6eeada8e2b90f3e1ab9966f77cd5197648ab7358a2b222b06a42a1fd6349e00f34dc55540f0605cba54e1878a605680ad00ce9f3463c6ee434d3721958ae8432e314e0a371af74eb1138966b6c959db6535cdf2a452e8fed88782f2052f52f9f81681146d35d06a04bcff6077b52f0f4067bb87be7e86f57000f594ff369f9c30c1f5cb809139f9f46f0d1618839175bfc9bd59519efbbf0d1103689ba3d6690222946df625c56aeabfb5fac7c422c86ae8b7ae26beb0374f7fc097390b939febd1d915cacfe487d1ea77ba6cebccf1b14d8ba8059f7afbc84e4fc25594106a2d9b924cc1d9686bfc685d604a7d00e78d56c19df92c8e666597452b79f3d592d02a95a66548a1519ebb7ead411ee237bfa300bf5cc0089554e979e6bddb868c70c7bea3ec1478ac4929c43bb9187df2d11aea960b2f8d287732c35e9651b86cec2b3237159a749e78f34682b0daa06eca62a0687e7bf1ec0ffbe723f9da4ced58306e47fa488dc8a80c7bdb9513096bf60e38154d6b2a4baef1102087f71b31c6852df4a8026468074a4fa3328e716a1f3427f054b4698487ae3a743be343094eb284c20dafdea154abb633a6b912507886c56e1406c65e6ae44092bdb0f53d4f246b4a433c67923d64e3c0124458a2c440ce1df771a2bc74c8cfbd511bb2257604901e925bbb866ebaf43b6f9ba4e5225f2ed2b6ef02334762c100606cfe2b7d6b86f7a6b182c566e2e47139ba2c0190f24f769566733b5131e9c186f00f579ff144269c92807e1299fd618505cad9f3106db38b9fa32dde3aac80dc097349e6ec38bf499a63e9f71f745e794f348b92af1917366354f304c0cc3c04581851c79e1b848e2cb908905b6c802799e8c9bf8b4259886834677586d0869239ad0c450a806c2dd32b26d7901cd3d43e76a4952541e7843d19e5c3ecdea1e7751c053dbd227f17feffc57f3de61377e73b65f41e1e652086e3775b2be14b611ea931544b1b7fb94bc28c873cf58addaf3877957f868cfc5cebdfb63f559fc8d0d743c8d569d701b4031ffae444ebc950a4f49ec5d6aa498370a02799bd8d8feefd9c5ce28a2f2607cf2954925698bf32711190365c394faa7cc06c558cb1507cda500df163edb31915684e278eba52fa980b7c48c5336ca06869b45a10ac8a3f19e2e9218b4584beeb80f2e162047db1ec663d6f781910a75a91e831051478a8851384470d2809864ece64e77c0816ed2afcc733eb897af1fbc7284f65fa7553f09fa2bc7debe8864b731021c55da05fdd9bb07d4a8261da13a3e9e6619152669186dc7ed6442b688e7920f02fa7396ab84e62034832e25cf5405829b818abbf4fcc447903fabdb040e4f3ddf559bcd335eda55fb8ccd205d0f8c82e2a5c42dd2afc11777bd3c64dbf612af4b2fa27ec3220fc0d387f10357882dedd9393492843291d68ef99b83e795c252ce3b5f073efdd8f840e0cc7b1ecffd65ad294dac4d54c358d8659221057dd85d86ca44ba4be5bb792caaa09ba6355f5192786b9708f59717c5421c54a9ce7c9eb2770a2011983cc031cf285ad529886df17e6494248d7fbf2ed72d8fe0cd60d5f1909f5493781407631a801030a7421e733c3bec9ee1cfa7f6fb9baead06c9a50188b2535be0cf39ca9eef596c19cb34e9a6c0afe5a6908fb7da46595ab013f3b5903367fc19e66c6704f7126e9e980265eb520a3ce6ffa5e694d864e0bb04674f50b4dc21bbca6b90cd28e5d6a4dcc4f297bbc945149d34cfa0606e18238777a75251c142f459fd42bd96dc8d5b1ea59617973d3ae20bfbca3b2c3b5a58fa2614fa87e763e30192aa67c0467cda75505edf700dce0aa8eb8da04e443079211895269e5e15964b42aba810aafdc28b37012ff4d7e1b98fc38177d6a4272da2608b384927c620deb8979442c96becfdf8b2365b518cc4aa4e944ee876462b365dab830bc9c4c1abb18e2ef5242042072f8e8da47e9f5fe2d790b498dbd4f5f7e3b67d82d87b93a8ebe0b35fae1916b0e1b7e08742f7a7c6faebea77c21044db3f35c26755e273c407be7452d7bf7ab3f4bcdc53955829a1d759fba8b25ae9e6bbbac6d61c7bc7944e962f5fc59907dc8fe2cfa816c10fb7208a965f0e40178166ee2f6896c6440d274e397733a0fc02c67192c9af9b8e68118e31755d29515c617444be06ea6bbcbd7f08dc6f44ab1c093736d32593e145993ad066a2d56c86eb14fbcb92877bf7f0054904e91f14d4a786f8943abb8d7febd3a7ee5272ff35ac2c20e2b82a0a35cb9bef3957a06d21afb5c7929ad1b0903611f090a7e5f6ea002fdc2141cec3f29ccb27003d092fd2f5dc720e5584d482a1009b435f6f095a5715ca28ee20d16a9b1ed211e52d7caa1d801a2cec550581efb2e76f5e6c9a5cfa8f736cb960cbd875e7d82a7009719b39e14b74ba90553c54f7e91108db3030218cf3a9aa02f45bcbfc3d3821f9dd67f4a3da50e6d7704c3541480ef28492bcd143860471f77b0f673dd4db81d6de4036cc53b69768c781965fa374a352ba51641352baa3437101a5c74b3897336de122b92ef9252e311514de1bb7ef9bd434cf023453c7b216aee4c5785cf9e859417fef94aa63203402c7a9c2486bee918e861bca8bc08db969db6a65d9a05a108207c1478baebebc72e2f0a98d0b4cc7a257c63fab62a0b3efcd641214b2493dcdbfd9d7ef9682d746fcb1ea96e6c979e51d4f27bd8135cc93eaa1485bf36c41dd6b560290a27cf739c00da7e4cf60a1de2fe0452f01f2c9dbb43c6579c9f99b0d379674271ee638c553cdd3a32eb8052507077d47a71f3f37ff56c21e5e71129fe14eff7062eff8670d2ea65effd1ec168550e28388a963e24543bf6d5d4f0148d880817b38d2ace7a0e17a9b62f1e7c3fa5e641d51e0c8f5716452529e805d489152ac3ac0300807d3a66e721ad3ac4eb3161029409e55d53301f8ed88449b6232d009835ad1c502887489b043951d659cbf474a3f2b8595a13a9bd2de875a7c6b750ba952fe3e344dfda8bd0916161f18188a6a6f63af469073cd493b5060c8683bfeb5971fb775d0fe88ee2fa25852c8a9c8c61f2886f52cdebd57d26281a421278a5b4b64d3c8ec4145417cf486a3c3a78ebfa2da2c9c5af1898f58a37f741e29042da5379bdfcaf276e02c79c79769f3153c004c453cbe3ff23e95c789b3dcf754ba0322404ef831fda701b069e11a36a9c35c0afb162ec0c13f48e894d5eb3ad86bce9bafe77d1fc711e3e613ecc9941e95da553b312e1a8fd834d9c327a24f125b69c8d8fec4cca360906525473c0269db338cf9a919c7a3a24475ef925ac26d7392cd7b25e463f674797306135e5b7bc42ea00953fd54000481f916de07d21c9b573b931c1a4b8c132ecf5ea566f0477d3af89480326b4defa9ac729e3267e5d23a90b65e88b1ae8d23fa944a89cd22f72e69b8551507e88e5b603084c62bb55f3ea1a0f6170f959d85042af1f5a2ed393e2395fcca7eeff441d790b1b88794345518b29582d537651c767487e3cf66a630c2320114f9131271f3a097b98b477334446994512abd11411a7a82a27bd7fb7851187a75c2b2ab8aa4f386a5f7c5efe57fd33f08cc88250f60148679231913495322c985816304f03cee82388d766d4c9cd3c0b3165d47655df0e0a5d37b240284eee0e3b9ae399a08e08dd90699ee0d3e405eb9b8566ae63fbe0b112b92098afb9dbb0cada1599f0132c7d727bcd7e28cfe3c42c9bb817301c5d5782613868c2e14eac869564cc56bdb29fbe35a5d9911b1d7387fe32ff09cdb2b6750e81c1d169906c4c93ede061f9a707a5b82cb1202fa803d5a2518cae6bb43a7e93109e44bf2c6376401507200d3929b8a3832d30ea0602bc44233596f366b1dcaef2f49a6b22c32da92ce79af62a38849e6a47592931aa7465887ae6b37424b9ac879a916c7df1d595f817c97f04493d8037395f6164a9953f29b1954f5034b3f51b6fbdf5019b1006030b539e2dc414034656e676c03b2ba0b08e3f9c3095048b526cba29d8bbf7b7dbaefe984ddc75f2cbef68d1e9832e2836f439ba1d84f780a79c056ec36a5dec05272d5f635772eff06e9105105752ab282136341d4788d6137908153fbce5e811bb2366e5d50b197079c27640eb4547daa13e007252cabbf518ba7d74037c56eb1d3ab6fe4d635e538047e8098e674c1ec2e35c355509ad303720fa7d56b1b3268d06887d0887b3000a83473acd415994e952e9fb70fac01c60aa5f7ea61d5f775af0ef21a4cde66dbdf035cf1b9a4c26a898f67729c89371d4e8164ed3590b2cb7a0f92e5ef86367875544a205e2fede5520d63a493eab70808eefda0b14b9d5a2046249a60540d9f0afc86f0845f9fa6699bb9dabb1efa3e14625ecfa7f4bf2defef5e52eb41e7be1cab922e345b1e7bba58f466a743021a950127d0714fc47173af6ecea58bac1b9d6e779a3de9a472e385136b82263b9de291c834a6a5c89ce143e40ec16f7d75bc10ec777f6f4c738119e3b83a26a6d6e34f22d89f399163015cfc701892cf363e1c0508c68de9e3fa3874a19359a094044b6486018b6f0124831c79bc87de5aa46c0bcac91159a29bbe6a21b550de694000adfa51865186a13fcc4f6a326d5fbc4f450081ed0a3c4b7af13ab9b938b89cdbb9002b9515fc5138734cd59d2bba43417f0bf6780b3198b365841ec8214350c534bfebf1759e57d1bcf7b7f6aca1e9638851551466c74452adbe5dd7054741a4a2b7df4599bee6e2104e1e93f14caa5683dd74b84332368419dc0bf4310708b9349465211b6c542e1e6cb88c5912c88de7929d422e0dc366c54f86d09933bbb09e4b26368f7c80c7020ae0c5bd9378e3be53a9e1f1d8e8efc81e75ad0a314a1a4d581562a6fa68af929672ba41aea49df0e9ff8b76ea8a4468a28585fb71d89fd9e15bdf9c7cdea4aeea118388ca31f67bd707edcb4d8a130468ef36695abdd25a0004d731afc8459d2d9049223339e854a25eefb1d96e706e383417f69ee768d90f1918275d0e5383dfc275aad9950e1ef1a85e28b07d52bf4eb144971c775b89626b33a184bcc52ab5a83db540457378a5351116a763b4cfb47f35391a83f1e6890a4b370739e9bdaac21fd70ca93bf4616b73d191cb9cb43357131df876ff8ff5a0b70afc16a5b4f6c496f5a8b334484a56841bfa24e85f1f911297f71548952c977f8ccb638b9a641db47fcbaaeb7d07a1469de8716dc1db25c3a9ad331f0795c75424c6b39fbb96fe646d27c6e6efa18d8aa47dfe289f3558de15894f39e5827e93f1a8dc1d0905b5b42cbd8067dcb37b0a2f775120870be633aa095df629a808a618873f8caa4ca43f570d60e149a6958654c7cc95a85426e841aa9df66691bba3d468ab78a9dd9574ef964c3c56813cd9ebc2599cc8a311e71f1f3343b220cf8251a5f07ea2faa4bb6475111b5f313d9b01a60fbd509a9f10819237e4a7eb529bf9c9b2c9f0c79de0254c2292c42aa9dff15077c97e4c1e2629522428b740d29df34be657ea3e3a7db3604e2063faec8d8cee019da04f4cd9378c7b55e8284ee93b890e4d12cb3807799f0c434085f0c9057625ed067512ff1fa1584a7bc7227be7aa7f9e7deff66a96e0579447db12eeaaaa74f923b4128d1d2a62ba187f5ccf00984dac3d8eaff7070e326ee3748b2d2af581c402f1a9f14f510f0204e783757126587f4dc3aa3f04c46a07c96ca186830ba07463d44631c06688d85db01bd2ebb3671b46ed4376dda2d649f6ca0c41b0eaa4342eefddddf917df29b005b05bf3b7663b279ab401e57926664d7871f2da30c3ad7528fa2bb41a9553c2cd413b11a9a9d37042f3c1a76bdb05175f088c33b5333f8b05fba108614d0284427ba8cb9ca608b7ecd9a47070e801e35f101267da6ba106ca69d032c5e327a84de5139ca2bd86ac7886a66d3cb0a1fe2c5c5fd2da469df23826c26514718bab2f9e5f5766bc99363ffb88d3b99399ee8bc8515a3aaae89539b4235d634e5bdfcdb0abc93da2d97b079ae785411b44a5ff1079397746505b1ad8781c0b93cba9758af78cbbcb5f831bb76738e8446802033a7b62022d06d9f92803bdb1a6746d19dce06f932be57712e8b3432fa5474a2089b8346b305fe9ae3fde7bca58a2d40c93237da47ca0278efc4913dbba7f56ddbed5814c645396f6a3346fdcc85180f2da01e82e7c8ea23f5240f95bef145578c45f4dcaf8b4a61739d35032305098f980434e2e7885dbf62b4fac3f89cec1220f224c2c406e0184e9dc3437f95f6db9f465c0ad0133b6868ac6bbb752137158d1b90cba05c20bc81cf291dd1031963c753a8fd1186923a8eada117721b6f7a8dda063bc29958d8694304be6f0056d6c954910f88f1254e420aa586f1e3d220126a55e35bb95c2ec4ca61341a588d27954f66fe2db8a0818ba583e219d6d24b22b16fcf12bd50a57be6ebb5274e7eda2c5583a8cdf802431ee99104528e0ff0b1349387c6da17c0f46588436667baeb7200650e9086116f17e7e3feb47c3b19799bbc40511f603b093641fd754363cc2da3189e3974f2e73c97bb7b4b26a796cb032d022328e7321bd48a2c15a05473789468d4e5a697bf948251ab7c5ef086f2c48b791b0d29f9e92fb989b93abd7d921ac0194f49e6a3e4a961753b924c288896662029e2512ff6e0f6a6d4a7919cbe0e5ad7dff931b9a17b30af9300d7807473273a85ea4ad984f810747f74b095c834019c5d4b2e90973af543b13b258a1f25fa1fd68e12cab9c3c35af719104084ad56507021f6e1a61753f174ec05859c315a02ec8d33c847dbd774f9b257f4ee57ace7718e5f45e6d1e674d29dd4b9946e77fe73c10e674b47c373e5ac890d32b3b8ef7b0c8541cc84a09bc5058106b3cd5a56058e3345c7940e093ebe8d3c1372364b9a4ea74b0d3d7b3266c117cf904b6e2557d9c878cd8e194818ca684b8a0d8f8ded62e8f955e3261e23bc92ff29fcb7884aa3e5f35ee1842f6f1892661afaa39200f74c560cc05da7463f581cb33b8cdc1984094a4d7cb469261cfc18f378ad4e88c0fc71f27e4b9127439ca55a611923b1065d5a58b4c64b859cc2a508a90c932a229f266f3ad6b45f05950704d90d3af47916f20a146331fc6bc4fc59fab8cf00f4393563ec61b70b0eab58909ad53aaf25bb12fca2e03542ef797238f681502ff0db752cbb8d78846056c99ddf8cfc7bde2aced80e9b44723048bbeb8e9bee5d9b23de2e4b569f1428f710eac98029567bac558a41ab42961d1d582600144c6f5cf3e36a968510744268054e20c7a8e2ef4848112167d8c18ca60de37b3e67839148756c9f32575873fceb91c2b38e778f3284c1f07220aebca4f6f838cec9e1564d1514e7676707cd20469840ea0c62442dd25b972e2adcb78b7d9cc48a22ab5f05116109f28546530aa7608ab0bfc5a706b3b91b17db9f2e72e17cc27643d638b7a6ee513112fdc790ee794a2dbc5446f8fcce4cdefc01b06524ce1c5d3ddc57e05eb740ad08f2aa595d4ed0e7c740a606caa40b16d1aca2251c46636de009e61a7220db3f325c65d4871f0298674857e2f0dabc131d8875e0ecbeec1a62e179a62c7ad6b47765f719cbadb09cf0d9a249989d70e6052eda83716b6a380bf1501ec6d049988842e316d9a7d4c3371e6b6d41db8b0c69ae606edd4643a61465e1398e1b0bf5c141204bf8d3407f2265b06fa7f9880f3db87a72468c7923c66447e8665c981e98da24b0dc7a8ceaba82e62cea410de275ea37813f4481354d90c6171c8dda882b583e23360e57376d4a7bdce72b8bf280c95fa52dde93457733a7799896623d285a0400a9f7992f9677d73d41078fcc870f8b011ec94c9334323972e53eebb231119616db3f1ba5deb01b52e98cfc436e9c7965828014d348bda66062f6dabdc9be4abc2909d664de4a85d58dbaca1a5fc2f6e975f29e8def8cde5be3715a657cae846d3fff2e7cb6e9c67c1e23a9d32ba3a80ee8ce0df9523071a868ff83b9d036551b2988baaa9c43f2ee3db9a78c7f7d2216e124d1051fa110cce7abdb0f3d4981c150f77f92e510b9883619f2379724dfe2b8a7ba7ab73c0b692d530a7298ebe0f00eb1d46fbfd0c27c61e198f05779746623c2cf1111663a6f4e75a77ce982d53c707596ea5f3735a858f44bf3bc6c47cff59f328e0210e9d261a22412baa03f56e446c25cd879dcd577f1335938ad969e60c1793f131f66972e891238299b987caaca95305cfbdc72ac8eee2997578e95d17a5c10d0dce772e32ad9c2e16368605123f164fac2f7767698ac14a8d0ed3ca23c29a808d724cd15064957f3df9cda38dcc440872593f3c7cf305754d4585e781a84f5da38a410d6351f99544bb93571526d5e6436e3d58cf44d3e2f80ff72e2438133bbba16bb29f16fa1ca5d2b48760bcd50abdd2d2aad32dd4f7f95cb88b4ddd2a5d038130e4a6b976c35570a0098b7db7d3379ed756527938a93fdeb83abd1a6531cff1762a20713f8c48017df802833f7872f1ffb3f915ac8a0140f7d78fe61d50874609361d1852bcace4688cc0cd23e52e9f94a732de9381eed1bf04dc098d8dbb88fb23efac4d547edab85f904f9141f589c1ee5e0e5bed43ca03a028cff6fbb09d5f0f3c354a25f12d6fdd61af13a61d0b318657167537a9696a196ac63881812d9b28f45f8268db2098e9b569daf8ee984c199b23a45cf02a2fc375a0b9543c08ca9ba37c375ffae65eb23989efff98072dc87d2e06b2f816f2567eeeae52ca14c6a5cb784fe38972672f0cba45827f305002aee86850f252d89f2964cf2ae227ebab598309a3e2fbfb2aa00cd3a370d22c2516b26dae993d6eb7fb4cbf866356d60dd48324f2dafec348282c8d017d53c8d50b9bbce76823bbfceab695bd608901b6147aabf97be7413f0cef8dcf7b17fcdad0c65051fcbd8e3d497915fe063a19cb1d478e2895a878f6d9b1e27c238d128fecc43389380d252b05b8e58a5e2fddb48f5a68fd7e0c699495c7faf150e926c5bed53c38ca7d969ac26d1e5afc0522faa70e1d3bb19a12263e7d2fa1d68e8b6b46d78c400e7c265fe4883fd9e500c039bc25a65a9ee42b98fba7a19105ad557cf8b30805337a6e98c1b40ec19d1d955e3d07e7c84b307327ed78adcdc50719c8ba81d3ec0d6c4060d270b60e51d073bce27c7cc53c4402ae7f022f25b629c001244b87cf8ead5f6d350ec92666d91db55fe05b257b20bfccc5fba5f01a838ef6bfee5a3ba23ca1dd7dca8b323bb138adad553cb6e14993f44205f2779f6d1d576f2569bd943f8226939cc33e6e27ec4e64f77164823eb56da0a4755ea11391bb10a5b834f9c70e06ac43290a51715c6c67af1edcbe2863a446b266c33a6a17e1696d44fc5e892fdd2c23a969325b990a8faff8ea32e29a3fc6ee0ccb5bf36ae9395024edbf1bcaa138a0f83b7f415f94de617a4cc383cf8476deb7eae5f06f6e2a11cf4b18a535fb6d4e3c113324415e67e3c20949e153f7212cc91e0e51367b2c077e0ee863f366c494bb7cbd13b7284ae6b567e329dd9294d1a1a480d4cb6cd710c746e8957a25d190adeda7b2c988d377b76f98f70e06ff71046131504ce49ddc69bd47e705b87972ac432b3946d20ef95c69115610c5ab20bb9ed07976627432048c11f8eef1ffb1b4a42f25401d59e2eac45cfb9ce7f29bb08300dcc56eb8b9c9db3821fd4de7286b88a2cb415f4171f084931d462fcca0d9f98a269a1d32b13d3d5c63f18d34a3107d2721483250462736ac8fa07c4b3473c7233ffb7827da553fc281c58c298643f17153b07deb350caa2fcbb88ccdcad5e635cd706632442ba5c4da530b6d545055b77556715d5a3f2dc25390665574428ecb004a6df218172975785380b25dee39dbe01d020173804e5fa096f4aafab9ea109de2e7885d02d0896b94e0b086f37a671ca96d3c66b9d6767d1ffa2a3712c1608c44b4934543d512afe3c2f6f4583268181aa3a89ca27792c03d62dd0bb32ad6f9c397959ae4b8511d2f52b6b48db4d8baeac09b5689dc40c7940b9745246299c03faa80b9399e9c26741b9661c89a7559e076540fe01882b8d11bd73dfb8404e5374a448e6e6868a3eb85ff8b3a8829901d48df16637c6145385793f3c3269d8009a67fea8308b4dc475f802b6e89401a1ebe0401e87ef90d90b31a724c66b3f662ca6a7e263d2f5fb13ac685f7d5554c2adee8e74e0a5505459972e452b05eb79f7363275581352a595b8a2a2b0ea3591a99d1025ae2f4a77c906b00bcfa868951bb07f69e28e0f8e769333da59434b577c22af62b0fe24ba7c6bce1da25c2699a6a9358cb2c1495e05f2ec046ccca172b2cffaff4db3b7bcc02f07971e40f9f4d8c57eebe90fb48c06d1106ffea2c8a76aaabd8b9bfc89853c7cce8b098fb0115ff556b8c12eba3cfd47b080b8e6a7652a0f331a77c080bfe0c0d8c5df026d2cbc6761da02d38c72551656f2d93a644678d82c6dcabb473eb943bf277cc5ff4d4fa7698934b03b0344a7727b9e4097392a0c0a92230b5d88ad77599ff8bd99a43bc89ba4a9a18119c5197ed81e5690b6895ef0ae337c85eb2c8ccb8f334e771fb9fa88f5890bf34db51baf91247935198335489f873282d010cf9a2dfd86a58082b03896ea010efc90229affbfc7a8cadd2d74ec8e0ff0131d92fa543a5d3d9cc423103898e7b69ba69e4cbe87a43d144249a9054b05252aa144567852ab3c95556983b08463e0c7a4fecb73af</script>
+</div>
+<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>Author：<a href="https://yipwinghong.github.io">YWH</a>
-            <p>原文链接：<a href="https://yipwinghong.github.io/2020/01/21/Kafka-dynamic_config/">https://yipwinghong.github.io/2020/01/21/Kafka-dynamic_config/</a>
-            <p>发表日期：<a href="https://yipwinghong.github.io/2020/01/21/Kafka-dynamic_config/">January 21st 2020, 3:31:23 pm</a>
-            <p>更新日期：<a href="https://yipwinghong.github.io/2020/01/21/Kafka-dynamic_config/">February 15th 2020, 4:17:41 pm</a>
+            <p>原文链接：<a href="https://yipwinghong.github.io/2020/03/06/InfoSecty-personal-infomation-security-guide/">https://yipwinghong.github.io/2020/03/06/InfoSecty-personal-infomation-security-guide/</a>
+            <p>发表日期：<a href="https://yipwinghong.github.io/2020/03/06/InfoSecty-personal-infomation-security-guide/">March 6th 2020, 12:36:48 am</a>
+            <p>更新日期：<a href="https://yipwinghong.github.io/2020/03/06/InfoSecty-personal-infomation-security-guide/">March 6th 2020, 1:24:45 am</a>
             <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -508,17 +441,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2020/01/21/Kafka-offset_reset/" title= "Kafka 位移重置">
-                    <div class="nextTitle">Kafka 位移重置</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2020/01/20/Python-OOP/" title= "Python 类与对象总结">
-                    <div class="prevTitle">Python 类与对象总结</div>
+                <a href= "/2020/02/22/2020-02-22_diary/" title= "免费 JetBrains 全家桶">
+                    <div class="prevTitle">免费 JetBrains 全家桶</div>
                 </a>
             
         </li>
@@ -656,7 +584,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#参数保存"><span class="toc-number">1.</span> <span class="toc-text">参数保存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参数配置"><span class="toc-number">2.</span> <span class="toc-text">参数配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用参数"><span class="toc-number">3.</span> <span class="toc-text">常用参数</span></a></li></ol>
+        
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -832,9 +760,22 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 15
+        Total : 16
         </div>
         <!-- search  -->
         
@@ -854,22 +795,27 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href= "/2020/03/06/InfoSecty-personal-infomation-security-guide/" >個人信息安全保護指南（初級篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2020/02/22/2020-02-22_diary/" >免费 JetBrains 全家桶</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Data-Warehouse-design-basic/" >数据仓库设计基础</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/DataWarehouse_design-basic/" >数据仓库设计基础</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker-K8S-Cheat-Sheet/" >Docker & K8S Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_Cheat-Sheet/" >Git Cheat Sheet</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git-Cheat-Sheet/" >Git Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_Cheat-Sheet/" >Docker & K8S Cheat Sheet</a>
         </li>
     
     
@@ -879,47 +825,47 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/06</span><a class="archive-post-title" href= "/2020/02/06/Python-async_programming/" >Python 异步编程总结</a>
+            <span class="archive-post-date">02/06</span><a class="archive-post-title" href= "/2020/02/06/Python_async-programming/" >Python 异步编程总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2020/02/03/JVM-jstat-monitor_analysis/" >JVM jstat 监控分析</a>
+            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2020/02/03/JVM_jstat-monitor-analysis/" >JVM jstat 监控分析</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/JVM-GC-log_analysis/" >JVM GC 日志分析</a>
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/JVM_GC-log-analysis/" >JVM GC 日志分析</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2020/01/23/Python-data_structure/" >Python 数据结构应用</a>
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2020/01/23/Python_data-structure/" >Python 数据结构应用</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-dynamic_config/" >Kafka 动态配置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_dynamic-config/" >Kafka 动态配置</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka-offset_reset/" >Kafka 位移重置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_offset-reset/" >Kafka 位移重置</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Kafka-common_scripts/" >Kafka 常用脚本</a>
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Kafka_common-scripts/" >Kafka 常用脚本</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Python-OOP/" >Python 类与对象总结</a>
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Python_OOP-summary/" >Python 类与对象总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Python-decorator/" >Python 装饰器总结</a>
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2020/01/20/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
         </li>
     
     
@@ -934,15 +880,17 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     

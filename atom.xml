@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2020-02-22T14:23:57.749Z</updated>
+  <updated>2020-03-05T17:24:45.068Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>個人信息安全保護指南（初級篇）</title>
+    <link href="https://yipwinghong.github.io/2020/03/06/InfoSecty-personal-infomation-security-guide/"/>
+    <id>https://yipwinghong.github.io/2020/03/06/InfoSecty-personal-infomation-security-guide/</id>
+    <published>2020-03-05T16:36:48.000Z</published>
+    <updated>2020-03-05T17:24:45.068Z</updated>
+    
+    <summary type="html">
+    
+      我深知在這類話題上較勁會很危險，但還是不能忍。
+    
+    </summary>
+    
+    
+    
+      <category term="信息安全" scheme="https://yipwinghong.github.io/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/"/>
+    
+  </entry>
   
   <entry>
     <title>免费 JetBrains 全家桶</title>
@@ -43,8 +62,8 @@
   
   <entry>
     <title>数据仓库设计基础</title>
-    <link href="https://yipwinghong.github.io/2020/02/15/Data-Warehouse-design-basic/"/>
-    <id>https://yipwinghong.github.io/2020/02/15/Data-Warehouse-design-basic/</id>
+    <link href="https://yipwinghong.github.io/2020/02/15/DataWarehouse_design-basic/"/>
+    <id>https://yipwinghong.github.io/2020/02/15/DataWarehouse_design-basic/</id>
     <published>2020-02-15T08:32:11.000Z</published>
     <updated>2020-02-15T12:11:17.212Z</updated>
     
@@ -62,16 +81,16 @@
     
     
     
-      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
   <entry>
     <title>Git Cheat Sheet</title>
-    <link href="https://yipwinghong.github.io/2020/02/15/Git-Cheat-Sheet/"/>
-    <id>https://yipwinghong.github.io/2020/02/15/Git-Cheat-Sheet/</id>
+    <link href="https://yipwinghong.github.io/2020/02/15/Git_Cheat-Sheet/"/>
+    <id>https://yipwinghong.github.io/2020/02/15/Git_Cheat-Sheet/</id>
     <published>2020-02-15T04:37:06.000Z</published>
     <updated>2020-02-15T08:17:41.091Z</updated>
     
@@ -89,16 +108,16 @@
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="Git" scheme="https://yipwinghong.github.io/tags/Git/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title>Docker &amp; K8S Cheat Sheet</title>
-    <link href="https://yipwinghong.github.io/2020/02/15/Docker-K8S-Cheat-Sheet/"/>
-    <id>https://yipwinghong.github.io/2020/02/15/Docker-K8S-Cheat-Sheet/</id>
+    <link href="https://yipwinghong.github.io/2020/02/15/Docker&amp;K8S_Cheat-Sheet/"/>
+    <id>https://yipwinghong.github.io/2020/02/15/Docker&amp;K8S_Cheat-Sheet/</id>
     <published>2020-02-15T04:30:21.000Z</published>
     <updated>2020-02-15T08:17:41.091Z</updated>
     
@@ -151,8 +170,8 @@
   
   <entry>
     <title>Python 异步编程总结</title>
-    <link href="https://yipwinghong.github.io/2020/02/06/Python-async_programming/"/>
-    <id>https://yipwinghong.github.io/2020/02/06/Python-async_programming/</id>
+    <link href="https://yipwinghong.github.io/2020/02/06/Python_async-programming/"/>
+    <id>https://yipwinghong.github.io/2020/02/06/Python_async-programming/</id>
     <published>2020-02-06T13:01:15.000Z</published>
     <updated>2020-02-15T12:13:20.761Z</updated>
     
@@ -178,8 +197,8 @@
   
   <entry>
     <title>JVM jstat 监控分析</title>
-    <link href="https://yipwinghong.github.io/2020/02/03/JVM-jstat-monitor_analysis/"/>
-    <id>https://yipwinghong.github.io/2020/02/03/JVM-jstat-monitor_analysis/</id>
+    <link href="https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/"/>
+    <id>https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/</id>
     <published>2020-02-03T06:41:50.000Z</published>
     <updated>2020-02-15T08:17:41.093Z</updated>
     
@@ -205,8 +224,8 @@
   
   <entry>
     <title>JVM GC 日志分析</title>
-    <link href="https://yipwinghong.github.io/2020/02/01/JVM-GC-log_analysis/"/>
-    <id>https://yipwinghong.github.io/2020/02/01/JVM-GC-log_analysis/</id>
+    <link href="https://yipwinghong.github.io/2020/02/01/JVM_GC-log-analysis/"/>
+    <id>https://yipwinghong.github.io/2020/02/01/JVM_GC-log-analysis/</id>
     <published>2020-02-01T14:48:17.000Z</published>
     <updated>2020-02-15T08:17:41.092Z</updated>
     
@@ -232,8 +251,8 @@
   
   <entry>
     <title>Python 数据结构应用</title>
-    <link href="https://yipwinghong.github.io/2020/01/23/Python-data_structure/"/>
-    <id>https://yipwinghong.github.io/2020/01/23/Python-data_structure/</id>
+    <link href="https://yipwinghong.github.io/2020/01/23/Python_data-structure/"/>
+    <id>https://yipwinghong.github.io/2020/01/23/Python_data-structure/</id>
     <published>2020-01-23T15:30:04.000Z</published>
     <updated>2020-02-15T08:17:41.100Z</updated>
     
@@ -259,8 +278,8 @@
   
   <entry>
     <title>Kafka 位移重置</title>
-    <link href="https://yipwinghong.github.io/2020/01/21/Kafka-offset_reset/"/>
-    <id>https://yipwinghong.github.io/2020/01/21/Kafka-offset_reset/</id>
+    <link href="https://yipwinghong.github.io/2020/01/21/Kafka_offset-reset/"/>
+    <id>https://yipwinghong.github.io/2020/01/21/Kafka_offset-reset/</id>
     <published>2020-01-21T07:32:33.000Z</published>
     <updated>2020-02-15T08:17:41.098Z</updated>
     
@@ -286,8 +305,8 @@
   
   <entry>
     <title>Kafka 动态配置</title>
-    <link href="https://yipwinghong.github.io/2020/01/21/Kafka-dynamic_config/"/>
-    <id>https://yipwinghong.github.io/2020/01/21/Kafka-dynamic_config/</id>
+    <link href="https://yipwinghong.github.io/2020/01/21/Kafka_dynamic-config/"/>
+    <id>https://yipwinghong.github.io/2020/01/21/Kafka_dynamic-config/</id>
     <published>2020-01-21T07:31:23.000Z</published>
     <updated>2020-02-15T08:17:41.097Z</updated>
     
@@ -313,8 +332,8 @@
   
   <entry>
     <title>Python 类与对象总结</title>
-    <link href="https://yipwinghong.github.io/2020/01/20/Python-OOP/"/>
-    <id>https://yipwinghong.github.io/2020/01/20/Python-OOP/</id>
+    <link href="https://yipwinghong.github.io/2020/01/20/Python_OOP-summary/"/>
+    <id>https://yipwinghong.github.io/2020/01/20/Python_OOP-summary/</id>
     <published>2020-01-20T15:30:04.000Z</published>
     <updated>2020-02-15T08:17:41.099Z</updated>
     
@@ -340,8 +359,8 @@
   
   <entry>
     <title>Kafka 常用脚本</title>
-    <link href="https://yipwinghong.github.io/2020/01/20/Kafka-common_scripts/"/>
-    <id>https://yipwinghong.github.io/2020/01/20/Kafka-common_scripts/</id>
+    <link href="https://yipwinghong.github.io/2020/01/20/Kafka_common-scripts/"/>
+    <id>https://yipwinghong.github.io/2020/01/20/Kafka_common-scripts/</id>
     <published>2020-01-20T15:26:29.000Z</published>
     <updated>2020-02-15T08:17:41.096Z</updated>
     
@@ -366,11 +385,11 @@
   </entry>
   
   <entry>
-    <title>Python 装饰器总结</title>
-    <link href="https://yipwinghong.github.io/2020/01/20/Python-decorator/"/>
-    <id>https://yipwinghong.github.io/2020/01/20/Python-decorator/</id>
+    <title>Python 装饰器基本用法</title>
+    <link href="https://yipwinghong.github.io/2020/01/20/Python_decorator-basic-usage/"/>
+    <id>https://yipwinghong.github.io/2020/01/20/Python_decorator-basic-usage/</id>
     <published>2020-01-19T16:01:52.000Z</published>
-    <updated>2020-02-15T13:05:28.668Z</updated>
+    <updated>2020-02-29T06:43:43.849Z</updated>
     
     <summary type="html">
     
