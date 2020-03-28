@@ -422,7 +422,7 @@ height:50vh;
         <blockquote>
 <p>与其他传统消息中间件不同，Kafka 是基于日志结构（log-based）的消息引擎，消费者在消费消息时，只是从磁盘文件上读取数据，因此消费者不会删除消息数据。而且由于消息的位移是由消费者控制的，因此可以通过修改位移的值，重复消费历史数据（replayable）。</p>
 </blockquote>
-<h2 id="重设位移策略"><a href="#重设位移策略" class="headerlink" title="重设位移策略"></a>重设位移策略</h2><h3 id="位移策略"><a href="#位移策略" class="headerlink" title="位移策略"></a>位移策略</h3><p>直接把消费者的位移值重设成期望的位移值</p>
+<h1 id="重设位移策略"><a href="#重设位移策略" class="headerlink" title="重设位移策略"></a>重设位移策略</h1><h2 id="位移策略"><a href="#位移策略" class="headerlink" title="位移策略"></a>位移策略</h2><p>直接把消费者的位移值重设成期望的位移值</p>
 <ul>
 <li>Earliest：调整到当前最早位移处，即 <strong>重新消费主题所有消息</strong>；</li>
 <li>Latest：调整到当前最新位移处，即 <strong>跳过所有历史消息</strong>；</li>
@@ -430,15 +430,14 @@ height:50vh;
 <li>Specified-Offset：调整为指定位移，一般用于 <strong>消费者在处理某条错误消息时，可手动地跳过此消息而规避错误</strong>；</li>
 <li>Shift-By-N：调整到当前位移 +N 处（可以为负值）；</li>
 </ul>
-<h3 id="时间策略"><a href="#时间策略" class="headerlink" title="时间策略"></a>时间策略</h3><p>给定一个时间，让消费者把位移调整成大于该时间的最小位移</p>
+<h2 id="时间策略"><a href="#时间策略" class="headerlink" title="时间策略"></a>时间策略</h2><p>给定一个时间，让消费者把位移调整成大于该时间的最小位移</p>
 <ul>
 <li>DateTime：调整到大于给定时间的最小位移处；</li>
 <li>Duration：调整到距离当前时间指定间隔的位移处。</li>
 </ul>
 <p>其中 Duration 策略则是指给定相对的时间间隔，将位移调整到距离当前给定时间间隔的位移处，格式：PnDTnHnMnS（ISO-8601 规范，参考 Java <code>Duration</code> 类），即以字母 P 开头，后面由 4 部分组成，D（天）、H（小时）、M（分钟）、S（秒）。</p>
 <p>如将位移调回到 15 分钟前，可以指定为：PT0H15M0S。</p>
-<hr>
-<h2 id="消费者-API"><a href="#消费者-API" class="headerlink" title="消费者 API"></a>消费者 API</h2><p>可以通过消费者 API 重设位移，其中 Java API：</p>
+<h1 id="消费者-API"><a href="#消费者-API" class="headerlink" title="消费者 API"></a>消费者 API</h1><p>可以通过消费者 API 重设位移，其中 Java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 除了 Earliest 和 Latest 以外，其余都使用 seek </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 只能重设一个分区</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seek</span><span class="params">(TopicPartition partition, <span class="keyword">long</span> offset)</span></span>;	</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seek</span><span class="params">(TopicPartition partition, OffsetAndMetadata offsetAndMetadata)</span></span>;	</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可重设多个分区</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seekToBeginning</span><span class="params">(Collection&lt;TopicPartition&gt; partitions)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seekToEnd</span><span class="params">(Collection&lt;TopicPartition&gt; partitions)</span></span>;</span><br></pre></td></tr></table></figure>
 
 <p>基本实现（注意调用带长整型的 poll 方法，而不要调用 <code>consumer.poll(Duration.ofSecond(0))</code>）：</p>
@@ -462,8 +461,7 @@ height:50vh;
 <p>Duration 策略</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将位移调回 30 分钟前</span></span><br><span class="line">Map&lt;TopicPartition, Long&gt; timeToSearch = consumer.partitionsFor(topic).stream()</span><br><span class="line">    .map(info -&gt; <span class="keyword">new</span> TopicPartition(topic, info.partition()))</span><br><span class="line">    .collect(Collectors.toMap(Function.identity(), tp -&gt; System.currentTimeMillis() - <span class="number">30</span> * <span class="number">1000</span>  * <span class="number">60</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (Map.Entry&lt;TopicPartition, OffsetAndTimestamp&gt; entry : </span><br><span class="line">    consumer.offsetsForTimes(timeToSearch).entrySet()) &#123;</span><br><span class="line">    consumer.seek(entry.getKey(), entry.getValue().offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<hr>
-<h2 id="命令行脚本"><a href="#命令行脚本" class="headerlink" title="命令行脚本"></a>命令行脚本</h2><p>对于 Kafka 0.11 及以上的版本，可以使用 kafka-consumer-groups 脚本设置位移。</p>
+<h1 id="命令行脚本"><a href="#命令行脚本" class="headerlink" title="命令行脚本"></a>命令行脚本</h1><p>对于 Kafka 0.11 及以上的版本，可以使用 kafka-consumer-groups 脚本设置位移。</p>
 <p>Earliest 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --all-topics --to-latest --execute</span><br></pre></td></tr></table></figure>
 
@@ -493,7 +491,7 @@ height:50vh;
             <p>Author：<a href="https://yipwinghong.github.io">YWH</a>
             <p>原文链接：<a href="https://yipwinghong.github.io/2020/01/21/Kafka_offset-reset/">https://yipwinghong.github.io/2020/01/21/Kafka_offset-reset/</a>
             <p>发表日期：<a href="https://yipwinghong.github.io/2020/01/21/Kafka_offset-reset/">January 21st 2020, 3:32:33 pm</a>
-            <p>更新日期：<a href="https://yipwinghong.github.io/2020/01/21/Kafka_offset-reset/">February 15th 2020, 4:17:41 pm</a>
+            <p>更新日期：<a href="https://yipwinghong.github.io/2020/01/21/Kafka_offset-reset/">March 28th 2020, 4:18:39 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -649,7 +647,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#重设位移策略"><span class="toc-number">1.</span> <span class="toc-text">重设位移策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#位移策略"><span class="toc-number">1.1.</span> <span class="toc-text">位移策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时间策略"><span class="toc-number">1.2.</span> <span class="toc-text">时间策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消费者-API"><span class="toc-number">2.</span> <span class="toc-text">消费者 API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命令行脚本"><span class="toc-number">3.</span> <span class="toc-text">命令行脚本</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#重设位移策略"><span class="toc-number">1.</span> <span class="toc-text">重设位移策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#位移策略"><span class="toc-number">1.1.</span> <span class="toc-text">位移策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#时间策略"><span class="toc-number">1.2.</span> <span class="toc-text">时间策略</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#消费者-API"><span class="toc-number">2.</span> <span class="toc-text">消费者 API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#命令行脚本"><span class="toc-number">3.</span> <span class="toc-text">命令行脚本</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -840,9 +838,20 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 16
+        Total : 17
         </div>
         <!-- search  -->
         
@@ -859,6 +868,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href= "/2020/03/28/Algorithm-leetcode-high-frequency-problems/" >LeetCode 高频面试题</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -947,23 +961,25 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

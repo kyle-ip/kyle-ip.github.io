@@ -419,7 +419,7 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="jstat-基本用法"><a href="#jstat-基本用法" class="headerlink" title="jstat 基本用法"></a>jstat 基本用法</h2><p>jstat 是 JDK 提供的 JVM 统计信息监控工具，可用于查看各 JVM 内存占用与垃圾收集的统计信息。</p>
+        <h1 id="jstat-基本用法"><a href="#jstat-基本用法" class="headerlink" title="jstat 基本用法"></a>jstat 基本用法</h1><p>jstat 是 JDK 提供的 JVM 统计信息监控工具，可用于查看各 JVM 内存占用与垃圾收集的统计信息。</p>
 <p>如每 250ms 查询一次 2764 进程的统计信息、共 20 次，可执行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gc 2764 250 20</span><br></pre></td></tr></table></figure>
 
@@ -514,7 +514,7 @@ height:50vh;
 <blockquote>
 <p>其他选项的用法直接在命令行输入 jstat 查看提示即可，此处不再赘述。</p>
 </blockquote>
-<h2 id="Young-GC"><a href="#Young-GC" class="headerlink" title="Young GC"></a>Young GC</h2><h3 id="JVM-参数"><a href="#JVM-参数" class="headerlink" title="JVM 参数"></a>JVM 参数</h3><table>
+<h1 id="Young-GC"><a href="#Young-GC" class="headerlink" title="Young GC"></a>Young GC</h1><h2 id="JVM-参数"><a href="#JVM-参数" class="headerlink" title="JVM 参数"></a>JVM 参数</h2><table>
 <thead>
 <tr>
 <th>序号</th>
@@ -563,7 +563,7 @@ height:50vh;
 <td>输出日志</td>
 </tr>
 </tbody></table>
-<h3 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Thread.sleep(<span class="number">30000</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            loadData();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadData</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">50</span>; i++) &#123;</span><br><span class="line">            data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">200</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        data = <span class="keyword">null</span>;</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Thread.sleep(<span class="number">30000</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            loadData();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadData</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">50</span>; i++) &#123;</span><br><span class="line">            data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">200</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        data = <span class="keyword">null</span>;</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>启动：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar -XX:NewSize=104857600 -XX:MaxNewSize=104857600 -XX:InitialHeapSize=209715200 -XX:MaxHeapSize=209715200 -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=3145728 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log Demo.jar</span><br></pre></td></tr></table></figure>
@@ -587,7 +587,7 @@ height:50vh;
 
 
 
-<h2 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h2><h3 id="JVM-参数-1"><a href="#JVM-参数-1" class="headerlink" title="JVM 参数"></a>JVM 参数</h3><p>基本同上一节，并把大对象阈值 20MB，避免分配的对象直接存入老年代：</p>
+<h1 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h1><h2 id="JVM-参数-1"><a href="#JVM-参数-1" class="headerlink" title="JVM 参数"></a>JVM 参数</h2><p>基本同上一节，并把大对象阈值 20MB，避免分配的对象直接存入老年代：</p>
 <table>
 <thead>
 <tr>
@@ -602,7 +602,7 @@ height:50vh;
 <td>进入老年代的对象内存阈值：20MB</td>
 </tr>
 </tbody></table>
-<h3 id="测试代码-1"><a href="#测试代码-1" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Thread.sleep(<span class="number">30000</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            loadData();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadData</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">            data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] data1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] data2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] data3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        data3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="测试代码-1"><a href="#测试代码-1" class="headerlink" title="测试代码"></a>测试代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Thread.sleep(<span class="number">30000</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            loadData();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadData</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">            data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] data1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] data2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] data3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        data3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>启动：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar -XX:NewSize=104857600 -XX:MaxNewSize=104857600 -XX:InitialHeapSize=209715200 -XX:MaxHeapSize=209715200 -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=20971520 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log Demo.jar</span><br></pre></td></tr></table></figure>
@@ -654,7 +654,7 @@ height:50vh;
 
 
 
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这里只是简单举例讲解了最基本的用法，实际上可以总结为：</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里只是简单举例讲解了最基本的用法，实际上可以总结为：</p>
 <ul>
 <li>重点关注新生代对象增长速率，Young GC 触发频率、耗时、存活对象、进入老年代的对象，老年代对象增长速率，Full GC 触发频率、耗时；</li>
 <li>对于一般系统，老年代对象增长速度很慢（比如每 n 分钟发生一次 YGC，老年代增长 xMB），如果每次 Young GC 发生后老年代增长较快，则很可能是每次 Young GC 存活对象太多、触发动态年龄判断规则，或 Survivor 太小放不下存活对象；</li>
@@ -669,7 +669,7 @@ height:50vh;
             <p>Author：<a href="https://yipwinghong.github.io">YWH</a>
             <p>原文链接：<a href="https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/">https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/</a>
             <p>发表日期：<a href="https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/">February 3rd 2020, 2:41:50 pm</a>
-            <p>更新日期：<a href="https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/">February 15th 2020, 4:17:41 pm</a>
+            <p>更新日期：<a href="https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/">March 28th 2020, 4:10:02 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -825,7 +825,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#jstat-基本用法"><span class="toc-number">1.</span> <span class="toc-text">jstat 基本用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Young-GC"><span class="toc-number">2.</span> <span class="toc-text">Young GC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JVM-参数"><span class="toc-number">2.1.</span> <span class="toc-text">JVM 参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试代码"><span class="toc-number">2.2.</span> <span class="toc-text">测试代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Full-GC"><span class="toc-number">3.</span> <span class="toc-text">Full GC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JVM-参数-1"><span class="toc-number">3.1.</span> <span class="toc-text">JVM 参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试代码-1"><span class="toc-number">3.2.</span> <span class="toc-text">测试代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#jstat-基本用法"><span class="toc-number">1.</span> <span class="toc-text">jstat 基本用法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Young-GC"><span class="toc-number">2.</span> <span class="toc-text">Young GC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM-参数"><span class="toc-number">2.1.</span> <span class="toc-text">JVM 参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试代码"><span class="toc-number">2.2.</span> <span class="toc-text">测试代码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Full-GC"><span class="toc-number">3.</span> <span class="toc-text">Full GC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM-参数-1"><span class="toc-number">3.1.</span> <span class="toc-text">JVM 参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试代码-1"><span class="toc-number">3.2.</span> <span class="toc-text">测试代码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -1016,9 +1016,20 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 16
+        Total : 17
         </div>
         <!-- search  -->
         
@@ -1035,6 +1046,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href= "/2020/03/28/Algorithm-leetcode-high-frequency-problems/" >LeetCode 高频面试题</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1123,23 +1139,25 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
