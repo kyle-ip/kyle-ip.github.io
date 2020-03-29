@@ -108,9 +108,9 @@
     
     
     
-      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
@@ -162,11 +162,11 @@
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="Docker" scheme="https://yipwinghong.github.io/tags/Docker/"/>
     
       <category term="Kubernetes" scheme="https://yipwinghong.github.io/tags/Kubernetes/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
