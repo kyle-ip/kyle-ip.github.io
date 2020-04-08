@@ -22,7 +22,7 @@
     <meta name="description" content="千反田爱瑠爱好者">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>数据仓库设计基础 · undefined</title>
+    <title>关于使用思维导图做笔记 · undefined</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >千反田爱瑠爱好者的生活笔记</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">数据仓库设计基础</a>
+                <a href="#" class="post-name">关于使用思维导图做笔记</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            数据仓库设计基础
+            关于使用思维导图做笔记
             <!-- 404 -->
             
         </h1>
@@ -269,18 +269,16 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "大数据">大数据</a>
-    
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,202</span>Reading time: <span class="post-count reading-time">11 min</span></span>
+                        <span>Word count: <span class="post-count word-count">71</span>Reading time: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2020/02/15</span>
+                    <span class="post-intro-time">2020/04/08</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -404,391 +402,37 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="数据仓库与业务系统库"><a href="#数据仓库与业务系统库" class="headerlink" title="数据仓库与业务系统库"></a>数据仓库与业务系统库</h1><p>业务系统库</p>
-<ul>
-<li>安全性：统计分析与业务分离</li>
-<li>变更频繁：重写分析系统、重新测试</li>
-<li>难以建立和维护源于多个业务系统的报表</li>
-<li>不同的数据源数据格式不统一</li>
-<li>业务数据库为事务处理性能优化，不适合查询分析</li>
-<li>统计分析影响业务系统性能</li>
-</ul>
-<p>数据仓库</p>
-<ul>
-<li>面向主题（业务类型：如机器，用户，歌曲，营收）</li>
-<li>集成（从多数据源抽取数据后按一致、无歧义的格式写入数据仓库）</li>
-<li>随时间变化（存放历史数据，保留快照）</li>
-<li>非易失（写入数据仓库后不再修改删除）</li>
-<li>粒度（数据装载的时间周期，日增量、日全量、日汇总、月全量等，粒度越低数据量越大，保留信息越多）</li>
-</ul>
-<h2 id="传统数据仓库"><a href="#传统数据仓库" class="headerlink" title="传统数据仓库"></a>传统数据仓库</h2><ul>
-<li>失信的 SLA：数据处理时间越来越长</li>
-<li>不堪重负的数据仓库：ETL处理与用户查询竞争资源，体验变差</li>
-<li>高昂的成本：节约成本把数据归档后难以查询时间窗口以外的数据</li>
-<li>缺乏灵活性：需求变更模式改动大，结构化数据与其他数据源难以关联</li>
-</ul>
-<h2 id="Hadoop-的优势"><a href="#Hadoop-的优势" class="headerlink" title="Hadoop 的优势"></a>Hadoop 的优势</h2><ul>
-<li>减少对 EDW 资源占用</li>
-<li>提供数据访问接口</li>
-<li>在线归档数据</li>
-<li>灵活的模式演进，半结构化、非结构化数据处理</li>
-<li>可通过Oozie等工作流管理工具协调调度</li>
-</ul>
-<p>Sqoop（操作型数据源系统）、Flume/Kafka（日志等）-&gt; HDFS -&gt; Hive/Impala/Spark/HBase &lt;-&gt; Sqoop（EDW）&lt;-&gt; 分析工具</p>
-<h1 id="数据仓库相关术语"><a href="#数据仓库相关术语" class="headerlink" title="数据仓库相关术语"></a>数据仓库相关术语</h1><p><strong>模型</strong>：</p>
-<ul>
-<li>维度模型：事实表 + 维表（星型模型）</li>
-<li>规范化模型：遵循关系型数据库三大范式</li>
-</ul>
-<p><strong>粒度</strong>：事实表粒度大小（一条记录代表什么），应尽可能细小；</p>
-<p><strong>可加性</strong>：字段是否可以直接相加（指标），计数或者求平均值（维度）；</p>
-<p><strong>事实表</strong>：拥有一或多个外键（参考维表，如订单表的城市 id），主键为一系列外键的组合（唯一标识一条记录）；</p>
-<p><strong>聚合事实表</strong>：为了加速查询而构建的事实表聚合（如每天订单平均金额）；</p>
-<p><strong>维表</strong>：各种查询约束（如省份城市表），及报表标签源头；</p>
-<p><strong>日历维度</strong>：附加在大多数的事实表和一些维表上；</p>
-<p><strong>缓慢变化的维度</strong>：把已存在的旧值修改为新的值（机器基本信息表），要么使用新值添加一条新的记录，并将其标记为当前值，将旧的标记为废弃（机器基本信息历史表）；</p>
-<h1 id="关系数据模型"><a href="#关系数据模型" class="headerlink" title="关系数据模型"></a>关系数据模型</h1><p>关系数据模型具备以下优势：</p>
-<ul>
-<li>非冗余性</li>
-<li>稳定性</li>
-<li>一致性</li>
-<li>灵活性</li>
-</ul>
-<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><ul>
-<li>关系（表，实体）</li>
-<li>属性（列，字段）</li>
-<li>属性域（约束）</li>
-<li>元组（行，记录）</li>
-<li>键（超键，候选键，主键，外键）</li>
-</ul>
-<p>主键选取原则</p>
-<ul>
-<li>尽可能小、数字类型（如 AUTO_INCREMENT）</li>
-<li>不可修改（避免外键引用失效）</li>
-<li>没有业务含义（避免随业务改变而修改）</li>
-<li>可多列组成，但尽可能少</li>
-</ul>
-<h2 id="完整性约束"><a href="#完整性约束" class="headerlink" title="完整性约束"></a>完整性约束</h2><ul>
-<li>实体完整性（主键不为空）</li>
-<li>参照完整性（外键值与主表某些记录的候选键值相同，或外键值全为空，即无关联）</li>
-</ul>
-<p>业务规则：包括属性域和完整性规则（check）   </p>
-<h2 id="关系数据库语言（SQL）："><a href="#关系数据库语言（SQL）：" class="headerlink" title="关系数据库语言（SQL）："></a>关系数据库语言（SQL）：</h2><ul>
-<li>DDL（数据定义语言）：create，alter，drop，truncate，comment，rename</li>
-<li>DML（数据操纵语言）：select，insert，update，delete，merge，call，explain，lock</li>
-<li>DCL（数据控制语言）：grant，revoke</li>
-<li>TCL（事务控制语言）：commit，rollback，savepoint，set transaction</li>
-</ul>
-<h2 id="规范化"><a href="#规范化" class="headerlink" title="规范化"></a>规范化</h2><p>规范化可以减少数据冗余度、提高更新效率，但联表过多降低查询性能。</p>
-<h3 id="1NF"><a href="#1NF" class="headerlink" title="1NF"></a>1NF</h3><p>原子性列，即属性不可再分。</p>
-<table>
-<thead>
-<tr>
-<th align="center">id</th>
-<th align="center">name</th>
-<th align="center">mobile</th>
-<th align="center">dept_no</th>
-<th align="center">dept_name</th>
-<th align="center">province</th>
-<th align="center">city</th>
-<th align="center">zip</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">1</td>
-<td align="center">张三</td>
-<td align="center">13800138000<br>13800138001</td>
-<td align="center">d1</td>
-<td align="center">部门1</td>
-<td align="center">广东</td>
-<td align="center">广州</td>
-<td align="center">110</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">李四</td>
-<td align="center">13800138002</td>
-<td align="center">d2</td>
-<td align="center">部门2</td>
-<td align="center">北京</td>
-<td align="center">北京</td>
-<td align="center">111</td>
-</tr>
-</tbody></table>
-<p>mobile 列可存放多个号码，应该拆分：</p>
-<table>
-<thead>
-<tr>
-<th align="center">id</th>
-<th align="center">name</th>
-<th align="center">mobile</th>
-<th align="center">dept_no</th>
-<th align="center">dept_name</th>
-<th align="center">province</th>
-<th align="center">city</th>
-<th align="center">zip</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">1</td>
-<td align="center">张三</td>
-<td align="center">13800138000</td>
-<td align="center">d1</td>
-<td align="center">部门1</td>
-<td align="center">广东</td>
-<td align="center">广州</td>
-<td align="center">110</td>
-</tr>
-<tr>
-<td align="center">1</td>
-<td align="center">张三</td>
-<td align="center">13800138001</td>
-<td align="center">d1</td>
-<td align="center">部门1</td>
-<td align="center">广东</td>
-<td align="center">广州</td>
-<td align="center">110</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">李四</td>
-<td align="center">13800138002</td>
-<td align="center">d2</td>
-<td align="center">部门2</td>
-<td align="center">北京</td>
-<td align="center">北京</td>
-<td align="center">111</td>
-</tr>
-</tbody></table>
-<h3 id="2NF"><a href="#2NF" class="headerlink" title="2NF"></a>2NF</h3><p>在满足 1NF 条件下消除部分依赖，即每个非主属性完全函数依赖于键码。</p>
-<p>上表中候选键 {id, name, dept_no}，dept_name 依赖 dept_no、name 依赖 id，因此应该把表拆分为如下三个表：    </p>
-<p>部门表：</p>
-<table>
-<thead>
-<tr>
-<th align="center">dept_no</th>
-<th align="center">dept_name</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">d1</td>
-<td align="center">部门 1</td>
-</tr>
-<tr>
-<td align="center">d2</td>
-<td align="center">部门 2</td>
-</tr>
-</tbody></table>
-<p>员工 - 部门表：</p>
-<table>
-<thead>
-<tr>
-<th align="center">id</th>
-<th align="center">dept_no</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">1</td>
-<td align="center">d1</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">d2</td>
-</tr>
-</tbody></table>
-<p>员工 - 号码表：</p>
-<table>
-<thead>
-<tr>
-<th align="center">id</th>
-<th align="center">mobile</th>
-<th align="center">province</th>
-<th align="center">city</th>
-<th align="center">zip</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">1</td>
-<td align="center">13800138000</td>
-<td align="center">广东</td>
-<td align="center">广州</td>
-<td align="center">110</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">13800138002</td>
-<td align="center">北京</td>
-<td align="center">北京</td>
-<td align="center">111</td>
-</tr>
-</tbody></table>
-<h3 id="3NF"><a href="#3NF" class="headerlink" title="3NF"></a>3NF</h3><p>在满足 2NF 条件下消除传递依赖，即非主属性不传递函数依赖于键码。</p>
-<p>上面的员工表中 province、city 依赖 zip，而 zip 依赖 id 即为传递依赖，应把表再拆分成员工表和地区表。</p>
-<p>员工表：</p>
-<table>
-<thead>
-<tr>
-<th align="center">id</th>
-<th align="center">mobile</th>
-<th align="center">zip</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">1</td>
-<td align="center">13800138000</td>
-<td align="center">110</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">13800138002</td>
-<td align="center">111</td>
-</tr>
-</tbody></table>
-<p>地区表：</p>
-<table>
-<thead>
-<tr>
-<th align="center">zip</th>
-<th align="center">province</th>
-<th align="center">city</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">110</td>
-<td align="center">广东</td>
-<td align="center">广州</td>
-</tr>
-<tr>
-<td align="center">111</td>
-<td align="center">北京</td>
-<td align="center">北京</td>
-</tr>
-</tbody></table>
-<h1 id="维度数据模型"><a href="#维度数据模型" class="headerlink" title="维度数据模型"></a>维度数据模型</h1><p>维度数据模型重点关注这些概念来构建：事实表、维度表（规范化级别低于关系模型）和数据粒度，具备以下优势：</p>
-<ul>
-<li>易理解</li>
-<li>高性能（非规范化，如原来有订单明细表和订单表，可以从订单明细状态中提取出订单状态维度表、再把订单表和订单明细表整合到一起）</li>
-<li>可扩展</li>
-</ul>
-<h2 id="构建流程"><a href="#构建流程" class="headerlink" title="构建流程"></a>构建流程</h2><ul>
-<li>选择业务流程（UML）</li>
-<li>声明粒度（订单/消费流水）</li>
-<li>确认维度（日期：年/月/日）</li>
-<li>确认事实（金额/数量）</li>
-</ul>
-<h2 id="维度规范化"><a href="#维度规范化" class="headerlink" title="维度规范化"></a>维度规范化</h2><p>把一个维度映射成多个维度表（“维度 - 子维度”连接，如地址表拆分为“省份表 - 城市表 - 区域表”）。</p>
-<p>其中需要避免规范化处理的情况：</p>
-<ul>
-<li>增加表数量使结构复杂</li>
-<li>多表连接使查询复杂</li>
-<li>不适合使用位图索引</li>
-<li>降低查询性能</li>
-</ul>
-<h2 id="星型模型"><a href="#星型模型" class="headerlink" title="星型模型"></a>星型模型</h2><p>以事实表为中心，多个维度表与事实表相连。    </p>
-<p>其中事实表包括：</p>
-<ul>
-<li>事务事实表（如销售行为）</li>
-<li>快照事实表（如用户月底余额）</li>
-<li>累积事实表（如月总营收）</li>
-</ul>
-<p>其具备以下特点：</p>
-<ul>
-<li>简化查询（简化业务报表逻辑，提升查询性能）；</li>
-<li>快速聚合，便于向 OLAP 提供数据；</li>
-<li>不能保证数据完整性（通过批处理和实时处理抵消）</li>
-<li>分析需求不灵活；</li>
-</ul>
-<h2 id="雪花模型"><a href="#雪花模型" class="headerlink" title="雪花模型"></a>雪花模型</h2><p>对星型模型的维度表再作规范化处理（如把机器的门店维度表拆分成门店表和门店地址表）。</p>
-<p>这种做法比星型模型节省存储空间，但同时会降低查询性能。</p>
-<p>也可结合使用星型模型与雪花模型（底层使用雪花模型，配置视图模拟星型模型）。</p>
-<h1 id="Data-Vault-模型"><a href="#Data-Vault-模型" class="headerlink" title="Data Vault 模型"></a>Data Vault 模型</h1><p>Data Vault 模型具备以下特点：</p>
-<ul>
-<li>基于时间存储</li>
-<li>依赖越少越好</li>
-<li>与源系统越独立越好</li>
-<li>适应源系统的数据变化、支持扩展</li>
-<li>ETL作业可反复执行</li>
-<li>数据可追踪</li>
-</ul>
-<p>由于存放原始数据（所有时间所有数据），不遵照任何业务规则，不同数据源的数据冲突时可存放多个版本数据。</p>
-<p>其中数据解析延迟到“数据集市”阶段：即存放单一主题（财务、销售部门等）、数据仓库/事务系统的少量数据源的粗粒度数据（汇总数据），只保留一段时间范围内（如数月），通常使用星型模型、雪花模型，存放的是 ETL 的输出数据。</p>
-<h2 id="中心表、链接表与附属表"><a href="#中心表、链接表与附属表" class="headerlink" title="中心表、链接表与附属表"></a>中心表、链接表与附属表</h2><p>由中心表（HUB）、链接表（Link）、附属表（Satelite）组成，综合了 3NF 和星型模型的优势；   </p>
-<ul>
-<li>中心表（如用户、机器、订单表等）：主键（系统生成的代理键）、业务主键（如用户 id，机器 id，可能用于多个系统，但只保留一份）、装载时间、数据源</li>
-<li>链接表（中心表之间的链接关系，如订单-用户关联表）：主键、外键、装载时间、数据源</li>
-<li>附属表（中心表和链接表的附属信息，如订单详情表）：主键、外键、装载时间、失效时间、数据源、属性xxx</li>
-</ul>
-<h2 id="构建流程-1"><a href="#构建流程-1" class="headerlink" title="构建流程"></a>构建流程</h2><ul>
-<li>设计中心表</li>
-<li>设计链接表</li>
-<li>设计附属表</li>
-<li>设计必要的 PIT 表</li>
-</ul>
-<h1 id="数据仓库架构"><a href="#数据仓库架构" class="headerlink" title="数据仓库架构"></a>数据仓库架构</h1><p>数据仓库的实施流程：</p>
-<ol>
-<li>定义范围</li>
-<li>确定需求</li>
-<li>逻辑设计</li>
-<li>物理设计</li>
-<li>装载数据</li>
-<li>访问数据</li>
-<li>管理维护</li>
-</ol>
-<p>可以根据业务形态，考虑以下技术选型。</p>
-<h2 id="数据建模与存储"><a href="#数据建模与存储" class="headerlink" title="数据建模与存储"></a>数据建模与存储</h2><p><strong>选择存储引擎：</strong>：取决于数据访问方式</p>
-<ul>
-<li>HDFS：从 OLTP 系统提取数据，批量处理（整个时间周期数据、批处理效率更高）后加载到数据仓库，或者全表扫描；</li>
-<li>HBase：随机访问，即席查询；</li>
-</ul>
-<p><strong>反范式设计</strong>：为分析提速（Hadoop 不适合进行多次关联操作，尤其是较大的事实表关联较小的维表：比如处理时订单表应直接写入机器信息而非 id，避免查询时机器信息表再与订单表关联），也避免维护多个数据集的繁琐，缺点是：带来数据冗余，数据采集流水线变得繁琐，数据更新困难；</p>
-<p><strong>数据更新</strong>：HDFS 不支持原地更新，而且即使加上处理逻辑原地更新后也无法追踪更新流水记录</p>
-<p><strong>事实表</strong>：根据更新时间取日增量每天同步追加（如订单收益取生成时间，订单退款取更新时间同步到事实表，即可计算净收益同时追踪变化，如有需要还可以另外维护一个订单全量表记录订单最新状态信息）；<br>历史表：根据更新时间取日全量每天同步（完整的用户表，同时最新的一份可以作为状态表）；</p>
-<p><strong>存储格式及压缩算法</strong></p>
-<ul>
-<li>Avro：行式存储，支持模式演进，不需要根据 OLTP 修改 ETL 操作（适合追加）；</li>
-<li>Parquet：列式存储，性能强大（涉及多个维表的事实表较宽，查询和聚合操作只涉及小部分列），压缩支持好；</li>
-<li>不推荐 CSV（出于性能、压缩和模式管理考虑，CSV 访问时还需要数据解析）<br>  压缩算法推荐使用 Snappy</li>
-</ul>
-<p><strong>分区方式</strong>：取决于数据访问方式，目的是跳过不必要的数据；按时间周期分区分区平均大小为 HDFS 数据块的若干倍（典型值为每天数据 1GB 则按天分区，较多则按小时，较少则按周或月）</p>
-<h2 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h2><p><strong>OLTP导出</strong>：Sqoop，Informatica，Pentaho，Kettle<br>对象：数据几乎不变的表（一次性导入），数据频繁更新的小表（日全量），数据频繁更新且无法每天全量提取的大表（日增量，周/月全量）</p>
-<p><strong>数据整合</strong>：Sqoop 导出时执行关联（可以仅插入、仅更新和混合，但只支持简单的条件，而且关联操作会给 OLTP 带来压力；Sqoop 同时支持元数据服务，可记录上次执行状态，下次执行时可以使用保证获取更新的记录）<br>导出到 HDFS 后再作关联（Spark、Hive）</p>
-<h2 id="数据处理与访问"><a href="#数据处理与访问" class="headerlink" title="数据处理与访问"></a>数据处理与访问</h2><p><strong>分区</strong>：</p>
-<ul>
-<li>对已存在表分区（从旧表读取数据，并将数据加载到新创建的、带分区的表的正确分区中）；</li>
-<li>将数据加载到表的多个分区中；</li>
-<li>将导入某个目录的数据作为新的分区添加到表中</li>
-</ul>
-<p><strong>合并、更新</strong>：除了记录事实表，还要维护已有信息表（缓慢变化的维表等），可以全量导入，也可以从已有信息读出、追加修改后再重新写入，并更新元数据（如果有的话）；</p>
-<p><strong>提高更新效率</strong>：只针对分区修改、添加 Hadoop 节点、改用 HBase（如果更新频繁的话，但也会渐慢查询速度）</p>
-<h2 id="数据聚合"><a href="#数据聚合" class="headerlink" title="数据聚合"></a>数据聚合</h2><p>Hadoop 支持在关系型数据库中执行很耗资源的聚合操作（求和、计数、平均，天然高度并行），使用 Hive、Spark、Impala，聚合后的数据集通过Sqoop导出到关系型数据库，可再接入 BI 工具继续处理。</p>
-<h2 id="数据导出"><a href="#数据导出" class="headerlink" title="数据导出"></a>数据导出</h2><ul>
-<li>将数据保留在 Hadoop 中，使用 Impala （更低延迟）、Hive 和集成的 BI 工具进行查询；</li>
-<li>与关系型数据库集成：Informatica、Pentaho，Sqoop + Oracle 连接器 </li>
-</ul>
-<h2 id="流程调度"><a href="#流程调度" class="headerlink" title="流程调度"></a>流程调度</h2><ul>
-<li><p>Oozie（开源），Autosys、Activebatch 以及 UC4</p>
-</li>
-<li><p>Oozie 工作流的关键几点（中间两步都可以由 Spark 完成）：</p>
-<ul>
-<li>一个用于获取数据的 Sqoop 操作</li>
-<li>一个用于执行数据集关联、分区、合并的 Hive 操作</li>
-<li>多个用于完成聚合的 Hive 或 MapReduce 操作</li>
-<li>一个用于将结果导出至数据仓库的 Sqoop 操作</li>
-</ul>
-</li>
-<li><p>多组步骤时采用 fork-and-join 模式</p>
-</li>
-</ul>
-<p>以上。</p>
+        <blockquote>
+<p>可能很快就要失业了，应该会继续在家学习一段时间再去找工作。</p>
+<p>这次要抓紧时间阅读更多的书、输出更多学习笔记。</p>
+</blockquote>
+<h1 id="Spring-Framework"><a href="#Spring-Framework" class="headerlink" title="Spring Framework"></a>Spring Framework</h1><iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:1080px;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5c890041e4b0c996d361e25c"></iframe>
 
+<h1 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h1><iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:1080px;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5cac5088e4b0cfb7342cd752"></iframe>
+
+<h1 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h1><iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:1080px;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5cc29109e4b085d010868fa0"></iframe>
+
+<h1 id="Java-并发"><a href="#Java-并发" class="headerlink" title="Java 并发"></a>Java 并发</h1><iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:1080px;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5c8f80cce4b0ab74ecdc6f12"></iframe>
+
+<h1 id="Java-虚拟机"><a href="#Java-虚拟机" class="headerlink" title="Java 虚拟机"></a>Java 虚拟机</h1><iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:1080px;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5c8f9682e4b09a16b9a6ec93"></iframe>
+
+<h1 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h1><iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:1080px;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5c9b66e9e4b09bf72a6ab9e8"></iframe>
+
+<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:1080px;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5ca36dd1e4b035b243bfe83e"></iframe>
+
+<h1 id="Kafa"><a href="#Kafa" class="headerlink" title="Kafa"></a>Kafa</h1><iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:1080px;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5c9e27e1e4b031d022567525"></iframe>
+
+<h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:1080px;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5ca5b7d1e4b0cfb7342817bc"></iframe>
+
+<h1 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h1><iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:1080px;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5c8f8a81e4b0afc744164990"></iframe>
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>Author：<a href="https://yipwinghong.github.io">YWH</a>
-            <p>原文链接：<a href="https://yipwinghong.github.io/2020/02/15/DataWarehouse_design-basic/">https://yipwinghong.github.io/2020/02/15/DataWarehouse_design-basic/</a>
-            <p>发表日期：<a href="https://yipwinghong.github.io/2020/02/15/DataWarehouse_design-basic/">February 15th 2020, 4:32:11 pm</a>
-            <p>更新日期：<a href="https://yipwinghong.github.io/2020/02/15/DataWarehouse_design-basic/">March 28th 2020, 4:15:51 pm</a>
+            <p>原文链接：<a href="https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/">https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/</a>
+            <p>发表日期：<a href="https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/">April 8th 2020, 12:40:08 am</a>
+            <p>更新日期：<a href="https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/">April 9th 2020, 12:13:04 am</a>
             <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -796,17 +440,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2020/02/22/2020-02-22_diary/" title= "免费 JetBrains 全家桶">
-                    <div class="nextTitle">免费 JetBrains 全家桶</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2020/02/15/Git_Cheat-Sheet/" title= "Git Cheat Sheet">
-                    <div class="prevTitle">Git Cheat Sheet</div>
+                <a href= "/2020/03/28/Algorithm-leetcode-high-frequency-problems/" title= "LeetCode 高频面试题">
+                    <div class="prevTitle">LeetCode 高频面试题</div>
                 </a>
             
         </li>
@@ -944,7 +583,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据仓库与业务系统库"><span class="toc-number">1.</span> <span class="toc-text">数据仓库与业务系统库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#传统数据仓库"><span class="toc-number">1.1.</span> <span class="toc-text">传统数据仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop-的优势"><span class="toc-number">1.2.</span> <span class="toc-text">Hadoop 的优势</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据仓库相关术语"><span class="toc-number">2.</span> <span class="toc-text">数据仓库相关术语</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关系数据模型"><span class="toc-number">3.</span> <span class="toc-text">关系数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据结构"><span class="toc-number">3.1.</span> <span class="toc-text">数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完整性约束"><span class="toc-number">3.2.</span> <span class="toc-text">完整性约束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关系数据库语言（SQL）："><span class="toc-number">3.3.</span> <span class="toc-text">关系数据库语言（SQL）：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规范化"><span class="toc-number">3.4.</span> <span class="toc-text">规范化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1NF"><span class="toc-number">3.4.1.</span> <span class="toc-text">1NF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2NF"><span class="toc-number">3.4.2.</span> <span class="toc-text">2NF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3NF"><span class="toc-number">3.4.3.</span> <span class="toc-text">3NF</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#维度数据模型"><span class="toc-number">4.</span> <span class="toc-text">维度数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#构建流程"><span class="toc-number">4.1.</span> <span class="toc-text">构建流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#维度规范化"><span class="toc-number">4.2.</span> <span class="toc-text">维度规范化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#星型模型"><span class="toc-number">4.3.</span> <span class="toc-text">星型模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#雪花模型"><span class="toc-number">4.4.</span> <span class="toc-text">雪花模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Data-Vault-模型"><span class="toc-number">5.</span> <span class="toc-text">Data Vault 模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#中心表、链接表与附属表"><span class="toc-number">5.1.</span> <span class="toc-text">中心表、链接表与附属表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建流程-1"><span class="toc-number">5.2.</span> <span class="toc-text">构建流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据仓库架构"><span class="toc-number">6.</span> <span class="toc-text">数据仓库架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据建模与存储"><span class="toc-number">6.1.</span> <span class="toc-text">数据建模与存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据采集"><span class="toc-number">6.2.</span> <span class="toc-text">数据采集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据处理与访问"><span class="toc-number">6.3.</span> <span class="toc-text">数据处理与访问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据聚合"><span class="toc-number">6.4.</span> <span class="toc-text">数据聚合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据导出"><span class="toc-number">6.5.</span> <span class="toc-text">数据导出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流程调度"><span class="toc-number">6.6.</span> <span class="toc-text">流程调度</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Framework"><span class="toc-number">1.</span> <span class="toc-text">Spring Framework</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Boot"><span class="toc-number">2.</span> <span class="toc-text">Spring Boot</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Mybatis"><span class="toc-number">3.</span> <span class="toc-text">Mybatis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-并发"><span class="toc-number">4.</span> <span class="toc-text">Java 并发</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-虚拟机"><span class="toc-number">5.</span> <span class="toc-text">Java 虚拟机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL"><span class="toc-number">6.</span> <span class="toc-text">MySQL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis"><span class="toc-number">7.</span> <span class="toc-text">Redis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Kafa"><span class="toc-number">8.</span> <span class="toc-text">Kafa</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#设计模式"><span class="toc-number">9.</span> <span class="toc-text">设计模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#系统设计"><span class="toc-number">10.</span> <span class="toc-text">系统设计</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>

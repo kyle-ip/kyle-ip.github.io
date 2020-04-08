@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2020-03-30T14:55:50.497Z</updated>
+  <updated>2020-04-08T16:13:04.226Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于使用思维导图做笔记</title>
+    <link href="https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/"/>
+    <id>https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/</id>
+    <published>2020-04-07T16:40:08.000Z</published>
+    <updated>2020-04-08T16:13:04.226Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
   
   <entry>
     <title>LeetCode 高频面试题</title>
@@ -108,9 +133,9 @@
     
     
     
-      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
