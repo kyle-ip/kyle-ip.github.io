@@ -200,7 +200,8 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 4.2.0"></head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="YWH's Studio" type="application/atom+xml">
+</head>
 
     
         <body class="post-body">
@@ -605,10 +606,10 @@ height:100vh;
 
 <h2 id="合并多个-commit"><a href="#合并多个-commit" class="headerlink" title="合并多个 commit"></a>合并多个 commit</h2><p>（建议只在自己的分支上使用）使用 rebase 可以合并多个 commit 为一个完整的 commit。</p>
 <p>比如在一个分支上的修改</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; B -&gt; C -D</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; B -&gt; C -D</span><br></pre></td></tr></table></figure>
 
 <p>后面的 B、C、D 合并为一个完整提交，再推送到远端仓库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; B&#39;</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; B<span class="string">'</span></span><br></pre></td></tr></table></figure>
 
 <p>可执行命令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git rebase -i [start] [end]		# 区间是前开后闭的，如果不指定区间中间，则直接合并到 HEAD 指向的 commit</span><br><span class="line">git rebase -i 32bs22			# -i 表示交互式编辑合并操作</span><br><span class="line">git rebase -i HEAD~3</span><br></pre></td></tr></table></figure>
@@ -631,7 +632,7 @@ height:100vh;
 </li>
 </ul>
 <h2 id="将某段-commit-粘贴到另一分支"><a href="#将某段-commit-粘贴到另一分支" class="headerlink" title="将某段 commit 粘贴到另一分支"></a>将某段 commit 粘贴到另一分支</h2><p>比如在某个分支上开发，有时需要将整段提交都应用到另一分支上，比如把下面 dev 分支上的 C、D、E 都合并到 master 分支的 G 后面：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F		(dev)</span><br><span class="line"> \</span><br><span class="line">  -&gt; G							(master)</span><br></pre></td></tr></table></figure>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A<span class="function"> -&gt;</span> B<span class="function"> -&gt;</span> C<span class="function"> -&gt;</span> D<span class="function"> -&gt;</span> E<span class="function"> -&gt;</span> F		(dev)</span><br><span class="line"> <span class="string">\</span></span><br><span class="line"><span class="function">  -&gt;</span> G							(master)</span><br></pre></td></tr></table></figure>
 
 <p> 可执行命令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git rebase [start] [end] --onto [branchName]		# 区间是前开后闭的，此处要指定 B 到 E 的 id</span><br><span class="line">git rebase 90bc0045b^ 5de0da9f2 --onto master</span><br></pre></td></tr></table></figure>
@@ -1118,8 +1119,6 @@ top:100vh;
     
     
     
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 18
@@ -1163,12 +1162,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_Cheat-Sheet/" >Docker & K8S Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_Cheat-Sheet/" >Git Cheat Sheet</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_Cheat-Sheet/" >Git Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_Cheat-Sheet/" >Docker & K8S Cheat Sheet</a>
         </li>
     
     
@@ -1198,12 +1197,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_dynamic-config/" >Kafka 动态配置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_offset-reset/" >Kafka 位移重置</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_offset-reset/" >Kafka 位移重置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_dynamic-config/" >Kafka 动态配置</a>
         </li>
     
     
@@ -1237,17 +1236,17 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
-    
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
