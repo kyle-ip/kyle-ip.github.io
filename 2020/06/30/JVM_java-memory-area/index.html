@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>JVM 内存区域 · YWH&#39;s Studio</title>
+    <title>Java 内存区域 · YWH&#39;s Studio</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >YWH&#39;s Studio</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">JVM 内存区域</a>
+                <a href="#" class="post-name">Java 内存区域</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            JVM 内存区域
+            Java 内存区域
             <!-- 404 -->
             
         </h1>
@@ -275,7 +275,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2,289</span>Reading time: <span class="post-count reading-time">8 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2,300</span>Reading time: <span class="post-count reading-time">9 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -518,7 +518,7 @@ height:100vh;
 <li>可划分出多个线程私有的分配缓冲区（TLAB）：与存放内容无关，都是存储对象实例。</li>
 <li>不需要连续的物理内存，可以动态增加其内存，失败时会抛出 <strong>OutOfMemoryError</strong> 异常。</li>
 </ul>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/G1%20%E6%94%B6%E9%9B%86%E5%99%A81.png?=1563022247&OSSAccessKeyId=TMP.hVDCDisTcem6y9ZJ3r2ivbcUcB6f1MsCVMfuc75WG62RjJGtGYCaJdJejsKADGJisxdBsr6CrC2q4YgKpLQjYGqfeXvAvzMaTj5PduXYaTsu1rE1rrehR7RwA666MH.tmp&Signature=snDIfPigBm2JFrU%2FUjHpGKBN5nw%3D" alt="G1 收集器1.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/G1%20%E6%94%B6%E9%9B%86%E5%99%A81.png" alt="G1 收集器1.png"></p>
 <p>主流的 JVM 支持堆扩展，通过 <code>-Xms</code>（初始值）和 <code>-Xmx</code>（最大值）指定一个程序的堆内存大小。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -Xms1M -Xmx2M HackTheJava</span><br></pre></td></tr></table></figure>
 
@@ -532,7 +532,7 @@ height:100vh;
 </li>
 <li><p>Survivor 区中每经过一次 Minor GC 都没有被清理的对象，年龄会增加一岁，增加到一定程度就会被移动到老年代。</p>
 </li>
-<li><p>如果使用 Appel 划分，则分为 Eden 区和 Survivor 区</p>
+<li><p>如果使用 Appel 划分，则分为 Eden 区和 Survivor 区。</p>
 </li>
 </ul>
 <h3 id="老年代（Old-Generation）"><a href="#老年代（Old-Generation）" class="headerlink" title="老年代（Old Generation）"></a>老年代（Old Generation）</h3><p>进入老年代的四种对象：</p>
@@ -544,13 +544,14 @@ height:100vh;
 </ul>
 <h3 id="永久代（Permanent-Generation）"><a href="#永久代（Permanent-Generation）" class="headerlink" title="永久代（Permanent Generation）"></a>永久代（Permanent Generation）</h3><p>容易造成内存溢出，JDK 1.8 已移除。</p>
 <h3 id="线程私有缓冲区（TLAB）"><a href="#线程私有缓冲区（TLAB）" class="headerlink" title="线程私有缓冲区（TLAB）"></a>线程私有缓冲区（TLAB）</h3><p>从内存分配的角度来看，线程共享的 Java 堆中可能划分出多个线程私有的线程分配缓冲区（TLAB，按内存分配分区）。</p>
-<p>目的是更好地回收内存、提升对象分配的效率。</p>
+<p>实际上这部分不属于共享区域，目的是更好地回收内存、提升对象分配的效率。</p>
 <h2 id="方法区（Method-Area）"><a href="#方法区（Method-Area）" class="headerlink" title="方法区（Method Area）"></a>方法区（Method Area）</h2><p>存放运行时常量池，以及类的版本、字段、方法，接口，静态静态变量等描述信息（即时编译器编译后的代码，.class 文件）。</p>
 <ul>
 <li>不需要连续的内存，可以动态扩展，动态扩展失败会抛出 <strong>OutOfMemoryError</strong> 异常；</li>
 <li>垃圾回收：主要目标是对常量池的回收和对类的卸载，但比较难实现，未完全回收可能导致内存泄漏。</li>
 </ul>
-<p>HotSpot 虚拟机把它当成永久代来进行垃圾回收。但很难确定永久代的大小，因为它受到很多因素影响，并且每次 Full GC 之后永久代的大小都会改变，所以经常会抛出 <strong>OutOfMemoryError</strong> 异常。</p>
+<p>HotSpot 虚拟机把它当成永久代来进行垃圾回收。</p>
+<p>但很难确定其的大小，因为它受到很多因素影响，并且每次 Full GC 之后永久代的大小都会改变，所以经常会抛出 <strong>OutOfMemoryError</strong> 异常。</p>
 <h3 id="运行时常量池（Runtime-Constant-Pool）"><a href="#运行时常量池（Runtime-Constant-Pool）" class="headerlink" title="运行时常量池（Runtime Constant Pool）"></a>运行时常量池（Runtime Constant Pool）</h3><ul>
 <li>Class 文件中的常量池（编译器生成的字面量和符号引用）会在类加载后被放入这个区域；</li>
 <li>JVM 规范对于 Class 文件中的运行时常量池没有任何细节要求，可由 JVM 厂商实现；</li>
@@ -933,6 +934,10 @@ top:100vh;
     
     
     
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 19
@@ -951,7 +956,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/JVM_memory-area/" >JVM 内存区域</a>
+            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/JVM_java-memory-area/" >Java 内存区域</a>
         </li>
     
     
@@ -981,12 +986,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_Cheat-Sheet/" >Docker & K8S Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_Cheat-Sheet/" >Git Cheat Sheet</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_Cheat-Sheet/" >Git Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_Cheat-Sheet/" >Docker & K8S Cheat Sheet</a>
         </li>
     
     
@@ -1055,19 +1060,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
