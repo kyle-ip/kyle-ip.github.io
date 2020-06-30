@@ -493,7 +493,7 @@ height:100vh;
 <p>Python 的 collections 模块为我们提供了双向队列，可以很方便的实现这个功能，以下是一个猜数游戏（用户每次输入数字，返回答案的取值范围，随着输入次数增多范围缩小，当用户输入与答案相同的数字时游戏结束）：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> randint</span><br><span class="line"></span><br><span class="line">N = randint(<span class="number">0</span>, <span class="number">100</span>)     <span class="comment"># 返回0~100范围内的数字</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">guess</span><span class="params">(k)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> k == N:</span><br><span class="line">        print(<span class="string">"Right!"</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">elif</span> k &lt; N:</span><br><span class="line">        print(<span class="string">"&#123;&#125; &lt; N..."</span>.format(k))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(<span class="string">"&#123;&#125; &gt; N..."</span>.format(k))</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    num = input(<span class="string">"Please input a number:"</span>)</span><br><span class="line">    <span class="keyword">if</span> num:</span><br><span class="line">        k = int(num)</span><br><span class="line">        <span class="keyword">if</span> guess(k):</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
 <p>但有时随着输入的次数增多，就很容易忘记之前已经输入过的数字，这时候可以引入一个存放历史记录的队列：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"><span class="keyword">from</span> pickle <span class="keyword">import</span> dump, load		<span class="comment"># 需要时可用 pickle 写入文件</span></span><br><span class="line">history = deque([], <span class="number">5</span>)		<span class="comment"># 空队列，长度为 5</span></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    num = input(<span class="string">"Please input a number:"</span>)</span><br><span class="line">    <span class="keyword">if</span> num:</span><br><span class="line">        k = int(num)</span><br><span class="line">        history.append(k)</span><br><span class="line">        <span class="comment"># 当用户输入 ? 或 history 时返回历史输入提示</span></span><br><span class="line">        <span class="keyword">if</span> num <span class="keyword">in</span> [<span class="string">'history'</span>, <span class="string">'?'</span>]: </span><br><span class="line">            print(list(history))</span><br><span class="line">        <span class="keyword">if</span> guess(k):</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"><span class="keyword">from</span> pickle <span class="keyword">import</span> dump, load		<span class="comment"># 需要时可用 pickle 写入文件</span></span><br><span class="line">history = deque([], <span class="number">5</span>)		<span class="comment"># 空队列，长度为 5</span></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    num = input(<span class="string">"Please input a number:"</span>)</span><br><span class="line">    <span class="keyword">if</span> num:</span><br><span class="line">        k = int(num)</span><br><span class="line">        history.append(k)</span><br><span class="line">        <span class="comment"># 当用户输入 ? 或 history 时返回历史输入提示</span></span><br><span class="line">        <span class="keyword">if</span> num <span class="keyword">in</span> [<span class="string">'history'</span>, <span class="string">'?'</span>]: </span><br><span class="line">            print(list(history))</span><br><span class="line">        <span class="keyword">if</span> guess(k):</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
     
@@ -868,9 +868,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 18
+        Total : 19
         </div>
         <!-- search  -->
         
@@ -883,6 +890,11 @@ top:100vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/JVM_memory-area/" >JVM 内存区域</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -989,9 +1001,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
-    
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     

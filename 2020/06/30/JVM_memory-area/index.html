@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Kafka 位移重置 · YWH&#39;s Studio</title>
+    <title>JVM 内存区域 · YWH&#39;s Studio</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >YWH&#39;s Studio</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">Kafka 位移重置</a>
+                <a href="#" class="post-name">JVM 内存区域</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Kafka 位移重置
+            JVM 内存区域
             <!-- 404 -->
             
         </h1>
@@ -269,18 +269,18 @@ height:100vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Java">Java</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">1,133</span>Reading time: <span class="post-count reading-time">5 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2,289</span>Reading time: <span class="post-count reading-time">8 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2020/01/21</span>
+                    <span class="post-intro-time">2020/06/30</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -404,70 +404,158 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <blockquote>
-<p>与其他传统消息中间件不同，Kafka 是基于日志结构（log-based）的消息引擎，消费者在消费消息时，只是从磁盘文件上读取数据，因此消费者不会删除消息数据。而且由于消息的位移是由消费者控制的，因此可以通过修改位移的值，重复消费历史数据（replayable）。</p>
+        <blockquote class="pullquote mindmap mindmap-md"><ul>
+<li>运行时数据区（Runtime Data Area）<ul>
+<li>线程区域<ul>
+<li>程序计数器（Program Counter Register）</li>
+<li>本地方法栈（Native Method Stack）</li>
+<li>Java 虚拟机栈（JVM Stack）<ul>
+<li>栈帧（Stack Frame）<ul>
+<li>局部变量表（Local Variable Array）<ul>
+<li>基本数据类型</li>
+<li>对象引用（reference）</li>
+<li>字节码指令地址（returnAddress）</li>
+</ul>
+</li>
+<li>操作数栈（Operand Stack）</li>
+<li>常量池引用（Reference to Constant Pool）</li>
+<li>动态链接</li>
+<li>方法出口</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>共享区域<ul>
+<li>堆（Heap）<ul>
+<li>新生代（Young Generation）<ul>
+<li>Eden</li>
+<li>From Survivor</li>
+<li>To Survivor</li>
+</ul>
+</li>
+<li>老年代（Old Generation）</li>
+<li>永久代（Permanent Generation）</li>
+<li>线程私有缓冲区（TLAB）</li>
+</ul>
+</li>
+<li>方法区（Method Area）<ul>
+<li>运行时常量池（Runtime Constant Pool）</li>
+<li>类的版本、字段、方法，接口，静态静态变量等描述信息</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>直接内存（Direct Memory）<ul>
+<li>元空间（Meta Area）</li>
+</ul>
+</li>
+</ul>
 </blockquote>
-<h1 id="重设位移策略"><a href="#重设位移策略" class="headerlink" title="重设位移策略"></a>重设位移策略</h1><h2 id="位移策略"><a href="#位移策略" class="headerlink" title="位移策略"></a>位移策略</h2><p>直接把消费者的位移值重设成期望的位移值</p>
+
+
+
+<h1 id="线程区域"><a href="#线程区域" class="headerlink" title="线程区域"></a>线程区域</h1><p>该区域为每个线程独占内存，包括程序计数器、本地方法栈、Java 虚拟机栈。</p>
+<h2 id="程序计数器（Program-Counter-Register）"><a href="#程序计数器（Program-Counter-Register）" class="headerlink" title="程序计数器（Program Counter Register）"></a>程序计数器（Program Counter Register）</h2><p>对于 Java 方法，记录正在执行的字节码指令的地址。</p>
 <ul>
-<li>Earliest：调整到当前最早位移处，即 <strong>重新消费主题所有消息</strong>；</li>
-<li>Latest：调整到当前最新位移处，即 <strong>跳过所有历史消息</strong>；</li>
-<li>Current：调整到当前最新提交位移处，一般用于 <strong>回滚变更前重设到消费者重启时的位置</strong>；</li>
-<li>Specified-Offset：调整为指定位移，一般用于 <strong>消费者在处理某条错误消息时，可手动地跳过此消息而规避错误</strong>；</li>
-<li>Shift-By-N：调整到当前位移 +N 处（可以为负值）；</li>
+<li>字节码解释器通过改变程序计数器来依次读取指令，实现代码的流程控制，如：顺序执行、选择、循环、异常处理等;</li>
+<li>在多线程的情况下，线程轮流切换并分配处理器执行时间，PCR 用于记录当前线程执行的位置，便于切换时恢复；</li>
+<li>对于 Native 方法，计数器为空；</li>
+<li>JVM 规范中唯一没有定义 OOM 情况的区域。</li>
 </ul>
-<h2 id="时间策略"><a href="#时间策略" class="headerlink" title="时间策略"></a>时间策略</h2><p>给定一个时间，让消费者把位移调整成大于该时间的最小位移</p>
+<h2 id="本地方法栈（Native-Method-Stack）"><a href="#本地方法栈（Native-Method-Stack）" class="headerlink" title="本地方法栈（Native Method Stack）"></a>本地方法栈（Native Method Stack）</h2><p>本地方法一般是用其它语言（C、C++ 或汇编语言等）编写，并且被编译为基于本机硬件和操作系统的程序，对待这些方法需要特别处理（HotSpot 把它与 JVM 栈合二为一）。</p>
+<p>该区域中使用的语言、使用方式和数据结构没有强制规定，因此 JVM 可以自由实现它。<br><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95.png" alt="本地方法.png"></p>
+<h2 id="Java-虚拟机栈（JVM-Stack）"><a href="#Java-虚拟机栈（JVM-Stack）" class="headerlink" title="Java 虚拟机栈（JVM Stack）"></a>Java 虚拟机栈（JVM Stack）</h2><p>Java 虚拟机栈生命周期与线程相同。</p>
+<p>每个 Java 方法在执行的同时会创建一个栈帧，用于存储局部变量表、操作数栈、常量池引用等信息。</p>
+<p>从方法调用直至执行完成的过程，对应着一个栈帧在 Java 虚拟机栈中入栈和出栈的过程。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%A0%88%E5%B8%A7.jpg?=1563022493&OSSAccessKeyId=TMP.hVDCDisTcem6y9ZJ3r2ivbcUcB6f1MsCVMfuc75WG62RjJGtGYCaJdJejsKADGJisxdBsr6CrC2q4YgKpLQjYGqfeXvAvzMaTj5PduXYaTsu1rE1rrehR7RwA666MH.tmp&Signature=ZvkcMZZxC6K3rxdmH1rUnUucFcU%3D" alt="栈帧.jpg"></p>
+<p>设置每个线程的 Java 虚拟机栈内存大小：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -Xss512M HackTheJava</span><br></pre></td></tr></table></figure>
 <ul>
-<li>DateTime：调整到大于给定时间的最小位移处；</li>
-<li>Duration：调整到距离当前时间指定间隔的位移处。</li>
+<li>其中当线程请求栈深度大于 JVM 允许的栈深度（比如递归），将抛出 SOF；JVM 栈可动态扩展，当栈扩展仍无法申请到足够内存则抛出 OOM。</li>
+<li>当限制栈大小（不允许动态扩展），则无论时栈帧太大还是 JVM 栈容量太小，都是抛出 SOF。</li>
 </ul>
-<p>其中 Duration 策略则是指给定相对的时间间隔，将位移调整到距离当前给定时间间隔的位移处，格式：PnDTnHnMnS（ISO-8601 规范，参考 Java <code>Duration</code> 类），即以字母 P 开头，后面由 4 部分组成，D（天）、H（小时）、M（分钟）、S（秒）。</p>
-<p>如将位移调回到 15 分钟前，可以指定为：PT0H15M0S。</p>
-<h1 id="消费者-API"><a href="#消费者-API" class="headerlink" title="消费者 API"></a>消费者 API</h1><p>可以通过消费者 API 重设位移，其中 Java API：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 除了 Earliest 和 Latest 以外，其余都使用 seek </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 只能重设一个分区</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seek</span><span class="params">(TopicPartition partition, <span class="keyword">long</span> offset)</span></span>;	</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seek</span><span class="params">(TopicPartition partition, OffsetAndMetadata offsetAndMetadata)</span></span>;	</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可重设多个分区</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seekToBeginning</span><span class="params">(Collection&lt;TopicPartition&gt; partitions)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seekToEnd</span><span class="params">(Collection&lt;TopicPartition&gt; partitions)</span></span>;</span><br></pre></td></tr></table></figure>
+<h3 id="栈帧（Stack-Frame）"><a href="#栈帧（Stack-Frame）" class="headerlink" title="栈帧（Stack Frame）"></a>栈帧（Stack Frame）</h3><p>每个方法执行时， JVM 都会同步创建一个栈帧。其需要使用多少内存，在类结构确定时就可以确定。</p>
+<h4 id="操作数栈（Operand-Stack）"><a href="#操作数栈（Operand-Stack）" class="headerlink" title="操作数栈（Operand Stack）"></a>操作数栈（Operand Stack）</h4><p>存放计算的操作数和返回结果，元素可以是任意 Java 类型，32 位数据占 1 个栈容量，64 位数据占 2 个栈容量。</p>
+<p>执行每一条指令之前，JVM 要求操作数已被压入操作数栈中。在执行指令时，JVM 会将该指令所需的操作数弹出，并且将指令的结果重新压入栈中。</p>
+<h4 id="常量池引用（Reference-to-Constant-Pool）"><a href="#常量池引用（Reference-to-Constant-Pool）" class="headerlink" title="常量池引用（Reference to Constant Pool）"></a>常量池引用（Reference to Constant Pool）</h4><h4 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a>动态链接</h4><p>指向运行时常量池中该栈帧所属方法的引用。</p>
+<h4 id="方法出口"><a href="#方法出口" class="headerlink" title="方法出口"></a>方法出口</h4><p>即方法返回地址，方法在遇到 <code>return</code> 或触发异常后退出。</p>
+<p>退出方法时可能执行的操作：</p>
+<ul>
+<li>恢复上层方法的局部变量表和操作数栈；</li>
+<li>把返回值压入调用者栈帧的操作数栈；</li>
+<li>调整 PC 计数器指向方法调用后面的指令。</li>
+</ul>
+<h4 id="局部变量表（Local-Variable-Array）"><a href="#局部变量表（Local-Variable-Array）" class="headerlink" title="局部变量表（Local Variable Array）"></a>局部变量表（Local Variable Array）</h4><p>其等价于一个数组，所存放的元素、最大容量在编译期可知。一般包含以下内容：</p>
+<ul>
+<li>基本数据类型：以 Slot 为最小单位（32 位）分配内存，64 位长度的 long 和 double 类型会占用 2 个局部变量空间（Slot），其余的数据类型只占用一个。</li>
+<li>对象引用（reference）：不等同于对象本身，可能是一个指向对象初始地址的引用指针，也可能是指向一个代表对象的句柄或其他与此对象相关的位置。可查找 Java 堆中的实例对象的起始地址、查找方法区中的 Class 对象。</li>
+<li>字节码指令地址（returnAddress）：指向一条字节码指令的地址。</li>
+</ul>
+<p>至少存在一个指向当前对象实例的局部变量，预留出第一个 Slot 位存放对象实例的引用，方法参数值从 1 开始计算（<code>this</code> 关键字访问自动转为对一个普通方法参数的访问，由 JVM 调实例方法时自动传入此参数）。</p>
+<p>Slot 的复用： 如果当前位置已经超过某个变量的作用域时，这个变量对应的 Slot 可以给其他变量服用。同时也说明只要其他变量没有使用这部分 Slot 区域，这个变量还会保存，因此这会对 GC 操作产生影响。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="keyword">byte</span>[] placeholder = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">64</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    System.gc();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>-verbose:gc</code> 输出（没有被回收）：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="name">GC</span> (<span class="name">System.gc</span>())  <span class="number">68813</span>K-&gt;66304K(<span class="name">123904K</span>), <span class="number">0.0034797</span> secs]</span><br><span class="line">[<span class="name">Full</span> GC (<span class="name">System.gc</span>())  <span class="number">66304</span>K-&gt;66204K(<span class="name">123904K</span>), <span class="number">0.0086225</span> secs]</span><br></pre></td></tr></table></figure>
+<p>进行如下修改：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="keyword">byte</span>[] placeholder = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">64</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">1</span>; <span class="comment">// 新加一个赋值操作</span></span><br><span class="line">    System.gc();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>-verbose:gc</code> 输出（被回收了）：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="name">GC</span> (<span class="name">System.gc</span>())  <span class="number">68813</span>K-&gt;66320K(<span class="name">123904K</span>), <span class="number">0.0017394</span> secs]</span><br><span class="line">[<span class="name">Full</span> GC (<span class="name">System.gc</span>())  <span class="number">66320</span>K-&gt;668K(<span class="name">123904K</span>), <span class="number">0.0084337</span> secs]</span><br></pre></td></tr></table></figure>
 
-<p>基本实现（注意调用带长整型的 poll 方法，而不要调用 <code>consumer.poll(Duration.ofSecond(0))</code>）：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Properties consumerProperties = <span class="keyword">new</span> Properties();</span><br><span class="line"><span class="comment">// 必须禁止自动提交位移</span></span><br><span class="line">consumerProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, <span class="keyword">false</span>);</span><br><span class="line">consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, <span class="string">"earliest"</span>);</span><br><span class="line"><span class="comment">// ...（省略其他消费者配置）</span></span><br></pre></td></tr></table></figure>
+<p>被回收的关键在于局部变量表中的 Slot 是否还存在关于 placeholder 的引用：</p>
+<ul>
+<li>出了 placeholder 所在的代码块后，还没有进行其他操作，所以 placeholder 所在的 Slot 还没有被其他变量复用，也就是说，局部变量表的 Slot 中依然存在着 placeholder 的引用；</li>
+<li>第二次修改后，<code>int a</code> 占用了原来 placeholder 所在的 Slot，所以可以被 GC 掉了。</li>
+</ul>
+<h1 id="共享区域"><a href="#共享区域" class="headerlink" title="共享区域"></a>共享区域</h1><h2 id="堆（Heap）"><a href="#堆（Heap）" class="headerlink" title="堆（Heap）"></a>堆（Heap）</h2><p>为 Java 程序中的对象分配内存，GC 的主要区域。</p>
+<ul>
+<li>存放几乎所有对象实例和数组（了解“JIT 编译器”、“逃逸分析”，可实现栈上分配、标量替换优化技术）；</li>
+<li>对于 byte、char 以及 short 这三种类型的字段或者数组单元，它们在堆上占用的空间分别为 1byte、2bytes，以及 2bytes，与这些类型的值域相吻合。</li>
+<li>现代的垃圾收集器基本都是采用分代收集算法，针对 <strong>新生代</strong> 及 <strong>老年代</strong>；</li>
+<li>可划分出多个线程私有的分配缓冲区（TLAB）：与存放内容无关，都是存储对象实例。</li>
+<li>不需要连续的物理内存，可以动态增加其内存，失败时会抛出 <strong>OutOfMemoryError</strong> 异常。</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/G1%20%E6%94%B6%E9%9B%86%E5%99%A81.png?=1563022247&OSSAccessKeyId=TMP.hVDCDisTcem6y9ZJ3r2ivbcUcB6f1MsCVMfuc75WG62RjJGtGYCaJdJejsKADGJisxdBsr6CrC2q4YgKpLQjYGqfeXvAvzMaTj5PduXYaTsu1rE1rrehR7RwA666MH.tmp&Signature=snDIfPigBm2JFrU%2FUjHpGKBN5nw%3D" alt="G1 收集器1.png"></p>
+<p>主流的 JVM 支持堆扩展，通过 <code>-Xms</code>（初始值）和 <code>-Xmx</code>（最大值）指定一个程序的堆内存大小。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -Xms1M -Xmx2M HackTheJava</span><br></pre></td></tr></table></figure>
 
-<p>Earliest 策略（Latest 同理）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 需要一次性构造主题的所有分区对象</span></span><br><span class="line">String topic = <span class="string">"test"</span>;  <span class="comment">// 要重设位移的Kafka主题 </span></span><br><span class="line"><span class="keyword">try</span> (<span class="keyword">final</span> KafkaConsumer&lt;String, String&gt; consumer = </span><br><span class="line">    <span class="keyword">new</span> KafkaConsumer&lt;&gt;(consumerProperties)) &#123;</span><br><span class="line">         consumer.subscribe(Collections.singleton(topic));</span><br><span class="line">         consumer.poll(<span class="number">0</span>);</span><br><span class="line">         consumer.seekToBeginning(</span><br><span class="line">    consumer.partitionsFor(topic).stream().map(partitionInfo -&gt;         </span><br><span class="line">        <span class="keyword">new</span> TopicPartition(topic, partitionInfo.partition()))</span><br><span class="line">            .collect(Collectors.toList()));</span><br><span class="line">    <span class="comment">// 如果是 Latest 则为 seekToEnd</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Current 策略</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 借助 KafkaConsumer 的 committed 方法获取当前提交的最新位移</span></span><br><span class="line">consumer.partitionsFor(topic).stream().map(info -&gt; </span><br><span class="line">    <span class="comment">// 获取给定主题的所有分区，然后依次获取对应分区上的已提交位移，最后通过 seek 方法重设位移到已提交位移处</span></span><br><span class="line">    <span class="keyword">new</span> TopicPartition(topic, info.partition()))</span><br><span class="line">        .forEach(tp -&gt; &#123;</span><br><span class="line">            <span class="keyword">long</span> committedOffset = consumer.committed(tp).offset();</span><br><span class="line">             consumer.seek(tp, committedOffset);</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-
-<p>Specified-Offset 策略</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> targetOffset = <span class="number">1234L</span>;</span><br><span class="line"><span class="keyword">for</span> (PartitionInfo info : consumer.partitionsFor(topic)) &#123;</span><br><span class="line">    TopicPartition tp = <span class="keyword">new</span> TopicPartition(topic, info.partition());</span><br><span class="line">    consumer.seek(tp, targetOffset);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Shift-By-N 策略（向前跳 123 条消息）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (PartitionInfo info : consumer.partitionsFor(topic)) &#123;</span><br><span class="line">    TopicPartition tp = <span class="keyword">new</span> TopicPartition(topic, info.partition());</span><br><span class="line">    <span class="keyword">long</span> targetOffset = consumer.committed(tp).offset() + <span class="number">123L</span>; </span><br><span class="line">    consumer.seek(tp, targetOffset);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>DateTime 策略</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 重设位移到 2019 年 6 月 20 日晚上 8 点</span></span><br><span class="line"><span class="keyword">long</span> ts = LocalDateTime.of(<span class="number">2019</span>, <span class="number">6</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">0</span>).toInstant(ZoneOffset.ofHours(<span class="number">8</span>)).toEpochMilli();</span><br><span class="line">Map&lt;TopicPartition, Long&gt; timeToSearch = consumer.partitionsFor(topic).stream().map(info -&gt; </span><br><span class="line">    <span class="keyword">new</span> TopicPartition(topic, info.partition()))</span><br><span class="line">        .collect(Collectors.toMap(Function.identity(), tp -&gt; ts));</span><br><span class="line"><span class="keyword">for</span> (Map.Entry&lt;TopicPartition, OffsetAndTimestamp&gt; entry :  consumer.offsetsForTimes(timeToSearch).entrySet()) &#123;</span><br><span class="line">    consumer.seek(entry.getKey(), entry.getValue().offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Duration 策略</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将位移调回 30 分钟前</span></span><br><span class="line">Map&lt;TopicPartition, Long&gt; timeToSearch = consumer.partitionsFor(topic).stream()</span><br><span class="line">    .map(info -&gt; <span class="keyword">new</span> TopicPartition(topic, info.partition()))</span><br><span class="line">    .collect(Collectors.toMap(Function.identity(), tp -&gt; System.currentTimeMillis() - <span class="number">30</span> * <span class="number">1000</span>  * <span class="number">60</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (Map.Entry&lt;TopicPartition, OffsetAndTimestamp&gt; entry : </span><br><span class="line">    consumer.offsetsForTimes(timeToSearch).entrySet()) &#123;</span><br><span class="line">    consumer.seek(entry.getKey(), entry.getValue().offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="命令行脚本"><a href="#命令行脚本" class="headerlink" title="命令行脚本"></a>命令行脚本</h1><p>对于 Kafka 0.11 及以上的版本，可以使用 kafka-consumer-groups 脚本设置位移。</p>
-<p>Earliest 策略</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --all-topics --to-latest --execute</span><br></pre></td></tr></table></figure>
-
-<p>Latest 策略</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --all-topics --to-earliest –execute</span><br></pre></td></tr></table></figure>
-
-<p>Current 策略</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --all-topics --to-current --execute</span><br></pre></td></tr></table></figure>
-
-<p>Specified-Offset 策略</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --shift-by &lt;offset_N&gt; --execute</span><br></pre></td></tr></table></figure>
-
-<p>Shift-By-N 策略</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --shift-by &lt;offset_N&gt; --execute</span><br></pre></td></tr></table></figure>
-
-<p>Duration 策略</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --by-duration PT0H30M0S --execute</span><br></pre></td></tr></table></figure>
+<p>指定新生代大小：<code>-Xmn</code>，所以堆内存为：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-Xms, -Xmx == -Xmn + 老年代</span></span><br></pre></td></tr></table></figure>
 
 
 
-<p>以上。</p>
+<h3 id="新生代（Young-Generation）"><a href="#新生代（Young-Generation）" class="headerlink" title="新生代（Young Generation）"></a>新生代（Young Generation）</h3><ul>
+<li><p>大多数对象（80%）生存时间很短，主要使用复制算法。</p>
+</li>
+<li><p>Survivor 区中每经过一次 Minor GC 都没有被清理的对象，年龄会增加一岁，增加到一定程度就会被移动到老年代。</p>
+</li>
+<li><p>如果使用 Appel 划分，则分为 Eden 区和 Survivor 区</p>
+</li>
+</ul>
+<h3 id="老年代（Old-Generation）"><a href="#老年代（Old-Generation）" class="headerlink" title="老年代（Old Generation）"></a>老年代（Old Generation）</h3><p>进入老年代的四种对象：</p>
+<ul>
+<li>对象年龄太大（经历太多次 GC 后存活）；</li>
+<li>对象占用内存太大；</li>
+<li>Young GC 后存活对象过多、Survivor 放不下；</li>
+<li>动态年龄判断。</li>
+</ul>
+<h3 id="永久代（Permanent-Generation）"><a href="#永久代（Permanent-Generation）" class="headerlink" title="永久代（Permanent Generation）"></a>永久代（Permanent Generation）</h3><p>容易造成内存溢出，JDK 1.8 已移除。</p>
+<h3 id="线程私有缓冲区（TLAB）"><a href="#线程私有缓冲区（TLAB）" class="headerlink" title="线程私有缓冲区（TLAB）"></a>线程私有缓冲区（TLAB）</h3><p>从内存分配的角度来看，线程共享的 Java 堆中可能划分出多个线程私有的线程分配缓冲区（TLAB，按内存分配分区）。</p>
+<p>目的是更好地回收内存、提升对象分配的效率。</p>
+<h2 id="方法区（Method-Area）"><a href="#方法区（Method-Area）" class="headerlink" title="方法区（Method Area）"></a>方法区（Method Area）</h2><p>存放运行时常量池，以及类的版本、字段、方法，接口，静态静态变量等描述信息（即时编译器编译后的代码，.class 文件）。</p>
+<ul>
+<li>不需要连续的内存，可以动态扩展，动态扩展失败会抛出 <strong>OutOfMemoryError</strong> 异常；</li>
+<li>垃圾回收：主要目标是对常量池的回收和对类的卸载，但比较难实现，未完全回收可能导致内存泄漏。</li>
+</ul>
+<p>HotSpot 虚拟机把它当成永久代来进行垃圾回收。但很难确定永久代的大小，因为它受到很多因素影响，并且每次 Full GC 之后永久代的大小都会改变，所以经常会抛出 <strong>OutOfMemoryError</strong> 异常。</p>
+<h3 id="运行时常量池（Runtime-Constant-Pool）"><a href="#运行时常量池（Runtime-Constant-Pool）" class="headerlink" title="运行时常量池（Runtime Constant Pool）"></a>运行时常量池（Runtime Constant Pool）</h3><ul>
+<li>Class 文件中的常量池（编译器生成的字面量和符号引用）会在类加载后被放入这个区域；</li>
+<li>JVM 规范对于 Class 文件中的运行时常量池没有任何细节要求，可由 JVM 厂商实现；</li>
+<li>动态性：除了在编译期生成的常量，还允许动态生成，例如 <code>String.intern()</code>。</li>
+</ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -476,17 +564,12 @@ height:100vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2020/01/23/Python_data-structure/" title= "Python 数据结构应用">
-                    <div class="nextTitle">Python 数据结构应用</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2020/01/21/Kafka_dynamic-config/" title= "Kafka 动态配置">
-                    <div class="prevTitle">Kafka 动态配置</div>
+                <a href= "/2020/04/08/2020-04-08_diary/" title= "关于使用思维导图做笔记">
+                    <div class="prevTitle">关于使用思维导图做笔记</div>
                 </a>
             
         </li>
@@ -624,7 +707,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#重设位移策略"><span class="toc-number">1.</span> <span class="toc-text">重设位移策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#位移策略"><span class="toc-number">1.1.</span> <span class="toc-text">位移策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#时间策略"><span class="toc-number">1.2.</span> <span class="toc-text">时间策略</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#消费者-API"><span class="toc-number">2.</span> <span class="toc-text">消费者 API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#命令行脚本"><span class="toc-number">3.</span> <span class="toc-text">命令行脚本</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#线程区域"><span class="toc-number">1.</span> <span class="toc-text">线程区域</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#程序计数器（Program-Counter-Register）"><span class="toc-number">1.1.</span> <span class="toc-text">程序计数器（Program Counter Register）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地方法栈（Native-Method-Stack）"><span class="toc-number">1.2.</span> <span class="toc-text">本地方法栈（Native Method Stack）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-虚拟机栈（JVM-Stack）"><span class="toc-number">1.3.</span> <span class="toc-text">Java 虚拟机栈（JVM Stack）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#栈帧（Stack-Frame）"><span class="toc-number">1.3.1.</span> <span class="toc-text">栈帧（Stack Frame）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#操作数栈（Operand-Stack）"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">操作数栈（Operand Stack）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#常量池引用（Reference-to-Constant-Pool）"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">常量池引用（Reference to Constant Pool）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#动态链接"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">动态链接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方法出口"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">方法出口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#局部变量表（Local-Variable-Array）"><span class="toc-number">1.3.1.5.</span> <span class="toc-text">局部变量表（Local Variable Array）</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#共享区域"><span class="toc-number">2.</span> <span class="toc-text">共享区域</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#堆（Heap）"><span class="toc-number">2.1.</span> <span class="toc-text">堆（Heap）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#新生代（Young-Generation）"><span class="toc-number">2.1.1.</span> <span class="toc-text">新生代（Young Generation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#老年代（Old-Generation）"><span class="toc-number">2.1.2.</span> <span class="toc-text">老年代（Old Generation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#永久代（Permanent-Generation）"><span class="toc-number">2.1.3.</span> <span class="toc-text">永久代（Permanent Generation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程私有缓冲区（TLAB）"><span class="toc-number">2.1.4.</span> <span class="toc-text">线程私有缓冲区（TLAB）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法区（Method-Area）"><span class="toc-number">2.2.</span> <span class="toc-text">方法区（Method Area）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#运行时常量池（Runtime-Constant-Pool）"><span class="toc-number">2.2.1.</span> <span class="toc-text">运行时常量池（Runtime Constant Pool）</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
