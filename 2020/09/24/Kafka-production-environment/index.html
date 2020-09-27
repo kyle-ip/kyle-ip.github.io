@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>YWH&#39;s Studio</title>
+    <title>Kafka 生产环境资源评估 · YWH&#39;s Studio</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -204,12 +204,23 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >YWH&#39;s Studio</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Kafka 生产环境资源评估</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>YWH's Studio</a>
 </header>
@@ -221,24 +232,76 @@
 
 
 
+
+height:100vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(https://api.ixiaowai.cn/mcapi/mcapi.php)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            Kafka 生产环境资源评估
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">423</span>Reading time: <span class="post-count reading-time">2 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/09/24</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -339,41 +402,81 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2020/03/28/Algorithm_leetcode-high-frequency-problems/" >
-            
-                <span>LeetCode 高频面试题</span>
-        </a>
-        <div class="abstract-content">
-            又是一年跳槽季...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/28</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "算法">算法</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Kafka-部署方案"><a href="#Kafka-部署方案" class="headerlink" title="Kafka 部署方案"></a>Kafka 部署方案</h1><h2 id="需求描述"><a href="#需求描述" class="headerlink" title="需求描述"></a>需求描述</h2><p>基本需求如下（非真实数据）：</p>
+<ul>
+<li>15 个业务系统 Topic</li>
+<li>留存时间：1 个月</li>
+<li>加载平均值：1,000 条 /s，峰值：5,000 条 /s</li>
+</ul>
+<h2 id="资源评估"><a href="#资源评估" class="headerlink" title="资源评估"></a>资源评估</h2><p>主要是磁盘容量和服务器节点数量。</p>
+<h3 id="磁盘规划"><a href="#磁盘规划" class="headerlink" title="磁盘规划"></a>磁盘规划</h3><p>无随机访问需求（Kafka 日志系统采用顺序访问），且软件层面的多副本机制可弥补磁盘易损坏的缺陷，可采用 HDD 机械硬盘 + RAID 0 的组合。</p>
+<p>单个节点磁盘容量规划如下：</p>
+<ul>
+<li>新增消息数：加载平均值 1,000 条 /s，60 * 60 * 24 * 1000 约 1 千万条。</li>
+<li>新增消息大小：预计每条消息 2KB，即每天消息总大小为 10,000,000 条 * 2KB / 1000 / 1000 约 20GB。</li>
+<li>备份数：建议 3 副本，20GB * 3 = 60GB。</li>
+<li>预留空间：预留 10% 左右磁盘空间用于索引等其他数据，每天总存储容量 66GB。</li>
+<li>留存时间：1 个月，66GB * 31 约 2TB。</li>
+<li>数据压缩：使用 LZ4 压缩算法，压缩比 0.75，2TB * 0.75 = 1.5TB。</li>
+</ul>
+<p>单节点数据盘总用量 1.5TB。</p>
+<h3 id="节点规划"><a href="#节点规划" class="headerlink" title="节点规划"></a>节点规划</h3><p>使用千兆网卡（1Gbps），且 Kafka 部署在专属服务器。</p>
+<ul>
+<li>最大带宽：为保证有充分带宽留作其他进程使用，且确保较低丢包率，Kafka 服务需预留 70% 带宽，即 700Mbps。</li>
+<li>平均带宽：按最大值 1/4<del>1/3 保守换算（其余预留），即单个节点平均可使用  175</del>240 Mbps。</li>
+<li>数据量：传输数据需要按峰值算，5,000 条 /s * 2KB * 8bit = 80Mbps，80Mbps / 175Mbps = 1 台。</li>
+<li>备份数：3 个副本，1 台 * 3 = 3 台。</li>
+</ul>
+<p>共需要 3 台 CPU 4 核+、内存 16GB+ 服务器，搭载系统 CentOS 7.6。</p>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2020/06/30/JVM_java-memory-area/" title= "Java 内存区域">
+                    <div class="prevTitle">Java 内存区域</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
     
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -462,6 +565,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:100vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Kafka-部署方案"><span class="toc-number">1.</span> <span class="toc-text">Kafka 部署方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#需求描述"><span class="toc-number">1.1.</span> <span class="toc-text">需求描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资源评估"><span class="toc-number">1.2.</span> <span class="toc-text">资源评估</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#磁盘规划"><span class="toc-number">1.2.1.</span> <span class="toc-text">磁盘规划</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#节点规划"><span class="toc-number">1.2.2.</span> <span class="toc-text">节点规划</span></a></li></ol></li></ol></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -915,6 +1036,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
 </html>
