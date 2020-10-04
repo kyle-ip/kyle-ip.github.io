@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2020-10-04T15:40:02.151Z</updated>
+  <updated>2020-10-04T15:56:51.418Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Java 常用调试分析命令</title>
+    <title>Java 应用生产环境常用调试分析总结</title>
     <link href="https://yipwinghong.github.io/2020/10/04/JVM_prod-analysis-cmd/"/>
     <id>https://yipwinghong.github.io/2020/10/04/JVM_prod-analysis-cmd/</id>
     <published>2020-10-04T14:41:50.000Z</published>
-    <updated>2020-10-04T15:40:02.151Z</updated>
+    <updated>2020-10-04T15:56:51.418Z</updated>
     
     <summary type="html">
     
