@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2020-09-24T12:52:44.028Z</updated>
+  <updated>2020-10-04T15:40:02.151Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -17,11 +17,32 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Java 常用调试分析命令</title>
+    <link href="https://yipwinghong.github.io/2020/10/04/JVM_prod-analysis-cmd/"/>
+    <id>https://yipwinghong.github.io/2020/10/04/JVM_prod-analysis-cmd/</id>
+    <published>2020-10-04T14:41:50.000Z</published>
+    <updated>2020-10-04T15:40:02.151Z</updated>
+    
+    <summary type="html">
+    
+      本文讲述 Java 应用在生产环境部署时常用的配置、命令、调试技巧
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Kafka 生产环境资源评估</title>
     <link href="https://yipwinghong.github.io/2020/09/24/Kafka-production-environment/"/>
     <id>https://yipwinghong.github.io/2020/09/24/Kafka-production-environment/</id>
     <published>2020-09-24T12:47:06.000Z</published>
-    <updated>2020-09-24T12:52:44.028Z</updated>
+    <updated>2020-09-28T14:12:16.981Z</updated>
     
     <summary type="html">
     
@@ -151,9 +172,9 @@
     
     
     
-      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
@@ -406,25 +427,6 @@
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
       <category term="Python" scheme="https://yipwinghong.github.io/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>2020 的约定</title>
-    <link href="https://yipwinghong.github.io/2020/01/19/2020-01-19_diary/"/>
-    <id>https://yipwinghong.github.io/2020/01/19/2020-01-19_diary/</id>
-    <published>2020-01-19T13:36:27.000Z</published>
-    <updated>2020-04-18T13:18:47.714Z</updated>
-    
-    <summary type="html">
-    
-      上一个 GitHub Pages 和公主号已经废弃很久了，只是忽然心血来潮想码字，所以又重新搭起来咯。
-    
-    </summary>
-    
-    
-    
-      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
     
   </entry>
   
