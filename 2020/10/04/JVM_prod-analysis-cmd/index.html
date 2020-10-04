@@ -275,7 +275,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,918</span>Reading time: <span class="post-count reading-time">17 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3,967</span>Reading time: <span class="post-count reading-time">17 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -541,13 +541,13 @@ height:100vh;
 <ul>
 <li>内存增长可以通过 top 命令去观察（RES 列的数值）；如果使用 jmap 命令去看内存占用，得到的只是堆的大小，只是很小的一部分。</li>
 <li>使用 <code>ps -p pid -o rss,vsz</code> 可以观测到除了虚拟内存比较高，实际使用的内存 RSS 也非常高，超过 <code>-Xmx</code> 的设定。</li>
-<li>使用 jps 查看启动参数，可发现实际内存使用远远超出最大内存设定。</li>
+<li>使用 <code>jps -v</code> 查看启动参数、使用 <code>java -XX:+PrintFlagsFinal 2&gt;&amp;1 | grep MaxHeapSize</code> 查看默认值，可发现实际内存使用远远超出最大内存设定。</li>
 </ul>
 <p>要追踪 Native 内存的使用情况，可在启动参数上加入 <code>-XX:NativeMemoryTracking=detail</code> 即可启用，在运行状态下使用 jcmd：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jcmd $PID VM.native_memory summary</span><br></pre></td></tr></table></figure>
 
 <p>即使 NMT 能看到堆内内存、Code 区域或者使用 unsafe.allocateMemory 和 DirectByteBuffer 申请的堆外内存，但仍然不能解决问题。</p>
-<h3 id="pmap"><a href="#pmap" class="headerlink" title="pmap"></a>pmap</h3><p>使用 pmap 命令查看进程的内存分配，通过 RSS 升序序排列，可以发现除了大块的堆内存以外，还有数量非常多的小块堆外内存，还有巨量小的物理内存块映射到不同的虚拟内存段上。</p>
+<h3 id="Pmap"><a href="#Pmap" class="headerlink" title="Pmap"></a>Pmap</h3><p>使用 pmap 命令查看进程的内存分配，通过 RSS 升序序排列，可以发现除了大块的堆内存以外，还有数量非常多的小块堆外内存，还有巨量小的物理内存块映射到不同的虚拟内存段上。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pmap -x 2154 | sort -n -k3</span><br></pre></td></tr></table></figure>
 
 
@@ -572,8 +572,8 @@ height:100vh;
 <figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>R<span class="number">4</span>f<span class="number">1</span>Qej<span class="number">1</span>ty<span class="number">5</span><span class="keyword">GT</span><span class="number">8</span>V<span class="number">1</span>R<span class="number">8</span><span class="symbol">no6</span>T<span class="number">44564</span>wz<span class="number">499</span>E<span class="number">6</span>Y<span class="number">582</span>q<span class="number">2</span>R<span class="number">9</span>h<span class="number">8</span>CC<span class="number">175</span>GJ<span class="number">3</span>yeJ<span class="number">1</span>Q<span class="number">3</span>P<span class="number">5</span>Vt<span class="number">757</span>Mcf<span class="number">6378</span>k<span class="name">M36</span>hxZ<span class="number">5</span>U<span class="number">8</span>uh<span class="name">g2</span>A<span class="number">26</span>T<span class="number">5</span>l<span class="number">7</span>f<span class="number">68719</span>WQK<span class="number">6</span>vZ<span class="number">2</span>BOdH<span class="number">9</span>lH<span class="number">5</span>C<span class="number">7838</span>qf<span class="number">1</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
 <p>可以发现一些原本应该存在于堆的内容使用了额外的内存进行分配，只可能是 Native 程序对堆外内存的操作。</p>
-<h3 id="perf"><a href="#perf" class="headerlink" title="perf"></a>perf</h3><p>开启监控栈函数调用。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perf record -g -p 2154</span><br></pre></td></tr></table></figure>
+<h3 id="Perf"><a href="#Perf" class="headerlink" title="Perf"></a>Perf</h3><p>Perf 除了能够进行一些性能分析，还能帮助我们找到相应的 Native 调用。首先开启监控栈函数调用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perf record -g -p $PID</span><br></pre></td></tr></table></figure>
 
 <p>访问服务器的 8888 端口，将会把内存使用的阈值增加到 85%，程序会逐渐把这部分内存占满。</p>
 <p>perf 运行一段时间后 Ctrl+C 结束会生成一个文件 perf.data，查看分析报告。</p>
@@ -583,7 +583,7 @@ height:100vh;
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Samples: <span class="number">26</span>K of event <span class="string">'cpu-clock'</span>, Event count (approx.): <span class="number">6583500000</span></span><br><span class="line">  Children    Self    Command    Shared Object        Symblo</span><br><span class="line">+ <span class="number">19.02</span>%      <span class="number">0.35</span>%   java       libc<span class="number">-2.17</span>.so         [.] __GI___libc_read</span><br><span class="line">+ <span class="number">18.93</span>%      <span class="number">1.25</span>%   java       libpthread<span class="number">-2.17</span>.so   [.] <span class="symbol">pthread_cond_timewait@</span>...</span><br><span class="line">+ <span class="number">7.43</span>%       <span class="number">0.06</span>%   java       libzip.so        [.] Java_java_util_zip_Inflater_inflateBytes</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>其中 libzip.so 占据大量 CPU，查看 JDK 代码，发现 bzip 包使用了大量 native 方法 <code>java.util.zip.Inflater#inflateBytesBytes</code>，即大量的内存申请和销毁实在堆外发生的。</p>
 <p>进程调用了申请了内存却没有调用 Deflater 释放内存。与 pmap 内存地址相比对，确实是 zip 造成的，应该检查业务代码中 zip 相关的操作。</p>
-<h3 id="gperftools"><a href="#gperftools" class="headerlink" title="gperftools"></a>gperftools</h3><p>还可以利用 gperftools 的 Heap Profiler 功能。安装成功后输出两个环境变量：</p>
+<h3 id="GPerftools"><a href="#GPerftools" class="headerlink" title="GPerftools"></a>GPerftools</h3><p>还可以利用 GPerftools 的 Heap Profiler 功能定位 Native 函数。安装成功后输出两个环境变量：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /opt/test </span><br><span class="line">export LD_PRELOAD=/usr/lib64/libtcmalloc.so </span><br><span class="line">export HEAPPROFILE=/opt/test/heap</span><br></pre></td></tr></table></figure>
 <p>在同一个终端启动应用程序，可见申请内存的动作都被记录到 /opt/test：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">java -jar ...</span><br><span class="line">...</span><br><span class="line">Dumping heap profile to /opt/test/heap.0001.heap (100MB currently in use)</span><br><span class="line">Dumping heap profile to /opt/test/heap.0002.heap (100MB currently in use)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
@@ -744,7 +744,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#日志配置"><span class="toc-number">1.</span> <span class="toc-text">日志配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#应用日志"><span class="toc-number">1.1.</span> <span class="toc-text">应用日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM-日志"><span class="toc-number">1.2.</span> <span class="toc-text">JVM 日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统日志"><span class="toc-number">1.3.</span> <span class="toc-text">系统日志</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#保留现场"><span class="toc-number">2.</span> <span class="toc-text">保留现场</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#服务器"><span class="toc-number">2.1.</span> <span class="toc-text">服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#网络"><span class="toc-number">2.1.1.</span> <span class="toc-text">网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程"><span class="toc-number">2.1.2.</span> <span class="toc-text">进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CPU"><span class="toc-number">2.1.3.</span> <span class="toc-text">CPU</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#磁盘"><span class="toc-number">2.1.4.</span> <span class="toc-text">磁盘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存"><span class="toc-number">2.1.5.</span> <span class="toc-text">内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他"><span class="toc-number">2.1.6.</span> <span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM"><span class="toc-number">2.2.</span> <span class="toc-text">JVM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#进程快照"><span class="toc-number">2.2.1.</span> <span class="toc-text">进程快照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#堆快照"><span class="toc-number">2.2.2.</span> <span class="toc-text">堆快照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栈快照"><span class="toc-number">2.2.3.</span> <span class="toc-text">栈快照</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#问题排查"><span class="toc-number">3.</span> <span class="toc-text">问题排查</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#定位异常线程"><span class="toc-number">3.1.</span> <span class="toc-text">定位异常线程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存泄漏现象"><span class="toc-number">3.2.</span> <span class="toc-text">内存泄漏现象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#直接内存溢出"><span class="toc-number">3.3.</span> <span class="toc-text">直接内存溢出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#现象描述"><span class="toc-number">3.3.1.</span> <span class="toc-text">现象描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pmap"><span class="toc-number">3.3.2.</span> <span class="toc-text">pmap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GDB"><span class="toc-number">3.3.3.</span> <span class="toc-text">GDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#perf"><span class="toc-number">3.3.4.</span> <span class="toc-text">perf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gperftools"><span class="toc-number">3.3.5.</span> <span class="toc-text">gperftools</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#日志配置"><span class="toc-number">1.</span> <span class="toc-text">日志配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#应用日志"><span class="toc-number">1.1.</span> <span class="toc-text">应用日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM-日志"><span class="toc-number">1.2.</span> <span class="toc-text">JVM 日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统日志"><span class="toc-number">1.3.</span> <span class="toc-text">系统日志</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#保留现场"><span class="toc-number">2.</span> <span class="toc-text">保留现场</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#服务器"><span class="toc-number">2.1.</span> <span class="toc-text">服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#网络"><span class="toc-number">2.1.1.</span> <span class="toc-text">网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程"><span class="toc-number">2.1.2.</span> <span class="toc-text">进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CPU"><span class="toc-number">2.1.3.</span> <span class="toc-text">CPU</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#磁盘"><span class="toc-number">2.1.4.</span> <span class="toc-text">磁盘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存"><span class="toc-number">2.1.5.</span> <span class="toc-text">内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他"><span class="toc-number">2.1.6.</span> <span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM"><span class="toc-number">2.2.</span> <span class="toc-text">JVM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#进程快照"><span class="toc-number">2.2.1.</span> <span class="toc-text">进程快照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#堆快照"><span class="toc-number">2.2.2.</span> <span class="toc-text">堆快照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栈快照"><span class="toc-number">2.2.3.</span> <span class="toc-text">栈快照</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#问题排查"><span class="toc-number">3.</span> <span class="toc-text">问题排查</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#定位异常线程"><span class="toc-number">3.1.</span> <span class="toc-text">定位异常线程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存泄漏现象"><span class="toc-number">3.2.</span> <span class="toc-text">内存泄漏现象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#直接内存溢出"><span class="toc-number">3.3.</span> <span class="toc-text">直接内存溢出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#现象描述"><span class="toc-number">3.3.1.</span> <span class="toc-text">现象描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pmap"><span class="toc-number">3.3.2.</span> <span class="toc-text">Pmap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GDB"><span class="toc-number">3.3.3.</span> <span class="toc-text">GDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Perf"><span class="toc-number">3.3.4.</span> <span class="toc-text">Perf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GPerftools"><span class="toc-number">3.3.5.</span> <span class="toc-text">GPerftools</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -1064,12 +1064,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_Cheat-Sheet/" >Docker & K8S Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_Cheat-Sheet/" >Git Cheat Sheet</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_Cheat-Sheet/" >Git Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_Cheat-Sheet/" >Docker & K8S Cheat Sheet</a>
         </li>
     
     
@@ -1099,12 +1099,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_offset-reset/" >Kafka 位移重置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_dynamic-config/" >Kafka 动态配置</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_dynamic-config/" >Kafka 动态配置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_offset-reset/" >Kafka 位移重置</a>
         </li>
     
     
@@ -1138,13 +1138,13 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
-    
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
