@@ -538,7 +538,7 @@ height:100vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/jmap%20%E8%BE%93%E5%87%BA%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80.jpg" alt="jmap 输出内存布局"></p>
 <p>另一方面需要关心的是堆中每种类型的对象占据内存的大小。比如某个对象数量很小，但占用的空间很大，这就说明存在大对象。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/jmap%20%E8%BE%93%E5%87%BA%E6%AF%8F%E7%A7%8D%E7%B1%BB%E5%9E%8B%E5%8D%A0%E7%94%A8%E7%A9%BA%E9%97%B4.jpg" alt="jmap 输出每种类型占用空间"></p>
-<p>一般内存溢出的表现形式就是老年代占用持续上升，即使经过了多轮 OGC 也没有明显改善。内存泄漏是其中一种原因，其本质就有些对象并没有切断和 GC Roots 的关系。</p>
+<p>一般内存溢出的表现形式就是老年代占用持续上升，即使经过了多轮 FGC 也没有明显改善。内存泄漏是其中一种原因，其本质就有些对象并没有切断和 GC Roots 的关系。</p>
 <p>以上方法只能大致看到一些统计信息，要作进一步排查可通过 VisualVM、MAT 等工具分析它们的联系（需要导出二进制格式的堆转储快照）。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jmap -dump:format=b,file=heap.bin $PID    # JDK 8</span><br><span class="line">jhsdb jmap --binaryheap --pid $PID        # JDK 8+</span><br></pre></td></tr></table></figure>
 
@@ -763,6 +763,8 @@ top:100vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
     
     
     
