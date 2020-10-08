@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2020-10-05T08:37:13.687Z</updated>
+  <updated>2020-10-08T14:50:36.370Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Maven 打包依赖外置</title>
+    <link href="https://yipwinghong.github.io/2020/10/08/Maven_external_dependencies_management/"/>
+    <id>https://yipwinghong.github.io/2020/10/08/Maven_external_dependencies_management/</id>
+    <published>2020-10-08T14:50:33.000Z</published>
+    <updated>2020-10-08T14:50:36.370Z</updated>
+    
+    <summary type="html">
+    
+      动辄几十 M 的 jar 包，网络不好的时候也是很头疼的...
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
+    
+      <category term="Maven" scheme="https://yipwinghong.github.io/tags/Maven/"/>
+    
+  </entry>
   
   <entry>
     <title>Java 应用生产环境常用调试分析总结</title>
@@ -214,11 +237,11 @@
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="Docker" scheme="https://yipwinghong.github.io/tags/Docker/"/>
     
       <category term="Kubernetes" scheme="https://yipwinghong.github.io/tags/Kubernetes/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
@@ -406,27 +429,6 @@
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
       <category term="Kafka" scheme="https://yipwinghong.github.io/tags/Kafka/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python 装饰器基本用法</title>
-    <link href="https://yipwinghong.github.io/2020/01/20/Python_decorator-basic-usage/"/>
-    <id>https://yipwinghong.github.io/2020/01/20/Python_decorator-basic-usage/</id>
-    <published>2020-01-19T16:01:52.000Z</published>
-    <updated>2020-04-18T13:18:58.778Z</updated>
-    
-    <summary type="html">
-    
-      这是一篇旧文，搬运自简书：https://www.jianshu.com/p/84ae6d657007
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="Python" scheme="https://yipwinghong.github.io/tags/Python/"/>
     
   </entry>
   
