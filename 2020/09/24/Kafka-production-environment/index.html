@@ -275,7 +275,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">423</span>Reading time: <span class="post-count reading-time">2 min</span></span>
+                        <span>Word count: <span class="post-count word-count">425</span>Reading time: <span class="post-count reading-time">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -425,7 +425,7 @@ height:100vh;
 <h3 id="节点规划"><a href="#节点规划" class="headerlink" title="节点规划"></a>节点规划</h3><p>使用千兆网卡（1Gbps），且 Kafka 部署在专属服务器。</p>
 <ul>
 <li>最大带宽：为保证有充分带宽留作其他进程使用，且确保较低丢包率，Kafka 服务需预留 70% 带宽，即 700Mbps。</li>
-<li>平均带宽：按最大值 1/4<del>1/3 保守换算（其余预留），即单个节点平均可使用  175</del>240 Mbps。</li>
+<li>平均带宽：按最大值 1/4-1/3 保守换算（其余预留），即单个节点平均可使用  175-240 Mbps。</li>
 <li>数据量：传输数据需要按峰值算，5,000 条 /s * 2KB * 8bit = 80Mbps，80Mbps / 175Mbps = 1 台。</li>
 <li>备份数：3 个副本，1 台 * 3 = 3 台。</li>
 </ul>
@@ -855,8 +855,6 @@ top:100vh;
     
     
     
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 22
@@ -992,11 +990,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
@@ -1006,9 +1004,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
