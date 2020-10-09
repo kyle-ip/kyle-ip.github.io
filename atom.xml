@@ -44,7 +44,7 @@
     <link href="https://yipwinghong.github.io/2020/10/04/JVM_prod-analysis-cmd/"/>
     <id>https://yipwinghong.github.io/2020/10/04/JVM_prod-analysis-cmd/</id>
     <published>2020-10-04T14:41:50.000Z</published>
-    <updated>2020-10-05T08:37:13.687Z</updated>
+    <updated>2020-10-09T13:22:00.573Z</updated>
     
     <summary type="html">
     
@@ -62,8 +62,8 @@
   
   <entry>
     <title>Kafka 生产环境资源评估</title>
-    <link href="https://yipwinghong.github.io/2020/09/24/Kafka-production-environment/"/>
-    <id>https://yipwinghong.github.io/2020/09/24/Kafka-production-environment/</id>
+    <link href="https://yipwinghong.github.io/2020/09/24/Kafka_prod-env-assess/"/>
+    <id>https://yipwinghong.github.io/2020/09/24/Kafka_prod-env-assess/</id>
     <published>2020-09-24T12:47:06.000Z</published>
     <updated>2020-10-09T13:14:57.238Z</updated>
     
@@ -195,9 +195,9 @@
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
