@@ -277,7 +277,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">1,403</span>Reading time: <span class="post-count reading-time">7 min</span></span>
+                        <span>Word count: <span class="post-count word-count">1,404</span>Reading time: <span class="post-count reading-time">7 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -433,7 +433,7 @@ height:100vh;
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ll -h target/demo-0.0.1-SNAPSHOT.jar</span></span><br><span class="line">-rw-r--r-- 1 yipwinghong 197609 121K 10月  8 22:36 demo-0.0.1-SNAPSHOT.jar</span><br><span class="line"><span class="meta">$</span><span class="bash"> ll -h target/lib/</span></span><br><span class="line">total 16M</span><br><span class="line">-rw-r--r-- 1 ywh 197609  67K 10月  8 21:01 jackson-annotations-2.11.2.jar</span><br><span class="line">-rw-r--r-- 1 ywh 197609 344K 10月  8 21:01 jackson-core-2.11.2.jar</span><br><span class="line">-rw-r--r-- 1 ywh 197609 1.4M 10月  8 21:02 jackson-databind-2.11.2.jar</span><br><span class="line">-rw-r--r-- 1 ywh 197609  34K 10月  8 21:01 jackson-datatype-jdk8-2.11.2.jar</span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br></pre></td></tr></table></figure>
 
 <p>但是因为缺少必要的依赖，这个包是不能跑起来的：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> java -jar target/demo-0.0.1-SNAPSHOT.jar                                      Exception <span class="keyword">in</span> thread <span class="string">"main"</span> java.lang.reflect.InvocationTargetException</span></span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)</span><br><span class="line">        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)</span><br><span class="line">        at java.lang.reflect.Method.invoke(Unknown Source)</span><br><span class="line">        at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)</span><br><span class="line">        at org.springframework.boot.loader.Launcher.launch(Launcher.java:107)</span><br><span class="line">        at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)</span><br><span class="line">        at org.springframework.boot.loader.PropertiesLauncher.main(PropertiesLauncher.java:466)</span><br><span class="line">Caused by: java.lang.NoClassDefFoundError: org/springframework/boot/SpringApplication</span><br><span class="line">        at com.ywh.demo.DemoApplication.main(DemoApplication.java:18)</span><br><span class="line">        ... 8 more</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> java -jar target/demo-0.0.1-SNAPSHOT.jar                                      </span></span><br><span class="line">Exception in thread "main" java.lang.reflect.InvocationTargetException</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)</span><br><span class="line">        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)</span><br><span class="line">        at java.lang.reflect.Method.invoke(Unknown Source)</span><br><span class="line">        at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)</span><br><span class="line">        at org.springframework.boot.loader.Launcher.launch(Launcher.java:107)</span><br><span class="line">        at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)</span><br><span class="line">        at org.springframework.boot.loader.PropertiesLauncher.main(PropertiesLauncher.java:466)</span><br><span class="line">Caused by: java.lang.NoClassDefFoundError: org/springframework/boot/SpringApplication</span><br><span class="line">        at com.ywh.demo.DemoApplication.main(DemoApplication.java:18)</span><br><span class="line">        ... 8 more</span><br></pre></td></tr></table></figure>
 
 <p>要部署程序，在启动参数 <code>-Dloader.path</code> 指定依赖包导出的路径即可：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> java -Dloader.path=target/lib/ -jar target/demo-0.0.1-SNAPSHOT.jar</span></span><br><span class="line"></span><br><span class="line">  .   ____          _            __ _ _</span><br><span class="line"> /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \</span><br><span class="line">( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \</span><br><span class="line"> \\/  ___)| |_)| | | | | || (_| |  ) ) ) )</span><br><span class="line">  '  |____| .__|_| |_|_| |_\__, | / / / /</span><br><span class="line"> =========|_|==============|___/=/_/_/_/</span><br><span class="line"> :: Spring Boot ::        (v2.3.4.RELEASE)</span><br><span class="line"></span><br><span class="line">2020-10-08 22:45:07.138  INFO 19232 --- [           main] com.ywh.demo.DemoApplication             : Starting DemoApplication v0.0.1-SNAPSHOT on DESKTOP-N02L3UQ with PID 19232 (C:\Project\other-project\demo\target\demo-0.0.1-SNAPSHOT.jar started by yipwinghong in C:\Project\other-project\demo)</span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br></pre></td></tr></table></figure>
@@ -867,8 +867,6 @@ top:100vh;
     
     
     
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 22
@@ -967,12 +965,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_offset-reset/" >Kafka 位移重置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_dynamic-config/" >Kafka 动态配置</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_dynamic-config/" >Kafka 动态配置</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2020/01/21/Kafka_offset-reset/" >Kafka 位移重置</a>
         </li>
     
     
@@ -1004,11 +1002,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
@@ -1018,9 +1016,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
