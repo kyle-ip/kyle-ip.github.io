@@ -306,29 +306,6 @@
   </entry>
   
   <entry>
-    <title>《DDIA》阅读笔记（三）：数据存储与检索</title>
-    <link href="https://yipwinghong.github.io/2021/01/13/DDIA_note-3/"/>
-    <id>https://yipwinghong.github.io/2021/01/13/DDIA_note-3/</id>
-    <published>2021-01-13T14:30:45.000Z</published>
-    <updated>2021-03-17T13:46:41.481Z</updated>
-    
-    <summary type="html">
-    
-      《DDIA》阅读笔记（三）：数据存储与检索
-    
-    </summary>
-    
-    
-      <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
-    
-  </entry>
-  
-  <entry>
     <title>树形表结构设计总结</title>
     <link href="https://yipwinghong.github.io/2021/01/01/DB_tree-table-design-summary/"/>
     <id>https://yipwinghong.github.io/2021/01/01/DB_tree-table-design-summary/</id>
@@ -346,6 +323,29 @@
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
       <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>《DDIA》阅读笔记（三）：数据存储与检索</title>
+    <link href="https://yipwinghong.github.io/2020/12/13/DDIA_note-3/"/>
+    <id>https://yipwinghong.github.io/2020/12/13/DDIA_note-3/</id>
+    <published>2020-12-13T14:30:45.000Z</published>
+    <updated>2021-03-19T04:12:31.879Z</updated>
+    
+    <summary type="html">
+    
+      《DDIA》阅读笔记（三）：数据存储与检索
+    
+    </summary>
+    
+    
+      <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
