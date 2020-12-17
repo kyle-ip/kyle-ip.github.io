@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2020-10-09T13:10:46.295Z</updated>
+  <updated>2020-12-17T15:38:56.576Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Resume</title>
+    <link href="https://yipwinghong.github.io/2020/12/17/Resume/"/>
+    <id>https://yipwinghong.github.io/2020/12/17/Resume/</id>
+    <published>2020-12-17T15:36:36.000Z</published>
+    <updated>2020-12-17T15:38:56.576Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="Resume" scheme="https://yipwinghong.github.io/tags/Resume/"/>
+    
+  </entry>
   
   <entry>
     <title>Maven 打包依赖外置</title>
@@ -195,9 +220,9 @@
     
     
     
-      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
@@ -408,27 +433,6 @@
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
       <category term="Python" scheme="https://yipwinghong.github.io/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Kafka 常用脚本</title>
-    <link href="https://yipwinghong.github.io/2020/01/20/Kafka_common-scripts/"/>
-    <id>https://yipwinghong.github.io/2020/01/20/Kafka_common-scripts/</id>
-    <published>2020-01-20T15:26:29.000Z</published>
-    <updated>2020-04-18T13:19:17.277Z</updated>
-    
-    <summary type="html">
-    
-      最近的项目中用到 Kafka，在初步了解之下发现相关的配置还挺多的，打算最近整理一些与 Kafka 运维监控相关的笔记，留作后续学习、项目上线后运维使用。
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="Kafka" scheme="https://yipwinghong.github.io/tags/Kafka/"/>
     
   </entry>
   
