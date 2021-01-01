@@ -414,7 +414,7 @@ height:100vh;
 <h3 id="磁盘规划"><a href="#磁盘规划" class="headerlink" title="磁盘规划"></a>磁盘规划</h3><p>无随机访问需求（Kafka 日志系统采用顺序访问），且软件层面的多副本机制可弥补磁盘易损坏的缺陷，可采用 HDD 机械硬盘 + RAID 0 的组合。</p>
 <p>单个节点磁盘容量规划如下：</p>
 <ul>
-<li>新增消息数：加载平均值 1,000 条 /s，60 <em> 60 </em> 24 * 1000 约 1 千万条。</li>
+<li>新增消息数：加载平均值 1,000 条 /s，60 * 60 * 24 * 1000 约 1 千万条。</li>
 <li>新增消息大小：预计每条消息 2KB，即每天消息总大小为 10,000,000 条 * 2KB / 1000 / 1000 约 20GB。</li>
 <li>备份数：建议 3 副本，20GB * 3 = 60GB。</li>
 <li>预留空间：预留 10% 左右磁盘空间用于索引等其他数据，每天总存储容量 66GB。</li>
@@ -426,7 +426,7 @@ height:100vh;
 <ul>
 <li>最大带宽：为保证有充分带宽留作其他进程使用，且确保较低丢包率，Kafka 服务需预留 70% 带宽，即 700Mbps。</li>
 <li>平均带宽：按最大值 1/4-1/3 保守换算（其余预留），即单个节点平均可使用  175-240 Mbps。</li>
-<li>数据量：传输数据需要按峰值算，5,000 条 /s <em> 2KB </em> 8bit = 80Mbps，80Mbps / 175Mbps = 1 台。</li>
+<li>数据量：传输数据需要按峰值算，5,000 条 /s * 2KB * 8bit = 80Mbps，80Mbps / 175Mbps = 1 台。</li>
 <li>备份数：3 个副本，1 台 * 3 = 3 台。</li>
 </ul>
 <p>共需要 3 台 CPU 4 核+、内存 16GB+ 服务器，搭载系统 CentOS 7.6。</p>
@@ -996,27 +996,27 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1088,7 +1088,26 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<!--
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+-->
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
 </html>
 
 
