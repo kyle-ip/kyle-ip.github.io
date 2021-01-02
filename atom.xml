@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-01-02T10:22:52.000Z</updated>
+  <updated>2021-01-02T11:05:00.000Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JVM_mindmap</title>
+    <link href="https://yipwinghong.github.io/2021/01/02/JVM_mindmap/"/>
+    <id>https://yipwinghong.github.io/2021/01/02/JVM_mindmap/</id>
+    <published>2021-01-02T10:30:40.160Z</published>
+    <updated>2021-01-02T11:05:00.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>树形表结构设计总结</title>
@@ -34,6 +57,27 @@
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
       <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>设计模式与设计原则</title>
+    <link href="https://yipwinghong.github.io/2020/11/01/Design_design-patterns/"/>
+    <id>https://yipwinghong.github.io/2020/11/01/Design_design-patterns/</id>
+    <published>2020-11-01T13:21:21.000Z</published>
+    <updated>2021-01-02T10:57:26.000Z</updated>
+    
+    <summary type="html">
+    
+      常用设计模式及其应用实例...
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
     
   </entry>
   
@@ -128,7 +172,7 @@
     <link href="https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/"/>
     <id>https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/</id>
     <published>2020-04-07T16:40:08.000Z</published>
-    <updated>2020-12-24T15:47:04.000Z</updated>
+    <updated>2021-01-02T10:53:22.000Z</updated>
     
     <summary type="html">
     
@@ -216,9 +260,9 @@
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
@@ -387,46 +431,6 @@
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
       <category term="Kafka" scheme="https://yipwinghong.github.io/tags/Kafka/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>2020 的约定</title>
-    <link href="https://yipwinghong.github.io/2020/01/19/2020-01-19_diary/"/>
-    <id>https://yipwinghong.github.io/2020/01/19/2020-01-19_diary/</id>
-    <published>2020-01-19T13:36:27.000Z</published>
-    <updated>2020-04-18T13:18:48.000Z</updated>
-    
-    <summary type="html">
-    
-      上一个 GitHub Pages 和公主号已经废弃很久了，只是忽然心血来潮想码字，所以又重新搭起来咯。
-    
-    </summary>
-    
-    
-    
-      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ES6 语法总结</title>
-    <link href="https://yipwinghong.github.io/2018/09/02/JavaScript_ES6-grammar/"/>
-    <id>https://yipwinghong.github.io/2018/09/02/JavaScript_ES6-grammar/</id>
-    <published>2018-09-02T02:06:17.000Z</published>
-    <updated>2021-01-02T10:10:04.000Z</updated>
-    
-    <summary type="html">
-    
-      这是一篇旧文，搬运自简书：https://www.jianshu.com/p/c8ab939556e8
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="JavaScript" scheme="https://yipwinghong.github.io/tags/JavaScript/"/>
     
   </entry>
   
