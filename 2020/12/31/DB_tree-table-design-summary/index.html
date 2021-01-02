@@ -267,15 +267,15 @@ height:100vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "数据库">数据库</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "数据库">数据库</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,318</span>Reading time: <span class="post-count reading-time">14 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3,301</span>Reading time: <span class="post-count reading-time">14 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -419,7 +419,7 @@ height:100vh;
 <li>用户删除评论或回复后，所有对其回复（及其子级）的回复都会被级联删除。</li>
 <li>……</li>
 </ul>
-<p>这类常见的功能有多种设计方法，基本如下：</p>
+<p>这类功能常见的设计方法如下：</p>
 <table>
 <thead>
 <tr>
@@ -476,7 +476,7 @@ height:100vh;
 <li><strong>难以使用聚合函数</strong>（比如 <code>COUNT</code>、<code>SUM</code>、<code>MAX</code>、<code>MIN</code> 等）。</li>
 </ul>
 <p>可以先查询出所有行，在业务代码中重新构造出这棵树。但处理数据之前就进行从数据库到应用程序之间的 <strong>大量数据复制</strong>，非常低效（可能只需要部分子树，或者只需要统计值而非全量数据，但不得不查出完整的树）。</p>
-<p>另一方面是如果要从树中 <strong>删除节点则很困难</strong>，需要执行多次查询找到所有后代节点，自底向上逐个删除这些节点以满足外键完整性。</p>
+<p>另一方面是如果要从树中 <strong>删除节点很困难</strong>，需要执行多次查询找到所有后代节点，自底向上逐个删除这些节点以满足外键完整性。</p>
 <p>解决方法：</p>
 <ul>
 <li><strong>不使用外键约束</strong>，但需要配合其他方法处理迷失节点，尽可能少产生零散数据。</li>
@@ -571,16 +571,16 @@ height:100vh;
 <p>要从一个地方移动一棵子树到另一地方相对复杂，但也有固定的算法：</p>
 <ul>
 <li><strong>断开这棵子树和它的祖先们的关系</strong>。需要找到这棵子树的顶点，删除它的所有子节点和它的所有祖先节点间的关系。</li>
-<li><strong>将这棵孤立的树和新节点及它的祖先建立关系</strong>。可以使用 <code>CROSS JOIN</code>（笛卡尔积）创建一个新节点及其祖先和这棵孤立的树中所有节点间的笛卡儿积来建立所有需要的关系。</li>
+<li><strong>将这棵孤立的树和新节点及它的祖先建立关系</strong>。可以使用 <strong><code>CROSS JOIN</code> 创建一个新节点及其祖先</strong> 和 <strong>这棵孤立的树中所有节点</strong> 间的笛卡儿积来建立所有需要的关系。</li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> TreePaths</span><br><span class="line"><span class="keyword">WHERE</span> descendant <span class="keyword">IN</span> (</span><br><span class="line">  <span class="keyword">SELECT</span> descendant</span><br><span class="line">  <span class="keyword">FROM</span> TreePaths</span><br><span class="line">  <span class="keyword">WHERE</span> ancestor = <span class="number">6</span></span><br><span class="line">) <span class="keyword">AND</span> ancestor <span class="keyword">IN</span> (</span><br><span class="line">  <span class="keyword">SELECT</span> ancestor</span><br><span class="line">  <span class="keyword">FROM</span> TreePaths</span><br><span class="line">  <span class="keyword">WHERE</span> descendant = <span class="number">6</span> <span class="keyword">AND</span> ancestor != descendant</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> TreePaths (ancestor, descendant)</span><br><span class="line"><span class="keyword">SELECT</span> supertree.ancestor, subtree.descendant</span><br><span class="line"><span class="keyword">FROM</span> TreePaths <span class="keyword">AS</span> supertree</span><br><span class="line"><span class="keyword">CROSS</span> <span class="keyword">JOIN</span> TreePaths <span class="keyword">AS</span> subtree</span><br><span class="line"><span class="keyword">WHERE</span> supertree.descendant = <span class="number">3</span> <span class="keyword">AND</span> subtree.ancestor = <span class="number">6</span>;</span><br></pre></td></tr></table></figure>
 
 <p>未完待续（结构图解和性能测试）。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>在实现层面邻接表最简单，如果数据库支持 <code>WITH</code> 或者 <code>CONNECT BY PRIOR</code> 递归查询，则会更高效（对递归查询性能存疑，有待测试）。</li>
-<li>枚举路径能直观地展示祖先到后代之间的路径，由于不能确保引用完整性，使之非常脆弱，需要结合其他手段确保数据正确性。</li>
+<li>枚举路径能直观地展示祖先到后代之间的路径，由于不能确保引用完整性，需要结合其他手段确保数据正确。</li>
 <li>嵌套集不能确保引用完整性，且业务复杂度比较高，建议在查询性能要求很高、对其他操作要求不高的场合才使用。</li>
-<li>闭包表的优势是支持多叉树，以空间换时间的方法减少操作过程中由冗余的计算所造成的消耗。</li>
+<li>闭包表的优势是支持多叉树，以空间换时间的方法减少操作过程中由于冗余的计算造成的消耗。</li>
 </ul>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
 <li>Bill Karwin. SQL Antipatterns [M]. Pragmatic Bookshelf, 2010.</li>
@@ -1200,17 +1200,15 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
@@ -1218,11 +1216,13 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
