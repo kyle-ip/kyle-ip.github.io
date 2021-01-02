@@ -467,12 +467,12 @@ height:100vh;
 <p>asyncio 具备以下特点：</p>
 <ul>
 <li>单线程，所有的函数调用都在 loop 中执行（如执行耗时操作则会等待完成后才执行下一个）；</li>
-<li>使用 <code>await asyncio.sleep(2)</code> 与 <code>time.sleep(2)</code> 的区别是前者会立即返回一个 Future 对象，下次循环的时候判断这个是否已经过 2s，而不是阻塞等待。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义异步函数</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">get_html</span><span class="params">(url)</span>:</span></span><br><span class="line">    print(<span class="string">"start get url"</span>)</span><br><span class="line">    <span class="keyword">await</span> asyncio.sleep(<span class="number">2</span>)</span><br><span class="line">    <span class="comment"># time.sleep(5)   # 协程是单线程执行，time.sleep 是同步阻塞接口，不应在协程中实现</span></span><br><span class="line">    print(<span class="string">"end get url"</span>)</span><br><span class="line"></span><br><span class="line">start_time = time.time()</span><br><span class="line">loop = asyncio.get_event_loop()     <span class="comment"># 创建事件循环（单线程：所有的函数调用都在 loop 中执行）</span></span><br><span class="line">tasks = [</span><br><span class="line">    get_html(<span class="string">"http://www.test.com"</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>)</span><br><span class="line">]</span><br><span class="line">loop.run_until_complete(asyncio.wait(tasks))    <span class="comment"># 类似 join，等待协程执行完成才往下执行</span></span><br><span class="line">print(time.time() - start_time)</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
+<li>使用 <code>await asyncio.sleep(2)</code> 与 <code>time.sleep(2)</code> 的区别是前者会立即返回一个 Future 对象，下次循环的时候判断这个是否已经过 2s，而不是阻塞等待。</li>
 </ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义异步函数</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">get_html</span><span class="params">(url)</span>:</span></span><br><span class="line">    print(<span class="string">"start get url"</span>)</span><br><span class="line">    <span class="keyword">await</span> asyncio.sleep(<span class="number">2</span>)</span><br><span class="line">    <span class="comment"># time.sleep(5)   # 协程是单线程执行，time.sleep 是同步阻塞接口，不应在协程中实现</span></span><br><span class="line">    print(<span class="string">"end get url"</span>)</span><br><span class="line"></span><br><span class="line">start_time = time.time()</span><br><span class="line">loop = asyncio.get_event_loop()     <span class="comment"># 创建事件循环（单线程：所有的函数调用都在 loop 中执行）</span></span><br><span class="line">tasks = [</span><br><span class="line">    get_html(<span class="string">"http://www.test.com"</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>)</span><br><span class="line">]</span><br><span class="line">loop.run_until_complete(asyncio.wait(tasks))    <span class="comment"># 类似 join，等待协程执行完成才往下执行</span></span><br><span class="line">print(time.time() - start_time)</span><br></pre></td></tr></table></figure>
+
+
+
 <h1 id="如何获取协程返回值？"><a href="#如何获取协程返回值？" class="headerlink" title="如何获取协程返回值？"></a>如何获取协程返回值？</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> partial</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">get_html</span><span class="params">(url)</span>:</span></span><br><span class="line">    print(<span class="string">"start get url"</span>)</span><br><span class="line">    <span class="keyword">await</span> asyncio.sleep(<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"ywh"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">callback</span><span class="params">(url, future)</span>:</span></span><br><span class="line">    print(url)</span><br><span class="line">    print(<span class="string">"send email to ywh"</span>)</span><br><span class="line"></span><br><span class="line">start_time = time.time()</span><br><span class="line">loop = asyncio.get_event_loop()</span><br><span class="line"><span class="comment"># get_future = asyncio.ensure_future(get_html("http://www.test.com"))</span></span><br><span class="line">task = loop.create_task(get_html(<span class="string">"http://www.test.com"</span>))   <span class="comment"># 创建一个任务，返回 Future 对象</span></span><br><span class="line">task.add_done_callback(             </span><br><span class="line">    partial(callback, <span class="string">"http://www.test.com"</span>)           <span class="comment"># 把 callback 包装可接收参数的偏函数</span></span><br><span class="line">)       <span class="comment"># 执行 get_html，完成后调用回调函数 callback，最后再返回 get_html 的结果</span></span><br><span class="line">loop.run_until_complete(task)</span><br><span class="line">print(task.result())        <span class="comment"># 获取 Future 对象的结果</span></span><br></pre></td></tr></table></figure>
 
 <p>wait 与 gather：gather 是更高层次的封装，可以将 task 分组管理；</p>
@@ -1131,17 +1131,17 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
@@ -1149,11 +1149,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
