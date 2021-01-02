@@ -31,9 +31,9 @@
     
     
     
-      <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
@@ -216,9 +216,9 @@
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="大数据" scheme="https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
@@ -410,15 +410,15 @@
   </entry>
   
   <entry>
-    <title>JavaScript Cheat Sheet</title>
-    <link href="https://yipwinghong.github.io/2019/08/28/JavaScript_Cheat-Sheet/"/>
-    <id>https://yipwinghong.github.io/2019/08/28/JavaScript_Cheat-Sheet/</id>
-    <published>2019-08-28T14:48:17.000Z</published>
-    <updated>2021-01-02T10:02:12.000Z</updated>
+    <title>ES6 语法总结</title>
+    <link href="https://yipwinghong.github.io/2018/09/02/JavaScript_ES6-grammar/"/>
+    <id>https://yipwinghong.github.io/2018/09/02/JavaScript_ES6-grammar/</id>
+    <published>2018-09-02T02:06:17.000Z</published>
+    <updated>2021-01-02T10:10:04.000Z</updated>
     
     <summary type="html">
     
-      这是一篇旧文，搬运自简书：https://www.jianshu.com/p/6d8c3face1b7
+      这是一篇旧文，搬运自简书：https://www.jianshu.com/p/c8ab939556e8
     
     </summary>
     
