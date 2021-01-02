@@ -391,25 +391,6 @@
   </entry>
   
   <entry>
-    <title>2020 的约定</title>
-    <link href="https://yipwinghong.github.io/2020/01/19/2020-01-19_diary/"/>
-    <id>https://yipwinghong.github.io/2020/01/19/2020-01-19_diary/</id>
-    <published>2020-01-19T13:36:27.000Z</published>
-    <updated>2021-01-02T15:30:52.000Z</updated>
-    
-    <summary type="html">
-    
-      上一个 GitHub Pages 和公主号已经废弃很久了，只是忽然心血来潮想码字，所以又重新搭起来咯。
-    
-    </summary>
-    
-    
-    
-      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
-    
-  </entry>
-  
-  <entry>
     <title>设计模式与设计原则</title>
     <link href="https://yipwinghong.github.io/2019/11/01/Design_design-patterns/"/>
     <id>https://yipwinghong.github.io/2019/11/01/Design_design-patterns/</id>
@@ -427,6 +408,25 @@
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
       <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 虚拟机与并发编程</title>
+    <link href="https://yipwinghong.github.io/2019/10/30/JVM_mindmap/"/>
+    <id>https://yipwinghong.github.io/2019/10/30/JVM_mindmap/</id>
+    <published>2019-10-29T17:20:12.000Z</published>
+    <updated>2021-01-02T12:29:44.000Z</updated>
+    
+    <summary type="html">
+    
+      ProcessON 与 GitHub Pages 更搭哦~
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
