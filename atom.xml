@@ -38,11 +38,30 @@
   </entry>
   
   <entry>
+    <title>Java 虚拟机与并发编程</title>
+    <link href="https://yipwinghong.github.io/2020/11/30/JVM_mindmap/"/>
+    <id>https://yipwinghong.github.io/2020/11/30/JVM_mindmap/</id>
+    <published>2020-11-29T17:20:12.000Z</published>
+    <updated>2021-01-02T11:21:50.000Z</updated>
+    
+    <summary type="html">
+    
+      ProcessON 与 GitHub Pages 更搭哦~
+    
+    </summary>
+    
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
     <title>设计模式与设计原则</title>
     <link href="https://yipwinghong.github.io/2020/11/01/Design_design-patterns/"/>
     <id>https://yipwinghong.github.io/2020/11/01/Design_design-patterns/</id>
     <published>2020-11-01T13:21:21.000Z</published>
-    <updated>2021-01-02T11:16:58.000Z</updated>
+    <updated>2021-01-02T11:22:38.000Z</updated>
     
     <summary type="html">
     
@@ -154,25 +173,6 @@
     <summary type="html">
     
       ProcessON 是个好工具~
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java 虚拟机与并发编程</title>
-    <link href="https://yipwinghong.github.io/2020/04/08/JVM_mindmap/"/>
-    <id>https://yipwinghong.github.io/2020/04/08/JVM_mindmap/</id>
-    <published>2020-04-07T16:40:08.000Z</published>
-    <updated>2021-01-02T11:16:44.000Z</updated>
-    
-    <summary type="html">
-    
-      ProcessON 与 GitHub Pages 更搭哦~
     
     </summary>
     
