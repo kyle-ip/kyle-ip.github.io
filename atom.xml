@@ -57,6 +57,29 @@
   </entry>
   
   <entry>
+    <title>《DDIA》阅读笔记（九）：一致性与共识（共识问题）</title>
+    <link href="https://yipwinghong.github.io/2021/02/24/DDIA_note-13/"/>
+    <id>https://yipwinghong.github.io/2021/02/24/DDIA_note-13/</id>
+    <published>2021-02-24T13:21:22.000Z</published>
+    <updated>2021-03-19T04:32:25.712Z</updated>
+    
+    <summary type="html">
+    
+      《DDIA》阅读笔记（九）：一致性与共识（共识问题）
+    
+    </summary>
+    
+    
+      <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
     <title>近期工作学习规划</title>
     <link href="https://yipwinghong.github.io/2021/02/21/2021-02-21_diary/"/>
     <id>https://yipwinghong.github.io/2021/02/21/2021-02-21_diary/</id>
@@ -76,57 +99,11 @@
   </entry>
   
   <entry>
-    <title>《DDIA》阅读笔记（八）：分布式系统的挑战</title>
-    <link href="https://yipwinghong.github.io/2021/02/06/DDIA_note-10/"/>
-    <id>https://yipwinghong.github.io/2021/02/06/DDIA_note-10/</id>
-    <published>2021-02-06T13:19:01.000Z</published>
-    <updated>2021-02-06T04:22:19.785Z</updated>
-    
-    <summary type="html">
-    
-      《DDIA》阅读笔记（八）：分布式系统的挑战
-    
-    </summary>
-    
-    
-      <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《DDIA》阅读笔记（九）：一致性与共识（共识问题）</title>
-    <link href="https://yipwinghong.github.io/2021/01/31/DDIA_note-13/"/>
-    <id>https://yipwinghong.github.io/2021/01/31/DDIA_note-13/</id>
-    <published>2021-01-31T13:21:22.000Z</published>
-    <updated>2021-03-17T13:46:36.554Z</updated>
-    
-    <summary type="html">
-    
-      《DDIA》阅读笔记（九）：一致性与共识（共识问题）
-    
-    </summary>
-    
-    
-      <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
-    
-  </entry>
-  
-  <entry>
     <title>《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</title>
-    <link href="https://yipwinghong.github.io/2021/01/30/DDIA_note-12/"/>
-    <id>https://yipwinghong.github.io/2021/01/30/DDIA_note-12/</id>
-    <published>2021-01-30T15:45:58.000Z</published>
-    <updated>2021-03-17T13:46:23.283Z</updated>
+    <link href="https://yipwinghong.github.io/2021/02/19/DDIA_note-12/"/>
+    <id>https://yipwinghong.github.io/2021/02/19/DDIA_note-12/</id>
+    <published>2021-02-19T15:45:58.000Z</published>
+    <updated>2021-03-19T04:32:07.205Z</updated>
     
     <summary type="html">
     
@@ -146,14 +123,37 @@
   
   <entry>
     <title>《DDIA》阅读笔记（九）：一致性与共识（可线性化）</title>
-    <link href="https://yipwinghong.github.io/2021/01/29/DDIA_note-11/"/>
-    <id>https://yipwinghong.github.io/2021/01/29/DDIA_note-11/</id>
-    <published>2021-01-29T12:11:55.000Z</published>
-    <updated>2021-01-29T03:59:03.604Z</updated>
+    <link href="https://yipwinghong.github.io/2021/02/13/DDIA_note-11/"/>
+    <id>https://yipwinghong.github.io/2021/02/13/DDIA_note-11/</id>
+    <published>2021-02-13T12:11:55.000Z</published>
+    <updated>2021-03-19T04:32:01.802Z</updated>
     
     <summary type="html">
     
       《DDIA》阅读笔记（九）：一致性与共识（可线性化）
+    
+    </summary>
+    
+    
+      <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>《DDIA》阅读笔记（八）：分布式系统的挑战</title>
+    <link href="https://yipwinghong.github.io/2021/02/06/DDIA_note-10/"/>
+    <id>https://yipwinghong.github.io/2021/02/06/DDIA_note-10/</id>
+    <published>2021-02-06T13:19:01.000Z</published>
+    <updated>2021-02-06T04:22:19.785Z</updated>
+    
+    <summary type="html">
+    
+      《DDIA》阅读笔记（八）：分布式系统的挑战
     
     </summary>
     
@@ -261,10 +261,10 @@
   
   <entry>
     <title>《DDIA》阅读笔记（五）：数据复制（单主节点）</title>
-    <link href="https://yipwinghong.github.io/2021/01/19/DDIA_note-5/"/>
-    <id>https://yipwinghong.github.io/2021/01/19/DDIA_note-5/</id>
-    <published>2021-01-19T13:42:41.000Z</published>
-    <updated>2021-03-17T13:46:45.772Z</updated>
+    <link href="https://yipwinghong.github.io/2021/01/09/DDIA_note-5/"/>
+    <id>https://yipwinghong.github.io/2021/01/09/DDIA_note-5/</id>
+    <published>2021-01-09T13:42:41.000Z</published>
+    <updated>2021-01-09T04:33:56.396Z</updated>
     
     <summary type="html">
     
