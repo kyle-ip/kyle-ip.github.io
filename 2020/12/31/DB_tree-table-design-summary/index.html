@@ -275,7 +275,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,301</span>Reading time: <span class="post-count reading-time">14 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3,286</span>Reading time: <span class="post-count reading-time">14 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -525,7 +525,7 @@ height:100vh;
 <li><code>nsleft</code> 的值小于该节点所有后代的 ID，<code>nsright</code> 的值大于该节点所有后代的 ID（数值与 <code>comment_id</code> 无关）。</li>
 <li>建表时需要对树进行一次深度优先遍历，在逐层深入时依次递增地分配 <code>nsleft</code> 的值，在返回时依次递增地分配 <code>nsright</code> 的值。</li>
 </ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Comments (</span><br><span class="line">  comment_id <span class="built_in">SERIAL</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">  nsleft <span class="built_in">INTEGER</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  nsright <span class="built_in">INTEGER</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="keyword">comment</span> <span class="built_in">TEXT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (parent_id) <span class="keyword">REFERENCES</span> Comments(comment_id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Comments (</span><br><span class="line">  comment_id <span class="built_in">SERIAL</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">  nsleft <span class="built_in">INTEGER</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  nsright <span class="built_in">INTEGER</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="keyword">comment</span> <span class="built_in">TEXT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 <p><code>nsleft</code> 和 <code>nsright</code> 可用于查找给定节点的后代或祖先：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> c2.*</span><br><span class="line"><span class="keyword">FROM</span> Comments <span class="keyword">AS</span> c1</span><br><span class="line"><span class="keyword">JOIN</span> Comments <span class="keyword">AS</span> c2 <span class="keyword">ON</span> c2.nsleft <span class="keyword">BETWEEN</span> c1.nsleft <span class="keyword">AND</span> c1.nsright</span><br><span class="line"><span class="keyword">WHERE</span> c1.comment_id = <span class="number">4</span>;</span><br></pre></td></tr></table></figure>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> c2.*</span><br><span class="line"><span class="keyword">FROM</span> Comments <span class="keyword">AS</span> c1</span><br><span class="line"><span class="keyword">JOIN</span> Comments <span class="keyword">AS</span> c2 <span class="keyword">ON</span> c1.nsleft <span class="keyword">BETWEEN</span> c2.nsleft <span class="keyword">AND</span> c2.nsright</span><br><span class="line"><span class="keyword">WHERE</span> c1.comment_id = <span class="number">6</span>;</span><br></pre></td></tr></table></figure>
@@ -554,9 +554,9 @@ height:100vh;
 <ul>
 <li>创建另一个表 <strong>记录树中所有节点间的关系</strong>：将树中任何具有（直接或间接的）“祖先-后代”关系节点对存储在 <code>TreePaths</code> 表中，同时增加一行指向节点自己。</li>
 <li>除了能快速查询给定节点的祖先和后代，闭包表能更加简单地维护分层信息。</li>
-<li>为了使它更方便地查询直接父亲节点或孩子节点，在 <code>TreePaths</code> 表中增加一个 <code>path_length</code> 字段，对于一个节点的子引用 <code>path_length</code> 为 0，到直接子节点 <code>path_length</code> 为 1，以此类推。</li>
+<li>为了使它更方便地查询直接父亲节点或孩子节点，在 <code>TreePaths</code> 表中增加一个 <code>path_length</code> 字段，对于节点的自身引用 <code>path_length</code> 为 0，到直接子节点 <code>path_length</code> 为 1，以此类推。</li>
 </ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Comments (</span><br><span class="line">  comment_id <span class="built_in">SERIAL</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">  <span class="keyword">comment</span> <span class="built_in">TEXT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (parent_id) <span class="keyword">REFERENCES</span> Comments(comment_id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> TreePaths (</span><br><span class="line">  ancestor <span class="built_in">BIGINT</span> <span class="keyword">UNSIGNED</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  descendant <span class="built_in">BIGINT</span> <span class="keyword">UNSIGNED</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  path_length <span class="built_in">BIGINT</span> <span class="keyword">UNSIGNED</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (ancestor, descendant),</span><br><span class="line">  <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (ancestor) <span class="keyword">REFERENCES</span> Comments(comment_id),</span><br><span class="line">  <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (descendant) <span class="keyword">REFERENCES</span> Comments(comment_id),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Comments (</span><br><span class="line">  comment_id <span class="built_in">SERIAL</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">  <span class="keyword">comment</span> <span class="built_in">TEXT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> TreePaths (</span><br><span class="line">  ancestor <span class="built_in">BIGINT</span> <span class="keyword">UNSIGNED</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  descendant <span class="built_in">BIGINT</span> <span class="keyword">UNSIGNED</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  path_length <span class="built_in">BIGINT</span> <span class="keyword">UNSIGNED</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (ancestor, descendant),</span><br><span class="line">  <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (ancestor) <span class="keyword">REFERENCES</span> Comments(comment_id),</span><br><span class="line">  <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (descendant) <span class="keyword">REFERENCES</span> Comments(comment_id),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 <p>查询直接子节点很简单：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> TreePaths</span><br><span class="line"><span class="keyword">WHERE</span> ancestor = <span class="number">4</span> <span class="keyword">AND</span> path_length = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
 
@@ -1119,25 +1119,25 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
+        <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
-    
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
-        <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
