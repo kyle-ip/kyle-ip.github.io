@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-01-21T13:37:58.000Z</updated>
+  <updated>2021-01-21T14:02:26.000Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -17,34 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>数据模型与查询语言</title>
-    <link href="https://yipwinghong.github.io/2021/01/21/DDIA_note-2/"/>
-    <id>https://yipwinghong.github.io/2021/01/21/DDIA_note-2/</id>
-    <published>2021-01-21T13:23:21.000Z</published>
-    <updated>2021-01-21T13:37:58.000Z</updated>
-    
-    <summary type="html">
-    
-      《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言
-    
-    </summary>
-    
-    
-      <category term="数据密集型应用系统设计" scheme="https://yipwinghong.github.io/categories/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
-    
-  </entry>
-  
-  <entry>
     <title>可靠、可扩展与可维护的应用系统</title>
     <link href="https://yipwinghong.github.io/2021/01/21/DDIA_note-1/"/>
     <id>https://yipwinghong.github.io/2021/01/21/DDIA_note-1/</id>
     <published>2021-01-21T13:23:21.000Z</published>
-    <updated>2021-01-21T13:25:20.000Z</updated>
+    <updated>2021-01-21T14:02:26.000Z</updated>
     
     <summary type="html">
     
@@ -63,11 +40,34 @@
   </entry>
   
   <entry>
+    <title>数据模型与查询语言</title>
+    <link href="https://yipwinghong.github.io/2021/01/21/DDIA_note-2/"/>
+    <id>https://yipwinghong.github.io/2021/01/21/DDIA_note-2/</id>
+    <published>2021-01-21T13:23:21.000Z</published>
+    <updated>2021-01-21T13:46:00.000Z</updated>
+    
+    <summary type="html">
+    
+      《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言
+    
+    </summary>
+    
+    
+      <category term="数据密集型应用系统设计" scheme="https://yipwinghong.github.io/categories/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+    
+  </entry>
+  
+  <entry>
     <title>树形表结构设计总结</title>
     <link href="https://yipwinghong.github.io/2021/01/01/DB_tree-table-design-summary/"/>
     <id>https://yipwinghong.github.io/2021/01/01/DB_tree-table-design-summary/</id>
     <published>2020-12-31T16:06:11.000Z</published>
-    <updated>2021-01-21T11:21:54.000Z</updated>
+    <updated>2021-01-21T14:00:04.000Z</updated>
     
     <summary type="html">
     
@@ -77,9 +77,9 @@
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
@@ -111,7 +111,7 @@
     <link href="https://yipwinghong.github.io/2020/10/04/JVM_prod-analysis-cmd/"/>
     <id>https://yipwinghong.github.io/2020/10/04/JVM_prod-analysis-cmd/</id>
     <published>2020-10-04T14:41:50.000Z</published>
-    <updated>2021-01-02T15:29:30.000Z</updated>
+    <updated>2021-01-21T13:55:06.000Z</updated>
     
     <summary type="html">
     
@@ -132,7 +132,7 @@
     <link href="https://yipwinghong.github.io/2020/09/24/Kafka_prod-env-assess/"/>
     <id>https://yipwinghong.github.io/2020/09/24/Kafka_prod-env-assess/</id>
     <published>2020-09-24T12:47:06.000Z</published>
-    <updated>2020-10-09T13:14:58.000Z</updated>
+    <updated>2021-01-21T13:56:20.000Z</updated>
     
     <summary type="html">
     
@@ -153,7 +153,7 @@
     <link href="https://yipwinghong.github.io/2020/06/30/JVM_java-memory-area/"/>
     <id>https://yipwinghong.github.io/2020/06/30/JVM_java-memory-area/</id>
     <published>2020-06-30T03:48:17.000Z</published>
-    <updated>2021-01-21T13:12:52.000Z</updated>
+    <updated>2021-01-21T13:53:00.000Z</updated>
     
     <summary type="html">
     
@@ -252,7 +252,7 @@
     <link href="https://yipwinghong.github.io/2020/02/15/DataWarehouse_design-basic/"/>
     <id>https://yipwinghong.github.io/2020/02/15/DataWarehouse_design-basic/</id>
     <published>2020-02-15T08:32:11.000Z</published>
-    <updated>2020-04-18T13:19:50.000Z</updated>
+    <updated>2021-01-21T13:51:40.000Z</updated>
     
     <summary type="html">
     
@@ -317,7 +317,7 @@
     <link href="https://yipwinghong.github.io/2020/02/15/2020-02-15_diary/"/>
     <id>https://yipwinghong.github.io/2020/02/15/2020-02-15_diary/</id>
     <published>2020-02-14T16:21:38.000Z</published>
-    <updated>2020-04-18T13:18:44.000Z</updated>
+    <updated>2021-01-21T13:49:28.000Z</updated>
     
     <summary type="html">
     
@@ -336,7 +336,7 @@
     <link href="https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/"/>
     <id>https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/</id>
     <published>2020-02-03T06:41:50.000Z</published>
-    <updated>2020-04-18T13:19:24.000Z</updated>
+    <updated>2021-01-21T13:54:02.000Z</updated>
     
     <summary type="html">
     
@@ -357,7 +357,7 @@
     <link href="https://yipwinghong.github.io/2020/02/01/JVM_GC-log-analysis/"/>
     <id>https://yipwinghong.github.io/2020/02/01/JVM_GC-log-analysis/</id>
     <published>2020-02-01T14:48:17.000Z</published>
-    <updated>2020-04-18T13:19:30.000Z</updated>
+    <updated>2021-01-21T13:53:36.000Z</updated>
     
     <summary type="html">
     
@@ -378,7 +378,7 @@
     <link href="https://yipwinghong.github.io/2020/01/21/Kafka_offset-reset/"/>
     <id>https://yipwinghong.github.io/2020/01/21/Kafka_offset-reset/</id>
     <published>2020-01-21T07:32:33.000Z</published>
-    <updated>2020-04-18T13:19:10.000Z</updated>
+    <updated>2021-01-21T13:56:02.000Z</updated>
     
     <summary type="html">
     
@@ -399,7 +399,7 @@
     <link href="https://yipwinghong.github.io/2020/01/21/Kafka_dynamic-config/"/>
     <id>https://yipwinghong.github.io/2020/01/21/Kafka_dynamic-config/</id>
     <published>2020-01-21T07:31:23.000Z</published>
-    <updated>2020-04-18T13:19:14.000Z</updated>
+    <updated>2021-01-21T13:55:50.000Z</updated>
     
     <summary type="html">
     
@@ -420,7 +420,7 @@
     <link href="https://yipwinghong.github.io/2020/01/20/Kafka_common-scripts/"/>
     <id>https://yipwinghong.github.io/2020/01/20/Kafka_common-scripts/</id>
     <published>2020-01-20T15:26:29.000Z</published>
-    <updated>2020-04-18T13:19:18.000Z</updated>
+    <updated>2021-01-21T13:55:26.000Z</updated>
     
     <summary type="html">
     
