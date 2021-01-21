@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-01-21T14:02:26.000Z</updated>
+  <updated>2021-01-21T14:08:32.000Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>可靠、可扩展与可维护的应用系统</title>
+    <title>《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统</title>
     <link href="https://yipwinghong.github.io/2021/01/21/DDIA_note-1/"/>
     <id>https://yipwinghong.github.io/2021/01/21/DDIA_note-1/</id>
     <published>2021-01-21T13:23:21.000Z</published>
-    <updated>2021-01-21T14:02:26.000Z</updated>
+    <updated>2021-01-21T14:08:32.000Z</updated>
     
     <summary type="html">
     
@@ -30,7 +30,7 @@
     </summary>
     
     
-      <category term="数据密集型应用系统设计" scheme="https://yipwinghong.github.io/categories/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
+      <category term="《数据密集型应用系统设计》读书笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
@@ -40,11 +40,11 @@
   </entry>
   
   <entry>
-    <title>数据模型与查询语言</title>
+    <title>《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言</title>
     <link href="https://yipwinghong.github.io/2021/01/21/DDIA_note-2/"/>
     <id>https://yipwinghong.github.io/2021/01/21/DDIA_note-2/</id>
     <published>2021-01-21T13:23:21.000Z</published>
-    <updated>2021-01-21T13:46:00.000Z</updated>
+    <updated>2021-01-21T14:08:46.000Z</updated>
     
     <summary type="html">
     
@@ -53,7 +53,7 @@
     </summary>
     
     
-      <category term="数据密集型应用系统设计" scheme="https://yipwinghong.github.io/categories/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
+      <category term="《数据密集型应用系统设计》读书笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
@@ -77,9 +77,9 @@
     
     
     
-      <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
