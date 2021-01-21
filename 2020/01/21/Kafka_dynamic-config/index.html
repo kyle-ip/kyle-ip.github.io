@@ -431,15 +431,20 @@ height:100vh;
 </ul>
 <p>Kafka 将动态 Broker 参数保存在 ZooKeeper 的 <code>/config</code> 路径中（都是持久化节点）：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/config</span><br><span class="line">	changes		<span class="comment"># changes 实时监测动态参数变更，不保存参数值</span></span><br><span class="line">	topics		<span class="comment"># 主题级别参数</span></span><br><span class="line">	users		<span class="comment"># 动态调整客户端配额（Quota）</span></span><br><span class="line">	clients			<span class="comment"># 即限制连入集群的客户端的吞吐量或者是限定使用的 CPU 资源</span></span><br><span class="line">    /brokers</span><br><span class="line">    	&lt;default&gt;	<span class="comment"># cluster-wide 范围的动态参数</span></span><br><span class="line">        broker.id	<span class="comment"># 特定 Broker 的 per-broker 范围参数（可能存在多个）</span></span><br></pre></td></tr></table></figure>
+
 <p>配置的优先级为：per-broker 参数 &gt; cluster-wide 参数 &gt; static 参数 &gt; Kafka 默认值。</p>
 <h1 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置"></a>参数配置</h1><p>使用 Kafka 自带的 kafka-configs 脚本，以配置 cluster-wide 范围参数为例：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-default --alter --add-config unclean.leader.election.enable=true</span><br><span class="line"><span class="meta">#</span><span class="bash"> unclean.leader.election.enable</span></span><br></pre></td></tr></table></figure>
+
 <p>要设置 cluster-wide 范围的动态参数，即在集群层面设置全局值，需要显式指定 <code>entity-default</code>，检查配置是否成功：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-default --describe</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 有以下输出，表示成功地在全局层面上设置该参数值为 <span class="literal">true</span>（其中 sensitive=<span class="literal">false</span> 表明要调整的参数不是敏感数据）：</span></span><br><span class="line">Default config for brokers in the cluster are:</span><br><span class="line">  unclean.leader.election.enable=true sensitive=false synonyms=&#123;DYNAMIC_DEFAULT_BROKER_CONFIG:unclean.leader.election.enable=true&#125;</span><br></pre></td></tr></table></figure>
+
 <p>如要设置 per-broker 范围（ID 为 1 的 Broker）参数，则执行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-name 1 --alter --add-config unclean.leader.election.enable=false</span><br></pre></td></tr></table></figure>
+
 <p>检查配置是否成功：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-name 1 --describe</span><br><span class="line"></span><br><span class="line">Configs for broker 1 are:</span><br><span class="line">  unclean.leader.election.enable=false sensitive=false synonyms=&#123;DYNAMIC_BROKER_CONFIG:unclean.leader.election.enable=false, DYNAMIC_DEFAULT_BROKER_CONFIG:unclean.leader.election.enable=true, DEFAULT_CONFIG:unclean.leader.election.enable=false&#125;</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li><p>在 Broker 1 层面上，该参数被设置成了 false，表明配置成功；</p>
 </li>
@@ -448,8 +453,8 @@ height:100vh;
 </ul>
 <p>最后需要分别从 Broker 和全局层面删除配置：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除cluster-wide范围参数</span></span><br><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-default --alter --delete-config unclean.leader.election.enable</span><br><span class="line">Completed updating default config for brokers in the cluster,</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除per-broker范围参数</span></span><br><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-name 1 --alter --delete-config unclean.leader.election.enable</span><br><span class="line">Completed updating config for broker: 1.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看cluster-wide范围参数</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> bin/kafka-configs.sh --bootstrap-server kafka-host:port  --entity-type brokers --entity-default --describe</span></span><br><span class="line">Default config for brokers in the cluster are:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看Broker 1上的动态参数配置</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> bin/kafka-configs.sh --bootstrap-server kafka-host:port  --entity-type brokers --entity-name 1 --describe</span></span><br><span class="line">Configs for broker 1 are:</span><br></pre></td></tr></table></figure>
-<h1 id="常用参数"><a href="#常用参数" class="headerlink" title="常用参数"></a>常用参数</h1><div class="table-container">
-<table>
+
+<h1 id="常用参数"><a href="#常用参数" class="headerlink" title="常用参数"></a>常用参数</h1><table>
 <thead>
 <tr>
 <th>序号</th>
@@ -457,8 +462,7 @@ height:100vh;
 <th>备注</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>1</td>
 <td>log.retention.ms</td>
 <td>由于不可能完美地预估所有业务的消息留存时长，修改日志留存时间是一个比较高频的操作。可以设置对应的主题级别或在全局层面上动态变更参数。</td>
@@ -478,9 +482,7 @@ height:100vh;
 <td>num.replica.fetchers</td>
 <td>Follower 副本拉取速度慢常见的做法是增加该参数值，确保有充足的线程可以执行 Follower 副本向 Leader 副本的拉取。使用动态参数，则不需要重启 Broker 就能立即在 Follower 端生效。</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <p>以上。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
@@ -1052,25 +1054,25 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
         <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
