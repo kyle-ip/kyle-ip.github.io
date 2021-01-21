@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>YWH&#39;s Notebook</title>
+    <title>可靠、可扩展与可维护的应用系统 · YWH&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -77,6 +77,8 @@
 
     <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
@@ -202,14 +204,23 @@
 </head>
 
     
-        <body class="home-body">
+        <body class="post-body">
     
     
-<header class="header index-header">
+<header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >YWH&#39;s Notebook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">可靠、可扩展与可维护的应用系统</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>YWH's Notebook</a>
 </header>
@@ -228,7 +239,7 @@ height:100vh;
     <!-- 主页  -->
     
     
-    <!-- 文章页  -->
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
     <div class="site-intro-img" style="background-image: url(https://api.ixiaowai.cn/mcapi/mcapi.php)"></div>
@@ -237,8 +248,8 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            YWH's Notebook
-            <!-- 文章页  -->
+            可靠、可扩展与可维护的应用系统
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
@@ -246,12 +257,51 @@ height:100vh;
             <!-- 主页副标题  -->
             
             
-                🡇
-            
-            <!-- 文章页  -->
+            <!-- 404 -->
             
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Design">Design</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">2,654</span>Reading time: <span class="post-count reading-time">9 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/01/21</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -352,344 +402,208 @@ height:100vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/11/01/Design_design-patterns/" >
-            
-                <span>设计模式与设计原则</span>
-        </a>
-        <div class="abstract-content">
-            常用设计模式及其应用实例...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/11/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Design">Design</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统"><a href="#《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统" class="headerlink" title="《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统"></a>《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统</h1><p>本章结构如下：</p>
+<blockquote class="pullquote mindmap mindmap-md"><ul>
+<li>可靠、可扩展与可维护的应用系统<ul>
+<li>可靠性（Reliability）<ul>
+<li>硬件故障</li>
+<li>软件故障</li>
+<li>人为失误</li>
+</ul>
+</li>
+<li>可扩展性（Scalability）<ul>
+<li>描述负载</li>
+<li>描述性能</li>
+<li>系统扩展<ul>
+<li>自动与手动</li>
+<li>水平与垂直</li>
+<li>有状态与无状态</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>可维护性（Maintainability）<ul>
+<li>可运维性</li>
+<li>简单性<ul>
+<li>复杂系统</li>
+<li>设计抽象</li>
+</ul>
+</li>
+<li>可演化性<ul>
+<li>应对需求变化</li>
+<li>敏捷开发模式</li>
+<li>简单与抽象</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>* 存储架构<ul>
+<li>数据库基本架构<ul>
+<li>客户端通信管理</li>
+<li>进程管理</li>
+<li>查询处理</li>
+<li>事务存储管理</li>
+<li>共享组件与工具</li>
+</ul>
+</li>
+<li>传统架构<ul>
+<li>客户端组件</li>
+<li>代理中间件</li>
+<li>单元化架构</li>
+</ul>
+</li>
+<li>分布式架构<ul>
+<li>PGXC</li>
+<li>NewSQL</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>区别于计算密集型应用（compute intensi ve），数据密集型应用（data intensiive），CPU 的处理能力不是第一限制性因素，关键在于数据量、数据复杂度及数据快速多变性。</p>
+<p>定义数据系统：</p>
+<ul>
+<li>应用系统需求广泛，单个组件往往无法满足所有数据处理与存储需求。因而需要将任务分解，每个组件负责高效完成其中一部分，多个组件依靠应用层代码驱动有机衔接起来。</li>
+<li>数据系统包括数据库、高速缓存、索引、流式处理、批处理等不同访问方式的系统。</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1-%E6%95%B0%E6%8D%AE%E7%B3%BB%E7%BB%9F.png" alt="数据系统"></p>
+<h2 id="可靠性（Reliability）"><a href="#可靠性（Reliability）" class="headerlink" title="可靠性（Reliability）"></a>可靠性（Reliability）</h2><p>人们对软件系统的期望：</p>
+<ul>
+<li>应用程序执行用户所期望的功能。</li>
+<li>可以容忍用户出现错误或者不正确的软件使用方法。</li>
+<li>性能可以应对典型场景、合理负载压力和数据量。</li>
+<li>系统可防止任何未经授权的访问和滥用。</li>
+</ul>
+<p>因此，可靠性意味着即使发生故障，系统也可以正常工作。</p>
+<ul>
+<li><strong>容错、弹性</strong>：在预算范围内，系统可应对特定类型的故障。</li>
+<li><strong>故障与失效</strong>：分别指组件与系统整体的层面。</li>
+</ul>
+<p>要确保系统可靠性，通常需要克服三个方面的故障：硬件故障、软件故障、人为故障。</p>
+<blockquote>
+<p> P.S. 容错测试：Netflix Chaos Monkey</p>
+</blockquote>
+<h3 id="硬件故障"><a href="#硬件故障" class="headerlink" title="硬件故障"></a>硬件故障</h3><ul>
+<li>为硬件添加冗余来减少系统故障率：磁盘配置 RAID，服务器配备双电源，热插拔 CPU，数据中心添加备用电源、发电机等。</li>
+<li>结合软件容错成为容忍多机失效的补充手段。</li>
+</ul>
+<h3 id="软件故障"><a href="#软件故障" class="headerlink" title="软件故障"></a>软件故障</h3><p>认真检查依赖的假设条件与系统之间交互，进行全面的测试，进程隔离，允许进程崩溃并自动重启，反复评估，监控并分析生产环节的行为表现。</p>
+<h3 id="人为失误"><a href="#人为失误" class="headerlink" title="人为失误"></a>人为失误</h3><ul>
+<li>以最小出错的方式来设计系统。</li>
+<li>分离最容易出错的地方、容易引发故障的接口（提供功能齐全、非生产用的沙箱环境）。</li>
+<li>充分的测试：单元测试，集成测试，系统测试，自动化测试（覆盖边界条件）。</li>
+<li>当出现人为失误时，提供快速的恢复机制以尽最减少故障影响。</li>
+<li>设置详细而清晰的监控子系统，包括性能指标和错误率。</li>
+<li>推行管理流程并加以培训。</li>
+</ul>
+<h2 id="可扩展性（Scalability）"><a href="#可扩展性（Scalability）" class="headerlink" title="可扩展性（Scalability）"></a>可扩展性（Scalability）</h2><p>可扩展性即当负载参数（数据量、流量或复杂性）增加时，系统应以合理的方式来匹配增长，保持良好性能。</p>
+<h3 id="描述负载"><a href="#描述负载" class="headerlink" title="描述负载"></a>描述负载</h3><p>负载参数的最佳选择取决于系统的体系结构，它可能是 Web 服务器的每秒请求处理次数，数据库中写入的比例，聊天室的同时活动用户数量，缓存命中率等。</p>
+<p>有时平均值很重要，有时系统瓶颈则来自于少数峰值。</p>
+<h3 id="描述性能"><a href="#描述性能" class="headerlink" title="描述性能"></a>描述性能</h3><p>负载增加，需要考虑如果系统资源不变、性能会发生什么变化？或者保持性能不变，需要增加多少资源。</p>
+<ul>
+<li>批处理系统中通常关心吞吐量（单位时间内可处理的记录条数、指定数据集上运行作业所需的总时间）。</li>
+<li>在线系统中更着重服务的响应时间：客户端从发送请求到接收响应之间的间隔（除了处理请求时间还包括来回网络延迟和各种排队延迟），必须在客户端测量。</li>
+<li>SLO（服务质量目标）和 SLA（服务质量协议）关注百分位数：比如 p95 即 95% 分位数为 200ms，要求 95% 的请求快于 200ms，允许 5% 的请求需要更长时间。</li>
+<li>对于后台服务，如果一次完整的服务里包含了多次请求调用，此时高百分位数指标尤为重要，因为最终用户仍然需要等待最慢的调用完成。即使只有很小百分比的请求缓慢，如果用户频发触发这种调用，最终总体变慢的概率就会增加（长尾效应）。</li>
+</ul>
+<h3 id="系统扩展"><a href="#系统扩展" class="headerlink" title="系统扩展"></a>系统扩展</h3><p>超大规模系统往往针对特定应用而高度定制，很难有一种通用的架构。</p>
+<p>背后取舍因素包括数据读取量、写入量 、待存储的数据量、数据的复杂程度、响应时间要求、访问模式等，或者上述因素的叠加，再加上其他更复杂的问题。</p>
+<p>但可扩展架构通常都是从通用模块逐步构建而来，背后往往有规律可循。</p>
+<h4 id="自动与手动"><a href="#自动与手动" class="headerlink" title="自动与手动"></a>自动与手动</h4><p>某些系统具有弹性特征，它可以自动检测负载增加，然后自动添加更多计算资源，而其他系统则是手动扩展（人工分析性能表现决定添加更多计算）。</p>
+<p>如果负载高度不可预测，则自动弹性系统会更加高效，但或许手动方式可以减少执行期间的意外情况。</p>
+<h4 id="水平与垂直"><a href="#水平与垂直" class="headerlink" title="水平与垂直"></a>水平与垂直</h4><p>在垂直扩展（即升级到更强大的机器）和水平扩展（即将负载分布到多个更小的机器）之间做取舍。在多台机器上分配负载也被称为无共享体系结构。</p>
+<p>在单台机器上运行的系统通常更简单，然而高端机器可能非常昂贵，且扩展水平有限，最终往往还是无法避免需要水平扩展。</p>
+<p>好的架构通常要做些实际取舍：使用几个强悍的服务器仍可以比大量的小型虚拟机来得更简单、便宜。</p>
+<h4 id="有状态与无状态"><a href="#有状态与无状态" class="headerlink" title="有状态与无状态"></a>有状态与无状态</h4><p>把无状态服务分布然后扩展至多台机器相对比较容易，而有状态服务从单个节点扩展到分布式多机环境的复杂性会大大增加。</p>
+<p>通常做法是将数据库运行在一个节点上（垂直扩展），直到高扩展性或高可用性的要求迫使不得不做水平扩展。</p>
+<h2 id="可维护性（Maintainability）"><a href="#可维护性（Maintainability）" class="headerlink" title="可维护性（Maintainability）"></a>可维护性（Maintainability）</h2><p>随着时间推移，许多新的人员参与到系统开发和运维以维护现有功能或适配新场景等，系统都应高效运转。</p>
+<p>系统的可维护性，即可运维性、简单性和可演化性。</p>
+<h3 id="可运维性"><a href="#可运维性" class="headerlink" title="可运维性"></a>可运维性</h3><p>方便运营团队保持系统平稳运行，数据系统设计：</p>
+<ul>
+<li>提供对系统运行时行为和内部的可观测性，方便监控。</li>
+<li>支持自动化，与标准工具集成。</li>
+<li>避免绑定特定的机器，在整个系统不间断运行的同时允许机器停机维护。</li>
+<li>提供良好的文档和易于理解的操作模式， 诸如“如果 X，会发生 Y”。</li>
+<li>提供良好的默认配置，且允许管理员在需要时方便地修改默认值。</li>
+<li>尝试自我修复，在需要时让管理员手动控制系统状态。</li>
+<li>行为可预测，减少意外发生。</li>
+</ul>
+<h3 id="简单性"><a href="#简单性" class="headerlink" title="简单性"></a>简单性</h3><p>即简化系统复杂性，使新工程师能够轻松理解系统（不是 UI 简单）。</p>
+<h4 id="复杂系统"><a href="#复杂系统" class="headerlink" title="复杂系统"></a>复杂系统</h4><p>随着项目越来越大，系统会越来越复杂和难以理解。</p>
+<ul>
+<li>复杂性拖慢开发效率，增加维护成本，通常表现为：状态空间的膨胀，模块紧耦合，令入纠结的相互依赖关系，不一致的命名和术语，为了性能而采取的特殊处理，为解决某特定问题而引入的特殊框架等。</li>
+<li>维护困难：导致预算超支和开发滞后。复杂的软件系统变更引入潜在错误的风险会显著加大，开发人员更加难以准确理解、评估或者更加容易忽略相关系统行为，包括背后的假设、潜在的后果、设计之外的模块交互等。</li>
+</ul>
+<h4 id="设计抽象"><a href="#设计抽象" class="headerlink" title="设计抽象"></a>设计抽象</h4><p>简化系统设计意味着消除意外方面的复杂性。最好手段之一是抽象：</p>
+<ul>
+<li>好的设计抽象可以隐藏大量的实现细节，并对外提供干净易懂的接口。</li>
+<li>可用于各种不同的应用程序，复用远比多次重复实现更有效率。</li>
+<li>带来更高质量的软件。</li>
+</ul>
+<p>质量过硬的抽象组件所带来的好处可使运行其上的所有应用轻松获益。</p>
+<h3 id="可演化性"><a href="#可演化性" class="headerlink" title="可演化性"></a>可演化性</h3><p>工程师能够轻松地对系统进行改进，并根据需求变化将其适配到非典型场景，也称为可延伸性、易修改性或可塑性。</p>
+<h4 id="应对需求变化"><a href="#应对需求变化" class="headerlink" title="应对需求变化"></a>应对需求变化</h4><p>适配新的外部环境、新的用例、业务优先级的变化、用户要求的新功能、新平台取代旧平台、法律或监管要求的变化、业务增长促使架构的演变等。</p>
+<h4 id="敏捷开发模式"><a href="#敏捷开发模式" class="headerlink" title="敏捷开发模式"></a>敏捷开发模式</h4><p>在组织流程方面敏捷开发模式为适应变化提供了很好的参考。其中很多技术工具和模式可帮助在频繁变化的环境中开发软件，例如测试驱动开发和重构（目前多数还只是针对小规模、本地模式环境，例如同一应用程序中的几个源代码文件）。</p>
+<h4 id="简单与抽象"><a href="#简单与抽象" class="headerlink" title="简单与抽象"></a>简单与抽象</h4><p>由于目标是可以轻松地修改数据系统，使其适应不断变化的需求，这和简单性与抽象性密切相关：简单易懂的系统更容易修改。 其中数据系统级的敏捷性即可演化性。</p>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/10/30/JVM_mindmap/" >
-            
-                <span>Java 虚拟机与并发编程</span>
-        </a>
-        <div class="abstract-content">
-            ProcessON 与 GitHub Pages 更搭哦~
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/09/02/JavaScript_ES6-grammar/" >
-            
-                <span>ES6 语法总结</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/c8ab939556e8
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaScript">JavaScript</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/08/28/JavaScript_cheat-sheet/" >
-            
-                <span>JavaScript Cheat Sheet</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/6d8c3face1b7
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/28</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaScript">JavaScript</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/10/04/Python_async-programming/" >
-            
-                <span>Python 异步编程总结</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/f4b49cfd15b6
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/04</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/09/19/Python_data-structure/" >
-            
-                <span>Python 数据结构应用</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/6d8c3face1b7
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/09/19</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/09/13/Python_decorator-basic-usage/" >
-            
-                <span>Python 装饰器基本用法</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/84ae6d657007
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/09/13</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/08/22/Python_OOP-summary/" >
-            
-                <span>Python 类与对象总结</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/28216703f7a1
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
+    <!-- license  -->
     
     <!-- paginator  -->
-    
-    <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/page/2/">PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
-    
-</main>
-            <!-- profile -->
+    <ul class="post-paginator">
+        <li class="next">
             
-            <div class="profile">
-    <img class="profile-avatar" alt="avatar" src= https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/avatar.png >
-    <div class="profile-name">YWH</div>
-    
-    <div class="profile-signature">
-        Be Geek, My Friend.
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2021/01/21/DDIA_note-2/" title= "数据模型与查询语言">
+                    <div class="nextTitle">数据模型与查询语言</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/01/01/DB_tree-table-design-summary/" title= "树形表结构设计总结">
+                    <div class="prevTitle">树形表结构设计总结</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
     </div>
+
+<!-- City版安装代码已完成 -->
     
     
-    <div class="profile-social">
-        
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
     
-        
-            
-                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
-            
-        
-    
-        
-            
-                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
-            
-        
-    
-        
-            
-                <span class="iconfont-archer wechat" title=wechat>
-                  
-                  <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
-                </span>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-            
-                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
-            
-        
     
 
-    </div>
-    
-    
-    
-        <div class="about-me">
-            <a href = "/about" >ABOUT ME</a>
-        </div>
-    
-</div>
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
             
         </div>
         <footer class="footer footer-unloaded">
@@ -776,6 +690,24 @@ height:100vh;
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:100vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统"><span class="toc-number">1.</span> <span class="toc-text">《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#可靠性（Reliability）"><span class="toc-number">1.1.</span> <span class="toc-text">可靠性（Reliability）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#硬件故障"><span class="toc-number">1.1.1.</span> <span class="toc-text">硬件故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#软件故障"><span class="toc-number">1.1.2.</span> <span class="toc-text">软件故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#人为失误"><span class="toc-number">1.1.3.</span> <span class="toc-text">人为失误</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可扩展性（Scalability）"><span class="toc-number">1.2.</span> <span class="toc-text">可扩展性（Scalability）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#描述负载"><span class="toc-number">1.2.1.</span> <span class="toc-text">描述负载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#描述性能"><span class="toc-number">1.2.2.</span> <span class="toc-text">描述性能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统扩展"><span class="toc-number">1.2.3.</span> <span class="toc-text">系统扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#自动与手动"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">自动与手动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#水平与垂直"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">水平与垂直</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#有状态与无状态"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">有状态与无状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可维护性（Maintainability）"><span class="toc-number">1.3.</span> <span class="toc-text">可维护性（Maintainability）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可运维性"><span class="toc-number">1.3.1.</span> <span class="toc-text">可运维性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单性"><span class="toc-number">1.3.2.</span> <span class="toc-text">简单性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#复杂系统"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">复杂系统</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设计抽象"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">设计抽象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可演化性"><span class="toc-number">1.3.3.</span> <span class="toc-text">可演化性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#应对需求变化"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">应对需求变化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#敏捷开发模式"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">敏捷开发模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简单与抽象"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">简单与抽象</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1281,6 +1213,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
