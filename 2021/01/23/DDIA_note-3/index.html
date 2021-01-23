@@ -640,10 +640,14 @@ height:100vh;
 <h5 id="更好的压缩"><a href="#更好的压缩" class="headerlink" title="更好的压缩"></a>更好的压缩</h5><p>通过定期重写消除碎片化，通常磁盘上的文件比 B-tree 小很多，当使用分层压缩时，具有较低的存储开销。</p>
 <h5 id="写入带宽开销"><a href="#写入带宽开销" class="headerlink" title="写入带宽开销"></a>写入带宽开销</h5><p>高写入吞吐量时，磁盘的有限写入带宽需要在初始写入（记录并刷新内存表到磁盘）和后台运行的压缩线程之间所共享。因此压缩过程有时会干扰读写操作。</p>
 <ul>
-<li>虽然存储引擎执行增量压缩且不影响并发访问，但受限于磁盘的并发资源，压缩时容易发生读写请求等待的情况，响应延迟不具确定性。</li>
-<li>写入空数据库时全部的磁盘带宽可用于初始写入，但随着数据量变大，压缩所需的磁盘带宽就越多。</li>
-<li>如果压缩无法匹配新数据写入速率，未合并段的数量不断增加，直到磁盘空间不足。</li>
-<li>由于查询时需要检查更多的段文件，读取速度也会降低 。</li>
+<li><p>虽然存储引擎执行增量压缩且不影响并发访问，但受限于磁盘的并发资源，压缩时容易发生读写请求等待的情况，响应延迟不具确定性。</p>
+</li>
+<li><p>写入空数据库时全部的磁盘带宽可用于初始写入，但随着数据量变大，压缩所需的磁盘带宽就越多。</p>
+</li>
+<li><p>如果压缩无法匹配新数据写入速率，未合并段的数量不断增加，直到磁盘空间不足。</p>
+</li>
+<li><p>由于查询时需要检查更多的段文件，读取速度也会降低 。</p>
+</li>
 </ul>
 <p>通常即使压缩不能跟上，基于 SSTable 的存储引擎也不会限制到来的写入速率，因此需要仔细配置压缩和额外的监控措施来及时发现这种情况。</p>
 <h3 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B-Tree"></a>B-Tree</h3><p>B-tree 保留按键排序的键值对，可以实现高效的键值查询和区间查询。</p>
@@ -807,7 +811,7 @@ height:100vh;
 <li><p>当底层数据发生变化时， 物化视图也需要随之更新（这种更新方式影响写入性能，因此 OLTP 数据库不常使用）。</p>
 </li>
 </ul>
-<p>数据立方体：由不同维度分组的聚合网格，优点是某些查询会非常快，主要是它们已被预先计算出来（只需要直接查看对应维度的总和， 而不需要扫<br>描数百万行）；缺点则是缺乏像查询原始数据那样的灵活性，数据仓库需要保留尽可能多的原始数据，仅当数据立方体可以对特定查询显著提升性能时， 才会采用多维数据聚合。<br><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93.jpg" alt="数据立方体"></p>
+<p>数据立方体：由不同维度分组的聚合网格，优点是某些查询会非常快，主要是它们已被预先计算出来（只需要直接查看对应维度的总和， 而不需要扫描数百万行）；缺点则是缺乏像查询原始数据那样的灵活性，数据仓库需要保留尽可能多的原始数据，仅当数据立方体可以对特定查询显著提升性能时， 才会采用多维数据聚合。<br><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93.jpg" alt="数据立方体"></p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -1381,33 +1385,33 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
-    
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1481,26 +1485,7 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-<!--
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
--->
-
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
 </html>
 
 
