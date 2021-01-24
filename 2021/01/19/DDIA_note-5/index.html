@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统 · YWH&#39;s Notebook</title>
+    <title>《数据密集型应用系统设计》读书笔记（五）：数据复制（单主节点复制） · YWH&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >YWH&#39;s Notebook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统</a>
+                <a href="#" class="post-name">《数据密集型应用系统设计》读书笔记（五）：数据复制（单主节点复制）</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统
+            《数据密集型应用系统设计》读书笔记（五）：数据复制（单主节点复制）
             <!-- 404 -->
             
         </h1>
@@ -275,12 +275,12 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2,639</span>Reading time: <span class="post-count reading-time">9 min</span></span>
+                        <span>Word count: <span class="post-count word-count">4,983</span>Reading time: <span class="post-count reading-time">17 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/01/21</span>
+                    <span class="post-intro-time">2021/01/19</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -404,59 +404,123 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="可靠、可扩展与可维护的应用系统"><a href="#可靠、可扩展与可维护的应用系统" class="headerlink" title="可靠、可扩展与可维护的应用系统"></a>可靠、可扩展与可维护的应用系统</h1><p>本章结构如下：</p>
+        <p>本章结构如下：</p>
 <blockquote class="pullquote mindmap mindmap-md"><ul>
-<li>可靠、可扩展与可维护的应用系统<ul>
-<li>可靠性（Reliability）<ul>
-<li>硬件故障</li>
-<li>软件故障</li>
-<li>人为失误</li>
+<li>数据复制<ul>
+<li>单主节点复制<ul>
+<li>同步/异步复制</li>
+<li>配置新从节点</li>
+<li>处理节点失效<ul>
+<li>从节点失效：追赶式恢复</li>
+<li>主节点失效：节点切换<ul>
+<li>处理步骤<ul>
+<li>确认主节点失效</li>
+<li>选举新的主节点</li>
+<li>使新主节点生效</li>
 </ul>
 </li>
-<li>可扩展性（Scalability）<ul>
-<li>描述负载</li>
-<li>描述性能</li>
-<li>系统扩展<ul>
-<li>自动与手动</li>
-<li>水平与垂直</li>
-<li>有状态与无状态</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>可维护性（Maintainability）<ul>
-<li>可运维性</li>
-<li>简单性<ul>
-<li>复杂系统</li>
-<li>设计抽象</li>
-</ul>
-</li>
-<li>可演化性<ul>
-<li>应对需求变化</li>
-<li>敏捷开发模式</li>
-<li>简单与抽象</li>
+<li>处理步骤<ul>
+<li>数据丢失</li>
+<li>数据不一致</li>
+<li>脑裂</li>
+<li>超时</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>* 存储架构<ul>
-<li>数据库基本架构<ul>
-<li>客户端通信管理</li>
-<li>进程管理</li>
-<li>查询处理</li>
-<li>事务存储管理</li>
-<li>共享组件与工具</li>
 </ul>
 </li>
-<li>传统架构<ul>
-<li>客户端组件</li>
-<li>代理中间件</li>
-<li>单元化架构</li>
+<li>复制日志的实现<ul>
+<li>基于语句的复制</li>
+<li>基于预写日志的复制</li>
+<li>基于行逻辑日志的复制</li>
+<li>基于触发器的复制</li>
 </ul>
 </li>
-<li>分布式架构<ul>
-<li>PGXC</li>
-<li>NewSQL</li>
+<li>复制滞后问题<ul>
+<li>一致性模型<ul>
+<li>写后读<ul>
+<li>主节点处理</li>
+<li>更新时间戳</li>
+<li>多数据中心</li>
+</ul>
+</li>
+<li>单调读</li>
+<li>前缀读</li>
+</ul>
+</li>
+<li>解决方案</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>多主节点复制<ul>
+<li>使用场景<ul>
+<li>多数据中心</li>
+<li>离线客户端</li>
+<li>协作编辑</li>
+</ul>
+</li>
+<li>处理写冲突<ul>
+<li>同步/异步检测</li>
+<li>避免冲突</li>
+<li>收敛于一致状态</li>
+<li>写时/读时冲突解决</li>
+<li>自动冲突解决<ul>
+<li>无冲突数据类型</li>
+<li>可合并的持久数据结构</li>
+<li>操作转换</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>拓扑结构<ul>
+<li>环型</li>
+<li>星型</li>
+<li>全链接</li>
+<li>存在问题</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>无主节点复制<ul>
+<li>节点失效时写入数据库<ul>
+<li>读修复与反熵</li>
+<li>读写 Quorum</li>
+</ul>
+</li>
+<li>Quorum 一致性的局限性<ul>
+<li>监控旧值</li>
+<li>sloppy quorum 与数据回传</li>
+<li>多数据中心</li>
+</ul>
+</li>
+<li>检测并发写<ul>
+<li>最后写入者获胜（丢弃）</li>
+<li>happens-before 关系和并发</li>
+<li>确定前后关系</li>
+<li>合并同时写入的值</li>
+<li>版本矢量</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>元数据存储<ul>
+<li>静态分片存储<ul>
+<li>哈希</li>
+<li>多节点</li>
+<li>无变更</li>
+</ul>
+</li>
+<li>无状态服务<ul>
+<li>心跳</li>
+<li>PD 被动接收</li>
+<li>持久化</li>
+</ul>
+</li>
+<li>去中心化<ul>
+<li>PSP 架构</li>
+<li>Gossip 协议</li>
 </ul>
 </li>
 </ul>
@@ -466,121 +530,184 @@ height:100vh;
 </ul>
 </blockquote>
 
-<p>定义数据系统：</p>
+<p>本篇介绍多种复制架构原理、存在问题及其解决方案。</p>
+<p>数据复制指通过互联网络在多台机器上保存相同数据的副本，其目的是：</p>
 <ul>
-<li>应用系统需求广泛，单个组件往往无法满足所有数据处理与存储需求。因而需要将任务分解，每个组件负责高效完成其中一部分，多个组件依靠应用层代码驱动有机衔接起来。</li>
-<li>数据系统包括数据库、高速缓存、索引、流式处理、批处理等不同访问方式的系统。</li>
-<li>区别于计算密集型应用（compute intensi ve），数据密集型应用（data intensiive）的 CPU 的处理能力不是第一限制性因素，关键在于数据量、数据复杂度及数据快速多变性。</li>
+<li><p>低延迟：使数据在地理位置上更接近用户，从而降低访问延迟。</p>
+</li>
+<li><p>高可用：当部分组件出现故障，系统依然可以继续工作，从而提高可用性。</p>
+</li>
+<li><p>可扩展：扩展至多台机器以同时提供数据访问服务，从而提高读吞吐量。</p>
+</li>
 </ul>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1-%E6%95%B0%E6%8D%AE%E7%B3%BB%E7%BB%9F.png" alt="数据系统"></p>
-<h2 id="可靠性（Reliability）"><a href="#可靠性（Reliability）" class="headerlink" title="可靠性（Reliability）"></a>可靠性（Reliability）</h2><p>人们对软件系统的期望：</p>
+<p>考虑数据复制问题的预设前提：</p>
 <ul>
-<li><p>应用程序执行用户所期望的功能。</p>
+<li><p>数据规模较小，集群的每一台机器都可以保存数据集的完整副本（否则必须分区）。</p>
 </li>
-<li><p>可以容忍用户出现错误或者不正确的软件使用方法。</p>
+<li><p>数据持续更改，需要不断复制；</p>
 </li>
-<li><p>性能可以应对典型场景、合理负载压力和数据量。</p>
+<li><p>考虑采用异步/同步复制、如何处理失败副本；</p>
 </li>
-<li><p>系统可防止任何未经授权的访问和滥用。</p>
+<li><p>……</p>
 </li>
 </ul>
-<p>因此，可靠性意味着即使发生故障，系统也可以正常工作。</p>
+<p>每种复制方案都有其优点和缺点。主从复制非常流行，主要是因为它很容易理解， 也不需要担心冲突问题，而出现节点失效、网络中断或者延迟抖动等情况，多主节点和无主节点复制方案会更加可靠，但代价是系统的复杂性和弱一致性保证。</p>
+<h1 id="单主节点复制"><a href="#单主节点复制" class="headerlink" title="单主节点复制"></a>单主节点复制</h1><p>所有的客户端写入操作都发送到某一个节点（主节点），由该节点负责将数据更改事件发送到其他副本（从节点）。每个副本都可以接收读请求，但内容可能是过期值。</p>
+<p>PostgreSQL（9+）、MySQL、Oracle、SQL Server 等关系型数据库，Kafka、RabbitMQ 等消息队列，以及一些网络文件系统或复制块设备都支持主从复制：</p>
 <ul>
-<li><p><strong>容错、弹性</strong>：在预算范围内，系统可应对特定类型的故障。</p>
+<li><p>以某一个副本为主副本（主节点），当客户写数据库时，将写请求首先发送给主副本，主副本将新数据写入本地存储。</p>
 </li>
-<li><p><strong>故障与失效</strong>：分别指组件与系统整体的层面。</p>
+<li><p>其他副本为从副本（从节点）。主副本把新数据写入本地存储后，将 <strong>数据更改</strong> 作为复制的日志或更改流发送给所有从副本。每个从副本获得更改日志之后应用到本地，且严格保持与主副本相同的写入顺序。</p>
 </li>
-</ul>
-<p>要确保系统可靠性，通常需要克服三个方面的故障：硬件故障、软件故障、人为故障。</p>
-<blockquote>
-<p> P.S. 容错测试：Netflix Chaos Monkey</p>
-</blockquote>
-<h3 id="硬件故障"><a href="#硬件故障" class="headerlink" title="硬件故障"></a>硬件故障</h3><ul>
-<li><p>为硬件添加冗余来减少系统故障率：磁盘配置 RAID，服务器配备双电源，热插拔 CPU，数据中心添加备用电源、发电机等。</p>
-</li>
-<li><p>结合软件容错成为容忍多机失效的补充手段。</p>
+<li><p>客户端从数据库中读数据时，可以在主副本或者从副本上执行查询，但只有主副本才可以接受写请求；从客户端的角度看从副本都是只读的。</p>
 </li>
 </ul>
-<h3 id="软件故障"><a href="#软件故障" class="headerlink" title="软件故障"></a>软件故障</h3><p>认真检查依赖的假设条件与系统之间交互，进行全面的测试，进程隔离，允许进程崩溃并自动重启，反复评估，监控并分析生产环节的行为表现。</p>
-<h3 id="人为失误"><a href="#人为失误" class="headerlink" title="人为失误"></a>人为失误</h3><ul>
-<li><p>以最小出错的方式来设计系统。</p>
-</li>
-<li><p>分离最容易出错的地方、容易引发故障的接口（提供功能齐全、非生产用的沙箱环境）。</p>
-</li>
-<li><p>充分的测试：单元测试，集成测试，系统测试，自动化测试（覆盖边界条件）。</p>
-</li>
-<li><p>当出现人为失误时，提供快速的恢复机制以尽最减少故障影响。</p>
-</li>
-<li><p>设置详细而清晰的监控子系统，包括性能指标和错误率。</p>
-</li>
-<li><p>推行管理流程并加以培训。</p>
-</li>
-</ul>
-<h2 id="可扩展性（Scalability）"><a href="#可扩展性（Scalability）" class="headerlink" title="可扩展性（Scalability）"></a>可扩展性（Scalability）</h2><p>可扩展性即当负载参数（数据量、流量或复杂性）增加时，系统应以合理的方式来匹配增长，保持良好性能。</p>
-<h3 id="描述负载"><a href="#描述负载" class="headerlink" title="描述负载"></a>描述负载</h3><p>负载参数的最佳选择取决于系统的体系结构，它可能是 Web 服务器的每秒请求处理次数，数据库中写入的比例，聊天室的同时活动用户数量，缓存命中率等。</p>
-<p>有时平均值很重要，有时系统瓶颈则来自于少数峰值。</p>
-<h3 id="描述性能"><a href="#描述性能" class="headerlink" title="描述性能"></a>描述性能</h3><p>负载增加，需要考虑如果系统资源不变、性能会发生什么变化？或者保持性能不变，需要增加多少资源。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6.jpg" alt="主从复制"></p>
+<h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><p>对于关系数据库系统，同步或异步通常是一个可配置的选项；而其他系统则可能是硬性指定或者只能二选一。同步复制与异步复制的区别在于主节点接收到客户端的写入请求时，是否需要等待从节点确认写入后才返回。</p>
+<p>采用同步复制或异步复制，是在复制性能和系统可用性之间平衡。<br><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%90%8C%E6%AD%A5%E5%A4%8D%E5%88%B6%E4%B8%8E%E5%BC%82%E6%AD%A5%E5%A4%8D%E5%88%B6.jpg" alt="同步复制与异步复制"></p>
+<p>主节点发生故障时异步复制系统可能会丢失数据的问题非常严重，在保证数据不去失的前提下，采用诸如链式复制等方法可以提高复制性能与系统可用性。</p>
+<h3 id="同步复制"><a href="#同步复制" class="headerlink" title="同步复制"></a>同步复制</h3><p>主节点需等待直到从节点确认完成了写入才会向用户报告完成，并且将最新的写入对其他客户端可见。</p>
+<p>优势在于保证向客户端确认时主从节点已经完成同步，即使主节点发生故障，从节点可以继续提供最新的数据，但如果从节点无法完成确认，则写入不能视为成功（阻塞）。</p>
+<h3 id="异步复制"><a href="#异步复制" class="headerlink" title="异步复制"></a>异步复制</h3><p>优势在于客户端不需要等待从节点的日志接收延迟，但从节点会比主节点落后，这个时间有可能很长（如从节点刚从故障中恢复、已接近最大的设计上限或节点间网络出现问题）。</p>
+<p>完全异步可以保证高吞吐量，但当主节点发生失败且不可恢复时，有尚未复制到从节点的写请求都会丢失，即使已响应写入请求仍无法持久化。</p>
+<h3 id="半同步复制"><a href="#半同步复制" class="headerlink" title="半同步复制"></a>半同步复制</h3><p>实践中通常把某一个从节点设为同步、而其他节点则是异步模式。</p>
+<p>当同步的从节点变得不可用或性能下降，则将另一个异步的从节点提升为同步模式。</p>
+<h2 id="配置新从节点"><a href="#配置新从节点" class="headerlink" title="配置新从节点"></a>配置新从节点</h2><p>如需要增加副本数以提高容错能力，或者替换失败的副本，就需要考虑增加新的从节点。要确保高可用，在不停机、数据服务不中断的前提下完成从节点设置，需要以下操作步骤：</p>
 <ul>
-<li><p>批处理系统中通常关心吞吐量（单位时间内可处理的记录条数、指定数据集上运行作业所需的总时间）。</p>
+<li><p>在某个时间点对主节点的数据副本产生一致性快照，避免长时间锁定整个数据库。目前大多数数据库都支持此功能， 快照也是系统备份所必需的。有时需要第三方工具（如 MySQL innobackupex）。</p>
 </li>
-<li><p>在线系统中更着重服务的响应时间：客户端从发送请求到接收响应之间的间隔（除了处理请求时间还包括来回网络延迟和各种排队延迟），必须在客户端测量。</p>
+<li><p>将此快照拷贝到新的从节点。</p>
 </li>
-<li><p>SLO（服务质量目标）和 SLA（服务质量协议）关注百分位数：比如 p95 即 95% 分位数为 200ms，要求 95% 的请求快于 200ms，允许 5% 的请求需要更长时间。</p>
+<li><p>从节点连接到主节点并请求快照点之后所发生的数据更改日志。在第一步创建快照时，快照与系统复制日志的某个确定位置相关联（如 PostgreSQL 的 log sequence number、MySQL 的 binlog coordinates） 。</p>
 </li>
-<li><p>对于后台服务，如果一次完整的服务里包含了多次请求调用，此时高百分位数指标尤为重要，因为最终用户仍然需要等待最慢的调用完成。即使只有很小百分比的请求缓慢，如果用户频发触发这种调用，最终总体变慢的概率就会增加（长尾效应）。</p>
+<li><p>获得日志之后，从节点应用这些快照点之后所有数据变更，即追赶。并继续处理主节点上新的数据变化，重复以上步骤。</p>
 </li>
 </ul>
-<h3 id="系统扩展"><a href="#系统扩展" class="headerlink" title="系统扩展"></a>系统扩展</h3><p>超大规模系统往往针对特定应用而高度定制，很难有一种通用的架构。</p>
-<p>背后取舍因素包括数据读取量、写入量 、待存储的数据量、数据的复杂程度、响应时间要求、访问模式等，或者上述因素的叠加，再加上其他更复杂的问题。</p>
-<p>但可扩展架构通常都是从通用模块逐步构建而来，背后往往有规律可循。</p>
-<h4 id="自动与手动"><a href="#自动与手动" class="headerlink" title="自动与手动"></a>自动与手动</h4><p>某些系统具有弹性特征，它可以自动检测负载增加，然后自动添加更多计算资源，而其他系统则是手动扩展（人工分析性能表现决定添加更多计算）。</p>
-<p>如果负载高度不可预测，则自动弹性系统会更加高效，但或许手动方式可以减少执行期间的意外情况。</p>
-<h4 id="水平与垂直"><a href="#水平与垂直" class="headerlink" title="水平与垂直"></a>水平与垂直</h4><p>在垂直扩展（即升级到更强大的机器）和水平扩展（即将负载分布到多个更小的机器）之间做取舍。在多台机器上分配负载也被称为无共享体系结构。</p>
-<p>在单台机器上运行的系统通常更简单，然而高端机器可能非常昂贵，且扩展水平有限，最终往往还是无法避免需要水平扩展。</p>
-<p>好的架构通常要做些实际取舍：使用几个强悍的服务器仍可以比大量的小型虚拟机来得更简单、便宜。</p>
-<h4 id="有状态与无状态"><a href="#有状态与无状态" class="headerlink" title="有状态与无状态"></a>有状态与无状态</h4><p>把无状态服务分布然后扩展至多台机器相对比较容易，而有状态服务从单个节点扩展到分布式多机环境的复杂性会大大增加。</p>
-<p>通常做法是将数据库运行在一个节点上（垂直扩展），直到高扩展性或高可用性的要求迫使不得不做水平扩展。</p>
-<h2 id="可维护性（Maintainability）"><a href="#可维护性（Maintainability）" class="headerlink" title="可维护性（Maintainability）"></a>可维护性（Maintainability）</h2><p>随着时间推移，许多新的人员参与到系统开发和运维以维护现有功能或适配新场景等，系统都应高效运转。</p>
-<p>系统的可维护性，即可运维性、简单性和可演化性。</p>
-<h3 id="可运维性"><a href="#可运维性" class="headerlink" title="可运维性"></a>可运维性</h3><p>方便运营团队保持系统平稳运行，数据系统设计：</p>
+<h2 id="处理节点失效"><a href="#处理节点失效" class="headerlink" title="处理节点失效"></a>处理节点失效</h2><p>目标是较少节点终端带来的影响。</p>
+<h3 id="从节点失效：追赶式恢复"><a href="#从节点失效：追赶式恢复" class="headerlink" title="从节点失效：追赶式恢复"></a>从节点失效：追赶式恢复</h3><p>从节点保存了副本收到的数据变更日志。如果从节点崩溃然后顺利重启，或者主从节点之间的网络发生暂时中断（闪断），则恢复比较容易。</p>
+<p>根据副本的复制日志，从节点可知在发生故障之前处理的最后一笔事务，连接到主节点并请求自那笔事务之后中断期间内所有的数据变更。在收到这些数据变更日志之后，将其应用到本地来追赶主节点。之后如常持续接收来自主节点数据流的变化。</p>
+<h3 id="主节点失效：节点切换"><a href="#主节点失效：节点切换" class="headerlink" title="主节点失效：节点切换"></a>主节点失效：节点切换</h3><p>切换步骤：</p>
 <ul>
-<li><p>提供对系统运行时行为和内部的可观测性，方便监控。</p>
+<li><p>选择某个从节点将其提升为主节点。</p>
 </li>
-<li><p>支持自动化，与标准工具集成。</p>
+<li><p>客户端更新，使写请求会发送给新的主节点。</p>
 </li>
-<li><p>避免绑定特定的机器，在整个系统不间断运行的同时允许机器停机维护。</p>
-</li>
-<li><p>提供良好的文档和易于理解的操作模式， 诸如“如果 X，会发生 Y”。</p>
-</li>
-<li><p>提供良好的默认配置，且允许管理员在需要时方便地修改默认值。</p>
-</li>
-<li><p>尝试自我修复，在需要时让管理员手动控制系统状态。</p>
-</li>
-<li><p>行为可预测，减少意外发生。</p>
+<li><p>其他从节点接受来自新主节点上的变更数据。</p>
 </li>
 </ul>
-<h3 id="简单性"><a href="#简单性" class="headerlink" title="简单性"></a>简单性</h3><p>即简化系统复杂性，使新工程师能够轻松理解系统（不是 UI 简单）。</p>
-<h4 id="复杂系统"><a href="#复杂系统" class="headerlink" title="复杂系统"></a>复杂系统</h4><p>随着项目越来越大，系统会越来越复杂和难以理解。</p>
+<h4 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h4><ul>
+<li><p>确认主节点失效：大多数系统采用了超时机制。节点间频繁地互相发生发送心跳存活消息，如某一个节点在一段比较长时间内没有响应即认为该节点失效。</p>
+</li>
+<li><p>选举新的主节点：选举新主节点需超过多数的节点达成共识，候选节点最好与原主节点的数据差异最小，可以最小化数据丢失的风险。</p>
+</li>
+<li><p>使新主节点生效：重新配置系统使新主节点生效。客户端现在需要将写请求发送给新的主节点，如果原主节点之后重新上线，可能仍然自认为是主节点，此时系统需要确保原主节点降级为从节点，并认可新的主节点。</p>
+</li>
+</ul>
+<h4 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h4><ul>
+<li><p>数据丢失：如果使用了异步复制且失效之前新的主节点并未收到原主节点的所有数据，在选举之后，原主节点很快又重新上线并加入到集群，新的主节点很可能会收到冲突的写请求，常见的解决方案是，原主节点上未完成复制的写请求就此丢弃，可能会违背数据更新持久化的承诺。</p>
+</li>
+<li><p>数据不一致：如在数据库外有其他系统依赖于数据库的内容并协同使用，切换主节点时丢弃无效数据存在危险：未完全同步的从节点被提升为主节点，新主节点的自增计数器落后于原主节点、重新使用了已被分配的主键，而恰好这些主键已被外部系统（如缓存）所引用，结果出现数据系统之间（缓存与数据库）的不一致，最后导致了某些私有数据被错误地泄露给了其他用户。</p>
+</li>
+<li><p>脑裂：即在同一时刻两个节点都认为自己是主节点，两个主节点都可能接受写请求，最后数据可能会丢失或者破坏。有些系统会采取措施来强制关闭其中一个节点，可能出现两个节点都被关闭的情况。</p>
+</li>
+<li><p>超时：需要配置合适的超时。主节点失效后，超时时间设置得越长也意味着总体恢复时间就越长，设置得太短也会导致太多不必要的切换。</p>
+</li>
+</ul>
+<h2 id="复制日志的实现"><a href="#复制日志的实现" class="headerlink" title="复制日志的实现"></a>复制日志的实现</h2><h3 id="基于语句的复制"><a href="#基于语句的复制" class="headerlink" title="基于语句的复制"></a>基于语句的复制</h3><p>主节点将每个写请求语句作为日志发送给从节点，但也有一些不适用的场景：</p>
 <ul>
-<li><p>复杂性拖慢开发效率，增加维护成本，通常表现为：状态空间的膨胀，模块紧耦合，令入纠结的相互依赖关系，不一致的命名和术语，为了性能而采取的特殊处理，为解决某特定问题而引入的特殊框架等。</p>
+<li><p>任何调用非确定性函数的语句：如 <code>NOW()</code> 获取当前时间、<code>RAND()</code> 获取随机数，则不同的副本上可能产生不同的值。</p>
 </li>
-<li><p>维护困难：导致预算超支和开发滞后。复杂的软件系统变更引入潜在错误的风险会显著加大，开发人员更加难以准确理解、评估或者更加容易忽略相关系统行为，包括背后的假设、潜在的后果、设计之外的模块交互等。</p>
+<li><p>如果语句中使用了自增列，或者依赖于数据库的现有数据，则所有副本都必须按相同顺序执行，如果有多个同时执行的并发事务，则有很大限制。</p>
+</li>
+<li><p>有副作用的语句（如触发器、存储过程、自定义函数），可能会在每个副本上产生不同的副作用。</p>
 </li>
 </ul>
-<h4 id="设计抽象"><a href="#设计抽象" class="headerlink" title="设计抽象"></a>设计抽象</h4><p>简化系统设计意味着消除意外方面的复杂性。最好手段之一是抽象：</p>
+<p>可以基于操作语句进行复制、结合一些特殊措施，比如主节点可以在记录操作语句时将非确定性函数替换为执行之后的确定的结果，这样所有节点直接使用相同的结果值。</p>
+<p>但存在太多边界条件需要考虑，因此目前通常首选的是其他复制实现方案。</p>
+<h3 id="基于预写日志的复制"><a href="#基于预写日志的复制" class="headerlink" title="基于预写日志的复制"></a>基于预写日志的复制</h3><p>预写日志（WAL）即每个写操作都是以追加写的方式写入到日志中：</p>
 <ul>
-<li><p>好的设计抽象可以隐藏大量的实现细节，并对外提供干净易懂的接口。</p>
+<li><p>对于日志结构存储引擎（比如 SSTables 和 LSM-trees），日志时主要的存储方式。日志段在后台压缩并支持垃圾回收。</p>
 </li>
-<li><p>可用于各种不同的应用程序，复用远比多次重复实现更有效率。</p>
-</li>
-<li><p>带来更高质量的软件。</p>
+<li><p>对于采用覆写磁盘的 B-trees 结构，每次修改会预先写入日志，如系统崩溃，通过索引更新的方式迅速恢复到此前一致状态。</p>
 </li>
 </ul>
-<p>质量过硬的抽象组件所带来的好处可使运行其上的所有应用轻松获益。</p>
-<h3 id="可演化性"><a href="#可演化性" class="headerlink" title="可演化性"></a>可演化性</h3><p>工程师能够轻松地对系统进行改进，并根据需求变化将其适配到非典型场景，也称为可延伸性、易修改性或可塑性。</p>
-<h4 id="应对需求变化"><a href="#应对需求变化" class="headerlink" title="应对需求变化"></a>应对需求变化</h4><p>适配新的外部环境、新的用例、业务优先级的变化、用户要求的新功能、新平台取代旧平台、法律或监管要求的变化、业务增长促使架构的演变等。</p>
-<h4 id="敏捷开发模式"><a href="#敏捷开发模式" class="headerlink" title="敏捷开发模式"></a>敏捷开发模式</h4><p>在组织流程方面敏捷开发模式为适应变化提供了很好的参考。其中很多技术工具和模式可帮助在频繁变化的环境中开发软件，例如测试驱动开发和重构（目前多数还只是针对小规模、本地模式环境，例如同一应用程序中的几个源代码文件）。</p>
-<h4 id="简单与抽象"><a href="#简单与抽象" class="headerlink" title="简单与抽象"></a>简单与抽象</h4><p>由于目标是可以轻松地修改数据系统，使其适应不断变化的需求，这和简单性与抽象性密切相关：简单易懂的系统更容易修改。 其中数据系统级的敏捷性即可演化性。</p>
+<p>所有对数据库写入的字节序列都被记入日志。可以使用完全相同的日志在另一个节点上构建副本：除了将日志写入磁盘之外，主节点还可以通过网络将其发送给从节点。从节点收到日志进行处理，建立和主节点内容完全相同的数据副本。</p>
+<p>缺点在于是日志描述的数据结果非常底层：包含了哪些磁盘块的哪些字节发生改变等，使复制方案和存储引擎紧密耦合。</p>
+<h3 id="基于行逻辑日志的复制"><a href="#基于行逻辑日志的复制" class="headerlink" title="基于行逻辑日志的复制"></a>基于行逻辑日志的复制</h3><p>复制和存储引擎采用不同的日志格式，这样复制与存储逻辑剥离，易于向后兼容，且主从节点可以运行不同版本的软件或不同的存储引擎。对于外部应用程序来说，逻辑日志格式也更容易解析。</p>
+<p>对于关系数据库，日志通常是指一系列记录来描述数据表行级别的写请求：</p>
+<ul>
+<li><p>对于行插入，日志包含所有相关列的新值。</p>
+</li>
+<li><p>对于行删除，日志里有足够的信息来唯一标识已删除的行，通常是靠主键，但如果表上没有定义主键，就需要记录所有列的旧值。</p>
+</li>
+<li><p>对于行更新，日志包含足够的信息来唯一标识更新的行，以及所有列的新值（或至少包含所有已更新列的新值）。</p>
+</li>
+</ul>
+<p>如果一条事务涉及多行的修改，则会产生多个日志记录，并在后面跟着一条记录，指出该事务已经提交，如 MySQL 的 binlog（当配置为基于行的复制时）。</p>
+<p>变更数据捕获：对于外部应用程序逻辑日志格式更容易解析，如果要将数据库的内容发送到外部系统（如用于离线分析的数据仓库），或构建自定义索引和缓存等，基于逻辑日志的复制更有优势。</p>
+<h3 id="基于触发器的复制"><a href="#基于触发器的复制" class="headerlink" title="基于触发器的复制"></a>基于触发器的复制</h3><p>如需要更高的灵活性，还可以不依赖于数据库系统，即通过代码在应用程序层实现。例如只想复制数据的一部分、从一种数据库复制到另一种数据库、需要订制管理冲突解决逻辑。</p>
+<p>一种方式是通过其他工具读取数据库日志让应用程序获取数据变更（比如 Oracle GoldenGate），另一种方法则是借助触发器和存储过程（将数据更改记录到一个单独的表，外部处理逻辑访问该表、实施自定义应用层逻辑，比如 Oracle 的 Databus 和 Postgres 的 Bucardo）。</p>
+<p>基于触发器的复制通常比其他复制方式开销更高，也比数据库内置复制更容易出错，或者暴露一些限制。</p>
+<h2 id="复制滞后问题"><a href="#复制滞后问题" class="headerlink" title="复制滞后问题"></a>复制滞后问题</h2><p>主从复制要求所有写请求都经由主节点，而任何副本只能接受读请求。</p>
+<ul>
+<li><p>只需添加更多的从副本，就可以提高读请求的服务吞吐量。</p>
+</li>
+<li><p>如果使用同步复制，单点故障或网络中断会使整个系统无法写入，节点越多故障发生概率越高，越扩展越不可靠。</p>
+</li>
+<li><p>使用异步复制在短时间内必然存在复制滞后问题、数据不一致，只能在从节点追赶上后确保最终一致性。</p>
+</li>
+</ul>
+<h3 id="写后读"><a href="#写后读" class="headerlink" title="写后读"></a>写后读</h3><p>写后读一致性保证用户总能看到自己所提交的最新数据。</p>
+<p>许多应用让用户提交数据后查看自己提交的内容，在异步复制时，写入数据发生在主节点、读取数据发生在从节点，则可能出现读取时新数据未同步到从节点的情况，在客户端看来数据写入不成功。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E8%AF%BB%E8%87%AA%E5%B7%B1%E7%9A%84%E5%86%99.jpg" alt="读自己的写"></p>
+<p>读写一致性机制保证如果用户重新加载页面，他们总能看到自己最近提交的更新。</p>
+<p>主节点处理：</p>
+<ul>
+<li><p>如果用户访问可能会被修改的内容，从主节点读取，否则在从节点读取。这要求一些方法在实际执行查询之前就已经知道内容是否可能会被修改（比如主节点读取用户自己的首页配置文件，从节点读取其他用户的配置文件）。</p>
+</li>
+<li><p>如果应用大部分内容都可能被所有用户修改，该方法将不太有效，它会导致大部分内容都必须经由主节点，丧失了读操作的扩展性。此时需要其他方案来判断是否从主节点读取。</p>
+</li>
+</ul>
+<p>更新时间戳时，要求客户端记住最近更新时的时间戳（逻辑时间或系统时间）并附带在读请求中，据此系统可确保对该用户提供读服务时都应该至少包含了该时间戳的更新（选择足够新的副本处理读请求）。但还是存在以下问题：</p>
+<ul>
+<li><p>服务端与客户端的时钟同步。</p>
+</li>
+<li><p>多端设备应用（比如浏览器和 APP）难以记住用户上次更新时间戳，同一设备无法完全获知其他设备的信息，此时元数据必须全局共享。</p>
+</li>
+</ul>
+<p>对于多数据中心的情况（出于地理位置、高可用的考虑，副本可能分布在多数据中心）：</p>
+<ul>
+<li><p>必须先把请求路由到主节点所在的数据中心。</p>
+</li>
+<li><p>对于多端设备应用，如果副本分布在多数据中心，如果要求必须从主节点读取，需要确保来自不同设备的请求路由到同一数据中心。</p>
+</li>
+</ul>
+<h3 id="单调读"><a href="#单调读" class="headerlink" title="单调读"></a>单调读</h3><p>单调读即在某个时间点读到数据之后，保证此后不会出现比该时间点更早的数据，其一致性介乎强一致性和最终一致性之间。</p>
+<ul>
+<li><p>需要确保同一用户总是从固定的同一副本执行读取，如基于用户 id 哈希的方法选择副本。</p>
+</li>
+<li><p>如果该副本失效，用户的查询须重新路由到另一个副本。</p>
+</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%8D%95%E8%B0%83%E8%AF%BB.jpg" alt="单调读"></p>
+<h3 id="前缀读"><a href="#前缀读" class="headerlink" title="前缀读"></a>前缀读</h3><p>前缀读保证对于一系列按照某个顺序发生的写请求，则读取这些内容时也会按照当时写入的顺序。</p>
+<ul>
+<li><p>如果数据库总是以相同的顺序写入，则读取总是看到一致的序列，不会发生顺序错乱反常。</p>
+</li>
+<li><p>在分区（分片）数据库中，不同分区独立运行，不存在全局的写入顺序，这就导致当用户从数据库中读数据时，可能会看到数据库的某部分旧值和另一部分新值。</p>
+</li>
+<li><p>解决方案是确保任何具有因果顺序关系的写入都交给一个分区来完成，这将大大降低效率。</p>
+</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%89%8D%E7%BC%80%E4%B8%80%E8%87%B4%E8%AF%BB.jpg" alt="前缀一致读"></p>
+<p>目前有一些新的算法来显式地追踪事件因果关系（Happened Before）。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li><p>应用层保障：在应用层可以提供比底层数据库更强有力的保证，代价是应用层代码中处理这些问题通常非常复杂且容易出错。</p>
+</li>
+<li><p>事务：如不必担心底层复制问题，假定数据库必然正确，则可以利用事务。单节点事务已很成熟，但分布式往往放弃支持事务而确保最终一致性。</p>
+</li>
+</ul>
+<p>未完待续。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -589,17 +716,12 @@ height:100vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/01/23/DDIA_note-3/" title= "《数据密集型应用系统设计》读书笔记（三）：数据存储与检索">
-                    <div class="nextTitle">《数据密集型应用系统设计》读书笔记（三）：数据存储与检索</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/01/21/DDIA_note-2/" title= "《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言">
-                    <div class="prevTitle">《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言</div>
+                <a href= "/2021/01/18/DDIA_note-4/" title= "《数据密集型应用系统设计》读书笔记（四）：数据编码与演化">
+                    <div class="prevTitle">《数据密集型应用系统设计》读书笔记（四）：数据编码与演化</div>
                 </a>
             
         </li>
@@ -737,7 +859,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#可靠、可扩展与可维护的应用系统"><span class="toc-number">1.</span> <span class="toc-text">可靠、可扩展与可维护的应用系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#可靠性（Reliability）"><span class="toc-number">1.1.</span> <span class="toc-text">可靠性（Reliability）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#硬件故障"><span class="toc-number">1.1.1.</span> <span class="toc-text">硬件故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#软件故障"><span class="toc-number">1.1.2.</span> <span class="toc-text">软件故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#人为失误"><span class="toc-number">1.1.3.</span> <span class="toc-text">人为失误</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可扩展性（Scalability）"><span class="toc-number">1.2.</span> <span class="toc-text">可扩展性（Scalability）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#描述负载"><span class="toc-number">1.2.1.</span> <span class="toc-text">描述负载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#描述性能"><span class="toc-number">1.2.2.</span> <span class="toc-text">描述性能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统扩展"><span class="toc-number">1.2.3.</span> <span class="toc-text">系统扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#自动与手动"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">自动与手动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#水平与垂直"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">水平与垂直</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#有状态与无状态"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">有状态与无状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可维护性（Maintainability）"><span class="toc-number">1.3.</span> <span class="toc-text">可维护性（Maintainability）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可运维性"><span class="toc-number">1.3.1.</span> <span class="toc-text">可运维性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单性"><span class="toc-number">1.3.2.</span> <span class="toc-text">简单性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#复杂系统"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">复杂系统</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设计抽象"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">设计抽象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可演化性"><span class="toc-number">1.3.3.</span> <span class="toc-text">可演化性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#应对需求变化"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">应对需求变化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#敏捷开发模式"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">敏捷开发模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简单与抽象"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">简单与抽象</span></a></li></ol></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#单主节点复制"><span class="toc-number">1.</span> <span class="toc-text">单主节点复制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#同步与异步"><span class="toc-number">1.1.</span> <span class="toc-text">同步与异步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#同步复制"><span class="toc-number">1.1.1.</span> <span class="toc-text">同步复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#异步复制"><span class="toc-number">1.1.2.</span> <span class="toc-text">异步复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#半同步复制"><span class="toc-number">1.1.3.</span> <span class="toc-text">半同步复制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置新从节点"><span class="toc-number">1.2.</span> <span class="toc-text">配置新从节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理节点失效"><span class="toc-number">1.3.</span> <span class="toc-text">处理节点失效</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#从节点失效：追赶式恢复"><span class="toc-number">1.3.1.</span> <span class="toc-text">从节点失效：追赶式恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主节点失效：节点切换"><span class="toc-number">1.3.2.</span> <span class="toc-text">主节点失效：节点切换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#具体步骤"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">具体步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存在问题"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">存在问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复制日志的实现"><span class="toc-number">1.4.</span> <span class="toc-text">复制日志的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基于语句的复制"><span class="toc-number">1.4.1.</span> <span class="toc-text">基于语句的复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于预写日志的复制"><span class="toc-number">1.4.2.</span> <span class="toc-text">基于预写日志的复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于行逻辑日志的复制"><span class="toc-number">1.4.3.</span> <span class="toc-text">基于行逻辑日志的复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于触发器的复制"><span class="toc-number">1.4.4.</span> <span class="toc-text">基于触发器的复制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复制滞后问题"><span class="toc-number">1.5.</span> <span class="toc-text">复制滞后问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#写后读"><span class="toc-number">1.5.1.</span> <span class="toc-text">写后读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单调读"><span class="toc-number">1.5.2.</span> <span class="toc-text">单调读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前缀读"><span class="toc-number">1.5.3.</span> <span class="toc-text">前缀读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决方案"><span class="toc-number">1.5.4.</span> <span class="toc-text">解决方案</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -957,9 +1079,23 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 29
+        Total : 31
         </div>
         <!-- search  -->
         
@@ -975,17 +1111,27 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2021/01/23/DDIA_note-3/" >《数据密集型应用系统设计》读书笔记（三）：数据存储与检索</a>
+            <span class="archive-post-date">01/19</span><a class="archive-post-title" href= "/2021/01/19/DDIA_note-5/" >《数据密集型应用系统设计》读书笔记（五）：数据复制（单主节点复制）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-1/" >《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统</a>
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2021/01/18/DDIA_note-4/" >《数据密集型应用系统设计》读书笔记（四）：数据编码与演化</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-2/" >《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言</a>
+            <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2021/01/13/DDIA_note-3/" >《数据密集型应用系统设计》读书笔记（三）：数据存储与检索</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DDIA_note-2/" >《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2021/01/08/DDIA_note-1/" >《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统</a>
         </li>
     
     
@@ -1159,13 +1305,13 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
@@ -1173,19 +1319,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     

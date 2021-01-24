@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言 · YWH&#39;s Notebook</title>
+    <title>《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统 · YWH&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >YWH&#39;s Notebook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言</a>
+                <a href="#" class="post-name">《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言
+            《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统
             <!-- 404 -->
             
         </h1>
@@ -275,12 +275,12 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2,961</span>Reading time: <span class="post-count reading-time">10 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2,625</span>Reading time: <span class="post-count reading-time">9 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/01/21</span>
+                    <span class="post-intro-time">2021/01/08</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -404,50 +404,59 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="数据模型与查询语言"><a href="#数据模型与查询语言" class="headerlink" title="数据模型与查询语言"></a>数据模型与查询语言</h1><p>本章结构如下：</p>
+        <p>本章结构如下：</p>
 <blockquote class="pullquote mindmap mindmap-md"><ul>
-<li>数据模型与查询语言<ul>
-<li>数据模型<ul>
-<li>关系模型（严格关联）<ul>
-<li>数据访问</li>
-<li>局限性</li>
-<li>多对一关系</li>
-<li>多对多关系</li>
+<li>可靠、可扩展与可维护的应用系统<ul>
+<li>可靠性（Reliability）<ul>
+<li>硬件故障</li>
+<li>软件故障</li>
+<li>人为失误</li>
 </ul>
 </li>
-<li>非关系模型<ul>
-<li>文档模型（弱关联）<ul>
-<li>灵活性</li>
-<li>局限性</li>
-<li>数据局部性</li>
-</ul>
-</li>
-<li>图模型（复杂关联）<ul>
-<li>属性图模型</li>
-<li>三元存储模型</li>
-<li>图处理框架</li>
-</ul>
-</li>
-<li>…</li>
+<li>可扩展性（Scalability）<ul>
+<li>描述负载</li>
+<li>描述性能</li>
+<li>系统扩展<ul>
+<li>自动与手动</li>
+<li>水平与垂直</li>
+<li>有状态与无状态</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>数据查询语言<ul>
-<li>声明式语言</li>
-<li>MapReduce</li>
-<li>图查询语言<ul>
-<li>声明式<ul>
-<li>Cypher</li>
-<li>SPARQL</li>
-<li>Datalog</li>
-<li>SQL</li>
+<li>可维护性（Maintainability）<ul>
+<li>可运维性</li>
+<li>简单性<ul>
+<li>复杂系统</li>
+<li>设计抽象</li>
 </ul>
 </li>
-<li>命令式<ul>
-<li>Gremlin</li>
+<li>可演化性<ul>
+<li>应对需求变化</li>
+<li>敏捷开发模式</li>
+<li>简单与抽象</li>
 </ul>
 </li>
+</ul>
+</li>
+<li>* 存储架构<ul>
+<li>数据库基本架构<ul>
+<li>客户端通信管理</li>
+<li>进程管理</li>
+<li>查询处理</li>
+<li>事务存储管理</li>
+<li>共享组件与工具</li>
+</ul>
+</li>
+<li>传统架构<ul>
+<li>客户端组件</li>
+<li>代理中间件</li>
+<li>单元化架构</li>
+</ul>
+</li>
+<li>分布式架构<ul>
+<li>PGXC</li>
+<li>NewSQL</li>
 </ul>
 </li>
 </ul>
@@ -457,151 +466,121 @@ height:100vh;
 </ul>
 </blockquote>
 
-<p>关于数据模型：</p>
+<p>定义数据系统：</p>
 <ul>
-<li><p>复杂的应用程序可能会有更多的中间层，其基本思想：每层都通过提供一个简洁的数据模型隐藏下层复杂性。抽象机制使得不同的人群可以高效协作。</p>
-</li>
-<li><p>有许多不同类型的数据模型，每种数据模型都有其最佳实践。精通一种数据模型需要很大功夫（即使不关心内部机制）。由于对其上的软件应用有巨大影响，因此需要慎重选择合适的数据模型。</p>
-</li>
+<li>应用系统需求广泛，单个组件往往无法满足所有数据处理与存储需求。因而需要将任务分解，每个组件负责高效完成其中一部分，多个组件依靠应用层代码驱动有机衔接起来。</li>
+<li>数据系统包括数据库、高速缓存、索引、流式处理、批处理等不同访问方式的系统。</li>
+<li>区别于计算密集型应用（compute intensi ve），数据密集型应用（data intensiive）的 CPU 的处理能力不是第一限制性因素，关键在于数据量、数据复杂度及数据快速多变性。</li>
 </ul>
-<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><h3 id="关系模型：严格关联"><a href="#关系模型：严格关联" class="headerlink" title="关系模型：严格关联"></a>关系模型：严格关联</h3><p>在关系模型中数据被组织成关系（Repations），在 SQL 中被称为表（Table）,每个关系都是元组（Tuples）或无序集合（行），其实现为关系数据库管理系统（RDBMS）和 SQL。</p>
-<h4 id="数据访问"><a href="#数据访问" class="headerlink" title="数据访问"></a>数据访问</h4><ul>
-<li><p>关系模型定义了所有数据的格式：关系（表）只是元组（行）的集合，没有复杂的嵌套结构和访问路径，可以读取表中的任何一行或者所有行，支持任意条件查询。</p>
-</li>
-<li><p>可指定某些列作为键并匹配这些列来读取特定行。</p>
-</li>
-<li><p>可在任何表中插入新行，而不必担心与其他表之间的外键关系。</p>
-</li>
-<li><p>优势在于联结操作、多对一和多对多关系更简洁的表达上，与文档模型抗衡。</p>
-</li>
-<li><p>查询优化器：只需构建一次，使用该数据库的所有应用程序都可以从中受益。即由查询优化器决定以何种顺序执行查询、使用哪些索引。希望使用新的方式查询数据，只需声明一个新的索引，查询会自动使用最合适的索引。</p>
-</li>
-</ul>
-<h4 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h4><ul>
-<li><p>数据存储在关系表中，应用层代码中的对象与表、行和列的数据库模型之间需要一个笨拙的转换层。模型之间的脱离有时被称为阻抗失谐。使用 ORM 框架可减少转换层所需的样板代码量， 但也不能完全隐藏两个模型之间的差异。</p>
-</li>
-<li><p>关系型数据库遵顼严格的 <strong>写时模式</strong>，因此在数据量大时，模式更改、数据更新操作速度缓慢且可能需要停机。此时可以借鉴文档数据库的做法采用 <strong>读时填充</strong>：设置字段为 NULL，在读取时再填充值。</p>
-</li>
-</ul>
-<h4 id="多对一关系"><a href="#多对一关系" class="headerlink" title="多对一关系"></a>多对一关系</h4><p>通常将诸如地址、行业等定义为 id（设计为字典表），而字符串在填写时供用户选择（而非输入），好处在于：</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1-%E6%95%B0%E6%8D%AE%E7%B3%BB%E7%BB%9F.png" alt="数据系统"></p>
+<h1 id="可靠性（Reliability）"><a href="#可靠性（Reliability）" class="headerlink" title="可靠性（Reliability）"></a>可靠性（Reliability）</h1><p>人们对软件系统的期望：</p>
 <ul>
-<li><p>保持样式和输入值一致</p>
+<li><p>应用程序执行用户所期望的功能。</p>
 </li>
-<li><p>避免歧义（广州、广州市）</p>
+<li><p>可以容忍用户出现错误或者不正确的软件使用方法。</p>
 </li>
-<li><p>易于更新</p>
+<li><p>性能可以应对典型场景、合理负载压力和数据量。</p>
 </li>
-<li><p>本地化支持</p>
-</li>
-<li><p>搜索支持</p>
+<li><p>系统可防止任何未经授权的访问和滥用。</p>
 </li>
 </ul>
-<p><strong>多对一</strong> 关系的表达（多人生活于某个地区、从事某一行业）不适宜使用文档模型：</p>
+<p>因此，可靠性意味着即使发生故障，系统也可以正常工作。</p>
 <ul>
-<li><p>区别于一对多的树状结构（不需要联结，即使支持联结通常也很弱），相关项都由唯一的标识符引用，在关系模型中被称为外键，在文档模型中被称为文档引用。标识符可以查询时通过联结操作或相关后续查询来解析。迄今为止文档数据库并未遵循 CODASYL 标准。</p>
+<li><p><strong>容错、弹性</strong>：在预算范围内，系统可应对特定类型的故障。</p>
 </li>
-<li><p>如果数据库本身不支持联结，也必须在应用程序代码中通过对数据库进行多次查询来模拟联结，即从持久层转移到应用层。</p>
-</li>
-<li><p>即使应用程序初始版本适合采用无联结的文档模型，随着应用支持越来越多的功能，数据也变得更加互联一体化。</p>
+<li><p><strong>故障与失效</strong>：分别指组件与系统整体的层面。</p>
 </li>
 </ul>
-<h4 id="多对多关系"><a href="#多对多关系" class="headerlink" title="多对多关系"></a>多对多关系</h4><h3 id="非关系模型"><a href="#非关系模型" class="headerlink" title="非关系模型"></a>非关系模型</h3><p>此处主要指 NoSQL，其目的不是替代 SQL，而是“不仅仅是 SQL”。采用 NoSQL 数据库有几个驱动因素，包括：</p>
+<p>要确保系统可靠性，通常需要克服三个方面的故障：硬件故障、软件故障、人为故障。</p>
+<blockquote>
+<p> P.S. 容错测试：Netflix Chaos Monkey</p>
+</blockquote>
+<h2 id="硬件故障"><a href="#硬件故障" class="headerlink" title="硬件故障"></a>硬件故障</h2><ul>
+<li><p>为硬件添加冗余来减少系统故障率：磁盘配置 RAID，服务器配备双电源，热插拔 CPU，数据中心添加备用电源、发电机等。</p>
+</li>
+<li><p>结合软件容错成为容忍多机失效的补充手段。</p>
+</li>
+</ul>
+<h2 id="软件故障"><a href="#软件故障" class="headerlink" title="软件故障"></a>软件故障</h2><p>认真检查依赖的假设条件与系统之间交互，进行全面的测试，进程隔离，允许进程崩溃并自动重启，反复评估，监控并分析生产环节的行为表现。</p>
+<h2 id="人为失误"><a href="#人为失误" class="headerlink" title="人为失误"></a>人为失误</h2><ul>
+<li><p>以最小出错的方式来设计系统。</p>
+</li>
+<li><p>分离最容易出错的地方、容易引发故障的接口（提供功能齐全、非生产用的沙箱环境）。</p>
+</li>
+<li><p>充分的测试：单元测试，集成测试，系统测试，自动化测试（覆盖边界条件）。</p>
+</li>
+<li><p>当出现人为失误时，提供快速的恢复机制以尽最减少故障影响。</p>
+</li>
+<li><p>设置详细而清晰的监控子系统，包括性能指标和错误率。</p>
+</li>
+<li><p>推行管理流程并加以培训。</p>
+</li>
+</ul>
+<h1 id="可扩展性（Scalability）"><a href="#可扩展性（Scalability）" class="headerlink" title="可扩展性（Scalability）"></a>可扩展性（Scalability）</h1><p>可扩展性即当负载参数（数据量、流量或复杂性）增加时，系统应以合理的方式来匹配增长，保持良好性能。</p>
+<h2 id="描述负载"><a href="#描述负载" class="headerlink" title="描述负载"></a>描述负载</h2><p>负载参数的最佳选择取决于系统的体系结构，它可能是 Web 服务器的每秒请求处理次数，数据库中写入的比例，聊天室的同时活动用户数量，缓存命中率等。</p>
+<p>有时平均值很重要，有时系统瓶颈则来自于少数峰值。</p>
+<h2 id="描述性能"><a href="#描述性能" class="headerlink" title="描述性能"></a>描述性能</h2><p>负载增加，需要考虑如果系统资源不变、性能会发生什么变化？或者保持性能不变，需要增加多少资源。</p>
 <ul>
-<li><p>比关系型数据库更好的扩展性需求。</p>
+<li><p>批处理系统中通常关心吞吐量（单位时间内可处理的记录条数、指定数据集上运行作业所需的总时间）。</p>
 </li>
-<li><p>丰富的免费和开源软件。</p>
+<li><p>在线系统中更着重服务的响应时间：客户端从发送请求到接收响应之间的间隔（除了处理请求时间还包括来回网络延迟和各种排队延迟），必须在客户端测量。</p>
 </li>
-<li><p>满足特定需求的查询操作。</p>
+<li><p>SLO（服务质量目标）和 SLA（服务质量协议）关注百分位数：比如 p95 即 95% 分位数为 200ms，要求 95% 的请求快于 200ms，允许 5% 的请求需要更长时间。</p>
 </li>
-<li><p>更少限制、更具动态和表达力的数据模型（不会对存储的数据强加模式）。</p>
+<li><p>对于后台服务，如果一次完整的服务里包含了多次请求调用，此时高百分位数指标尤为重要，因为最终用户仍然需要等待最慢的调用完成。即使只有很小百分比的请求缓慢，如果用户频发触发这种调用，最终总体变慢的概率就会增加（长尾效应）。</p>
 </li>
 </ul>
-<p>目标是通过提供新的数据模型以及内置的复制和分区等手段改进传统关系模型。NoSQL 有时也会结合关系型存储一起使用，被称为混合持久化。常见用于解决关系型数据库问题的 NoSQL 方案：</p>
+<h2 id="系统扩展"><a href="#系统扩展" class="headerlink" title="系统扩展"></a>系统扩展</h2><p>超大规模系统往往针对特定应用而高度定制，很难有一种通用的架构。</p>
+<p>背后取舍因素包括数据读取量、写入量 、待存储的数据量、数据的复杂程度、响应时间要求、访问模式等，或者上述因素的叠加，再加上其他更复杂的问题。</p>
+<p>但可扩展架构通常都是从通用模块逐步构建而来，背后往往有规律可循。</p>
+<h3 id="自动与手动"><a href="#自动与手动" class="headerlink" title="自动与手动"></a>自动与手动</h3><p>某些系统具有弹性特征，它可以自动检测负载增加，然后自动添加更多计算资源，而其他系统则是手动扩展（人工分析性能表现决定添加更多计算）。</p>
+<p>如果负载高度不可预测，则自动弹性系统会更加高效，但或许手动方式可以减少执行期间的意外情况。</p>
+<h3 id="水平与垂直"><a href="#水平与垂直" class="headerlink" title="水平与垂直"></a>水平与垂直</h3><p>在垂直扩展（即升级到更强大的机器）和水平扩展（即将负载分布到多个更小的机器）之间做取舍。在多台机器上分配负载也被称为无共享体系结构。</p>
+<p>在单台机器上运行的系统通常更简单，然而高端机器可能非常昂贵，且扩展水平有限，最终往往还是无法避免需要水平扩展。</p>
+<p>好的架构通常要做些实际取舍：使用几个强悍的服务器仍可以比大量的小型虚拟机来得更简单、便宜。</p>
+<h3 id="有状态与无状态"><a href="#有状态与无状态" class="headerlink" title="有状态与无状态"></a>有状态与无状态</h3><p>把无状态服务分布然后扩展至多台机器相对比较容易，而有状态服务从单个节点扩展到分布式多机环境的复杂性会大大增加。</p>
+<p>通常做法是将数据库运行在一个节点上（垂直扩展），直到高扩展性或高可用性的要求迫使不得不做水平扩展。</p>
+<h1 id="可维护性（Maintainability）"><a href="#可维护性（Maintainability）" class="headerlink" title="可维护性（Maintainability）"></a>可维护性（Maintainability）</h1><p>随着时间推移，许多新的人员参与到系统开发和运维以维护现有功能或适配新场景等，系统都应高效运转。</p>
+<p>系统的可维护性，即可运维性、简单性和可演化性。</p>
+<h2 id="可运维性"><a href="#可运维性" class="headerlink" title="可运维性"></a>可运维性</h2><p>方便运营团队保持系统平稳运行，数据系统设计：</p>
 <ul>
-<li><p>键值数据库：解决无法存储数据结构的问题（Redis）。</p>
+<li><p>提供对系统运行时行为和内部的可观测性，方便监控。</p>
 </li>
-<li><p>文档数据库：解决强 schema 约束的问题（MongoDB）。</p>
+<li><p>支持自动化，与标准工具集成。</p>
 </li>
-<li><p>列式数据库：解决大数据场景下的 I/O 问题（HBase）。</p>
+<li><p>避免绑定特定的机器，在整个系统不间断运行的同时允许机器停机维护。</p>
 </li>
-<li><p>全文搜索引擎：解决全文搜索性能问题（Elasticsearch）。</p>
+<li><p>提供良好的文档和易于理解的操作模式， 诸如“如果 X，会发生 Y”。</p>
+</li>
+<li><p>提供良好的默认配置，且允许管理员在需要时方便地修改默认值。</p>
+</li>
+<li><p>尝试自我修复，在需要时让管理员手动控制系统状态。</p>
+</li>
+<li><p>行为可预测，减少意外发生。</p>
 </li>
 </ul>
-<h4 id="文档模型：弱关联"><a href="#文档模型：弱关联" class="headerlink" title="文档模型：弱关联"></a>文档模型：弱关联</h4><p>支持文档数据模型的主要论点是模式灵活性， 由于局部性而带来较好的性能，对于某些应用而言它更接近于应用程序所使用的数据结构。</p>
-<p>目标用例是数据来自于自包含文档，且一个文档与其他文档之间的关联很少。</p>
-<h5 id="灵活性"><a href="#灵活性" class="headerlink" title="灵活性"></a>灵活性</h5><p>文档数据库是某种方式的层次模型：即在其父记录中保存了嵌套记录，而不是存储在单独的表中。</p>
+<h2 id="简单性"><a href="#简单性" class="headerlink" title="简单性"></a>简单性</h2><p>即简化系统复杂性，使新工程师能够轻松理解系统（不是 UI 简单）。</p>
+<h3 id="复杂系统"><a href="#复杂系统" class="headerlink" title="复杂系统"></a>复杂系统</h3><p>随着项目越来越大，系统会越来越复杂和难以理解。</p>
 <ul>
-<li><p><strong>读时模式</strong>：即为读数据的代码通常采用某种结构因而存在某种隐形模式（而不是由数据库强制执行，类似运行时类型检查），适用于大量异构、动态结构的数据存储。而关系型数据库的 <strong>写时模式</strong> 在更改模式时则面临速度慢和停机的问题（存在于数据量大的情况下，有各种工具可以解决限制）。</p>
+<li><p>复杂性拖慢开发效率，增加维护成本，通常表现为：状态空间的膨胀，模块紧耦合，令入纠结的相互依赖关系，不一致的命名和术语，为了性能而采取的特殊处理，为解决某特定问题而引入的特殊框架等。</p>
 </li>
-<li><p>非关联的树状结构也很容易表达 <strong>一对多</strong> 关系，比如一名用户身兼多个职位、拥有多段工作经历等。</p>
-</li>
-<li><p>当应用数据在一对多关系中，通常一次加载整个树，使用文档模型更合适。因为无需像关系模型般把文档结构分解为多个表，使得模式更为笨重，以及不必要的应用代码复杂化。</p>
-</li>
-<li><p>文档模型局限性在于不能直接引用嵌套项，难以处理嵌套太深的结构。对于联结的支持（多对多、多对一）缺失是否是问题取决于应用程序。</p>
+<li><p>维护困难：导致预算超支和开发滞后。复杂的软件系统变更引入潜在错误的风险会显著加大，开发人员更加难以准确理解、评估或者更加容易忽略相关系统行为，包括背后的假设、潜在的后果、设计之外的模块交互等。</p>
 </li>
 </ul>
-<h5 id="局限性-1"><a href="#局限性-1" class="headerlink" title="局限性"></a>局限性</h5><ul>
-<li><p>在表示多对一和多对多的关系时， 关系数据库和文档数据库没有根本的不同：在这两种情况下相关项都由唯一标识符引用（称为外键或文档引用）。可以查询时通过联结操作或相关后续查询来解析（文档数据库并未遵循 CODASYL 标准）。</p>
-</li>
-<li><p>如果应用程序使用多对多关系，文档模型可以通过反规范化减少联结需求，但应用程序代码需要做额外的工作来保持非规范化数据的一致性，除了代码更复杂外通常也比数据库内的专用代码执行的联结慢。</p>
-</li>
-</ul>
-<h5 id="数据局部性"><a href="#数据局部性" class="headerlink" title="数据局部性"></a>数据局部性</h5><p>由于文档通常存储为 JSON、 XML 或其二进制变体（如 MongoDB 的 BSON）编码的连续字符串：</p>
+<h3 id="设计抽象"><a href="#设计抽象" class="headerlink" title="设计抽象"></a>设计抽象</h3><p>简化系统设计意味着消除意外方面的复杂性。最好手段之一是抽象：</p>
 <ul>
-<li><p>存储局部性具有性能优势（相比起关系模型数据被划分到多个表，需要多次索引查找来检索，中间需要更多的磁盘 I/O）。</p>
+<li><p>好的设计抽象可以隐藏大量的实现细节，并对外提供干净易懂的接口。</p>
 </li>
-<li><p>仅适用 <strong>需要同时访问文档大部分内容</strong> 的场景。如果只是访问其中的一小部分，对于大型文档数据则比较浪费。</p>
+<li><p>可用于各种不同的应用程序，复用远比多次重复实现更有效率。</p>
 </li>
-<li><p>对文档进行更新时通常会重写整个文档，而只有修改量不改变源文档大小时原地覆盖更新才更有效。因此建议文档尽量小且避免写入时增加文档大小。</p>
-</li>
-</ul>
-<h4 id="图模型：复杂关联"><a href="#图模型：复杂关联" class="headerlink" title="图模型：复杂关联"></a>图模型：复杂关联</h4><p>关系模型能够处理简单的多对多关系，随着数据之间的关联越来越复杂，将数据建模转化为图模型会更加自然（目标用例是所有数据都可能会互相关联）。</p>
-<ul>
-<li><p>由顶点和边组成。每个顶点可以连接到其他任何顶点，与文档模型类似，不存在模式限制某种事物是否可关联。给定某个顶点可高效地得到所有入边和出边，从而遍历图。</p>
-</li>
-<li><p>很多著名算法可以在图上运行，如 PageRank。</p>
-</li>
-<li><p>除了同构数据，还提供了单个数据存储区中保存完全不同类型对象的一致性方式。通过对不同类型的关系使用不同的标签，可以在单个图中存储多种不同类型的信息，同时仍然保持整洁的数据模型。</p>
+<li><p>带来更高质量的软件。</p>
 </li>
 </ul>
-<p>图相关模型和处理框架：</p>
-<ul>
-<li><p>属性图模型：比如 Neo4j 、 Titan 和 InfiniteGraph。</p>
-</li>
-<li><p>三元存储模型：比如 Datomic、 AllegroGraph。</p>
-</li>
-<li><p>图处理框架：比如 Pregel。</p>
-</li>
-</ul>
-<h2 id="数据查询语言"><a href="#数据查询语言" class="headerlink" title="数据查询语言"></a>数据查询语言</h2><h3 id="声明式语言"><a href="#声明式语言" class="headerlink" title="声明式语言"></a>声明式语言</h3><ul>
-<li><p>命令式语言：如数据处理代码，完全可以推理整个过程， 逐行遍历代码、 评估相关条件、更新对应的变量，并决定是否再循环一遍。由于指定了特定的执行顺序而难以并行化</p>
-</li>
-<li><p>声明式语言：如 SQL 与关系代数，只需指定所需的数据模式， 结果需满足什么条件，以及如何转换数据，而不需指明如何实现这一目标。SQL 隐藏了数据库引擎的细节，数据库系统能在不改变查询语旬的情况下提高性能，且通常适合于并行执行。</p>
-</li>
-</ul>
-<h3 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h3><p>MapReduce 是一种编程模型，用于在许多机器上批量处理海量数据。</p>
-<ul>
-<li><p>介于声明式查询语言和命令式查询 API 之间：查询的逻辑用代码片段来表示，代码片段可以被处理框架重复地调用。</p>
-</li>
-<li><p>map 和 reduce 函数对于可执行的操作限制必须为纯函数，只能使用传递进去的数据作为输入，不能执行额外的数据库查询，也不能有任何副作用。使得数据库能够在任何位置、 以任意顺序来运行函数，并在失败时重新运行这些函数。</p>
-</li>
-<li><p>某些 SQL 数据库也可以扩展使用 JavaScript 函数，在 MapReduce 模型中一个可用性问题是必须编写两个密切协调的JavaScript 函数，通常比编写单个查询更难。</p>
-</li>
-<li><p>聚合管道：声明式查询语言的支持，表达能力上相当干 SQL 的子集，但它使用了基于 JSON 的语法。</p>
-</li>
-</ul>
-<h3 id="图查询语言"><a href="#图查询语言" class="headerlink" title="图查询语言"></a>图查询语言</h3><p>声明式：</p>
-<ul>
-<li><p>Cypher：用于属性图的声明式查询语言，最早为 Neo4j 图形数据库而创建。</p>
-</li>
-<li><p>SPARQL：采用 RDF 数据模型的三元存储查询语言。</p>
-</li>
-<li><p>Datalog</p>
-</li>
-<li><p>SQL：在关系数据库中，通常会预先知道查询中需要哪些 join 操作。而对于图查询，在找到要查找的顶点之前可能需要遍历数量未知的边，join 操作数量并不是预先确定的。因此在图模型中使用 SQL 会非常繁琐。</p>
-</li>
-</ul>
-<p>命令式：Gremlin</p>
+<p>质量过硬的抽象组件所带来的好处可使运行其上的所有应用轻松获益。</p>
+<h2 id="可演化性"><a href="#可演化性" class="headerlink" title="可演化性"></a>可演化性</h2><p>工程师能够轻松地对系统进行改进，并根据需求变化将其适配到非典型场景，也称为可延伸性、易修改性或可塑性。</p>
+<h3 id="应对需求变化"><a href="#应对需求变化" class="headerlink" title="应对需求变化"></a>应对需求变化</h3><p>适配新的外部环境、新的用例、业务优先级的变化、用户要求的新功能、新平台取代旧平台、法律或监管要求的变化、业务增长促使架构的演变等。</p>
+<h3 id="敏捷开发模式"><a href="#敏捷开发模式" class="headerlink" title="敏捷开发模式"></a>敏捷开发模式</h3><p>在组织流程方面敏捷开发模式为适应变化提供了很好的参考。其中很多技术工具和模式可帮助在频繁变化的环境中开发软件，例如测试驱动开发和重构（目前多数还只是针对小规模、本地模式环境，例如同一应用程序中的几个源代码文件）。</p>
+<h3 id="简单与抽象"><a href="#简单与抽象" class="headerlink" title="简单与抽象"></a>简单与抽象</h3><p>由于目标是可以轻松地修改数据系统，使其适应不断变化的需求，这和简单性与抽象性密切相关：简单易懂的系统更容易修改。 其中数据系统级的敏捷性即可演化性。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -611,8 +590,8 @@ height:100vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/01/21/DDIA_note-1/" title= "《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统">
-                    <div class="nextTitle">《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统</div>
+                <a href= "/2021/01/10/DDIA_note-2/" title= "《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言">
+                    <div class="nextTitle">《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言</div>
                 </a>
             
         </li>
@@ -758,7 +737,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据模型与查询语言"><span class="toc-number">1.</span> <span class="toc-text">数据模型与查询语言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">1.1.</span> <span class="toc-text">数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关系模型：严格关联"><span class="toc-number">1.1.1.</span> <span class="toc-text">关系模型：严格关联</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#数据访问"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">数据访问</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#局限性"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">局限性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多对一关系"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">多对一关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多对多关系"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">多对多关系</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非关系模型"><span class="toc-number">1.1.2.</span> <span class="toc-text">非关系模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#文档模型：弱关联"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">文档模型：弱关联</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#灵活性"><span class="toc-number">1.1.2.1.1.</span> <span class="toc-text">灵活性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#局限性-1"><span class="toc-number">1.1.2.1.2.</span> <span class="toc-text">局限性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#数据局部性"><span class="toc-number">1.1.2.1.3.</span> <span class="toc-text">数据局部性</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#图模型：复杂关联"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">图模型：复杂关联</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据查询语言"><span class="toc-number">1.2.</span> <span class="toc-text">数据查询语言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#声明式语言"><span class="toc-number">1.2.1.</span> <span class="toc-text">声明式语言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MapReduce"><span class="toc-number">1.2.2.</span> <span class="toc-text">MapReduce</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#图查询语言"><span class="toc-number">1.2.3.</span> <span class="toc-text">图查询语言</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#可靠性（Reliability）"><span class="toc-number">1.</span> <span class="toc-text">可靠性（Reliability）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#硬件故障"><span class="toc-number">1.1.</span> <span class="toc-text">硬件故障</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#软件故障"><span class="toc-number">1.2.</span> <span class="toc-text">软件故障</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#人为失误"><span class="toc-number">1.3.</span> <span class="toc-text">人为失误</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#可扩展性（Scalability）"><span class="toc-number">2.</span> <span class="toc-text">可扩展性（Scalability）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#描述负载"><span class="toc-number">2.1.</span> <span class="toc-text">描述负载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#描述性能"><span class="toc-number">2.2.</span> <span class="toc-text">描述性能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统扩展"><span class="toc-number">2.3.</span> <span class="toc-text">系统扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#自动与手动"><span class="toc-number">2.3.1.</span> <span class="toc-text">自动与手动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#水平与垂直"><span class="toc-number">2.3.2.</span> <span class="toc-text">水平与垂直</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#有状态与无状态"><span class="toc-number">2.3.3.</span> <span class="toc-text">有状态与无状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#可维护性（Maintainability）"><span class="toc-number">3.</span> <span class="toc-text">可维护性（Maintainability）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#可运维性"><span class="toc-number">3.1.</span> <span class="toc-text">可运维性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单性"><span class="toc-number">3.2.</span> <span class="toc-text">简单性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#复杂系统"><span class="toc-number">3.2.1.</span> <span class="toc-text">复杂系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设计抽象"><span class="toc-number">3.2.2.</span> <span class="toc-text">设计抽象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可演化性"><span class="toc-number">3.3.</span> <span class="toc-text">可演化性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#应对需求变化"><span class="toc-number">3.3.1.</span> <span class="toc-text">应对需求变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#敏捷开发模式"><span class="toc-number">3.3.2.</span> <span class="toc-text">敏捷开发模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单与抽象"><span class="toc-number">3.3.3.</span> <span class="toc-text">简单与抽象</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -978,9 +957,23 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 29
+        Total : 31
         </div>
         <!-- search  -->
         
@@ -996,17 +989,27 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2021/01/23/DDIA_note-3/" >《数据密集型应用系统设计》读书笔记（三）：数据存储与检索</a>
+            <span class="archive-post-date">01/19</span><a class="archive-post-title" href= "/2021/01/19/DDIA_note-5/" >《数据密集型应用系统设计》读书笔记（五）：数据复制（单主节点复制）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-1/" >《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统</a>
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2021/01/18/DDIA_note-4/" >《数据密集型应用系统设计》读书笔记（四）：数据编码与演化</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-2/" >《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言</a>
+            <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2021/01/13/DDIA_note-3/" >《数据密集型应用系统设计》读书笔记（三）：数据存储与检索</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DDIA_note-2/" >《数据密集型应用系统设计》读书笔记（二）：数据模型与查询语言</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2021/01/08/DDIA_note-1/" >《数据密集型应用系统设计》读书笔记（一）：可靠、可扩展与可维护的应用系统</a>
         </li>
     
     
@@ -1180,13 +1183,13 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
@@ -1194,19 +1197,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
