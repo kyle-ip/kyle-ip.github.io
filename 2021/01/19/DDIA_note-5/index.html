@@ -267,15 +267,15 @@ height:100vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Design">Design</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Design">Design</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">4,917</span>Reading time: <span class="post-count reading-time">17 min</span></span>
+                        <span>Word count: <span class="post-count word-count">4,901</span>Reading time: <span class="post-count reading-time">16 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -529,6 +529,7 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
 <p>本篇介绍多种复制架构原理、存在问题及其解决方案。</p>
 <p>数据复制指通过互联网络在多台机器上保存相同数据的副本，其目的是：</p>
 <ul>
@@ -550,12 +551,8 @@ height:100vh;
 <li><p>……</p>
 </li>
 </ul>
-<p>每种复制方案都有其优点和缺点：</p>
-<ul>
-<li>主从复制较流行，因为相对简单、不需要担心冲突问题，而出现可能节点失效、网络中断或者延迟抖动等情况。</li>
-<li>多主节点和无主节点复制方案会更加可靠，但代价是系统的复杂性和弱一致性保证。</li>
-</ul>
-<h1 id="单主节点复制"><a href="#单主节点复制" class="headerlink" title="单主节点复制"></a>单主节点复制</h1><p>客户端写入操作发送到主节点，由主节点负责将数据更改事件发送到其他从节点。每个副本可以接收读请求，但内容可能是过期值。</p>
+<h1 id="单主节点复制"><a href="#单主节点复制" class="headerlink" title="单主节点复制"></a>单主节点复制</h1><p>主从复制较流行，因为相对简单、不需要担心冲突问题，但出现可能节点失效、网络中断或者延迟抖动等情况。</p>
+<p>客户端写入操作发送到主节点，由主节点负责将数据更改事件发送到其他从节点。每个副本可以接收读请求，但内容可能是过期值。</p>
 <p>PostgreSQL（9+）、MySQL、Oracle、SQL Server 等关系型数据库，Kafka、RabbitMQ 等消息队列，以及一些网络文件系统或复制块设备都支持主从复制：</p>
 <ul>
 <li><p>某一个副本为主副本（主节点），客户写数据库时将写请求首先发送给主副本，写入本地存储。</p>
@@ -730,7 +727,8 @@ height:100vh;
 <li><p>事务：如不必担心底层复制问题，假定数据库必然正确，则可以利用事务。单节点事务已很成熟，但分布式往往放弃支持事务而确保最终一致性。</p>
 </li>
 </ul>
-<p>未完待续。</p>
+<hr>
+<p>多主节点和无主节点复制方案会更加可靠，但代价是系统的复杂性和弱一致性保证（待续）。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -1330,13 +1328,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+        <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
@@ -1344,9 +1340,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
@@ -1355,6 +1351,8 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
