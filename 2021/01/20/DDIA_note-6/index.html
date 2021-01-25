@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>YWH&#39;s Notebook</title>
+    <title>《数据密集型应用系统设计》读书笔记（五）：数据复制（多主节点复制） · YWH&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -204,12 +204,23 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >YWH&#39;s Notebook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">《数据密集型应用系统设计》读书笔记（五）：数据复制（多主节点复制）</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>YWH's Notebook</a>
 </header>
@@ -221,24 +232,76 @@
 
 
 
+
+height:100vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(https://api.ixiaowai.cn/mcapi/mcapi.php)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            《数据密集型应用系统设计》读书笔记（五）：数据复制（多主节点复制）
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Design">Design</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">2,035</span>Reading time: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/01/20</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -339,39 +402,151 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/10/30/JVM_mindmap/" >
-            
-                <span>Java 虚拟机与并发编程</span>
-        </a>
-        <div class="abstract-content">
-            ProcessON 与 GitHub Pages 更搭哦~
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="多主节点复制"><a href="#多主节点复制" class="headerlink" title="多主节点复制"></a>多主节点复制</h1><p>系统存在多个主节点，每个都可以接收写请求，客户端将写请求发送到其中的一个主节点上，由该主节点负责将数据更改事件同步到其他主节点和自己的从节点。</p>
+<p>每个主节点还可以同时扮演其他主节点的从节点。</p>
+<p>多主节点复制方案比单主节点复制方案更可靠，但代价是系统的复杂性和弱一致性保证。</p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><h3 id="多数据中心"><a href="#多数据中心" class="headerlink" title="多数据中心"></a>多数据中心</h3><p>一些数据库已内嵌支持多主复制，也可以借助外部工具实现，比如 MySQL 的 Tungsten Replicator、PostgreSQL BDR 和 Oracle GoldenGate。</p>
+<p>在多数据中心、多主节点复制环境下：</p>
+<ul>
+<li><p>性能提高：每个写操作都可以在本地数据中心快速响应，然后采用异步复制方式将变化同步到其他数据中心。对上层屏蔽了数据中心之间的网络延迟。</p>
+</li>
+<li><p>容忍失效：每个数据中心独立于其他数据中心运行，发生故障的数据中心在恢复后更新到最新状态（无需经过跨数据中心的主节点选举过程）。</p>
+</li>
+<li><p>容忍网络问题：采用异步复制可更好地容忍网络性能和稳定性问题，例如临时网络闪断不会妨碍写请求最终成功。</p>
+</li>
+</ul>
+<p>存在问题：</p>
+<ul>
+<li><p>不同的数据中心同时修改相同的数据时，必须解决潜在的写冲突。</p>
+</li>
+<li><p>在与其他数据库功能交互时有时会出现副作用：自增主键、触发器和完整性约束等，因此比较危险。</p>
+</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%A4%9A%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83.jpg" alt="多数据中心"></p>
+<h3 id="离线客户端"><a href="#离线客户端" class="headerlink" title="离线客户端"></a>离线客户端</h3><p>即应用在与网络断开后还继续保持工作：每个设备都有一个充当主节点的本地数据库，相当于网络连接极度不可靠的数据中心。</p>
+<p>所有设备之间采用异步方式同步这些多主节点上的副本，同步滞后时间取决于设备何时恢复联网（如云笔记、CouchDB）。</p>
+<h3 id="协作编辑"><a href="#协作编辑" class="headerlink" title="协作编辑"></a>协作编辑</h3><p>当一名用户编辑文档时，所做的更改会立即应用到本地副本，然后异步复制到服务器以及编辑同一文档的其他用户。</p>
+<ul>
+<li><p>要确保不会发生编辑冲突，在编辑前必须锁定。另一用户要编辑文档必须等待持有锁的用户提交修改并释放锁。</p>
+</li>
+<li><p>这种协作模式相当于主从复制模型下在主节点上执行事务操作。</p>
+</li>
+<li><p>为了加快协作编辑的效率，可编辑的粒度需要非常小。</p>
+</li>
+</ul>
+<h2 id="处理写冲突"><a href="#处理写冲突" class="headerlink" title="处理写冲突"></a>处理写冲突</h2><p>正常情况下主从复制只有主节点可以处理写请求，因此不会出现这种情况。但多主复制很可能发生写冲突：即异地请求都分别成功提交到本地主节点，在更改被异步复制到对方时发生冲突。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%A4%84%E7%90%86%E5%86%99%E5%86%B2%E7%AA%81.jpg" alt="处理写冲突"></p>
+<h3 id="同步-异步检测"><a href="#同步-异步检测" class="headerlink" title="同步/异步检测"></a>同步/异步检测</h3><ul>
+<li><p>同步：写请求等待完成对所有副本的同步，再返回通知写入成功，这样会失去多主节点允许每个主节点独立接收写请求的主要优势。</p>
+</li>
+<li><p>异步：如果在稍后的时间点上才能异步检测到冲突，要求用户层来解决冲突则为时已晚。</p>
+</li>
+</ul>
+<h3 id="避免冲突"><a href="#避免冲突" class="headerlink" title="避免冲突"></a>避免冲突</h3><p>如果应用层可以保证对特定记录的写请求总是通过同一个主节点就不会发生写冲突。</p>
+<ul>
+<li><p>用户更新数据时要确保特定用户的更新请求总是路由到特定的数据中心，并在该数据中心的主节点上进行读写。不同的用户则可能对应不同的主数据中心（如基于地理位置）。从用户的角度来看基本等价于主从复制模型。</p>
+</li>
+<li><p>有时需要改变事先指定的主节点，例如：数据中心发生故障、将流量重新路由到其他数据中心，或者是因为用户已经漫游到另一个位置更靠近新数据中心。此时必须有措施来处理同时写入冲突的可能性。</p>
+</li>
+</ul>
+<h3 id="状态收敛"><a href="#状态收敛" class="headerlink" title="状态收敛"></a>状态收敛</h3><p>主从复制模型数据更新符合顺序性原则：如果同一个字段有多个更新，则最后一个写操作将决定该字段的最终值。</p>
+<p>多主节点复制模型不存在明确的写入顺序，最终值也会变得不确定。可以用以下方式解决收敛问题：</p>
+<ul>
+<li><p>为每个写入分配唯一的 ID，最后写入者获胜，这种做法容易造成数据丢失。</p>
+</li>
+<li><p>在 1 的基础上制定规则，如序号高的优先。这种做法容易造成数据丢失。</p>
+</li>
+<li><p>以某种方式将这些值合并，例如按字母顺序排序然后拼接在一起。</p>
+</li>
+<li><p>利用预定义好的格式记录和保留冲突相关的所有信息，依靠应用层的逻辑事后解决冲突（可能会提示用户）。</p>
+</li>
+</ul>
+<h3 id="写时-读时冲突解决"><a href="#写时-读时冲突解决" class="headerlink" title="写时/读时冲突解决"></a>写时/读时冲突解决</h3><ul>
+<li><p>写时冲突：只要数据库系统在复制变更日志时检测到冲突，就调用应用层的冲突处理程序。例如 Bucardo 支持编写一段 Perl 代码。这个处理程序通常不能在线提示用户，而只能在后台运行，这样速度更快。</p>
+</li>
+<li><p>读时冲突：当检测到冲突时所有冲突写入值都会暂时保存下来。下一次读取数据时将数据的多个版本读返回给应用层。应用层可提示用户或自动解决冲突，将最后的结果返回到数据库（比如 CouchDB）。</p>
+</li>
+</ul>
+<h3 id="自动冲突解决"><a href="#自动冲突解决" class="headerlink" title="自动冲突解决"></a>自动冲突解决</h3><ul>
+<li><p>使用无冲突数据类型：无冲突的复制数据类型 CRDT 是可以由多个用户同时编辑的数据结构，包括 map、ordered list、计数器等，并且以内置的合理方式自动地解决冲突。</p>
+</li>
+<li><p>使用可合并的持久数据结构：可合并的持久数据结构 Mergeable persitent data 跟踪变更历史，类似于 Git 版本控制系统，并提出三向合并功能。</p>
+</li>
+<li><p>操作转换：专为可同时编辑的有序列表而设计，如文本文档的字符列表。</p>
+</li>
+</ul>
+<h3 id="拓扑结构"><a href="#拓扑结构" class="headerlink" title="拓扑结构"></a>拓扑结构</h3><p>常见的拓扑结构有环型（每个节点接收来自前序节点的写入，并将这些写入以及自己的写入转发给后序节点），星型（一个指定的根节点将写入转发给所有其他节点），全链接（每个主节点将其写入同步到其他所有主节点）。</p>
+<p>在环形和星形拓扑中写请求需要通过多个节点才能到达所有的副本，即中间节点需要转发从其他节点收到的数据变更。</p>
+<ul>
+<li><p>为防止无限循环，每个节点需要赋予唯一标识符，在复制日志中每个写请求都标记了已通过的节点标识符。</p>
+</li>
+<li><p>如果节点收到了包含自身标识符的数据更改，表明该请求巳经被处理过，因此会忽略此变更请求避免重复转发。</p>
+</li>
+</ul>
+<p>每种拓扑结构都存在一定的问题：</p>
+<ul>
+<li><p>环形和星形拓扑：如果某一个节点发生了故障，在修复之前会影响其他节点之间复制日志的转发。可采用重新配置拓扑结构的方法暂时排除掉故障节点。在大多数部署中这种重新配置必须手动完成。</p>
+</li>
+<li><p>全链接拓扑：存在某些网络链路比其他链路更快的情况，从而导致复制日志之间的覆盖（参考“前缀一致读”，而且引入时间戳仍不能解决，因为涉及时钟同步问题）。</p>
+</li>
+<li><p>为了使得日志消息正确有序，可以使用版本向量（参考“检测并发写入”）。</p>
+</li>
+</ul>
+<p>（未完待续）</p>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2021/01/21/DDIA_note-7/" title= "《数据密集型应用系统设计》读书笔记（五）：数据复制（无主节点复制）">
+                    <div class="nextTitle">《数据密集型应用系统设计》读书笔记（五）：数据复制（无主节点复制）</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/01/19/DDIA_note-5/" title= "《数据密集型应用系统设计》读书笔记（五）：数据复制（单主节点复制）">
+                    <div class="prevTitle">《数据密集型应用系统设计》读书笔记（五）：数据复制（单主节点复制）</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
     
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -460,6 +635,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:100vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#多主节点复制"><span class="toc-number">1.</span> <span class="toc-text">多主节点复制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用场景"><span class="toc-number">1.1.</span> <span class="toc-text">使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#多数据中心"><span class="toc-number">1.1.1.</span> <span class="toc-text">多数据中心</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#离线客户端"><span class="toc-number">1.1.2.</span> <span class="toc-text">离线客户端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协作编辑"><span class="toc-number">1.1.3.</span> <span class="toc-text">协作编辑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理写冲突"><span class="toc-number">1.2.</span> <span class="toc-text">处理写冲突</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#同步-异步检测"><span class="toc-number">1.2.1.</span> <span class="toc-text">同步&#x2F;异步检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#避免冲突"><span class="toc-number">1.2.2.</span> <span class="toc-text">避免冲突</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#状态收敛"><span class="toc-number">1.2.3.</span> <span class="toc-text">状态收敛</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写时-读时冲突解决"><span class="toc-number">1.2.4.</span> <span class="toc-text">写时&#x2F;读时冲突解决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动冲突解决"><span class="toc-number">1.2.5.</span> <span class="toc-text">自动冲突解决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拓扑结构"><span class="toc-number">1.2.6.</span> <span class="toc-text">拓扑结构</span></a></li></ol></li></ol></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1025,6 +1218,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({

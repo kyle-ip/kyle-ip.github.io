@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-01-24T23:41:38.000Z</updated>
+  <updated>2021-01-25T14:01:36.000Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -17,11 +17,57 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>《数据密集型应用系统设计》读书笔记（五）：数据复制（无主节点复制）</title>
+    <link href="https://yipwinghong.github.io/2021/01/21/DDIA_note-7/"/>
+    <id>https://yipwinghong.github.io/2021/01/21/DDIA_note-7/</id>
+    <published>2021-01-21T11:37:00.000Z</published>
+    <updated>2021-01-25T14:01:36.000Z</updated>
+    
+    <summary type="html">
+    
+      《数据密集型应用系统设计》读书笔记（五）：数据复制（无主节点复制）
+    
+    </summary>
+    
+    
+      <category term="《数据密集型应用系统设计》读书笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>《数据密集型应用系统设计》读书笔记（五）：数据复制（多主节点复制）</title>
+    <link href="https://yipwinghong.github.io/2021/01/20/DDIA_note-6/"/>
+    <id>https://yipwinghong.github.io/2021/01/20/DDIA_note-6/</id>
+    <published>2021-01-20T15:11:27.000Z</published>
+    <updated>2021-01-25T13:38:10.000Z</updated>
+    
+    <summary type="html">
+    
+      《数据密集型应用系统设计》读书笔记（五）：数据复制（多主节点复制）
+    
+    </summary>
+    
+    
+      <category term="《数据密集型应用系统设计》读书笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
     <title>《数据密集型应用系统设计》读书笔记（五）：数据复制（单主节点复制）</title>
     <link href="https://yipwinghong.github.io/2021/01/19/DDIA_note-5/"/>
     <id>https://yipwinghong.github.io/2021/01/19/DDIA_note-5/</id>
     <published>2021-01-19T13:42:41.000Z</published>
-    <updated>2021-01-24T23:41:38.000Z</updated>
+    <updated>2021-01-25T14:00:22.000Z</updated>
     
     <summary type="html">
     
@@ -33,9 +79,9 @@
       <category term="《数据密集型应用系统设计》读书笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
@@ -56,9 +102,9 @@
       <category term="《数据密集型应用系统设计》读书笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
@@ -79,9 +125,9 @@
       <category term="《数据密集型应用系统设计》读书笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
@@ -102,9 +148,9 @@
       <category term="《数据密集型应用系统设计》读书笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
@@ -125,9 +171,9 @@
       <category term="《数据密集型应用系统设计》读书笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
       <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
@@ -397,48 +443,6 @@
     
     
       <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JVM jstat 监控分析</title>
-    <link href="https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/"/>
-    <id>https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/</id>
-    <published>2020-02-03T06:41:50.000Z</published>
-    <updated>2021-01-21T13:54:02.000Z</updated>
-    
-    <summary type="html">
-    
-      在开发及测试阶段需要对程序进行部分预估性的优化，这时候可以使用 JDK 提供的一些脚本和工具，本文主要讲述 jstat 命令的基本用法和使用场景。
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JVM GC 日志分析</title>
-    <link href="https://yipwinghong.github.io/2020/02/01/JVM_GC-log-analysis/"/>
-    <id>https://yipwinghong.github.io/2020/02/01/JVM_GC-log-analysis/</id>
-    <published>2020-02-01T14:48:17.000Z</published>
-    <updated>2021-01-21T13:53:36.000Z</updated>
-    
-    <summary type="html">
-    
-      本文通过几段代码，结合 JVM 日志和图解分析对象内存分配的过程。
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
     
   </entry>
   
