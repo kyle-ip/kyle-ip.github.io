@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-01-25T14:12:34.000Z</updated>
+  <updated>2021-01-26T13:52:18.000Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -17,15 +17,38 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>《DDIA》读书笔记（五）：数据复制（无主节点复制）</title>
+    <title>《DDIA》读书笔记（六）：数据分区</title>
+    <link href="https://yipwinghong.github.io/2021/01/22/DDIA_note-8/"/>
+    <id>https://yipwinghong.github.io/2021/01/22/DDIA_note-8/</id>
+    <published>2021-01-22T15:11:01.000Z</published>
+    <updated>2021-01-26T13:52:18.000Z</updated>
+    
+    <summary type="html">
+    
+      《DDIA》读书笔记（六）：数据分区
+    
+    </summary>
+    
+    
+      <category term="《数据密集型应用系统设计》读书笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>《DDIA》读书笔记（五）：数据复制（无主节点）</title>
     <link href="https://yipwinghong.github.io/2021/01/21/DDIA_note-7/"/>
     <id>https://yipwinghong.github.io/2021/01/21/DDIA_note-7/</id>
     <published>2021-01-21T11:37:00.000Z</published>
-    <updated>2021-01-25T14:12:34.000Z</updated>
+    <updated>2021-01-26T12:41:56.000Z</updated>
     
     <summary type="html">
     
-      《DDIA》读书笔记（五）：数据复制（无主节点复制）
+      《DDIA》读书笔记（五）：数据复制（无主节点）
     
     </summary>
     
@@ -40,15 +63,15 @@
   </entry>
   
   <entry>
-    <title>《DDIA》读书笔记（五）：数据复制（多主节点复制）</title>
+    <title>《DDIA》读书笔记（五）：数据复制（多主节点）</title>
     <link href="https://yipwinghong.github.io/2021/01/20/DDIA_note-6/"/>
     <id>https://yipwinghong.github.io/2021/01/20/DDIA_note-6/</id>
     <published>2021-01-20T15:11:27.000Z</published>
-    <updated>2021-01-25T14:12:26.000Z</updated>
+    <updated>2021-01-26T12:42:02.000Z</updated>
     
     <summary type="html">
     
-      《DDIA》读书笔记（五）：数据复制（多主节点复制）
+      《DDIA》读书笔记（五）：数据复制（多主节点）
     
     </summary>
     
@@ -63,15 +86,15 @@
   </entry>
   
   <entry>
-    <title>《DDIA》读书笔记（五）：数据复制（单主节点复制）</title>
+    <title>《DDIA》读书笔记（五）：数据复制（单主节点）</title>
     <link href="https://yipwinghong.github.io/2021/01/19/DDIA_note-5/"/>
     <id>https://yipwinghong.github.io/2021/01/19/DDIA_note-5/</id>
     <published>2021-01-19T13:42:41.000Z</published>
-    <updated>2021-01-25T14:12:18.000Z</updated>
+    <updated>2021-01-26T12:42:08.000Z</updated>
     
     <summary type="html">
     
-      《DDIA》读书笔记（五）：数据复制（单主节点复制）
+      《DDIA》读书笔记（五）：数据复制（单主节点）
     
     </summary>
     
@@ -424,25 +447,6 @@
       <category term="Docker" scheme="https://yipwinghong.github.io/tags/Docker/"/>
     
       <category term="Kubernetes" scheme="https://yipwinghong.github.io/tags/Kubernetes/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>疫情过后最想做的事</title>
-    <link href="https://yipwinghong.github.io/2020/02/15/2020-02-15_diary/"/>
-    <id>https://yipwinghong.github.io/2020/02/15/2020-02-15_diary/</id>
-    <published>2020-02-14T16:21:38.000Z</published>
-    <updated>2021-01-21T13:49:28.000Z</updated>
-    
-    <summary type="html">
-    
-      据闻这是魔幻元年...
-    
-    </summary>
-    
-    
-    
-      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
     
   </entry>
   
