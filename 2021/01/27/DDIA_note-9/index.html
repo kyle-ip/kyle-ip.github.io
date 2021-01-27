@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>《DDIA》读书笔记（七）：事务 · YWH&#39;s Notebook</title>
+    <title>《DDIA》阅读笔记（七）：事务 · YWH&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >YWH&#39;s Notebook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">《DDIA》读书笔记（七）：事务</a>
+                <a href="#" class="post-name">《DDIA》阅读笔记（七）：事务</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            《DDIA》读书笔记（七）：事务
+            《DDIA》阅读笔记（七）：事务
             <!-- 404 -->
             
         </h1>
@@ -482,7 +482,6 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
-
 <p>数据存储环境中可能存在各种出错的情况：软硬件失效、应用程序崩溃、节点间链接中断、多客户端并发写入数据覆盖、数据部分更新、边界条件竞争等。通过事务（成功提交或失败回滚）可以简化容错机制，使应用程序安全地重试，不必担心部分失败地情况，但也意味着牺牲系统部分性能和可用性。</p>
 <h1 id="事务原理"><a href="#事务原理" class="headerlink" title="事务原理"></a>事务原理</h1><p>几乎所有的关系数据库和一些非关系数据库都支持事务处理，比如 MySQL、PostgreSQL、Oracle、SQL Server 等系统事务实现与 IBM System R 非常相似。</p>
 <p>NoSQL 则提供了新的数据模型、内置的复制和分区等手段改进关系模型。同时放弃了事务支持，或替换为更弱的保证。</p>
@@ -628,9 +627,7 @@ height:100vh;
 </li>
 </ul>
 <p>使用一级封锁协议可以解决 <strong>更新丢失</strong> 问题。</p>
-<h3 id="原子写操作"><a href="#原子写操作" class="headerlink" title="原子写操作"></a>原子写操作</h3><p>数据库内置原子操作可避免“读-修改-写回”操作，确保并发安全比如：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">table</span> </span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">value</span> = <span class="keyword">value</span>+ <span class="number">1</span> </span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">key</span> = &amp;<span class="comment">#39;foo&amp;#39;;</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="原子写操作"><a href="#原子写操作" class="headerlink" title="原子写操作"></a>原子写操作</h3><p>数据库内置原子操作可避免“读-修改-写回”操作，确保并发安全比如：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">table</span> </span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">value</span> = <span class="keyword">value</span>+ <span class="number">1</span> </span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">key</span> = &amp;<span class="comment">#39;foo&amp;#39;;</span></span><br></pre></td></tr></table></figure></p>
 <ul>
 <li><p>通常采用对读取对象加独占锁实现，确保更新提交前不会被其他事务读取，有时也被称为 <strong>游标稳定性</strong>。另一种实现方式是强制所有原子操作都在单线程上执行。</p>
 </li>
@@ -640,9 +637,7 @@ height:100vh;
 <h3 id="显式加锁"><a href="#显式加锁" class="headerlink" title="显式加锁"></a>显式加锁</h3><p>由应用程序显式锁定待更新的对象，然后执行“读-修改-写回”操作。此时如果有其他事务尝试同时读取对象，则必须等待当前正在执行得序列全部完成。</p>
 <h3 id="自动检测更新丢失"><a href="#自动检测更新丢失" class="headerlink" title="自动检测更新丢失"></a>自动检测更新丢失</h3><p>先让操作并发执行，如果事务管理器检测到了更新丢失风险则中止当前事务，并强制回退到安全的“读-修改-写回”方式。</p>
 <p>可借助快照级别隔离高效执行检查，如 PostgreSQL 的可重复读、Oracle 的可串行化、SQL Server 的快照级别隔离都能检测冲突并中止违规事务，但 MySQL InnoDB 的可重复读不支持。</p>
-<h3 id="原子比较和设置"><a href="#原子比较和设置" class="headerlink" title="原子比较和设置"></a>原子比较和设置</h3><p>对于不支持事务的数据库，有时会支持原子“比较和设置”操作以避免更新丢失：只有在上次读取的数据没有发生变化时才允许更新，否则回退到“读-修改-写回”方式：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">table</span></span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">value</span> = <span class="string">'new content'</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="string">'id'</span></span><br><span class="line"><span class="keyword">AND</span> <span class="keyword">value</span> = <span class="string">'old content'</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="原子比较和设置"><a href="#原子比较和设置" class="headerlink" title="原子比较和设置"></a>原子比较和设置</h3><p>对于不支持事务的数据库，有时会支持原子“比较和设置”操作以避免更新丢失：只有在上次读取的数据没有发生变化时才允许更新，否则回退到“读-修改-写回”方式：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">table</span></span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">value</span> = <span class="string">'new content'</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="string">'id'</span></span><br><span class="line"><span class="keyword">AND</span> <span class="keyword">value</span> = <span class="string">'old content'</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="冲突解决与复制"><a href="#冲突解决与复制" class="headerlink" title="冲突解决与复制"></a>冲突解决与复制</h3><p>对于多副本的数据库，由于多节点上的数据副本、不同的节点可能会并发修改数据，必须采取一些额外的措施来防止丢失更新。</p>
 <ul>
 <li><p>加锁和原子修改都有个前提即只有一个最新的数据副本。多主节点或者无主节点的多副本数据库支持多个并发写，且通常以异步方式来同步更新，会有多个最新的数据副本，所以加锁和原子修改不适用。</p>
@@ -668,7 +663,6 @@ height:100vh;
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span> <span class="keyword">TRANSACTION</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--- FOR UPDATE 会通知数据库对返回的所有结果自动加锁</span></span><br><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">WHERE</span> ... <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">UPDATE</span> ... <span class="keyword">WHERE</span> ...;</span><br><span class="line"></span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
-
 <h3 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h3><p>写倾斜主要出现在两个事务请求的数据范围存在重叠，或两个事务都可单独安全执行、但无法叠加执行的情况，这种情况无法通过对单对象加锁解决。其出现的模式：</p>
 <ul>
 <li><p>访问满足条件的行。</p>
@@ -827,8 +821,8 @@ height:100vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/01/22/DDIA_note-8/" title= "《DDIA》读书笔记（六）：数据分区">
-                    <div class="prevTitle">《DDIA》读书笔记（六）：数据分区</div>
+                <a href= "/2021/01/22/DDIA_note-8/" title= "《DDIA》阅读笔记（六）：数据分区">
+                    <div class="prevTitle">《DDIA》阅读笔记（六）：数据分区</div>
                 </a>
             
         </li>
@@ -1246,47 +1240,47 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2021/01/27/DDIA_note-9/" >《DDIA》读书笔记（七）：事务</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2021/01/27/DDIA_note-9/" >《DDIA》阅读笔记（七）：事务</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2021/01/22/DDIA_note-8/" >《DDIA》读书笔记（六）：数据分区</a>
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2021/01/22/DDIA_note-8/" >《DDIA》阅读笔记（六）：数据分区</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-7/" >《DDIA》读书笔记（五）：数据复制（无主节点）</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-7/" >《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2021/01/20/DDIA_note-6/" >《DDIA》读书笔记（五）：数据复制（多主节点）</a>
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2021/01/20/DDIA_note-6/" >《DDIA》阅读笔记（五）：数据复制（多主节点）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/19</span><a class="archive-post-title" href= "/2021/01/19/DDIA_note-5/" >《DDIA》读书笔记（五）：数据复制（单主节点）</a>
+            <span class="archive-post-date">01/19</span><a class="archive-post-title" href= "/2021/01/19/DDIA_note-5/" >《DDIA》阅读笔记（五）：数据复制（单主节点）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2021/01/18/DDIA_note-4/" >《DDIA》读书笔记（四）：数据编码与演化</a>
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2021/01/18/DDIA_note-4/" >《DDIA》阅读笔记（四）：数据编码与演化</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2021/01/13/DDIA_note-3/" >《DDIA》读书笔记（三）：数据存储与检索</a>
+            <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2021/01/13/DDIA_note-3/" >《DDIA》阅读笔记（三）：数据存储与检索</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DDIA_note-2/" >《DDIA》读书笔记（二）：数据模型与查询语言</a>
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DDIA_note-2/" >《DDIA》阅读笔记（二）：数据模型与查询语言</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2021/01/08/DDIA_note-1/" >《DDIA》读书笔记（一）：可靠、可扩展与可维护的应用系统</a>
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2021/01/08/DDIA_note-1/" >《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
         </li>
     
     
@@ -1460,11 +1454,11 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
     
@@ -1474,11 +1468,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
@@ -1523,7 +1517,7 @@ jsonContent:
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》读书笔记"><span class="iconfont-archer">&#xe60a;</span>《数据密集型应用系统设计》读书笔记</span>
+        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《数据密集型应用系统设计》阅读笔记</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

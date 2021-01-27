@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>《DDIA》读书笔记（五）：数据复制（无主节点） · YWH&#39;s Notebook</title>
+    <title>《DDIA》阅读笔记（五）：数据复制（无主节点） · YWH&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >YWH&#39;s Notebook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">《DDIA》读书笔记（五）：数据复制（无主节点）</a>
+                <a href="#" class="post-name">《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            《DDIA》读书笔记（五）：数据复制（无主节点）
+            《DDIA》阅读笔记（五）：数据复制（无主节点）
             <!-- 404 -->
             
         </h1>
@@ -472,7 +472,7 @@ height:100vh;
 <li><p><strong>数据回传</strong>：是否应该接收该写请求，将它们暂时写入一些可访问的节点中（当网络问题恢复，临时节点需要把这期间的写入发送到原始主节点上）？</p>
 </li>
 </ul>
-<p>Sloppy 对于提高写入可用性特别有用：只要有 w 个节点可用，数据库就可以接收新的写入。但即使满足 w + r &gt; n，除非回传结束，否则无法保证客户端一定能从 r 个节点读到新值。</p>
+<p>Sloppy 对于提高写入可用性特别有用：只要有 w 个节点可用，数据库就可以接收新的写入。但即使满足 w + r > n，除非回传结束，否则无法保证客户端一定能从 r 个节点读到新值。</p>
 <h3 id="多数据中心"><a href="#多数据中心" class="headerlink" title="多数据中心"></a>多数据中心</h3><p>无主节点复制旨在更容忍并发写入冲突、网络中断和延迟尖峰等，因此也可适用于多数据中心操作。</p>
 <ul>
 <li><p>Cassandra 和 Voldemort 默认配置为无主节点模型，其跨数据中心操作：副本数量 n 是 <strong>包含所有数据中心的节点总数</strong>，可以指定各数据中心副本数。客户端的写入会发送到所有副本，但通常只等待来自本地数据中心内的 Quorum 节点数确认，以避免高延迟和跨数据中心可能导致的网络异常。</p>
@@ -533,16 +533,16 @@ height:100vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/01/22/DDIA_note-8/" title= "《DDIA》读书笔记（六）：数据分区">
-                    <div class="nextTitle">《DDIA》读书笔记（六）：数据分区</div>
+                <a href= "/2021/01/22/DDIA_note-8/" title= "《DDIA》阅读笔记（六）：数据分区">
+                    <div class="nextTitle">《DDIA》阅读笔记（六）：数据分区</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/01/20/DDIA_note-6/" title= "《DDIA》读书笔记（五）：数据复制（多主节点）">
-                    <div class="prevTitle">《DDIA》读书笔记（五）：数据复制（多主节点）</div>
+                <a href= "/2021/01/20/DDIA_note-6/" title= "《DDIA》阅读笔记（五）：数据复制（多主节点）">
+                    <div class="prevTitle">《DDIA》阅读笔记（五）：数据复制（多主节点）</div>
                 </a>
             
         </li>
@@ -960,47 +960,47 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2021/01/27/DDIA_note-9/" >《DDIA》读书笔记（七）：事务</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2021/01/27/DDIA_note-9/" >《DDIA》阅读笔记（七）：事务</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2021/01/22/DDIA_note-8/" >《DDIA》读书笔记（六）：数据分区</a>
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2021/01/22/DDIA_note-8/" >《DDIA》阅读笔记（六）：数据分区</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-7/" >《DDIA》读书笔记（五）：数据复制（无主节点）</a>
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-7/" >《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2021/01/20/DDIA_note-6/" >《DDIA》读书笔记（五）：数据复制（多主节点）</a>
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2021/01/20/DDIA_note-6/" >《DDIA》阅读笔记（五）：数据复制（多主节点）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/19</span><a class="archive-post-title" href= "/2021/01/19/DDIA_note-5/" >《DDIA》读书笔记（五）：数据复制（单主节点）</a>
+            <span class="archive-post-date">01/19</span><a class="archive-post-title" href= "/2021/01/19/DDIA_note-5/" >《DDIA》阅读笔记（五）：数据复制（单主节点）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2021/01/18/DDIA_note-4/" >《DDIA》读书笔记（四）：数据编码与演化</a>
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2021/01/18/DDIA_note-4/" >《DDIA》阅读笔记（四）：数据编码与演化</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2021/01/13/DDIA_note-3/" >《DDIA》读书笔记（三）：数据存储与检索</a>
+            <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2021/01/13/DDIA_note-3/" >《DDIA》阅读笔记（三）：数据存储与检索</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DDIA_note-2/" >《DDIA》读书笔记（二）：数据模型与查询语言</a>
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DDIA_note-2/" >《DDIA》阅读笔记（二）：数据模型与查询语言</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2021/01/08/DDIA_note-1/" >《DDIA》读书笔记（一）：可靠、可扩展与可维护的应用系统</a>
+            <span class="archive-post-date">01/08</span><a class="archive-post-title" href= "/2021/01/08/DDIA_note-1/" >《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
         </li>
     
     
@@ -1174,11 +1174,11 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
     
@@ -1188,11 +1188,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
@@ -1237,7 +1237,7 @@ jsonContent:
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》读书笔记"><span class="iconfont-archer">&#xe60a;</span>《数据密集型应用系统设计》读书笔记</span>
+        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《数据密集型应用系统设计》阅读笔记</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
