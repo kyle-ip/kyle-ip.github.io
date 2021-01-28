@@ -405,7 +405,6 @@ height:100vh;
             <main class="main post-page">
     <article class="article-entry">
         <h1 id="常用脚本说明"><a href="#常用脚本说明" class="headerlink" title="常用脚本说明"></a>常用脚本说明</h1><p>Kafka 部署包中提供了数十个脚本（Windows 的 bat 和 Linux 的 Shell），直接运行会提示基本用法，比较常用的有：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -414,8 +413,7 @@ height:100vh;
 <th>描述</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>1</td>
 <td>connect-standalone<br />connect-distributed</td>
 <td>Kafka Connect 组件的启动脚本，分别为单节点 Standalone 模式和多节点 Distributed 模式。</td>
@@ -515,54 +513,74 @@ height:100vh;
 <td>trogdor</td>
 <td>Kafka 的测试框架，用于执行各种基准测试和负载测试。</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <h1 id="功能测试"><a href="#功能测试" class="headerlink" title="功能测试"></a>功能测试</h1><h2 id="生产消息"><a href="#生产消息" class="headerlink" title="生产消息"></a>生产消息</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-producer.sh --broker-list kafka-host:port --topic test-topic --request-required-acks -1 --producer-property compression.type=lz4</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定生产者参数 acks 为 -1，同时启用了 LZ4 的压缩算法。</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="消费消息"><a href="#消费消息" class="headerlink" title="消费消息"></a>消费消息</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-consumer.sh --bootstrap-server kafka-host:port --topic test-topic --group test-group --from-beginning --consumer-property enable.auto.commit=false </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> --group 指定消费者组，否则每次运行 Console Consumer，都会自动生成一个新的消费者组来消费（console-consumer）</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> --from-beginning 等同于将 Consumer 端参数 auto.offset.reset 设置成 earliest，否则默认为 latest</span></span><br></pre></td></tr></table></figure>
+
 <h1 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h1><h2 id="测试生产者性能"><a href="#测试生产者性能" class="headerlink" title="测试生产者性能"></a>测试生产者性能</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-producer-perf-test.sh --topic test-topic --num-records 10000000 --throughput -1 --record-size 1024 --producer-props bootstrap.servers=kafka-host:port acks=-1 linger.ms=2000 compression.type=lz4</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 向指定主题发送了 1 千万条消息，每条消息大小是 1KB，还可以设置压缩算法、延时时间等</span></span><br></pre></td></tr></table></figure>
+
 <p>输出测试生产者的吞吐量 (MB/s)、消息发送延时以及各种分位数下的延时。</p>
 <p>通常会关注 99th 分位（604ms），表明测试生产者生产的消息中，有 99% 消息的延时都在 604ms 以内，可作为 SLA 参考。</p>
 <figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">2175479 </span>records sent, <span class="number">435095.8</span> records/sec (<span class="number">424.90</span> MB/sec), <span class="number">131.1</span> ms avg latency, <span class="number">681.0</span> ms max latency.</span><br><span class="line"><span class="symbol">4190124 </span>records sent, <span class="number">838024.8</span> records/sec (<span class="number">818.38</span> MB/sec), <span class="number">4.4</span> ms avg latency, <span class="number">73.0</span> ms max latency.</span><br><span class="line"><span class="symbol">10000000 </span>records sent, <span class="number">737463.126844</span> records/sec (<span class="number">720.18</span> MB/sec), <span class="number">31.81</span> ms avg latency, <span class="number">681.00</span> ms max latency, <span class="number">4</span> ms <span class="number">50</span>th, <span class="number">126</span> ms <span class="number">95</span>th, <span class="number">604</span> ms <span class="number">99</span>th, <span class="number">672</span> ms <span class="number">99.9</span>th.</span><br></pre></td></tr></table></figure>
+
 <hr>
 <h2 id="测试消费者性能"><a href="#测试消费者性能" class="headerlink" title="测试消费者性能"></a>测试消费者性能</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-perf-test.sh --broker-list kafka-host:port --messages 10000000 --topic test-topic</span><br></pre></td></tr></table></figure>
+
 <p>输出消费者的吞吐量数据（1723MB/s，但没有不同分位数下的分布情况）。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">start</span><span class="selector-class">.time</span>, <span class="selector-tag">end</span><span class="selector-class">.time</span>, <span class="selector-tag">data</span><span class="selector-class">.consumed</span><span class="selector-class">.in</span><span class="selector-class">.MB</span>, <span class="selector-tag">MB</span><span class="selector-class">.sec</span>, <span class="selector-tag">data</span><span class="selector-class">.consumed</span><span class="selector-class">.in</span><span class="selector-class">.nMsg</span>, <span class="selector-tag">nMsg</span><span class="selector-class">.sec</span>, <span class="selector-tag">rebalance</span><span class="selector-class">.time</span><span class="selector-class">.ms</span>, <span class="selector-tag">fetch</span><span class="selector-class">.time</span><span class="selector-class">.ms</span>, <span class="selector-tag">fetch</span><span class="selector-class">.MB</span><span class="selector-class">.sec</span>, <span class="selector-tag">fetch</span><span class="selector-class">.nMsg</span><span class="selector-class">.sec</span></span><br><span class="line">2019<span class="selector-tag">-06-26</span> 15<span class="selector-pseudo">:24</span><span class="selector-pseudo">:18</span><span class="selector-pseudo">:138</span>, 2019<span class="selector-tag">-06-26</span> 15<span class="selector-pseudo">:24</span><span class="selector-pseudo">:23</span><span class="selector-pseudo">:805</span>, 9765<span class="selector-class">.6202</span>, 1723<span class="selector-class">.2434</span>, 10000000, 1764602<span class="selector-class">.0822</span>, 16, 5651, 1728<span class="selector-class">.1225</span>, 1769598<span class="selector-class">.3012</span></span><br></pre></td></tr></table></figure>
+
 <h1 id="查看消息"><a href="#查看消息" class="headerlink" title="查看消息"></a>查看消息</h1><h2 id="查看主题消息总数"><a href="#查看主题消息总数" class="headerlink" title="查看主题消息总数"></a>查看主题消息总数</h2><p>Kafka 自带命令没有提供这种功能，可以使用 Kafka 工具类 GetOffsetShell ：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list kafka-host:port --time -2 --topic test-topic</span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">test</span>-topic:0:0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">test</span>-topic:1:0</span></span><br><span class="line"></span><br><span class="line">bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list kafka-host:port --time -1 --topic test-topic</span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">test</span>-topic:0:5500000</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">test</span>-topic:1:5500000</span></span><br></pre></td></tr></table></figure>
+
 <p>计算出给定主题特定分区当前的最早位移和最新位移，将两者的差值累加起来，就能得到该主题当前总的消息数（5500000 + 5500000 == 11000000）</p>
 <h2 id="查看消息文件数据"><a href="#查看消息文件数据" class="headerlink" title="查看消息文件数据"></a>查看消息文件数据</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-dump-log.sh --files ../data_dir/kafka_1/test-topic-1/00000000000000000000.log --deep-iteration</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 加上 --deep-iteration 可查看每条具体消息</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 加上 --<span class="built_in">print</span>-data-log 可查看消息里面的实际数据</span></span><br></pre></td></tr></table></figure>
+
 <p>输出消息批次（RecordBatch）或消息集合（MessageSet）的元数据信息（创建时间、使用的压缩算法、CRC 校验值等）。</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Dumping ..<span class="regexp">/data_dir/</span>kafka_1<span class="regexp">/test-topic-1/</span><span class="number">00000000000000000000.</span>log</span><br><span class="line">Starting <span class="string">offset:</span> <span class="number">0</span></span><br><span class="line"><span class="string">baseOffset:</span> <span class="number">0</span> <span class="string">lastOffset:</span> <span class="number">14</span> <span class="string">count:</span> <span class="number">15</span> <span class="string">baseSequence:</span> <span class="number">-1</span> <span class="string">lastSequence:</span> <span class="number">-1</span> <span class="string">producerId:</span> <span class="number">-1</span> <span class="string">producerEpoch:</span> <span class="number">-1</span> <span class="string">partitionLeaderEpoch:</span> <span class="number">0</span> <span class="string">isTransactional:</span> <span class="literal">false</span> <span class="string">isControl:</span> <span class="literal">false</span> <span class="string">position:</span> <span class="number">0</span> <span class="string">CreateTime:</span> <span class="number">1561597044933</span> <span class="string">size:</span> <span class="number">1237</span> <span class="string">magic:</span> <span class="number">2</span> <span class="string">compresscodec:</span> LZ4 <span class="string">crc:</span> <span class="number">646766737</span> <span class="string">isvalid:</span> <span class="literal">true</span></span><br><span class="line">| <span class="string">offset:</span> <span class="number">0</span> <span class="string">CreateTime:</span> <span class="number">1561597044911</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">1</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">2</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">3</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">4</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">5</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">6</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">7</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">8</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">9</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">10</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">11</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">12</span> <span class="string">CreateTime:</span> <span class="number">1561597044932</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">13</span> <span class="string">CreateTime:</span> <span class="number">1561597044933</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line">| <span class="string">offset:</span> <span class="number">14</span> <span class="string">CreateTime:</span> <span class="number">1561597044933</span> <span class="string">keysize:</span> <span class="number">-1</span> <span class="string">valuesize:</span> <span class="number">1024</span> <span class="string">sequence:</span> <span class="number">-1</span> <span class="string">headerKeys:</span> []</span><br><span class="line"><span class="string">baseOffset:</span> <span class="number">15</span> <span class="string">lastOffset:</span> <span class="number">29</span> <span class="string">count:</span> <span class="number">15</span> <span class="string">baseSequence:</span> <span class="number">-1</span> <span class="string">lastSequence:</span> <span class="number">-1</span> <span class="string">producerId:</span> <span class="number">-1</span> <span class="string">producerEpoch:</span> <span class="number">-1</span> <span class="string">partitionLeaderEpoch:</span> <span class="number">0</span> <span class="string">isTransactional:</span> <span class="literal">false</span> <span class="string">isControl:</span> <span class="literal">false</span> <span class="string">position:</span> <span class="number">1237</span> <span class="string">CreateTime:</span> <span class="number">1561597044934</span> <span class="string">size:</span> <span class="number">1237</span> <span class="string">magic:</span> <span class="number">2</span> <span class="string">compresscodec:</span> LZ4 <span class="string">crc:</span> <span class="number">3751986433</span> <span class="string">isvalid:</span> <span class="literal">true</span></span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
 <h2 id="查看消费者组消息位移"><a href="#查看消费者组消息位移" class="headerlink" title="查看消费者组消息位移"></a>查看消费者组消息位移</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumr-groups.sh --bootstrap-server kafka-host:port --describe --group test-group</span><br></pre></td></tr></table></figure>
+
 <p>其中输出的 CURRENT-OFFSET 表示该消费者当前消费的最新位移，LOG-END-OFFSET 表示对应分区最新生产消息的位移，LAG 列是两者的差值。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TOPIC		PARTITION	CURRENT-OFFSET	LOG-END-OFFSET	LAG			CONSUMER-ID											HOST		CLIENT-ID</span><br><span class="line">test-topic	<span class="number">0</span>			<span class="number">1112985</span>			<span class="number">5000000</span>			<span class="number">3887015</span>		consumer<span class="number">-1</span>-d2a5e537-aec5<span class="number">-4659</span>-a084<span class="number">-33174e1</span>b3c48		/<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>	consumer<span class="number">-1</span></span><br><span class="line">test-topic	<span class="number">0</span>			<span class="number">1095015</span>			<span class="number">5000000</span>			<span class="number">3904985</span>		consumer<span class="number">-1</span>-d2a5e537-aec5<span class="number">-4659</span>-a084<span class="number">-33174e1</span>b3c48		/<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>	consumer<span class="number">-1</span></span><br></pre></td></tr></table></figure>
+
 <h1 id="主题管理"><a href="#主题管理" class="headerlink" title="主题管理"></a>主题管理</h1><h2 id="主题创建"><a href="#主题创建" class="headerlink" title="主题创建"></a>主题创建</h2><p>指定分区、副本个数和主题名称</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --bootstrap-server broker_host:port --create --topic my_topic_name  --partitions 1 --replication-factor 1</span><br></pre></td></tr></table></figure>
+
+
+
 <p>Kafka 2.2 版本开始，社区推荐用 <code>--bootstrap-server</code> 参数替换 <code>--zookeeper</code> 参数（详见官方文档： <a href="http://kafka.apache.org/22/documentation.html" target="_blank" rel="noopener">http://kafka.apache.org/22/documentation.html</a> ）： </p>
 <blockquote>
 <p> The <code>bin/kafka-topics.sh</code> command line tool is now able to connect directly to brokers with <code>--bootstrap-server</code> instead of zookeeper. The old <code>--zookeeper</code> option is still available for now. Please read <a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-377%3A+TopicCommand+to+use+AdminClient" target="_blank" rel="noopener">KIP-377</a> for more information. </p>
 </blockquote>
 <ul>
-<li><p>使用 <code>--zookeeper</code> 会绕过 Kafka 的安全体系：即使为 Kafka 集群设置了安全认证，限制了主题的创建，如果使用 —zookeeper 的命令依然能不受约束成功创建任意主题。</p>
+<li><p>使用 <code>--zookeeper</code> 会绕过 Kafka 的安全体系：即使为 Kafka 集群设置了安全认证，限制了主题的创建，如果使用 –zookeeper 的命令依然能不受约束成功创建任意主题。</p>
 </li>
 <li><p>使用 <code>--bootstrap-server</code> 与集群进行交互，逐渐成为使用 Kafka 标准做法，不必同时维护 ZooKeeper 和 Broker 的连接信息。</p>
 </li>
 </ul>
 <h2 id="主题查询"><a href="#主题查询" class="headerlink" title="主题查询"></a>主题查询</h2><p>注意用户只能查看自己可见的 Kafka 主题。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --bootstrap-server broker_host:port --list</span><br></pre></td></tr></table></figure>
+
 <p>使用 <code>--zookeeper</code> 会绕过 Kafka 的安全体系，默认返回集群中所有的主题详细数据。</p>
 <h2 id="修改分区"><a href="#修改分区" class="headerlink" title="修改分区"></a>修改分区</h2><p>只能增加数量，否则抛出 <code>InvalidPartitionsException</code> 异常。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --bootstrap-server broker_host:port --alter --topic &lt;topic_name&gt; --partitions &lt;新分区数&gt;</span><br></pre></td></tr></table></figure>
+
 <h2 id="修改主题级别参数"><a href="#修改主题级别参数" class="headerlink" title="修改主题级别参数"></a>修改主题级别参数</h2><p>注意必须使用 <code>--zookeeper</code> 参数</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --zookeeper zookeeper_host:port --entity-type topics --entity-name &lt;topic_name&gt; --alter --add-config max.message.bytes=10485760</span><br></pre></td></tr></table></figure>
+
 <h2 id="修改主题限速"><a href="#修改主题限速" class="headerlink" title="修改主题限速"></a>修改主题限速</h2><p>即设置 Leader 副本和 Follower 副本使用的带宽。</p>
 <p>先设置 Broker 端参数 <code>leader.replication.throttled.rate</code>  和  <code>follower.replication.throttled.rate</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --zookeeper zookeeper_host:port --alter --add-config 'leader.replication.throttled.rate=104857600,follower.replication.throttled.rate=104857600' --entity-type brokers --entity-name 0</span><br></pre></td></tr></table></figure>
+
 <p>为该主题设置要限速的副本</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --zookeeper zookeeper_host:port --alter --add-config 'leader.replication.throttled.replicas=*,follower.replication.throttled.replicas=*' --entity-type topics --entity-name test</span><br></pre></td></tr></table></figure>
+
 <h2 id="删除主题"><a href="#删除主题" class="headerlink" title="删除主题"></a>删除主题</h2><p>注意删除是异步操作，返回的是“已删除”的状态标记。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --bootstrap-server broker_host:port --delete  --topic &lt;topic_name&gt;</span><br></pre></td></tr></table></figure>
+
+
+
 <h1 id="常见错误排查"><a href="#常见错误排查" class="headerlink" title="常见错误排查"></a>常见错误排查</h1><h2 id="主题删除失效"><a href="#主题删除失效" class="headerlink" title="主题删除失效"></a>主题删除失效</h2><p>由于删除是异步操作，有可能删除不成功，最常见的原因：</p>
 <ul>
 <li><p>副本所在的 Broker 宕机：重启 Broker 后自动恢复</p>
@@ -999,9 +1017,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 35
+        Total : 36
         </div>
         <!-- search  -->
         
@@ -1014,6 +1039,11 @@ top:100vh;
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/28</span><a class="archive-post-title" href= "/2021/01/28/DDIA_note-10/" >《DDIA》阅读笔记（八）：分布式系统的挑战</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1235,9 +1265,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
@@ -1247,13 +1277,13 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
