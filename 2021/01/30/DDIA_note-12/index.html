@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>《DDIA》阅读笔记（九）：一致性与共识（可线性化） · YWH&#39;s Notebook</title>
+    <title>《DDIA》阅读笔记（九）：一致性与共识（顺序保证） · YWH&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >YWH&#39;s Notebook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
+                <a href="#" class="post-name">《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            《DDIA》阅读笔记（九）：一致性与共识（可线性化）
+            《DDIA》阅读笔记（九）：一致性与共识（顺序保证）
             <!-- 404 -->
             
         </h1>
@@ -275,12 +275,12 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,568</span>Reading time: <span class="post-count reading-time">12 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3,115</span>Reading time: <span class="post-count reading-time">10 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/01/28</span>
+                    <span class="post-intro-time">2021/01/30</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -404,265 +404,115 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>本章结构如下：</p>
-<blockquote class="pullquote mindmap mindmap-md"><ul>
-<li>一致性与共识<ul>
-<li>一致性保证<ul>
-<li>数据一致性<ul>
-<li>最终一致性</li>
-<li>线性一致性</li>
-<li>因果一致性</li>
-<li>顺序一致性</li>
-<li>……</li>
-</ul>
+        <h1 id="顺序保证"><a href="#顺序保证" class="headerlink" title="顺序保证"></a>顺序保证</h1><ul>
+<li><p>主从复制系统中，主节点主要是确定复制日志中的写入顺序，使从节点遵从相同顺序执行写入。如果没有主节点，则可能由于并发操作引发冲突。</p>
 </li>
-<li>事务一致性<ul>
-<li>事务 ACID</li>
-<li>隔离性<ul>
-<li>ANSI SQL-92<ul>
-<li>未提交读（RU）</li>
-<li>已提交读（RC）</li>
-<li>可重复读（RR）</li>
-<li>可串行化（Serializable）</li>
-</ul>
+<li><p>可串行化是确保事务的执行结果与按照某种顺序方式执行一致。实现方式可以是严格顺序执行，或者允许并发但需要相应的冲突解决方案，如加锁或“冲突-中止”。</p>
 </li>
-<li>Critique<ul>
-<li>访问异常（幻读，写倾斜）</li>
-<li>隔离级别<ul>
-<li>快照隔离（SI）</li>
-</ul>
-</li>
-<li>技术实现<ul>
-<li>多版本并发控制（MVCC）</li>
-</ul>
+<li><p>分布式系统的时间戳与时钟试图将顺序引入到无序的操作世界，例如确定两个写操作的先后顺序。</p>
 </li>
 </ul>
-</li>
-</ul>
-</li>
-<li>具体实现<ul>
-<li>可串行化<ul>
-<li>两阶段封锁（2PL）</li>
-<li>单进程</li>
-<li>可串行化快照隔离（SSI）</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>可线性化<ul>
-<li>达成条件</li>
-<li>可线性化与可串行化</li>
-<li>依赖条件<ul>
-<li>加锁与主节点选举</li>
-<li>约束与唯一性保证</li>
-<li>跨通道的时间依赖</li>
-</ul>
-</li>
-<li>实现方式<ul>
-<li>主从复制（部分支持可线性化）</li>
-<li>共识算法（可线性化）</li>
-<li>多主复制（不可线性化）</li>
-<li>无主复制（可能不可线性化）</li>
-</ul>
-</li>
-<li>线性化代价<ul>
-<li>CAP 理论</li>
-<li>非线性系统</li>
-<li>网络延迟</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>顺序保证<ul>
-<li>顺序与因果关系<ul>
-<li>因果顺序并非全序</li>
-<li>可线性化强于因果一致性</li>
-<li>捕获因果依赖关系</li>
-</ul>
-</li>
-<li>序列号排序<ul>
-<li>非因果序列发生器</li>
-<li>Lamport 时间戳</li>
-</ul>
-</li>
-<li>全序关系广播<ul>
-<li>使用全序关系广播</li>
-<li>全序关系广播 -&gt; 线性化存储<ul>
-<li>原子比较设置</li>
-<li>追加日志</li>
-<li>线性化读取</li>
-</ul>
-</li>
-<li>线性化存储 -&gt; 全序关系广播</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>共识问题<ul>
-<li>原子提交与两阶段提交：停止服务/人工介入<ul>
-<li>事务原子提交</li>
-<li>两阶段提交（2PC）</li>
-<li>系统的承诺</li>
-<li>协调者发生故障</li>
-<li>三阶段提交（3PC）</li>
-</ul>
-</li>
-<li>实践中的分布式事务<ul>
-<li>Exactly-Once 消息处理</li>
-<li>XA 交易</li>
-<li>停顿时仍持有锁</li>
-<li>从协调者故障中恢复</li>
-<li>局限性<ul>
-<li>单点故障</li>
-<li>有状态</li>
-<li>高复杂度</li>
-<li>低容错</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>支持容错的共识：自动切换<ul>
-<li>共识算法与全序广播</li>
-<li>主从复制与共识</li>
-<li>Epoch 和 Quorum</li>
-<li>局限性<ul>
-<li>同步复制</li>
-<li>故障误判</li>
-<li>多数节点</li>
-<li>静态成员组成</li>
-<li>网络问题敏感</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>成员与协调服务<ul>
-<li>节点任务分配</li>
-<li>服务发现</li>
-<li>成员服务</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<p>为了构建容错系统，最好先建立一套通用的抽象机制和与之对应的技术保证，这样只需实现一次，其上的各种应用程序都可以安全地信赖底层的保证。</p>
-<p>共识：即所有的节点就某一项提议达成一致。通过实现正确得共识算法，可以避免发生脑裂等问题。</p>
-<p>一致性保证：</p>
+<h2 id="顺序关系与因果关系"><a href="#顺序关系与因果关系" class="headerlink" title="顺序关系与因果关系"></a>顺序关系与因果关系</h2><p>如果系统服从因果关系所规定的顺序，称之为 <strong>因果一致性</strong>。</p>
+<p>例如快照隔离提供了因果一致性：当从数据库中读数据时，如果查询到了某些数据，也一定能看到触发该数据的前序事件（假设期间没有发生删除操作）。</p>
+<h3 id="因果顺序并非全序"><a href="#因果顺序并非全序" class="headerlink" title="因果顺序并非全序"></a>因果顺序并非全序</h3><p><strong>全序关系</strong> 支持任何两个元素之间进行比较：即对于任意两个元素，总是可以比较大小，否则为偏序。</p>
+<p>全序和偏序的差异也会体现在不同的数据库一致性模型中：</p>
 <ul>
-<li><p>大多数多副本系统都至少提供了最终一致性保证，但无法确定系统何时收敛。即使系统在大多数情况下都运行良好，在系统面临故障或高并发压力时，最终一致性的临界条件或错误才会对外暴露，因此难以测试和发现错误。</p>
+<li><p><strong>可线性化</strong>：在一个可线性化的系统中，存在全序操作关系。系统的行为类似只有一个副本且每个操作都是原子的，意味着对于任何两个操作，总是可以指出其先后。</p>
 </li>
-<li><p>分布式系统下也存在更强的一致性模型，可使上层应用逻辑更简单、不容易出错，但也意味着牺牲性能或容错性，需要结合自身需求选择。</p>
-</li>
-<li><p>分布式一致性模型与事务相似，但事务隔离主要为了处理并发执行事务时的各种临界条件，而分布式一致性主要是针对延迟和故障等问题来协调副本之间的状态。</p>
+<li><p><strong>因果关系</strong>：如果两个操作都没有明确先后顺序，则为并发关系，无法排序比较；如果两个事件是因果关系，则这两个事件可以被排序比较。这表明因果关系至少可以定义为偏序而非全序。</p>
 </li>
 </ul>
-<h1 id="可线性化"><a href="#可线性化" class="headerlink" title="可线性化"></a>可线性化</h1><p>在最终一致性数据库中，同时查询不同的副本可能会得到不同的答案。</p>
-<p>可线性化的思想：数据库对上提供只有单个副本的假象，即每个客户端都拥有相同的数据视图，而不必担心复制滞后。一旦某个客户端成功提交写请求，后续其他所有客户端的读请求一定都能看到刚写入的值。</p>
-<p><strong>可线性化的达成条件</strong>：如果与写并发的读操作可能返回旧值或新值，不同的读客户端会看到旧值和新值之间来回跳变的情况。为使系统可线性化，需要添加约束：在写操作的开始与结束之间必定存在某个时间点，x 的值发生了从 0 到 1 的跳变。如果某个客户端的读取返回了新值 1，即使写操作尚未提交，所有后续的读取也必须全部返回新值。</p>
-<h2 id="可线性化与可串行化"><a href="#可线性化与可串行化" class="headerlink" title="可线性化与可串行化"></a>可线性化与可串行化</h2><p>可串行化和可线性化是正交的概念：</p>
+<p>因此在可线性化数据存储中不存在并发操作，一定有一个时间线将所有操作都全序执行。可能存在多个请求处于等待处理的状态，但是数据存储保证了在特定的时间点执行特定的操作，所以是单个时间轴、单个数据副本、没有并发。而并发意味着时间线会出现分支和合并，而不同分支上的橾作无法直接比较。</p>
+<h3 id="可线性化强于因果一致性"><a href="#可线性化强于因果一致性" class="headerlink" title="可线性化强于因果一致性"></a>可线性化强于因果一致性</h3><p>任何可线性化的系统都将正确地保证因果关系，但线性化并非是保证因果关系的唯一途径，还有其他方法使得系统可以满足因果一致性而免于线性化所带来的性能问题。 </p>
+<h3 id="捕获因果依赖关系"><a href="#捕获因果依赖关系" class="headerlink" title="捕获因果依赖关系"></a>捕获因果依赖关系</h3><ul>
+<li><p>为保持因果关系需要知道哪个操作发生在前。这里只需偏序关系，或许并发操作会以任意顺序执行，但如果一个操作发生在另一个操作之前，每个副本都应该按照相同的顺序处理。</p>
+</li>
+<li><p>当某个副本在处理一个请求时，必须确保所有因果在前的请求都已完成处理；否则后面的请求必须等待直到前序操作处理完毕。</p>
+</li>
+<li><p>为了确定因果关系，数据库需要知道应用程序读取的是哪个版本的数据。比如事务提交时数据库要检查事务曾经读取的数据版本现在是否仍是最新的，因此需要跟踪事务读取了哪些版本的数据。</p>
+</li>
+</ul>
+<h2 id="序列号排序"><a href="#序列号排序" class="headerlink" title="序列号排序"></a>序列号排序</h2><p>显式跟踪所有已读数据以确定因果关系意味着巨大的运行开销，可使用序列号或时间戳来排序事件。</p>
 <ul>
-<li><p>可串行化：事务的隔离属性，其中每个事务可以读写多个对象。它用来确保事务执行的结果与串行执行的结果完全相同，即使串行执行的顺序可能与事务实际执行顺序不同。</p>
+<li><p>由于使用墙上时钟存在很多问题，可以使用逻辑时钟：如采用算法来产生一个数字序列用以识别操作，通常是递增的计数器。这样的标识紧凑且保证全序关系。</p>
 </li>
-<li><p>可线性化：读写寄存器（单个对象）的最新值保证。它并不要求将操作组合到事务中，因此无法避免写倾斜等问题，除非采用其他额外措施（如实体化冲突）。</p>
+<li><p>在主从复制数据库中，复制日志定义了与因果关系一致的写操作全序关系。主节点可以为每个操作递增某个计数器，从而为日志中的操作赋值单调递增的序列号。从节点按照日志出现的顺序来应用写操作，则结果一定满足因果一致性（虽然从节点可能会滞后于主节点）。</p>
 </li>
 </ul>
-<p>数据库可以同时支持可串行化与线性化，被称为 <strong>严格的可串行化</strong> 或者 <strong>强的单副本可串行化</strong>。</p>
+<h3 id="非因果序列发生器"><a href="#非因果序列发生器" class="headerlink" title="非因果序列发生器"></a>非因果序列发生器</h3><p>对于多主或无主类型数据库，或者数据库本身是分区的，则生成序列号会变得复杂：</p>
 <ul>
-<li><p>基于两阶段加锁或实际以串行执行都是典型的可线性化。</p>
+<li><p>每个节点可独立产生序列号，比如两个节点，一个生成偶数、另一个生成奇数，或嵌入节点的唯一标识符。</p>
 </li>
-<li><p>可串行化的快照隔离不是可线性化（不保证读取到最新的数据）：它可以从一致性快照中读取，以避免读、写之间的竞争。由于其不包括快照点创建时刻之后的写入数据，从快照读取肯定不满足线性化。</p>
+<li><p>把墙上时钟附加到每个操作上，不必连续，只需可区分操作（比如 LWW）。</p>
+</li>
+<li><p>为每个节点预先分配序列号的区间范围。</p>
 </li>
 </ul>
-<h2 id="依赖条件"><a href="#依赖条件" class="headerlink" title="依赖条件"></a>依赖条件</h2><p>在以下场景需要线性化保证。</p>
-<h3 id="加锁与主节点选举"><a href="#加锁与主节点选举" class="headerlink" title="加锁与主节点选举"></a>加锁与主节点选举</h3><p>主从复制系统需要确保有且只有一个主节点，否则会产生脑裂：一般是加上满足可线性化的锁：所有节点都必须同意某个节点持有锁。</p>
+<p>以上方法生成的序列号与因果关系不严格一致：节点处理速度不一样、墙钟时间的偏移、请求操作路由到不同节点都回导致序列号与因果顺序不一致。</p>
+<h3 id="Lamport-时间戳"><a href="#Lamport-时间戳" class="headerlink" title="Lamport 时间戳"></a>Lamport 时间戳</h3><p>Lamport Timestamp 是产生与因果关系一致的序列号的方法：其与墙钟时间不存在直接对应关系，对于给定的两个时间戳，计数值较大者大，如果相同则节点 id 较大者大。</p>
 <ul>
-<li><p>提供协调者服务的系统：ZooKeeper、Etcd，其中线性化存储服务是所有这些协调服务的基础。</p>
+<li><p>其实现把最大计数器值嵌入每个请求中（每个节点以及客户端）。当节点收到某个请求或回复时，如发现内嵌的最大计数值大于节点的计数器值，则把自身计数器修改为该最大值。</p>
 </li>
-<li><p>Oracle Real Application Clusters (RAC) 的分布式锁有更细粒度的实现：每个磁盘页面均设置一把锁，多个节点可以并发地共享访问存储系统。可线性化的锁处于事务执行的关键路径上。</p>
+<li><p>区别于“检测并发写”中的版本向量：版本向量用以区分操作是并发关系或因果关系，Lamport 时间戳用于确保全序关系。</p>
+</li>
+<li><p>即使 Lamport 时间戳与因果序一致，但根据其全序关系却无法区分两个操作属于并发关系还是因果依赖关系。</p>
+</li>
+<li><p>Lamport 时间戳优于版本向显之处在于它更加紧凑和高效。</p>
 </li>
 </ul>
-<p>出于性能考虑，RAC 部署时通常都要求专用的集群互连网络连接数据库节点。</p>
-<h3 id="约束与唯一性保证"><a href="#约束与唯一性保证" class="headerlink" title="约束与唯一性保证"></a>约束与唯一性保证</h3><p>比如用户名唯一标识一名用户，如果在写入数据时强制执行这些约束，则需要线性化。</p>
+<p>对于某个系统要确保用户名唯一标识用户，两个用户如果同时尝试使用相同的用户名操作时，只允许其中一个成功，另一个必须失败的场景，使用 Lamport 时间戳实现的全序关系则无法解决问题：</p>
 <ul>
-<li><p>由于操作上要求线性化，本质上与加锁类似。在某些实际场合中可以放宽这些限制，比如使用其他措施提供补偿。</p>
+<li><p>需要收集系统中所有的用户创建请求才可以比较时间戳。节点刚收到用户的创建请求时，无法立即决定该请求应该成功还是失败，因为不知道是否有其他节点在同时以相同用户名进行操作。</p>
 </li>
-<li><p>硬性的唯一约束需要线性化保证，比如主键，其他属性约束则不一定，比如外键等。</p>
+<li><p>系统必须检查每个节点，如果某个节点出现故障，则整套系统都无法运转：如果另一个节点执行了某些操作但无法知道，就无法构造出最终请求序列。</p>
 </li>
 </ul>
-<h3 id="跨通道的时间依赖"><a href="#跨通道的时间依赖" class="headerlink" title="跨通道的时间依赖"></a>跨通道的时间依赖</h3><p>线性化违例之所以被注意到，是因为系统中存在其他的通信渠道。比如以下的例子中用户可以上传照片到某网站，有一个后台进<br>程将照片调整为更低的分辨率以方便更快下载：<br><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD%E6%9E%B6%E6%9E%84.jpg" alt="图片上传下载架构"></p>
+<h2 id="全序关系广播"><a href="#全序关系广播" class="headerlink" title="全序关系广播"></a>全序关系广播</h2><p>要使所有节点就全序关系达成一致，如果使用按时间戳或序列号排序实现唯一性约束，会丧失容错性。</p>
+<p>全序关系广播、原子广播：如果使用主从复制，首先确定某一个节点作为主节点，然后在主节点上顺序执行操作。问题在于如何扩展系统的吞吐量，使之突破单一主节点的限制，以及处理主节点失效时的故障切换。</p>
+<p>ZooKeeper 和 Etcd 等共识服务就实现了全序关系广播。</p>
+<h3 id="使用全序关系广播"><a href="#使用全序关系广播" class="headerlink" title="使用全序关系广播"></a>使用全序关系广播</h3><ul>
+<li><p>状态机复制：如果每条消息代表数据库写请求，并且每个副本都按相同的顺序处理这些写请求，则所有副本可以保持一致（可能滞后）。 </p>
+</li>
+<li><p>实现可串行化事务。如果每条消息表示一个确定性事务且作为存储过程来执行，且每个节点都遵从相同的执行顺序，则可以保证数据库各分区以及各副本之间的一致性。</p>
+</li>
+<li><p>顺序在发送消息时已经确定，如果消息发送成功，节点不允许追溯地将某条消息插入到先前的某个位置上。</p>
+</li>
+<li><p>全序关系广播可视为以追加方式写入的日志（如复制日志、事务日志、预写日志），所有节点以相同的顺序发送消息，所有节点都可以读取日志并看到相同的消息序列。</p>
+</li>
+<li><p>对于提供 fencing 令牌的锁服务全序关系广播也很有用，每个获取锁的请求都作为消息附加到日志中，所有消息按照日志中的顺序依次编号。</p>
+</li>
+</ul>
+<p>全序关系广播需要确保可靠发送（没有消息丢失，如果消息发送到了某一个节点， 则它一定要发送到所有节点），且严格有序（消息总是以相同的顺序发送给每个节点）。</p>
+<h3 id="全序关系广播-gt-线性化存储"><a href="#全序关系广播-gt-线性化存储" class="headerlink" title="全序关系广播 -&gt; 线性化存储"></a>全序关系广播 -&gt; 线性化存储</h3><p>全序关系广播是基于异步模型的，保证消息以固定的顺序可靠地发送，但是不保证消息何时发送成功。</p>
+<p>而可线性化则强调就近性，读取时保证能够看到最新的写入值。</p>
+<h4 id="原子比较设置"><a href="#原子比较设置" class="headerlink" title="原子比较设置"></a>原子比较设置</h4><p>每个用户名都可以有一个带有原子“比较-设置”操作的线性化寄存器，初始值为空。当用户创建一个用户名时，对该用户名的寄存器执行比较设置操作：仅当寄存器值为空时将其设置为新的用户账号。如果多个用户试图同时获取相同的用户名则只有一个原子“比较-设置”操作成功。</p>
+<h4 id="追加日志"><a href="#追加日志" class="headerlink" title="追加日志"></a>追加日志</h4><p>以上的原子比较设置操作可以以追加日志的方式实现：</p>
 <ul>
-<li><p>采用消息队列将图像调整命令从 Web 服务器发送到调整器，Web 服务器把照片先写入文件存储服务，完成后把调整命令写入队列。</p>
+<li><p>在日志中追加一条消息指明想要的用户名。</p>
 </li>
-<li><p>如果文件存储服务不是可线性化的，则可能存在竞争：消息队列比存储服务内部的复制执行更快。当调整模块在读取图像看到图像的某个旧版本或读取不到内容。可能导致文件存储中的全尺寸图片与调整之后图片出现永久不一致。</p>
+<li><p>读取日志并将其广播给所有节点，等待回复。</p>
+</li>
+<li><p>检查是否有任何消息声称该用户名已被占用。如果第一条回复来自于当前节点则成功获得该用户名，可以提交该获取声明并返回给客户端。如果声称占用的第一条回复消息来自其他节点则中止操作。</p>
 </li>
 </ul>
-<p>由于 Web 服务器和调整模块之间存在文件存储服务器和消息队列两个不同的通信通道，如果没有线性化就近性保证，两个通道之间存在竞争条件。</p>
-<p>如果可以控制某一个通信通道可以尝试保证“写后读”，但会引入额外的复杂性。</p>
-<h2 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h2><p>在多副本系统中实现线性化，本质上意味着表现为只有一个数据副本，且在其上的所有操作都是原子的。</p>
-<p>最简单的实现方法是只用一个副本，但会牺牲容错。因此需要考虑的是各种复制方案是否满足可线性化。</p>
-<h3 id="主从复制（部分支持可线性化）"><a href="#主从复制（部分支持可线性化）" class="headerlink" title="主从复制（部分支持可线性化）"></a>主从复制（部分支持可线性化）</h3><p>主节点承担数据写入，从节点在各自节点上维护备份副本。</p>
+<p>日志条目以相同的顺序发送到所有节点，而如果存在多个并发写入，则所有节点将首先决定哪个请求在先。选择第一个写请求作为获胜者并中止其他请求，以确保所有节点同意一个写请求最终要么提交成功要么中止。</p>
+<h4 id="线性化读取"><a href="#线性化读取" class="headerlink" title="线性化读取"></a>线性化读取</h4><p>以上过程可确保线性化写入，却无法保证线性化读取，即从异步日志更新的存储中读取数据时可能是旧值。因此只是顺序一致性（弱于线性化保证）。</p>
+<p>为了满足线性化保证，可以：</p>
 <ul>
-<li><p>如果在主节点或者同步更新的从节点上读取，则可以满足线性化。</p>
+<li><p>以追加的方式把读请求排序、广播，再各个节点获取该日志，当本节点收到消息时才执行真正的读操作。 </p>
 </li>
-<li><p>但并非每个数据库实例都是可线性化的，主要是可能采用了快照隔离的设计，或者存在并发方面的 bug。</p>
+<li><p>如果可以以线性化的方式获取当前最新日志中消息的位置则查询位置，等待直到该位置之前的所有条目都已经发送，接下来再执行读取。 </p>
 </li>
-<li><p>在主节点上读取的前提是确知主节点，但从节点都可能自认为是主节点，如果“自以为”的主节点对外提供服务就会违反线性化。</p>
-</li>
-<li><p>对于异步复制，在故障切换过程中甚至可能丢失已提交的写入，导致同时违反持久性和线性化。</p>
+<li><p>从同步更新的副本上进行读取，可确保总是读取最新值（链式复制）。</p>
 </li>
 </ul>
-<h3 id="共识算法（可线性化）"><a href="#共识算法（可线性化）" class="headerlink" title="共识算法（可线性化）"></a>共识算法（可线性化）</h3><p>与主从复制机制相似，但通过内置措施防止脑裂和过期的版本。</p>
-<p>通过共识算法可安全实现线性化存储，如 ZooKeeper 和 Etcd。</p>
-<h3 id="多主复制（不可线性化）"><a href="#多主复制（不可线性化）" class="headerlink" title="多主复制（不可线性化）"></a>多主复制（不可线性化）</h3><p>通常无法线性化，主要由于它们同时在多个节点上执行并发写入，并将数据异步复制到其他节点。</p>
-<p>由于存在多副本，它们可能会产生冲突的写入，需要额外的解决方案。</p>
-<h3 id="无主复制（可能不可线性化）"><a href="#无主复制（可能不可线性化）" class="headerlink" title="无主复制（可能不可线性化）"></a>无主复制（可能不可线性化）</h3><p>配置法定读取和写入满足（w + r &gt; n）可满足一定程度的一致性。但也完全取决于 Quorum 的配置以及强一致性的定义，可能无法保证线性化：比如基于墙钟的 LWW 冲突解决方式就是非线性化（时钟偏移时间戳无法保证与事件顺序一致）。</p>
-<p>不规范的 Quorum 会破坏线性化，但遵从严格的 Quorum 也不一定能保证可线性化。比如：</p>
+<h3 id="线性化存储-gt-全序关系广播"><a href="#线性化存储-gt-全序关系广播" class="headerlink" title="线性化存储 -&gt; 全序关系广播"></a>线性化存储 -&gt; 全序关系广播</h3><p>假定已有线性化存储，也可以在其上构建全序关系广播。</p>
 <ul>
-<li><p>x 的初始值为 0，客户端 C 向所有的三个副本发送请求将其更新为 1（n = w = 3）。</p>
+<li><p>假设有一个线性化寄存器来存储一个计数，使其支持原子“自增-读取”操作或原子“比较-设置”操作。对于每个要通过全序关系广播的消息，原子递增并读取该线性化的计数，将其作为序列号附加到消息。再将消息广播到所有节点，而接收者也严格按照序列化来发送回复消息。</p>
 </li>
-<li><p>客户端 A 从两个节点（r = 2）读取数据，在其中一个节点上看到新值 1。</p>
-</li>
-<li><p>客户端 B 从两个节点读取，两个节点都返回 0。</p>
-</li>
-<li><p>即使满足仲裁条件（w + r &gt; n），但 B 的请求在 A 的请求完成后才开始（此时 C 还未完成），A 得到新值，B 得到旧值，显然不是线性化。</p>
+<li><p>与 Lamport 时间戳不同，通过递增线性化寄存器获得的数字不存在任何间隙。</p>
 </li>
 </ul>
-<p>满足线性化的方法：读操作在返回结果给应用之前必须同步执行读修复、写操作在发送结果之前必须读取 Quorum 节点以获取最新值。但这样会严重牺牲性能，且只能实现线性化读写，线性化的“比较设置”操作需要共识算法支持。</p>
-<h2 id="线性化代价"><a href="#线性化代价" class="headerlink" title="线性化代价"></a>线性化代价</h2><p>对于主从复制或多主复制，网络中断必然违背可线性化读写需求。如果客户端可以直接连接到主节点所在的数据中心，则可以避免此问题，否则，只能等到数据中心之间的网络恢复之后才能继续正常工作。</p>
-<h3 id="CAP-理论"><a href="#CAP-理论" class="headerlink" title="CAP 理论"></a>CAP 理论</h3><p>对于任何可线性化的数据库，只要有不可靠的网络都会发生违背线性化的风险。</p>
-<ul>
-<li><p>如果要求线性化，但由于网络方面的问题、某些副本与其他副本断开连接之后无法继续处理请求，就必须等待网络修复或者直接返回错误，结果都是服务 <strong>不可用</strong>。</p>
-</li>
-<li><p>如果不要求线性化，断开连接之后每个副本可独立处理请求（例如多主复制模型下的写操作），此时服务可用但结果行为不符合线性化，即 <strong>不一致</strong>。</p>
-</li>
-</ul>
-<p>不要求线性化的应用更能容忍网络故障，这种思路被称为 CAP 理论：</p>
-<ul>
-<li><p>一致性（Consistency）</p>
-</li>
-<li><p>可用性（Availability）</p>
-</li>
-<li><p>分区容错性（Partition Tolerance）</p>
-</li>
-</ul>
-<p>其中在分布式系统中分区是必然的，网络故障不论是否可接受都会发生，所以 CAP 定理的含义是：一旦发生网络故障，只能选择线性化（一致性）或可用性。</p>
-<h3 id="非线性系统"><a href="#非线性系统" class="headerlink" title="非线性系统"></a>非线性系统</h3><p>很少有系统可以真正保证线性化，现代多核 CPU 上的内存就是非线性化：</p>
-<ul>
-<li><p>如果某个 CPU 核上运行的线程修改一个内存，另一个 CPU 核上的线程尝试读取，则系统无法保证可以读到刚写入的值，除非使用内存屏障或 fence 指令。</p>
-</li>
-<li><p>每个 CPU 核都有自己独立的 cache 和寄存器，内存访问首先进入 cache 系统，所有修改默认会异步地刷新到主存。</p>
-</li>
-<li><p>访问 cache 比访问主存要快得多，异步刷新的特性对于现代 CPU 的性能至关重要，同时这就导致出现了多个数据副本（一个在主存，另外几个在不同级别的 cache 中），而副本更新是异步的，无法保证线性化。</p>
-</li>
-</ul>
-<h3 id="网络延迟"><a href="#网络延迟" class="headerlink" title="网络延迟"></a>网络延迟</h3><p>CAP 理论不适用于当今的“多核-内存”一致性模型，因为在计算机内部通常假设通信是可靠的（不会假定 CPU 核与其他核断开后还能安然工作），不支持线性化是为了提高性能而非容错性。</p>
-<p>分布式数据库也是处于性能考虑。由于无论网络故障是否发生，线性化对性能影响都是巨大的。假设要满足线性化，则读写请求响应时间至少要与网路中延迟成正比，由于网络高度不确定的延迟，线性化读写性能必然非常差。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -671,12 +521,17 @@ height:100vh;
     <ul class="post-paginator">
         <li class="next">
             
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2021/01/31/DDIA_note-13/" title= "《DDIA》阅读笔记（九）：一致性与共识（共识问题）">
+                    <div class="nextTitle">《DDIA》阅读笔记（九）：一致性与共识（共识问题）</div>
+                </a>
+            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/01/28/DDIA_note-10/" title= "《DDIA》阅读笔记（八）：分布式系统的挑战">
-                    <div class="prevTitle">《DDIA》阅读笔记（八）：分布式系统的挑战</div>
+                <a href= "/2021/01/29/DDIA_note-11/" title= "《DDIA》阅读笔记（九）：一致性与共识（可线性化）">
+                    <div class="prevTitle">《DDIA》阅读笔记（九）：一致性与共识（可线性化）</div>
                 </a>
             
         </li>
@@ -814,7 +669,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#可线性化"><span class="toc-number">1.</span> <span class="toc-text">可线性化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#可线性化与可串行化"><span class="toc-number">1.1.</span> <span class="toc-text">可线性化与可串行化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#依赖条件"><span class="toc-number">1.2.</span> <span class="toc-text">依赖条件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加锁与主节点选举"><span class="toc-number">1.2.1.</span> <span class="toc-text">加锁与主节点选举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#约束与唯一性保证"><span class="toc-number">1.2.2.</span> <span class="toc-text">约束与唯一性保证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#跨通道的时间依赖"><span class="toc-number">1.2.3.</span> <span class="toc-text">跨通道的时间依赖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现方式"><span class="toc-number">1.3.</span> <span class="toc-text">实现方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#主从复制（部分支持可线性化）"><span class="toc-number">1.3.1.</span> <span class="toc-text">主从复制（部分支持可线性化）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#共识算法（可线性化）"><span class="toc-number">1.3.2.</span> <span class="toc-text">共识算法（可线性化）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多主复制（不可线性化）"><span class="toc-number">1.3.3.</span> <span class="toc-text">多主复制（不可线性化）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#无主复制（可能不可线性化）"><span class="toc-number">1.3.4.</span> <span class="toc-text">无主复制（可能不可线性化）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线性化代价"><span class="toc-number">1.4.</span> <span class="toc-text">线性化代价</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CAP-理论"><span class="toc-number">1.4.1.</span> <span class="toc-text">CAP 理论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非线性系统"><span class="toc-number">1.4.2.</span> <span class="toc-text">非线性系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络延迟"><span class="toc-number">1.4.3.</span> <span class="toc-text">网络延迟</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#顺序保证"><span class="toc-number">1.</span> <span class="toc-text">顺序保证</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#顺序关系与因果关系"><span class="toc-number">1.1.</span> <span class="toc-text">顺序关系与因果关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#因果顺序并非全序"><span class="toc-number">1.1.1.</span> <span class="toc-text">因果顺序并非全序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可线性化强于因果一致性"><span class="toc-number">1.1.2.</span> <span class="toc-text">可线性化强于因果一致性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#捕获因果依赖关系"><span class="toc-number">1.1.3.</span> <span class="toc-text">捕获因果依赖关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#序列号排序"><span class="toc-number">1.2.</span> <span class="toc-text">序列号排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#非因果序列发生器"><span class="toc-number">1.2.1.</span> <span class="toc-text">非因果序列发生器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lamport-时间戳"><span class="toc-number">1.2.2.</span> <span class="toc-text">Lamport 时间戳</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全序关系广播"><span class="toc-number">1.3.</span> <span class="toc-text">全序关系广播</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用全序关系广播"><span class="toc-number">1.3.1.</span> <span class="toc-text">使用全序关系广播</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全序关系广播-gt-线性化存储"><span class="toc-number">1.3.2.</span> <span class="toc-text">全序关系广播 -&gt; 线性化存储</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#原子比较设置"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">原子比较设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#追加日志"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">追加日志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线性化读取"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">线性化读取</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线性化存储-gt-全序关系广播"><span class="toc-number">1.3.3.</span> <span class="toc-text">线性化存储 -&gt; 全序关系广播</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -1115,22 +970,22 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/28</span><a class="archive-post-title" href= "/2021/01/28/DDIA_note-11/" >《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
+            <span class="archive-post-date">01/31</span><a class="archive-post-title" href= "/2021/01/31/DDIA_note-13/" >《DDIA》阅读笔记（九）：一致性与共识（共识问题）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href= "/2021/01/30/DDIA_note-12/" >《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/29</span><a class="archive-post-title" href= "/2021/01/29/DDIA_note-11/" >《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">01/28</span><a class="archive-post-title" href= "/2021/01/28/DDIA_note-10/" >《DDIA》阅读笔记（八）：分布式系统的挑战</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/28</span><a class="archive-post-title" href= "/2021/01/28/DDIA_note-12/" >《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/28</span><a class="archive-post-title" href= "/2021/01/28/DDIA_note-13/" >《DDIA》阅读笔记（九）：一致性与共识（共识问题）</a>
         </li>
     
     
@@ -1358,6 +1213,8 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
@@ -1365,8 +1222,6 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
