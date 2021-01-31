@@ -431,33 +431,49 @@ height:100vh;
 <p>如将位移调回到 15 分钟前，可以指定为：PT0H15M0S。</p>
 <h1 id="消费者-API"><a href="#消费者-API" class="headerlink" title="消费者 API"></a>消费者 API</h1><p>可以通过消费者 API 重设位移，其中 Java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 除了 Earliest 和 Latest 以外，其余都使用 seek </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 只能重设一个分区</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seek</span><span class="params">(TopicPartition partition, <span class="keyword">long</span> offset)</span></span>;	</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seek</span><span class="params">(TopicPartition partition, OffsetAndMetadata offsetAndMetadata)</span></span>;	</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可重设多个分区</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seekToBeginning</span><span class="params">(Collection&lt;TopicPartition&gt; partitions)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seekToEnd</span><span class="params">(Collection&lt;TopicPartition&gt; partitions)</span></span>;</span><br></pre></td></tr></table></figure>
+
 <p>基本实现（注意调用带长整型的 poll 方法，而不要调用 <code>consumer.poll(Duration.ofSecond(0))</code>）：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Properties consumerProperties = <span class="keyword">new</span> Properties();</span><br><span class="line"><span class="comment">// 必须禁止自动提交位移</span></span><br><span class="line">consumerProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, <span class="keyword">false</span>);</span><br><span class="line">consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, <span class="string">"earliest"</span>);</span><br><span class="line"><span class="comment">// ...（省略其他消费者配置）</span></span><br></pre></td></tr></table></figure>
+
 <p>Earliest 策略（Latest 同理）</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 需要一次性构造主题的所有分区对象</span></span><br><span class="line">String topic = <span class="string">"test"</span>;  <span class="comment">// 要重设位移的Kafka主题 </span></span><br><span class="line"><span class="keyword">try</span> (<span class="keyword">final</span> KafkaConsumer&lt;String, String&gt; consumer = </span><br><span class="line">    <span class="keyword">new</span> KafkaConsumer&lt;&gt;(consumerProperties)) &#123;</span><br><span class="line">         consumer.subscribe(Collections.singleton(topic));</span><br><span class="line">         consumer.poll(<span class="number">0</span>);</span><br><span class="line">         consumer.seekToBeginning(</span><br><span class="line">    consumer.partitionsFor(topic).stream().map(partitionInfo -&gt;         </span><br><span class="line">        <span class="keyword">new</span> TopicPartition(topic, partitionInfo.partition()))</span><br><span class="line">            .collect(Collectors.toList()));</span><br><span class="line">    <span class="comment">// 如果是 Latest 则为 seekToEnd</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>Current 策略</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 借助 KafkaConsumer 的 committed 方法获取当前提交的最新位移</span></span><br><span class="line">consumer.partitionsFor(topic).stream().map(info -&gt; </span><br><span class="line">    <span class="comment">// 获取给定主题的所有分区，然后依次获取对应分区上的已提交位移，最后通过 seek 方法重设位移到已提交位移处</span></span><br><span class="line">    <span class="keyword">new</span> TopicPartition(topic, info.partition()))</span><br><span class="line">        .forEach(tp -&gt; &#123;</span><br><span class="line">            <span class="keyword">long</span> committedOffset = consumer.committed(tp).offset();</span><br><span class="line">             consumer.seek(tp, committedOffset);</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+
 <p>Specified-Offset 策略</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> targetOffset = <span class="number">1234L</span>;</span><br><span class="line"><span class="keyword">for</span> (PartitionInfo info : consumer.partitionsFor(topic)) &#123;</span><br><span class="line">    TopicPartition tp = <span class="keyword">new</span> TopicPartition(topic, info.partition());</span><br><span class="line">    consumer.seek(tp, targetOffset);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>Shift-By-N 策略（向前跳 123 条消息）</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (PartitionInfo info : consumer.partitionsFor(topic)) &#123;</span><br><span class="line">    TopicPartition tp = <span class="keyword">new</span> TopicPartition(topic, info.partition());</span><br><span class="line">    <span class="keyword">long</span> targetOffset = consumer.committed(tp).offset() + <span class="number">123L</span>; </span><br><span class="line">    consumer.seek(tp, targetOffset);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>DateTime 策略</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 重设位移到 2019 年 6 月 20 日晚上 8 点</span></span><br><span class="line"><span class="keyword">long</span> ts = LocalDateTime.of(<span class="number">2019</span>, <span class="number">6</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">0</span>).toInstant(ZoneOffset.ofHours(<span class="number">8</span>)).toEpochMilli();</span><br><span class="line">Map&lt;TopicPartition, Long&gt; timeToSearch = consumer.partitionsFor(topic).stream().map(info -&gt; </span><br><span class="line">    <span class="keyword">new</span> TopicPartition(topic, info.partition()))</span><br><span class="line">        .collect(Collectors.toMap(Function.identity(), tp -&gt; ts));</span><br><span class="line"><span class="keyword">for</span> (Map.Entry&lt;TopicPartition, OffsetAndTimestamp&gt; entry :  consumer.offsetsForTimes(timeToSearch).entrySet()) &#123;</span><br><span class="line">    consumer.seek(entry.getKey(), entry.getValue().offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>Duration 策略</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将位移调回 30 分钟前</span></span><br><span class="line">Map&lt;TopicPartition, Long&gt; timeToSearch = consumer.partitionsFor(topic).stream()</span><br><span class="line">    .map(info -&gt; <span class="keyword">new</span> TopicPartition(topic, info.partition()))</span><br><span class="line">    .collect(Collectors.toMap(Function.identity(), tp -&gt; System.currentTimeMillis() - <span class="number">30</span> * <span class="number">1000</span>  * <span class="number">60</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (Map.Entry&lt;TopicPartition, OffsetAndTimestamp&gt; entry : </span><br><span class="line">    consumer.offsetsForTimes(timeToSearch).entrySet()) &#123;</span><br><span class="line">    consumer.seek(entry.getKey(), entry.getValue().offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h1 id="命令行脚本"><a href="#命令行脚本" class="headerlink" title="命令行脚本"></a>命令行脚本</h1><p>对于 Kafka 0.11 及以上的版本，可以使用 kafka-consumer-groups 脚本设置位移。</p>
 <p>Earliest 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --all-topics --to-latest --execute</span><br></pre></td></tr></table></figure>
+
 <p>Latest 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --all-topics --to-earliest –execute</span><br></pre></td></tr></table></figure>
+
 <p>Current 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --all-topics --to-current --execute</span><br></pre></td></tr></table></figure>
+
 <p>Specified-Offset 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --shift-by &lt;offset_N&gt; --execute</span><br></pre></td></tr></table></figure>
+
 <p>Shift-By-N 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --shift-by &lt;offset_N&gt; --execute</span><br></pre></td></tr></table></figure>
+
 <p>Duration 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --by-duration PT0H30M0S --execute</span><br></pre></td></tr></table></figure>
+
+
+
 <p>以上。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
@@ -1145,23 +1161,23 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
@@ -1169,9 +1185,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
