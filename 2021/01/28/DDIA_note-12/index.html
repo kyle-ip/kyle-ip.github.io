@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>YWH&#39;s Notebook</title>
+    <title>《DDIA》阅读笔记（九）：一致性与共识（顺序保证） · YWH&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -204,12 +204,23 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >YWH&#39;s Notebook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>YWH's Notebook</a>
 </header>
@@ -221,24 +232,76 @@
 
 
 
+
+height:100vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(https://api.ixiaowai.cn/mcapi/mcapi.php)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            《DDIA》阅读笔记（九）：一致性与共识（顺序保证）
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Design">Design</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">3,115</span>Reading time: <span class="post-count reading-time">10 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/01/28</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -339,262 +402,169 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/05/21/Kafka_dynamic-config/" >
-            
-                <span>Kafka 动态配置</span>
-        </a>
-        <div class="abstract-content">
-            Kafka 社区于 1.1.0 版本中正式引入了动态 Broker 参数（Dynamic Broker Configs）。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/21</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="顺序保证"><a href="#顺序保证" class="headerlink" title="顺序保证"></a>顺序保证</h1><ul>
+<li><p>主从复制系统中，主节点主要是确定复制日志中的写入顺序，使从节点遵从相同顺序执行写入。如果没有主节点，则可能由于并发操作引发冲突。</p>
+</li>
+<li><p>可串行化是确保事务的执行结果与按照某种顺序方式执行一致。实现方式可以是严格顺序执行，或者允许并发但需要相应的冲突解决方案，如加锁或“冲突-中止”。</p>
+</li>
+<li><p>分布式系统的时间戳与时钟试图将顺序引入到无序的操作世界，例如确定两个写操作的先后顺序。</p>
+</li>
+</ul>
+<h2 id="顺序关系与因果关系"><a href="#顺序关系与因果关系" class="headerlink" title="顺序关系与因果关系"></a>顺序关系与因果关系</h2><p>如果系统服从因果关系所规定的顺序，称之为 <strong>因果一致性</strong>。</p>
+<p>例如快照隔离提供了因果一致性：当从数据库中读数据时，如果查询到了某些数据，也一定能看到触发该数据的前序事件（假设期间没有发生删除操作）。</p>
+<h3 id="因果顺序并非全序"><a href="#因果顺序并非全序" class="headerlink" title="因果顺序并非全序"></a>因果顺序并非全序</h3><p><strong>全序关系</strong> 支持任何两个元素之间进行比较：即对于任意两个元素，总是可以比较大小，否则为偏序。</p>
+<p>全序和偏序的差异也会体现在不同的数据库一致性模型中：</p>
+<ul>
+<li><p><strong>可线性化</strong>：在一个可线性化的系统中，存在全序操作关系。系统的行为类似只有一个副本且每个操作都是原子的，意味着对于任何两个操作，总是可以指出其先后。</p>
+</li>
+<li><p><strong>因果关系</strong>：如果两个操作都没有明确先后顺序，则为并发关系，无法排序比较；如果两个事件是因果关系，则这两个事件可以被排序比较。这表明因果关系至少可以定义为偏序而非全序。</p>
+</li>
+</ul>
+<p>因此在可线性化数据存储中不存在并发操作，一定有一个时间线将所有操作都全序执行。可能存在多个请求处于等待处理的状态，但是数据存储保证了在特定的时间点执行特定的操作，所以是单个时间轴、单个数据副本、没有并发。而并发意味着时间线会出现分支和合并，而不同分支上的橾作无法直接比较。</p>
+<h3 id="可线性化强于因果一致性"><a href="#可线性化强于因果一致性" class="headerlink" title="可线性化强于因果一致性"></a>可线性化强于因果一致性</h3><p>任何可线性化的系统都将正确地保证因果关系，但线性化并非是保证因果关系的唯一途径，还有其他方法使得系统可以满足因果一致性而免于线性化所带来的性能问题。 </p>
+<h3 id="捕获因果依赖关系"><a href="#捕获因果依赖关系" class="headerlink" title="捕获因果依赖关系"></a>捕获因果依赖关系</h3><ul>
+<li><p>为保持因果关系需要知道哪个操作发生在前。这里只需偏序关系，或许并发操作会以任意顺序执行，但如果一个操作发生在另一个操作之前，每个副本都应该按照相同的顺序处理。</p>
+</li>
+<li><p>当某个副本在处理一个请求时，必须确保所有因果在前的请求都已完成处理；否则后面的请求必须等待直到前序操作处理完毕。</p>
+</li>
+<li><p>为了确定因果关系，数据库需要知道应用程序读取的是哪个版本的数据。比如事务提交时数据库要检查事务曾经读取的数据版本现在是否仍是最新的，因此需要跟踪事务读取了哪些版本的数据。</p>
+</li>
+</ul>
+<h2 id="序列号排序"><a href="#序列号排序" class="headerlink" title="序列号排序"></a>序列号排序</h2><p>显式跟踪所有已读数据以确定因果关系意味着巨大的运行开销，可使用序列号或时间戳来排序事件。</p>
+<ul>
+<li><p>由于使用墙上时钟存在很多问题，可以使用逻辑时钟：如采用算法来产生一个数字序列用以识别操作，通常是递增的计数器。这样的标识紧凑且保证全序关系。</p>
+</li>
+<li><p>在主从复制数据库中，复制日志定义了与因果关系一致的写操作全序关系。主节点可以为每个操作递增某个计数器，从而为日志中的操作赋值单调递增的序列号。从节点按照日志出现的顺序来应用写操作，则结果一定满足因果一致性（虽然从节点可能会滞后于主节点）。</p>
+</li>
+</ul>
+<h3 id="非因果序列发生器"><a href="#非因果序列发生器" class="headerlink" title="非因果序列发生器"></a>非因果序列发生器</h3><p>对于多主或无主类型数据库，或者数据库本身是分区的，则生成序列号会变得复杂：</p>
+<ul>
+<li><p>每个节点可独立产生序列号，比如两个节点，一个生成偶数、另一个生成奇数，或嵌入节点的唯一标识符。</p>
+</li>
+<li><p>把墙上时钟附加到每个操作上，不必连续，只需可区分操作（比如 LWW）。</p>
+</li>
+<li><p>为每个节点预先分配序列号的区间范围。</p>
+</li>
+</ul>
+<p>以上方法生成的序列号与因果关系不严格一致：节点处理速度不一样、墙钟时间的偏移、请求操作路由到不同节点都回导致序列号与因果顺序不一致。</p>
+<h3 id="Lamport-时间戳"><a href="#Lamport-时间戳" class="headerlink" title="Lamport 时间戳"></a>Lamport 时间戳</h3><p>Lamport Timestamp 是产生与因果关系一致的序列号的方法：其与墙钟时间不存在直接对应关系，对于给定的两个时间戳，计数值较大者大，如果相同则节点 id 较大者大。</p>
+<ul>
+<li><p>其实现把最大计数器值嵌入每个请求中（每个节点以及客户端）。当节点收到某个请求或回复时，如发现内嵌的最大计数值大于节点的计数器值，则把自身计数器修改为该最大值。</p>
+</li>
+<li><p>区别于“检测并发写”中的版本向量：版本向量用以区分操作是并发关系或因果关系，Lamport 时间戳用于确保全序关系。</p>
+</li>
+<li><p>即使 Lamport 时间戳与因果序一致，但根据其全序关系却无法区分两个操作属于并发关系还是因果依赖关系。</p>
+</li>
+<li><p>Lamport 时间戳优于版本向显之处在于它更加紧凑和高效。</p>
+</li>
+</ul>
+<p>对于某个系统要确保用户名唯一标识用户，两个用户如果同时尝试使用相同的用户名操作时，只允许其中一个成功，另一个必须失败的场景，使用 Lamport 时间戳实现的全序关系则无法解决问题：</p>
+<ul>
+<li><p>需要收集系统中所有的用户创建请求才可以比较时间戳。节点刚收到用户的创建请求时，无法立即决定该请求应该成功还是失败，因为不知道是否有其他节点在同时以相同用户名进行操作。</p>
+</li>
+<li><p>系统必须检查每个节点，如果某个节点出现故障，则整套系统都无法运转：如果另一个节点执行了某些操作但无法知道，就无法构造出最终请求序列。</p>
+</li>
+</ul>
+<h2 id="全序关系广播"><a href="#全序关系广播" class="headerlink" title="全序关系广播"></a>全序关系广播</h2><p>要使所有节点就全序关系达成一致，如果使用按时间戳或序列号排序实现唯一性约束，会丧失容错性。</p>
+<p>全序关系广播、原子广播：如果使用主从复制，首先确定某一个节点作为主节点，然后在主节点上顺序执行操作。问题在于如何扩展系统的吞吐量，使之突破单一主节点的限制，以及处理主节点失效时的故障切换。</p>
+<p>ZooKeeper 和 Etcd 等共识服务就实现了全序关系广播。</p>
+<h3 id="使用全序关系广播"><a href="#使用全序关系广播" class="headerlink" title="使用全序关系广播"></a>使用全序关系广播</h3><ul>
+<li><p>状态机复制：如果每条消息代表数据库写请求，并且每个副本都按相同的顺序处理这些写请求，则所有副本可以保持一致（可能滞后）。 </p>
+</li>
+<li><p>实现可串行化事务。如果每条消息表示一个确定性事务且作为存储过程来执行，且每个节点都遵从相同的执行顺序，则可以保证数据库各分区以及各副本之间的一致性。</p>
+</li>
+<li><p>顺序在发送消息时已经确定，如果消息发送成功，节点不允许追溯地将某条消息插入到先前的某个位置上。</p>
+</li>
+<li><p>全序关系广播可视为以追加方式写入的日志（如复制日志、事务日志、预写日志），所有节点以相同的顺序发送消息，所有节点都可以读取日志并看到相同的消息序列。</p>
+</li>
+<li><p>对于提供 fencing 令牌的锁服务全序关系广播也很有用，每个获取锁的请求都作为消息附加到日志中，所有消息按照日志中的顺序依次编号。</p>
+</li>
+</ul>
+<p>全序关系广播需要确保可靠发送（没有消息丢失，如果消息发送到了某一个节点， 则它一定要发送到所有节点），且严格有序（消息总是以相同的顺序发送给每个节点）。</p>
+<h3 id="全序关系广播-gt-线性化存储"><a href="#全序关系广播-gt-线性化存储" class="headerlink" title="全序关系广播 -&gt; 线性化存储"></a>全序关系广播 -&gt; 线性化存储</h3><p>全序关系广播是基于异步模型的，保证消息以固定的顺序可靠地发送，但是不保证消息何时发送成功。</p>
+<p>而可线性化则强调就近性，读取时保证能够看到最新的写入值。</p>
+<h4 id="原子比较设置"><a href="#原子比较设置" class="headerlink" title="原子比较设置"></a>原子比较设置</h4><p>每个用户名都可以有一个带有原子“比较-设置”操作的线性化寄存器，初始值为空。当用户创建一个用户名时，对该用户名的寄存器执行比较设置操作：仅当寄存器值为空时将其设置为新的用户账号。如果多个用户试图同时获取相同的用户名则只有一个原子“比较-设置”操作成功。</p>
+<h4 id="追加日志"><a href="#追加日志" class="headerlink" title="追加日志"></a>追加日志</h4><p>以上的原子比较设置操作可以以追加日志的方式实现：</p>
+<ul>
+<li><p>在日志中追加一条消息指明想要的用户名。</p>
+</li>
+<li><p>读取日志并将其广播给所有节点，等待回复。</p>
+</li>
+<li><p>检查是否有任何消息声称该用户名已被占用。如果第一条回复来自于当前节点则成功获得该用户名，可以提交该获取声明并返回给客户端。如果声称占用的第一条回复消息来自其他节点则中止操作。</p>
+</li>
+</ul>
+<p>日志条目以相同的顺序发送到所有节点，而如果存在多个并发写入，则所有节点将首先决定哪个请求在先。选择第一个写请求作为获胜者并中止其他请求，以确保所有节点同意一个写请求最终要么提交成功要么中止。</p>
+<h4 id="线性化读取"><a href="#线性化读取" class="headerlink" title="线性化读取"></a>线性化读取</h4><p>以上过程可确保线性化写入，却无法保证线性化读取，即从异步日志更新的存储中读取数据时可能是旧值。因此只是顺序一致性（弱于线性化保证）。</p>
+<p>为了满足线性化保证，可以：</p>
+<ul>
+<li><p>以追加的方式把读请求排序、广播，再各个节点获取该日志，当本节点收到消息时才执行真正的读操作。 </p>
+</li>
+<li><p>如果可以以线性化的方式获取当前最新日志中消息的位置则查询位置，等待直到该位置之前的所有条目都已经发送，接下来再执行读取。 </p>
+</li>
+<li><p>从同步更新的副本上进行读取，可确保总是读取最新值（链式复制）。</p>
+</li>
+</ul>
+<h3 id="线性化存储-gt-全序关系广播"><a href="#线性化存储-gt-全序关系广播" class="headerlink" title="线性化存储 -&gt; 全序关系广播"></a>线性化存储 -&gt; 全序关系广播</h3><p>假定已有线性化存储，也可以在其上构建全序关系广播。</p>
+<ul>
+<li><p>假设有一个线性化寄存器来存储一个计数，使其支持原子“自增-读取”操作或原子“比较-设置”操作。对于每个要通过全序关系广播的消息，原子递增并读取该线性化的计数，将其作为序列号附加到消息。再将消息广播到所有节点，而接收者也严格按照序列化来发送回复消息。</p>
+</li>
+<li><p>与 Lamport 时间戳不同，通过递增线性化寄存器获得的数字不存在任何间隙。</p>
+</li>
+</ul>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/05/20/Kafka_common-scripts/" >
-            
-                <span>Kafka 常用脚本</span>
-        </a>
-        <div class="abstract-content">
-            最近的项目中用到 Kafka，在初步了解之下发现相关的配置还挺多的，打算最近整理一些与 Kafka 运维监控相关的笔记，留作后续学习、项目上线后运维使用。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/09/02/JavaScript_ES6-grammar/" >
-            
-                <span>ES6 语法总结</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/c8ab939556e8
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaScript">JavaScript</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/08/28/JavaScript_cheat-sheet/" >
-            
-                <span>JavaScript Cheat Sheet</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/6d8c3face1b7
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/28</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaScript">JavaScript</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/10/04/Python_async-programming/" >
-            
-                <span>Python 异步编程总结</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/f4b49cfd15b6
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/04</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/09/19/Python_data-structure/" >
-            
-                <span>Python 数据结构应用</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/6d8c3face1b7
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/09/19</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/09/13/Python_decorator-basic-usage/" >
-            
-                <span>Python 装饰器基本用法</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/84ae6d657007
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/09/13</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/08/22/Python_OOP-summary/" >
-            
-                <span>Python 类与对象总结</span>
-        </a>
-        <div class="abstract-content">
-            这是一篇旧文，搬运自简书：https://www.jianshu.com/p/28216703f7a1
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
-    
-</div>
-            
-        </div>
-    </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2021/01/28/DDIA_note-10/" title= "《DDIA》阅读笔记（八）：分布式系统的挑战">
+                    <div class="nextTitle">《DDIA》阅读笔记（八）：分布式系统的挑战</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/01/28/DDIA_note-13/" title= "《DDIA》阅读笔记（九）：一致性与共识（共识问题）">
+                    <div class="prevTitle">《DDIA》阅读笔记（九）：一致性与共识（共识问题）</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
     
-    <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/page/3/">PREV</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="page-number current">4</span>
-    </nav>
     
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -683,6 +653,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:100vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#顺序保证"><span class="toc-number">1.</span> <span class="toc-text">顺序保证</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#顺序关系与因果关系"><span class="toc-number">1.1.</span> <span class="toc-text">顺序关系与因果关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#因果顺序并非全序"><span class="toc-number">1.1.1.</span> <span class="toc-text">因果顺序并非全序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可线性化强于因果一致性"><span class="toc-number">1.1.2.</span> <span class="toc-text">可线性化强于因果一致性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#捕获因果依赖关系"><span class="toc-number">1.1.3.</span> <span class="toc-text">捕获因果依赖关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#序列号排序"><span class="toc-number">1.2.</span> <span class="toc-text">序列号排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#非因果序列发生器"><span class="toc-number">1.2.1.</span> <span class="toc-text">非因果序列发生器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lamport-时间戳"><span class="toc-number">1.2.2.</span> <span class="toc-text">Lamport 时间戳</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全序关系广播"><span class="toc-number">1.3.</span> <span class="toc-text">全序关系广播</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用全序关系广播"><span class="toc-number">1.3.1.</span> <span class="toc-text">使用全序关系广播</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全序关系广播-gt-线性化存储"><span class="toc-number">1.3.2.</span> <span class="toc-text">全序关系广播 -&gt; 线性化存储</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#原子比较设置"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">原子比较设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#追加日志"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">追加日志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线性化读取"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">线性化读取</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线性化存储-gt-全序关系广播"><span class="toc-number">1.3.3.</span> <span class="toc-text">线性化存储 -&gt; 全序关系广播</span></a></li></ol></li></ol></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1308,6 +1296,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
