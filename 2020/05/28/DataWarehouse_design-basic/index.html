@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>《DDIA》阅读笔记（九）：一致性与共识（可线性化） · Kylo&#39;s Notebook</title>
+    <title>数据仓库设计基础 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >Kylo&#39;s Notebook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
+                <a href="#" class="post-name">数据仓库设计基础</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            《DDIA》阅读笔记（九）：一致性与共识（可线性化）
+            数据仓库设计基础
             <!-- 404 -->
             
         </h1>
@@ -269,18 +269,18 @@ height:100vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "设计">设计</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "大数据">大数据</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,568</span>Reading time: <span class="post-count reading-time">12 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3,195</span>Reading time: <span class="post-count reading-time">11 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/01/29</span>
+                    <span class="post-intro-time">2020/05/28</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -404,267 +404,473 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>本章结构如下：</p>
-<blockquote class="pullquote mindmap mindmap-md"><ul>
-<li>一致性与共识<ul>
-<li>一致性保证<ul>
-<li>数据一致性<ul>
-<li>最终一致性</li>
-<li>线性一致性</li>
-<li>因果一致性</li>
-<li>顺序一致性</li>
-<li>……</li>
-</ul>
-</li>
-<li>事务一致性<ul>
-<li>事务 ACID</li>
-<li>隔离性<ul>
-<li>ANSI SQL-92<ul>
-<li>未提交读（RU）</li>
-<li>已提交读（RC）</li>
-<li>可重复读（RR）</li>
-<li>可串行化（Serializable）</li>
-</ul>
-</li>
-<li>Critique<ul>
-<li>访问异常（幻读，写倾斜）</li>
-<li>隔离级别<ul>
-<li>快照隔离（SI）</li>
-</ul>
-</li>
-<li>技术实现<ul>
-<li>多版本并发控制（MVCC）</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>具体实现<ul>
-<li>可串行化<ul>
-<li>两阶段封锁（2PL）</li>
-<li>单进程</li>
-<li>可串行化快照隔离（SSI）</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>可线性化<ul>
-<li>达成条件</li>
-<li>可线性化与可串行化</li>
-<li>依赖条件<ul>
-<li>加锁与主节点选举</li>
-<li>约束与唯一性保证</li>
-<li>跨通道的时间依赖</li>
-</ul>
-</li>
-<li>实现方式<ul>
-<li>主从复制（部分支持可线性化）</li>
-<li>共识算法（可线性化）</li>
-<li>多主复制（不可线性化）</li>
-<li>无主复制（可能不可线性化）</li>
-</ul>
-</li>
-<li>线性化代价<ul>
-<li>CAP 理论</li>
-<li>非线性系统</li>
-<li>网络延迟</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>顺序保证<ul>
-<li>顺序与因果关系<ul>
-<li>因果顺序并非全序</li>
-<li>可线性化强于因果一致性</li>
-<li>捕获因果依赖关系</li>
-</ul>
-</li>
-<li>序列号排序<ul>
-<li>非因果序列发生器</li>
-<li>Lamport 时间戳</li>
-</ul>
-</li>
-<li>全序关系广播<ul>
-<li>使用全序关系广播</li>
-<li>全序关系广播 -&gt; 线性化存储<ul>
-<li>原子比较设置</li>
-<li>追加日志</li>
-<li>线性化读取</li>
-</ul>
-</li>
-<li>线性化存储 -&gt; 全序关系广播</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>共识问题<ul>
-<li>原子提交与两阶段提交：停止服务/人工介入<ul>
-<li>事务原子提交</li>
-<li>两阶段提交（2PC）</li>
-<li>系统的承诺</li>
-<li>协调者发生故障</li>
-<li>三阶段提交（3PC）</li>
-</ul>
-</li>
-<li>实践中的分布式事务<ul>
-<li>Exactly-Once 消息处理</li>
-<li>XA 交易</li>
-<li>停顿时仍持有锁</li>
-<li>从协调者故障中恢复</li>
-<li>局限性<ul>
-<li>单点故障</li>
-<li>有状态</li>
-<li>高复杂度</li>
-<li>低容错</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>支持容错的共识：自动切换<ul>
-<li>共识算法与全序广播</li>
-<li>主从复制与共识</li>
-<li>Epoch 和 Quorum</li>
-<li>局限性<ul>
-<li>同步复制</li>
-<li>故障误判</li>
-<li>多数节点</li>
-<li>静态成员组成</li>
-<li>网络问题敏感</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>成员与协调服务<ul>
-<li>节点任务分配</li>
-<li>服务发现</li>
-<li>成员服务</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-
-<p>为了构建容错系统，最好先建立一套通用的抽象机制和与之对应的技术保证，这样只需实现一次，其上的各种应用程序都可以安全地信赖底层的保证。</p>
-<p>共识：即所有的节点就某一项提议达成一致。通过实现正确得共识算法，可以避免发生脑裂等问题。</p>
-<p>一致性保证：</p>
+        <h1 id="数据仓库与业务系统库"><a href="#数据仓库与业务系统库" class="headerlink" title="数据仓库与业务系统库"></a>数据仓库与业务系统库</h1><p>业务系统库</p>
 <ul>
-<li><p>大多数多副本系统都至少提供了最终一致性保证，但无法确定系统何时收敛。即使系统在大多数情况下都运行良好，在系统面临故障或高并发压力时，最终一致性的临界条件或错误才会对外暴露，因此难以测试和发现错误。</p>
+<li><p>安全性：统计分析与业务分离</p>
 </li>
-<li><p>分布式系统下也存在更强的一致性模型，可使上层应用逻辑更简单、不容易出错，但也意味着牺牲性能或容错性，需要结合自身需求选择。</p>
+<li><p>变更频繁：重写分析系统、重新测试</p>
 </li>
-<li><p>分布式一致性模型与事务相似，但事务隔离主要为了处理并发执行事务时的各种临界条件，而分布式一致性主要是针对延迟和故障等问题来协调副本之间的状态。</p>
+<li><p>难以建立和维护源于多个业务系统的报表</p>
+</li>
+<li><p>不同的数据源数据格式不统一</p>
+</li>
+<li><p>业务数据库为事务处理性能优化，不适合查询分析</p>
+</li>
+<li><p>统计分析影响业务系统性能</p>
 </li>
 </ul>
-<h1 id="可线性化"><a href="#可线性化" class="headerlink" title="可线性化"></a>可线性化</h1><p>在最终一致性数据库中，同时查询不同的副本可能会得到不同的答案。</p>
-<p>可线性化的思想：数据库对上提供只有单个副本的假象，即每个客户端都拥有相同的数据视图，而不必担心复制滞后。一旦某个客户端成功提交写请求，后续其他所有客户端的读请求一定都能看到刚写入的值。</p>
-<p><strong>可线性化的达成条件</strong>：如果与写并发的读操作可能返回旧值或新值，不同的读客户端会看到旧值和新值之间来回跳变的情况。为使系统可线性化，需要添加约束：在写操作的开始与结束之间必定存在某个时间点，x 的值发生了从 0 到 1 的跳变。如果某个客户端的读取返回了新值 1，即使写操作尚未提交，所有后续的读取也必须全部返回新值。</p>
-<h2 id="可线性化与可串行化"><a href="#可线性化与可串行化" class="headerlink" title="可线性化与可串行化"></a>可线性化与可串行化</h2><p>可串行化和可线性化是正交的概念：</p>
+<p>数据仓库</p>
 <ul>
-<li><p>可串行化：事务的隔离属性，其中每个事务可以读写多个对象。它用来确保事务执行的结果与串行执行的结果完全相同，即使串行执行的顺序可能与事务实际执行顺序不同。</p>
+<li><p>面向主题（业务类型：如机器，用户，歌曲，营收）</p>
 </li>
-<li><p>可线性化：读写寄存器（单个对象）的最新值保证。它并不要求将操作组合到事务中，因此无法避免写倾斜等问题，除非采用其他额外措施（如实体化冲突）。</p>
+<li><p>集成（从多数据源抽取数据后按一致、无歧义的格式写入数据仓库）</p>
+</li>
+<li><p>随时间变化（存放历史数据，保留快照）</p>
+</li>
+<li><p>非易失（写入数据仓库后不再修改删除）</p>
+</li>
+<li><p>粒度（数据装载的时间周期，日增量、日全量、日汇总、月全量等，粒度越低数据量越大，保留信息越多）</p>
 </li>
 </ul>
-<p>数据库可以同时支持可串行化与线性化，被称为 <strong>严格的可串行化</strong> 或者 <strong>强的单副本可串行化</strong>。</p>
+<h2 id="传统数据仓库"><a href="#传统数据仓库" class="headerlink" title="传统数据仓库"></a>传统数据仓库</h2><ul>
+<li><p>失信的 SLA：数据处理时间越来越长</p>
+</li>
+<li><p>不堪重负的数据仓库：ETL处理与用户查询竞争资源，体验变差</p>
+</li>
+<li><p>高昂的成本：节约成本把数据归档后难以查询时间窗口以外的数据</p>
+</li>
+<li><p>缺乏灵活性：需求变更模式改动大，结构化数据与其他数据源难以关联</p>
+</li>
+</ul>
+<h2 id="Hadoop-的优势"><a href="#Hadoop-的优势" class="headerlink" title="Hadoop 的优势"></a>Hadoop 的优势</h2><ul>
+<li><p>减少对 EDW 资源占用</p>
+</li>
+<li><p>提供数据访问接口</p>
+</li>
+</ul>
 <ul>
-<li><p>基于两阶段加锁或实际以串行执行都是典型的可线性化。</p>
+<li><p>在线归档数据</p>
 </li>
-<li><p>可串行化的快照隔离不是可线性化（不保证读取到最新的数据）：它可以从一致性快照中读取，以避免读、写之间的竞争。由于其不包括快照点创建时刻之后的写入数据，从快照读取肯定不满足线性化。</p>
+<li><p>灵活的模式演进，半结构化、非结构化数据处理</p>
+</li>
+<li><p>可通过Oozie等工作流管理工具协调调度</p>
 </li>
 </ul>
-<h2 id="依赖条件"><a href="#依赖条件" class="headerlink" title="依赖条件"></a>依赖条件</h2><p>在以下场景需要线性化保证。</p>
-<h3 id="加锁与主节点选举"><a href="#加锁与主节点选举" class="headerlink" title="加锁与主节点选举"></a>加锁与主节点选举</h3><p>主从复制系统需要确保有且只有一个主节点，否则会产生脑裂：一般是加上满足可线性化的锁：所有节点都必须同意某个节点持有锁。</p>
+<p>Sqoop（操作型数据源系统）、Flume/Kafka（日志等）-&gt; HDFS -&gt; Hive/Impala/Spark/HBase &lt;-&gt; Sqoop（EDW）&lt;-&gt; 分析工具</p>
+<h1 id="数据仓库相关术语"><a href="#数据仓库相关术语" class="headerlink" title="数据仓库相关术语"></a>数据仓库相关术语</h1><p><strong>模型</strong>：</p>
 <ul>
-<li><p>提供协调者服务的系统：ZooKeeper、Etcd，其中线性化存储服务是所有这些协调服务的基础。</p>
+<li><p>维度模型：事实表 + 维表（星型模型）</p>
 </li>
-<li><p>Oracle Real Application Clusters (RAC) 的分布式锁有更细粒度的实现：每个磁盘页面均设置一把锁，多个节点可以并发地共享访问存储系统。可线性化的锁处于事务执行的关键路径上。</p>
+<li><p>规范化模型：遵循关系型数据库三大范式</p>
 </li>
 </ul>
-<p>出于性能考虑，RAC 部署时通常都要求专用的集群互连网络连接数据库节点。</p>
-<h3 id="约束与唯一性保证"><a href="#约束与唯一性保证" class="headerlink" title="约束与唯一性保证"></a>约束与唯一性保证</h3><p>比如用户名唯一标识一名用户，如果在写入数据时强制执行这些约束，则需要线性化。</p>
+<p><strong>粒度</strong>：事实表粒度大小（一条记录代表什么），应尽可能细小；</p>
+<p><strong>可加性</strong>：字段是否可以直接相加（指标），计数或者求平均值（维度）；</p>
+<p><strong>事实表</strong>：拥有一或多个外键（参考维表，如订单表的城市 id），主键为一系列外键的组合（唯一标识一条记录）；</p>
+<p><strong>聚合事实表</strong>：为了加速查询而构建的事实表聚合（如每天订单平均金额）；</p>
+<p><strong>维表</strong>：各种查询约束（如省份城市表），及报表标签源头；</p>
+<p><strong>日历维度</strong>：附加在大多数的事实表和一些维表上；</p>
+<p><strong>缓慢变化的维度</strong>：把已存在的旧值修改为新的值（机器基本信息表），要么使用新值添加一条新的记录，并将其标记为当前值，将旧的标记为废弃（机器基本信息历史表）；</p>
+<h1 id="关系数据模型"><a href="#关系数据模型" class="headerlink" title="关系数据模型"></a>关系数据模型</h1><p>关系数据模型具备以下优势：</p>
 <ul>
-<li><p>由于操作上要求线性化，本质上与加锁类似。在某些实际场合中可以放宽这些限制，比如使用其他措施提供补偿。</p>
+<li><p>非冗余性</p>
 </li>
-<li><p>硬性的唯一约束需要线性化保证，比如主键，其他属性约束则不一定，比如外键等。</p>
+<li><p>稳定性</p>
+</li>
+<li><p>一致性</p>
+</li>
+<li><p>灵活性</p>
 </li>
 </ul>
-<h3 id="跨通道的时间依赖"><a href="#跨通道的时间依赖" class="headerlink" title="跨通道的时间依赖"></a>跨通道的时间依赖</h3><p>线性化违例之所以被注意到，是因为系统中存在其他的通信渠道。比如以下的例子中用户可以上传照片到某网站，有一个后台进<br>程将照片调整为更低的分辨率以方便更快下载：</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD%E6%9E%B6%E6%9E%84.jpg" alt="图片上传下载架构"></p>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><ul>
+<li><p>关系（表，实体）</p>
+</li>
+<li><p>属性（列，字段）</p>
+</li>
+<li><p>属性域（约束）</p>
+</li>
+<li><p>元组（行，记录）</p>
+</li>
+<li><p>键（超键，候选键，主键，外键）</p>
+</li>
+</ul>
+<p>主键选取原则</p>
 <ul>
-<li><p>采用消息队列将图像调整命令从 Web 服务器发送到调整器，Web 服务器把照片先写入文件存储服务，完成后把调整命令写入队列。</p>
+<li><p>尽可能小、数字类型（如 AUTO_INCREMENT）</p>
 </li>
-<li><p>如果文件存储服务不是可线性化的，则可能存在竞争：消息队列比存储服务内部的复制执行更快。当调整模块在读取图像看到图像的某个旧版本或读取不到内容。可能导致文件存储中的全尺寸图片与调整之后图片出现永久不一致。</p>
+<li><p>不可修改（避免外键引用失效）</p>
+</li>
+<li><p>没有业务含义（避免随业务改变而修改）</p>
+</li>
+<li><p>可多列组成，但尽可能少</p>
 </li>
 </ul>
-<p>由于 Web 服务器和调整模块之间存在文件存储服务器和消息队列两个不同的通信通道，如果没有线性化就近性保证，两个通道之间存在竞争条件。</p>
-<p>如果可以控制某一个通信通道可以尝试保证“写后读”，但会引入额外的复杂性。</p>
-<h2 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h2><p>在多副本系统中实现线性化，本质上意味着表现为只有一个数据副本，且在其上的所有操作都是原子的。</p>
-<p>最简单的实现方法是只用一个副本，但会牺牲容错。因此需要考虑的是各种复制方案是否满足可线性化。</p>
-<h3 id="主从复制（部分支持可线性化）"><a href="#主从复制（部分支持可线性化）" class="headerlink" title="主从复制（部分支持可线性化）"></a>主从复制（部分支持可线性化）</h3><p>主节点承担数据写入，从节点在各自节点上维护备份副本。</p>
+<h2 id="完整性约束"><a href="#完整性约束" class="headerlink" title="完整性约束"></a>完整性约束</h2><ul>
+<li><p>实体完整性（主键不为空）</p>
+</li>
+<li><p>参照完整性（外键值与主表某些记录的候选键值相同，或外键值全为空，即无关联）</p>
+</li>
+</ul>
+<p>业务规则：包括属性域和完整性规则（check）   </p>
+<h2 id="关系数据库语言（SQL）："><a href="#关系数据库语言（SQL）：" class="headerlink" title="关系数据库语言（SQL）："></a>关系数据库语言（SQL）：</h2><ul>
+<li><p>DDL（数据定义语言）：create，alter，drop，truncate，comment，rename</p>
+</li>
+<li><p>DML（数据操纵语言）：select，insert，update，delete，merge，call，explain，lock</p>
+</li>
+<li><p>DCL（数据控制语言）：grant，revoke</p>
+</li>
+<li><p>TCL（事务控制语言）：commit，rollback，savepoint，set transaction</p>
+</li>
+</ul>
+<h2 id="规范化"><a href="#规范化" class="headerlink" title="规范化"></a>规范化</h2><p>规范化可以减少数据冗余度、提高更新效率，但联表过多降低查询性能。</p>
+<h3 id="1NF"><a href="#1NF" class="headerlink" title="1NF"></a>1NF</h3><p>原子性列，即属性不可再分。</p>
+<table>
+<thead>
+<tr>
+<th align="center">id</th>
+<th align="center">name</th>
+<th align="center">mobile</th>
+<th align="center">dept_no</th>
+<th align="center">dept_name</th>
+<th align="center">province</th>
+<th align="center">city</th>
+<th align="center">zip</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">张三</td>
+<td align="center">13800138000<br>13800138001</td>
+<td align="center">d1</td>
+<td align="center">部门1</td>
+<td align="center">广东</td>
+<td align="center">广州</td>
+<td align="center">110</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">李四</td>
+<td align="center">13800138002</td>
+<td align="center">d2</td>
+<td align="center">部门2</td>
+<td align="center">北京</td>
+<td align="center">北京</td>
+<td align="center">111</td>
+</tr>
+</tbody></table>
+<p>mobile 列可存放多个号码，应该拆分：</p>
+<table>
+<thead>
+<tr>
+<th align="center">id</th>
+<th align="center">name</th>
+<th align="center">mobile</th>
+<th align="center">dept_no</th>
+<th align="center">dept_name</th>
+<th align="center">province</th>
+<th align="center">city</th>
+<th align="center">zip</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">张三</td>
+<td align="center">13800138000</td>
+<td align="center">d1</td>
+<td align="center">部门1</td>
+<td align="center">广东</td>
+<td align="center">广州</td>
+<td align="center">110</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">张三</td>
+<td align="center">13800138001</td>
+<td align="center">d1</td>
+<td align="center">部门1</td>
+<td align="center">广东</td>
+<td align="center">广州</td>
+<td align="center">110</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">李四</td>
+<td align="center">13800138002</td>
+<td align="center">d2</td>
+<td align="center">部门2</td>
+<td align="center">北京</td>
+<td align="center">北京</td>
+<td align="center">111</td>
+</tr>
+</tbody></table>
+<h3 id="2NF"><a href="#2NF" class="headerlink" title="2NF"></a>2NF</h3><p>在满足 1NF 条件下消除部分依赖，即每个非主属性完全函数依赖于键码。</p>
+<p>上表中候选键 {id, name, dept_no}，dept_name 依赖 dept_no、name 依赖 id，因此应该把表拆分为如下三个表：    </p>
+<p>部门表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">dept_no</th>
+<th align="center">dept_name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">d1</td>
+<td align="center">部门 1</td>
+</tr>
+<tr>
+<td align="center">d2</td>
+<td align="center">部门 2</td>
+</tr>
+</tbody></table>
+<p>员工 - 部门表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">id</th>
+<th align="center">dept_no</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">d1</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">d2</td>
+</tr>
+</tbody></table>
+<p>员工 - 号码表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">id</th>
+<th align="center">mobile</th>
+<th align="center">province</th>
+<th align="center">city</th>
+<th align="center">zip</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">13800138000</td>
+<td align="center">广东</td>
+<td align="center">广州</td>
+<td align="center">110</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">13800138002</td>
+<td align="center">北京</td>
+<td align="center">北京</td>
+<td align="center">111</td>
+</tr>
+</tbody></table>
+<h3 id="3NF"><a href="#3NF" class="headerlink" title="3NF"></a>3NF</h3><p>在满足 2NF 条件下消除传递依赖，即非主属性不传递函数依赖于键码。</p>
+<p>上面的员工表中 province、city 依赖 zip，而 zip 依赖 id 即为传递依赖，应把表再拆分成员工表和地区表。</p>
+<p>员工表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">id</th>
+<th align="center">mobile</th>
+<th align="center">zip</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">13800138000</td>
+<td align="center">110</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">13800138002</td>
+<td align="center">111</td>
+</tr>
+</tbody></table>
+<p>地区表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">zip</th>
+<th align="center">province</th>
+<th align="center">city</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">110</td>
+<td align="center">广东</td>
+<td align="center">广州</td>
+</tr>
+<tr>
+<td align="center">111</td>
+<td align="center">北京</td>
+<td align="center">北京</td>
+</tr>
+</tbody></table>
+<h1 id="维度数据模型"><a href="#维度数据模型" class="headerlink" title="维度数据模型"></a>维度数据模型</h1><p>维度数据模型重点关注这些概念来构建：事实表、维度表（规范化级别低于关系模型）和数据粒度，具备以下优势：</p>
 <ul>
-<li><p>如果在主节点或者同步更新的从节点上读取，则可以满足线性化。</p>
+<li><p>易理解</p>
 </li>
-<li><p>但并非每个数据库实例都是可线性化的，主要是可能采用了快照隔离的设计，或者存在并发方面的 bug。</p>
+<li><p>高性能（非规范化，如原来有订单明细表和订单表，可以从订单明细状态中提取出订单状态维度表、再把订单表和订单明细表整合到一起）</p>
 </li>
-<li><p>在主节点上读取的前提是确知主节点，但从节点都可能自认为是主节点，如果“自以为”的主节点对外提供服务就会违反线性化。</p>
-</li>
-<li><p>对于异步复制，在故障切换过程中甚至可能丢失已提交的写入，导致同时违反持久性和线性化。</p>
+<li><p>可扩展</p>
 </li>
 </ul>
-<h3 id="共识算法（可线性化）"><a href="#共识算法（可线性化）" class="headerlink" title="共识算法（可线性化）"></a>共识算法（可线性化）</h3><p>与主从复制机制相似，但通过内置措施防止脑裂和过期的版本。</p>
-<p>通过共识算法可安全实现线性化存储，如 ZooKeeper 和 Etcd。</p>
-<h3 id="多主复制（不可线性化）"><a href="#多主复制（不可线性化）" class="headerlink" title="多主复制（不可线性化）"></a>多主复制（不可线性化）</h3><p>通常无法线性化，主要由于它们同时在多个节点上执行并发写入，并将数据异步复制到其他节点。</p>
-<p>由于存在多副本，它们可能会产生冲突的写入，需要额外的解决方案。</p>
-<h3 id="无主复制（可能不可线性化）"><a href="#无主复制（可能不可线性化）" class="headerlink" title="无主复制（可能不可线性化）"></a>无主复制（可能不可线性化）</h3><p>配置法定读取和写入满足（w + r &gt; n）可满足一定程度的一致性。但也完全取决于 Quorum 的配置以及强一致性的定义，可能无法保证线性化：比如基于墙钟的 LWW 冲突解决方式就是非线性化（时钟偏移时间戳无法保证与事件顺序一致）。</p>
-<p>不规范的 Quorum 会破坏线性化，但遵从严格的 Quorum 也不一定能保证可线性化。比如：</p>
+<h2 id="构建流程"><a href="#构建流程" class="headerlink" title="构建流程"></a>构建流程</h2><ul>
+<li><p>选择业务流程（UML）</p>
+</li>
+<li><p>声明粒度（订单/消费流水）</p>
+</li>
+<li><p>确认维度（日期：年/月/日）</p>
+</li>
+<li><p>确认事实（金额/数量）</p>
+</li>
+</ul>
+<h2 id="维度规范化"><a href="#维度规范化" class="headerlink" title="维度规范化"></a>维度规范化</h2><p>把一个维度映射成多个维度表（“维度 - 子维度”连接，如地址表拆分为“省份表 - 城市表 - 区域表”）。</p>
+<p>其中需要避免规范化处理的情况：</p>
 <ul>
-<li><p>x 的初始值为 0，客户端 C 向所有的三个副本发送请求将其更新为 1（n = w = 3）。</p>
+<li><p>增加表数量使结构复杂</p>
 </li>
-<li><p>客户端 A 从两个节点（r = 2）读取数据，在其中一个节点上看到新值 1。</p>
+<li><p>多表连接使查询复杂</p>
 </li>
-<li><p>客户端 B 从两个节点读取，两个节点都返回 0。</p>
+<li><p>不适合使用位图索引</p>
 </li>
-<li><p>即使满足仲裁条件（w + r &gt; n），但 B 的请求在 A 的请求完成后才开始（此时 C 还未完成），A 得到新值，B 得到旧值，显然不是线性化。</p>
+<li><p>降低查询性能</p>
 </li>
 </ul>
-<p>满足线性化的方法：读操作在返回结果给应用之前必须同步执行读修复、写操作在发送结果之前必须读取 Quorum 节点以获取最新值。但这样会严重牺牲性能，且只能实现线性化读写，线性化的“比较设置”操作需要共识算法支持。</p>
-<h2 id="线性化代价"><a href="#线性化代价" class="headerlink" title="线性化代价"></a>线性化代价</h2><p>对于主从复制或多主复制，网络中断必然违背可线性化读写需求。如果客户端可以直接连接到主节点所在的数据中心，则可以避免此问题，否则，只能等到数据中心之间的网络恢复之后才能继续正常工作。</p>
-<h3 id="CAP-理论"><a href="#CAP-理论" class="headerlink" title="CAP 理论"></a>CAP 理论</h3><p>对于任何可线性化的数据库，只要有不可靠的网络都会发生违背线性化的风险。</p>
+<h2 id="星型模型"><a href="#星型模型" class="headerlink" title="星型模型"></a>星型模型</h2><p>以事实表为中心，多个维度表与事实表相连。    </p>
+<p>其中事实表包括：</p>
 <ul>
-<li><p>如果要求线性化，但由于网络方面的问题、某些副本与其他副本断开连接之后无法继续处理请求，就必须等待网络修复或者直接返回错误，结果都是服务 <strong>不可用</strong>。</p>
+<li><p>事务事实表（如销售行为）</p>
 </li>
-<li><p>如果不要求线性化，断开连接之后每个副本可独立处理请求（例如多主复制模型下的写操作），此时服务可用但结果行为不符合线性化，即 <strong>不一致</strong>。</p>
+<li><p>快照事实表（如用户月底余额）</p>
+</li>
+<li><p>累积事实表（如月总营收）</p>
 </li>
 </ul>
-<p>不要求线性化的应用更能容忍网络故障，这种思路被称为 CAP 理论：</p>
+<p>其具备以下特点：</p>
 <ul>
-<li><p>一致性（Consistency）</p>
+<li><p>简化查询（简化业务报表逻辑，提升查询性能）；</p>
 </li>
-<li><p>可用性（Availability）</p>
+<li><p>快速聚合，便于向 OLAP 提供数据；</p>
 </li>
-<li><p>分区容错性（Partition Tolerance）</p>
+<li><p>不能保证数据完整性（通过批处理和实时处理抵消）</p>
+</li>
+<li><p>分析需求不灵活；</p>
 </li>
 </ul>
-<p>其中在分布式系统中分区是必然的，网络故障不论是否可接受都会发生，所以 CAP 定理的含义是：一旦发生网络故障，只能选择线性化（一致性）或可用性。</p>
-<h3 id="非线性系统"><a href="#非线性系统" class="headerlink" title="非线性系统"></a>非线性系统</h3><p>很少有系统可以真正保证线性化，现代多核 CPU 上的内存就是非线性化：</p>
+<h2 id="雪花模型"><a href="#雪花模型" class="headerlink" title="雪花模型"></a>雪花模型</h2><p>对星型模型的维度表再作规范化处理（如把机器的门店维度表拆分成门店表和门店地址表）。</p>
+<p>这种做法比星型模型节省存储空间，但同时会降低查询性能。</p>
+<p>也可结合使用星型模型与雪花模型（底层使用雪花模型，配置视图模拟星型模型）。</p>
+<h1 id="Data-Vault-模型"><a href="#Data-Vault-模型" class="headerlink" title="Data Vault 模型"></a>Data Vault 模型</h1><p>Data Vault 模型具备以下特点：</p>
 <ul>
-<li><p>如果某个 CPU 核上运行的线程修改一个内存，另一个 CPU 核上的线程尝试读取，则系统无法保证可以读到刚写入的值，除非使用内存屏障或 fence 指令。</p>
+<li><p>基于时间存储</p>
 </li>
-<li><p>每个 CPU 核都有自己独立的 cache 和寄存器，内存访问首先进入 cache 系统，所有修改默认会异步地刷新到主存。</p>
+<li><p>依赖越少越好</p>
 </li>
-<li><p>访问 cache 比访问主存要快得多，异步刷新的特性对于现代 CPU 的性能至关重要，同时这就导致出现了多个数据副本（一个在主存，另外几个在不同级别的 cache 中），而副本更新是异步的，无法保证线性化。</p>
+<li><p>与源系统越独立越好</p>
+</li>
+<li><p>适应源系统的数据变化、支持扩展</p>
+</li>
+<li><p>ETL 作业可反复执行</p>
+</li>
+<li><p>数据可追踪</p>
 </li>
 </ul>
-<h3 id="网络延迟"><a href="#网络延迟" class="headerlink" title="网络延迟"></a>网络延迟</h3><p>CAP 理论不适用于当今的“多核-内存”一致性模型，因为在计算机内部通常假设通信是可靠的（不会假定 CPU 核与其他核断开后还能安然工作），不支持线性化是为了提高性能而非容错性。</p>
-<p>分布式数据库也是处于性能考虑。由于无论网络故障是否发生，线性化对性能影响都是巨大的。假设要满足线性化，则读写请求响应时间至少要与网路中延迟成正比，由于网络高度不确定的延迟，线性化读写性能必然非常差。</p>
+<p>由于存放原始数据（所有时间所有数据），不遵照任何业务规则，不同数据源的数据冲突时可存放多个版本数据。</p>
+<p>其中数据解析延迟到“数据集市”阶段：即存放单一主题（财务、销售部门等）、数据仓库/事务系统的少量数据源的粗粒度数据（汇总数据），只保留一段时间范围内（如数月），通常使用星型模型、雪花模型，存放的是 ETL 的输出数据。</p>
+<h2 id="中心表、链接表与附属表"><a href="#中心表、链接表与附属表" class="headerlink" title="中心表、链接表与附属表"></a>中心表、链接表与附属表</h2><p>由中心表（HUB）、链接表（Link）、附属表（Satelite）组成，综合了 3NF 和星型模型的优势；   </p>
+<ul>
+<li><p>中心表（如用户、机器、订单表等）：主键（系统生成的代理键）、业务主键（如用户 id，机器 id，可能用于多个系统，但只保留一份）、装载时间、数据源</p>
+</li>
+<li><p>链接表（中心表之间的链接关系，如订单-用户关联表）：主键、外键、装载时间、数据源</p>
+</li>
+<li><p>附属表（中心表和链接表的附属信息，如订单详情表）：主键、外键、装载时间、失效时间、数据源、属性xxx</p>
+</li>
+</ul>
+<h2 id="构建流程-1"><a href="#构建流程-1" class="headerlink" title="构建流程"></a>构建流程</h2><ul>
+<li><p>设计中心表</p>
+</li>
+<li><p>设计链接表</p>
+</li>
+<li><p>设计附属表</p>
+</li>
+<li><p>设计必要的 PIT 表</p>
+</li>
+</ul>
+<h1 id="数据仓库架构"><a href="#数据仓库架构" class="headerlink" title="数据仓库架构"></a>数据仓库架构</h1><p>数据仓库的实施流程：</p>
+<ul>
+<li><p>定义范围</p>
+</li>
+<li><p>确定需求</p>
+</li>
+<li><p>逻辑设计</p>
+</li>
+<li><p>物理设计</p>
+</li>
+<li><p>装载数据</p>
+</li>
+<li><p>访问数据</p>
+</li>
+<li><p>管理维护</p>
+</li>
+</ul>
+<p>可以根据业务形态，考虑以下技术选型。</p>
+<h2 id="数据建模与存储"><a href="#数据建模与存储" class="headerlink" title="数据建模与存储"></a>数据建模与存储</h2><p><strong>选择存储引擎：</strong>：取决于数据访问方式</p>
+<ul>
+<li><p>HDFS：从 OLTP 系统提取数据，批量处理（整个时间周期数据、批处理效率更高）后加载到数据仓库，或者全表扫描；</p>
+</li>
+<li><p>HBase：随机访问，即席查询；</p>
+</li>
+</ul>
+<p><strong>反范式设计</strong>：为分析提速（Hadoop 不适合进行多次关联操作，尤其是较大的事实表关联较小的维表：比如处理时订单表应直接写入机器信息而非 id，避免查询时机器信息表再与订单表关联），也避免维护多个数据集的繁琐，缺点是：带来数据冗余，数据采集流水线变得繁琐，数据更新困难；</p>
+<p><strong>数据更新</strong>：HDFS 不支持原地更新，而且即使加上处理逻辑原地更新后也无法追踪更新流水记录</p>
+<p><strong>事实表</strong>：根据更新时间取日增量每天同步追加（如订单收益取生成时间，订单退款取更新时间同步到事实表，即可计算净收益同时追踪变化，如有需要还可以另外维护一个订单全量表记录订单最新状态信息）；<br>历史表：根据更新时间取日全量每天同步（完整的用户表，同时最新的一份可以作为状态表）；</p>
+<p><strong>存储格式及压缩算法</strong></p>
+<ul>
+<li><p>Avro：行式存储，支持模式演进，不需要根据 OLTP 修改 ETL 操作（适合追加）；</p>
+</li>
+<li><p>Parquet：列式存储，性能强大（涉及多个维表的事实表较宽，查询和聚合操作只涉及小部分列），压缩支持好；</p>
+</li>
+<li><p>不推荐 CSV（出于性能、压缩和模式管理考虑，CSV 访问时还需要数据解析）<br>  压缩算法推荐使用 Snappy</p>
+</li>
+</ul>
+<p><strong>分区方式</strong>：取决于数据访问方式，目的是跳过不必要的数据；按时间周期分区分区平均大小为 HDFS 数据块的若干倍（典型值为每天数据 1GB 则按天分区，较多则按小时，较少则按周或月）</p>
+<h2 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h2><p><strong>OLTP导出</strong>：Sqoop，Informatica，Pentaho，Kettle<br>对象：数据几乎不变的表（一次性导入），数据频繁更新的小表（日全量），数据频繁更新且无法每天全量提取的大表（日增量，周/月全量）</p>
+<p><strong>数据整合</strong>：Sqoop 导出时执行关联（可以仅插入、仅更新和混合，但只支持简单的条件，而且关联操作会给 OLTP 带来压力；Sqoop 同时支持元数据服务，可记录上次执行状态，下次执行时可以使用保证获取更新的记录）<br>导出到 HDFS 后再作关联（Spark、Hive）</p>
+<h2 id="数据处理与访问"><a href="#数据处理与访问" class="headerlink" title="数据处理与访问"></a>数据处理与访问</h2><p><strong>分区</strong>：</p>
+<ul>
+<li><p>对已存在表分区（从旧表读取数据，并将数据加载到新创建的、带分区的表的正确分区中）；</p>
+</li>
+<li><p>将数据加载到表的多个分区中；</p>
+</li>
+<li><p>将导入某个目录的数据作为新的分区添加到表中</p>
+</li>
+</ul>
+<p><strong>合并、更新</strong>：除了记录事实表，还要维护已有信息表（缓慢变化的维表等），可以全量导入，也可以从已有信息读出、追加修改后再重新写入，并更新元数据（如果有的话）；</p>
+<p><strong>提高更新效率</strong>：只针对分区修改、添加 Hadoop 节点、改用 HBase（如果更新频繁的话，但也会渐慢查询速度）</p>
+<h2 id="数据聚合"><a href="#数据聚合" class="headerlink" title="数据聚合"></a>数据聚合</h2><p>Hadoop 支持在关系型数据库中执行很耗资源的聚合操作（求和、计数、平均，天然高度并行），使用 Hive、Spark、Impala，聚合后的数据集通过Sqoop导出到关系型数据库，可再接入 BI 工具继续处理。</p>
+<h2 id="数据导出"><a href="#数据导出" class="headerlink" title="数据导出"></a>数据导出</h2><ul>
+<li><p>将数据保留在 Hadoop 中，使用 Impala （更低延迟）、Hive 和集成的 BI 工具进行查询；</p>
+</li>
+<li><p>与关系型数据库集成：Informatica、Pentaho，Sqoop + Oracle 连接器 </p>
+</li>
+</ul>
+<h2 id="流程调度"><a href="#流程调度" class="headerlink" title="流程调度"></a>流程调度</h2><ul>
+<li><p>Oozie（开源），Autosys、Activebatch 以及 UC4</p>
+</li>
+<li><p>Oozie 工作流的关键几点（中间两步都可以由 Spark 完成）：</p>
+<ul>
+<li>一个用于获取数据的 Sqoop 操作</li>
+<li>一个用于执行数据集关联、分区、合并的 Hive 操作</li>
+<li>多个用于完成聚合的 Hive 或 MapReduce 操作</li>
+<li>一个用于将结果导出至数据仓库的 Sqoop 操作</li>
+</ul>
+</li>
+<li><p>多组步骤时采用 fork-and-join 模式</p>
+</li>
+</ul>
+<p>以上。</p>
 <script type="text&#x2F;javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -674,16 +880,16 @@ height:100vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/01/30/DDIA_note-12/" title= "《DDIA》阅读笔记（九）：一致性与共识（顺序保证）">
-                    <div class="nextTitle">《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</div>
+                <a href= "/2020/06/30/JVM_java-memory-area/" title= "Java 内存区域">
+                    <div class="nextTitle">Java 内存区域</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/01/27/DDIA_note-9/" title= "《DDIA》阅读笔记（七）：事务">
-                    <div class="prevTitle">《DDIA》阅读笔记（七）：事务</div>
+                <a href= "/2020/04/08/2020-04-08_diary/" title= "关于使用思维导图做笔记">
+                    <div class="prevTitle">关于使用思维导图做笔记</div>
                 </a>
             
         </li>
@@ -821,7 +1027,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#可线性化"><span class="toc-number">1.</span> <span class="toc-text">可线性化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#可线性化与可串行化"><span class="toc-number">1.1.</span> <span class="toc-text">可线性化与可串行化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#依赖条件"><span class="toc-number">1.2.</span> <span class="toc-text">依赖条件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加锁与主节点选举"><span class="toc-number">1.2.1.</span> <span class="toc-text">加锁与主节点选举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#约束与唯一性保证"><span class="toc-number">1.2.2.</span> <span class="toc-text">约束与唯一性保证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#跨通道的时间依赖"><span class="toc-number">1.2.3.</span> <span class="toc-text">跨通道的时间依赖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现方式"><span class="toc-number">1.3.</span> <span class="toc-text">实现方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#主从复制（部分支持可线性化）"><span class="toc-number">1.3.1.</span> <span class="toc-text">主从复制（部分支持可线性化）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#共识算法（可线性化）"><span class="toc-number">1.3.2.</span> <span class="toc-text">共识算法（可线性化）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多主复制（不可线性化）"><span class="toc-number">1.3.3.</span> <span class="toc-text">多主复制（不可线性化）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#无主复制（可能不可线性化）"><span class="toc-number">1.3.4.</span> <span class="toc-text">无主复制（可能不可线性化）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线性化代价"><span class="toc-number">1.4.</span> <span class="toc-text">线性化代价</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CAP-理论"><span class="toc-number">1.4.1.</span> <span class="toc-text">CAP 理论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非线性系统"><span class="toc-number">1.4.2.</span> <span class="toc-text">非线性系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络延迟"><span class="toc-number">1.4.3.</span> <span class="toc-text">网络延迟</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据仓库与业务系统库"><span class="toc-number">1.</span> <span class="toc-text">数据仓库与业务系统库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#传统数据仓库"><span class="toc-number">1.1.</span> <span class="toc-text">传统数据仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop-的优势"><span class="toc-number">1.2.</span> <span class="toc-text">Hadoop 的优势</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据仓库相关术语"><span class="toc-number">2.</span> <span class="toc-text">数据仓库相关术语</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关系数据模型"><span class="toc-number">3.</span> <span class="toc-text">关系数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据结构"><span class="toc-number">3.1.</span> <span class="toc-text">数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完整性约束"><span class="toc-number">3.2.</span> <span class="toc-text">完整性约束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关系数据库语言（SQL）："><span class="toc-number">3.3.</span> <span class="toc-text">关系数据库语言（SQL）：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规范化"><span class="toc-number">3.4.</span> <span class="toc-text">规范化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1NF"><span class="toc-number">3.4.1.</span> <span class="toc-text">1NF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2NF"><span class="toc-number">3.4.2.</span> <span class="toc-text">2NF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3NF"><span class="toc-number">3.4.3.</span> <span class="toc-text">3NF</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#维度数据模型"><span class="toc-number">4.</span> <span class="toc-text">维度数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#构建流程"><span class="toc-number">4.1.</span> <span class="toc-text">构建流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#维度规范化"><span class="toc-number">4.2.</span> <span class="toc-text">维度规范化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#星型模型"><span class="toc-number">4.3.</span> <span class="toc-text">星型模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#雪花模型"><span class="toc-number">4.4.</span> <span class="toc-text">雪花模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Data-Vault-模型"><span class="toc-number">5.</span> <span class="toc-text">Data Vault 模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#中心表、链接表与附属表"><span class="toc-number">5.1.</span> <span class="toc-text">中心表、链接表与附属表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建流程-1"><span class="toc-number">5.2.</span> <span class="toc-text">构建流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据仓库架构"><span class="toc-number">6.</span> <span class="toc-text">数据仓库架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据建模与存储"><span class="toc-number">6.1.</span> <span class="toc-text">数据建模与存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据采集"><span class="toc-number">6.2.</span> <span class="toc-text">数据采集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据处理与访问"><span class="toc-number">6.3.</span> <span class="toc-text">数据处理与访问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据聚合"><span class="toc-number">6.4.</span> <span class="toc-text">数据聚合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据导出"><span class="toc-number">6.5.</span> <span class="toc-text">数据导出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流程调度"><span class="toc-number">6.6.</span> <span class="toc-text">流程调度</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
