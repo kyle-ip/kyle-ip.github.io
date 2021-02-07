@@ -267,15 +267,15 @@ height:100vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Design">Design</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Design">Design</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">7,737</span>Reading time: <span class="post-count reading-time">26 min</span></span>
+                        <span>Word count: <span class="post-count word-count">7,729</span>Reading time: <span class="post-count reading-time">26 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -406,9 +406,9 @@ height:100vh;
     <article class="article-entry">
         <h1 id="共识问题"><a href="#共识问题" class="headerlink" title="共识问题"></a>共识问题</h1><p>有很多重要的场景都需要集群节点达成某种一致：</p>
 <ul>
-<li><p>主节点选举：对于主从复制的数据库，所有节点需要就何者充当主节点达成一致。如果由于网络故障原因出现节点之间无法通信，就很容易出现争议。此时共识对于避免错误的故障切换非常重要，后者会导致脑裂：如果集群中存在两个主节点都在接受写请求，最终导致数据不一致甚至丢失。</p>
+<li><p><strong>主节点选举</strong>：对于主从复制的数据库，所有节点需要就何者充当主节点达成一致。如果由于网络故障原因出现节点之间无法通信，就很容易出现争议。此时共识对于避免错误的故障切换非常重要，后者会导致脑裂：如果集群中存在两个主节点都在接受写请求，最终导致数据不一致甚至丢失。</p>
 </li>
-<li><p>原子事务提交：对于支持跨节点或跨分区事务的数据库，可能存在某个事务在一些节点上执行成功，在其他节点执行失败的情况。为了维护事务的原子性，所有节点必须对事务的结果达成一致：成功提交或失败回滚。</p>
+<li><p><strong>原子事务提交</strong>：对于支持跨节点或跨分区事务的数据库，可能存在某个事务在一些节点上执行成功，在其他节点执行失败的情况。为了维护事务的原子性，所有节点必须对事务的结果达成一致：成功提交或失败回滚。</p>
 </li>
 </ul>
 <blockquote>
@@ -555,13 +555,13 @@ height:100vh;
 <p>大多数共识算法都假定系统不存在拜占庭式错误，而对于拜占庭式错误，只要故障节点数小于三分之一也可以达成共识。</p>
 <h3 id="共识算法与全序广播"><a href="#共识算法与全序广播" class="headerlink" title="共识算法与全序广播"></a>共识算法与全序广播</h3><p>著名的容错式共识算法包括 VSR、Paxos、Raft、Zab，其中大部分不是直接使用共识的形式化模型（提议并决定某个值，同时满足四个属性），而是决定一系列的值，采用全序关系广播算法，其要点是消息按照相同的顺序有且只有一次地发送到所有节点，相当于进行了多轮共识：在每一轮节点提出要发送的消息、决定下一个消息全局顺序。</p>
 <ul>
-<li><p>由于协商一致性，所有节点决定相同的顺序发送相同消息。</p>
+<li><p><strong>协商一致性</strong>：所有节点决定相同的顺序发送相同消息。</p>
 </li>
-<li><p>由于诚实性，消息不能重复。</p>
+<li><p><strong>诚实性</strong>：消息不能重复。</p>
 </li>
-<li><p>由于合法性，消息不会被破坏，也不能凭空捏造。</p>
+<li><p><strong>合法性</strong>：消息不会被破坏，也不能凭空捏造。</p>
 </li>
-<li><p>由于可中止性，消息不会丢失。</p>
+<li><p><strong>可中止性</strong>：消息不会丢失。</p>
 </li>
 </ul>
 <p>VSR、Raft、Zab 都直接采取全序关系广播，比重复性的一轮共识，只解决一个提议更高效，而 Paxos 则有对应的优化版本 Multi-Paxos。</p>
@@ -1322,19 +1322,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
+        <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
+    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
@@ -1420,7 +1420,26 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<!--
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+-->
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
 </html>
 
 
