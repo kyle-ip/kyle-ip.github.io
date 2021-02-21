@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-02-01T11:53:30.000Z</updated>
+  <updated>2021-02-21T15:59:45.568Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>近期工作学习规划</title>
+    <link href="https://yipwinghong.github.io/2021/02/21/2021-02-21_diary/"/>
+    <id>https://yipwinghong.github.io/2021/02/21/2021-02-21_diary/</id>
+    <published>2021-02-21T15:59:57.000Z</published>
+    <updated>2021-02-21T15:59:45.568Z</updated>
+    
+    <summary type="html">
+    
+      近期工作学习规划
+    
+    </summary>
+    
+    
+    
+      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>《DDIA》阅读笔记（九）：一致性与共识（共识问题）</title>
@@ -341,7 +360,7 @@
     <link href="https://yipwinghong.github.io/2020/10/08/Maven_external_dependencies_management/"/>
     <id>https://yipwinghong.github.io/2020/10/08/Maven_external_dependencies_management/</id>
     <published>2020-10-08T14:50:33.000Z</published>
-    <updated>2020-10-09T13:10:48.000Z</updated>
+    <updated>2021-02-12T03:35:14.000Z</updated>
     
     <summary type="html">
     
@@ -438,27 +457,6 @@
     
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>LeetCode 高频面试题</title>
-    <link href="https://yipwinghong.github.io/2020/03/28/Algorithm_leetcode-high-frequency-problems/"/>
-    <id>https://yipwinghong.github.io/2020/03/28/Algorithm_leetcode-high-frequency-problems/</id>
-    <published>2020-03-28T09:05:05.000Z</published>
-    <updated>2020-04-18T13:19:56.000Z</updated>
-    
-    <summary type="html">
-    
-      又是一年跳槽季...
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
