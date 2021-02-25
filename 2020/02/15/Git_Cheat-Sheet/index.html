@@ -412,8 +412,6 @@ height:100vh;
 <p>创建本地仓库</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir d &amp;&amp; cd !$</span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
 
-
-
 <h3 id="保存工作"><a href="#保存工作" class="headerlink" title="保存工作"></a>保存工作</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git stash</span><br><span class="line">	[-u]						# 包括 untracked 文件（新建的）</span><br><span class="line">git stash pop					# 回到最后一个保存的状态，并删除该 stash</span><br><span class="line">git stash clear					# 删除所有 stash</span><br></pre></td></tr></table></figure>
 
 <p>可保存多次、读取</p>
@@ -480,9 +478,12 @@ height:100vh;
 
 <h2 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h2><h3 id="管理策略"><a href="#管理策略" class="headerlink" title="管理策略"></a>管理策略</h3><p>分支管理建议遵顼以下原则：</p>
 <ul>
-<li><code>master</code> 分支应该是非常稳定的，仅用来发布新版本，平时不能在上面工作；</li>
-<li>创建 <code>dev</code> 分支用于工作，<code>dev</code>分支是不稳定的，比如 1.0版本发布时，再把 <code>dev</code> 分支合并到 <code>master</code> 上，在 <code>master</code> 分支发布 1.0 版本；</li>
-<li>开发组成员在 <code>dev</code> 的分支上工作，时不时地往 <code>dev</code> 分支上合并即可。</li>
+<li><p><code>master</code> 分支应该是非常稳定的，仅用来发布新版本，平时不能在上面工作；</p>
+</li>
+<li><p>创建 <code>dev</code> 分支用于工作，<code>dev</code>分支是不稳定的，比如 1.0版本发布时，再把 <code>dev</code> 分支合并到 <code>master</code> 上，在 <code>master</code> 分支发布 1.0 版本；</p>
+</li>
+<li><p>开发组成员在 <code>dev</code> 的分支上工作，时不时地往 <code>dev</code> 分支上合并即可。</p>
+</li>
 </ul>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/git_branch.png" alt="git-br-policy"></p>
 <p>多人协作模式：</p>
@@ -502,16 +503,23 @@ height:100vh;
 </ul>
 <p>关于是否需要推送分支：</p>
 <ul>
-<li><code>master</code> 分支是主分支，因此要时刻与远程同步；</li>
-<li><code>dev</code> 分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；</li>
-<li><code>bug</code> 分支只用于在本地修复 bug，没必要推到远程；</li>
-<li><code>feature</code> 分支是否推到远程，取决于是否团队成员合作在上面开发。</li>
+<li><p><code>master</code> 分支是主分支，因此要时刻与远程同步；</p>
+</li>
+<li><p><code>dev</code> 分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；</p>
+</li>
+<li><p><code>bug</code> 分支只用于在本地修复 bug，没必要推到远程；</p>
+</li>
+<li><p><code>feature</code> 分支是否推到远程，取决于是否团队成员合作在上面开发。</p>
+</li>
 </ul>
 <h3 id="标准版本号"><a href="#标准版本号" class="headerlink" title="标准版本号"></a>标准版本号</h3><p>标准版本号格式：<code>X.Y.Z</code>，其中：</p>
 <ul>
-<li>X：主版本号，当添加了不兼容或颠覆性的更新时修改；</li>
-<li>Y：次版本号，当添加了向下兼容的功能性修改时修改；</li>
-<li>Z：修订号，当做了向下兼容的问题修正时修改。</li>
+<li><p>X：主版本号，当添加了不兼容或颠覆性的更新时修改；</p>
+</li>
+<li><p>Y：次版本号，当添加了向下兼容的功能性修改时修改；</p>
+</li>
+<li><p>Z：修订号，当做了向下兼容的问题修正时修改。</p>
+</li>
 </ul>
 <p>其中 X、Y、Z 为非负整数，禁止数字前补 0，每个数值递增。</p>
 <p>查看分支：</p>
@@ -1418,33 +1426,33 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+        <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
