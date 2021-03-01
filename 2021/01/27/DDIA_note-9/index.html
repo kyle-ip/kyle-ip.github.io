@@ -588,8 +588,10 @@ height:100vh;
 <ul>
 <li><p>如果只提供读-提交级别隔离，则只保留对象的两个版本：一个已提交的旧版本和尚未提交的新版本。支持快照级别隔离的存储引擎可直接采用 MVCC 来实现读-提交隔离：</p>
 <ul>
-<li>“读-提交”级别下对每个不同的查询单独创建一个快照。</li>
-<li>快照级别隔离则是使用一个快照来运行整个事务。</li>
+<li><p>“读-提交”级别下对每个不同的查询单独创建一个快照。</p>
+</li>
+<li><p>快照级别隔离则是使用一个快照来运行整个事务。</p>
+</li>
 </ul>
 </li>
 <li><p>表中的每行都有 <code>created_by</code> 字段，包含了创建该行的事务 ID。每行还有初始为空的 <code>deleted_by</code> 字段。如果事务要删除某行，只是将 <code>deleted_by</code> 字段设置为请求删除的事务 ID。事后 <strong>确定没有其他事务引用该标记删除的行</strong> 时，数据库的垃圾回收进程才去真正删除并释放存储空间。</p>
@@ -1513,9 +1515,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
@@ -1529,6 +1531,8 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
@@ -1538,8 +1542,6 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     

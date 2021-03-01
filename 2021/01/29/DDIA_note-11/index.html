@@ -596,7 +596,8 @@ height:100vh;
 <li><p>硬性的唯一约束需要线性化保证，比如主键，其他属性约束则不一定，比如外键等。</p>
 </li>
 </ul>
-<h3 id="跨通道的时间依赖"><a href="#跨通道的时间依赖" class="headerlink" title="跨通道的时间依赖"></a>跨通道的时间依赖</h3><p>线性化违例之所以被注意到，是因为系统中存在其他的通信渠道。比如以下的例子中用户可以上传照片到某网站，有一个后台进<br>程将照片调整为更低的分辨率以方便更快下载：<br><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD%E6%9E%B6%E6%9E%84.jpg" alt="图片上传下载架构"></p>
+<h3 id="跨通道的时间依赖"><a href="#跨通道的时间依赖" class="headerlink" title="跨通道的时间依赖"></a>跨通道的时间依赖</h3><p>线性化违例之所以被注意到，是因为系统中存在其他的通信渠道。比如以下的例子中用户可以上传照片到某网站，有一个后台进<br>程将照片调整为更低的分辨率以方便更快下载：</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD%E6%9E%B6%E6%9E%84.jpg" alt="图片上传下载架构"></p>
 <ul>
 <li><p>采用消息队列将图像调整命令从 Web 服务器发送到调整器，Web 服务器把照片先写入文件存储服务，完成后把调整命令写入队列。</p>
 </li>
@@ -1362,9 +1363,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
@@ -1378,6 +1379,8 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
@@ -1387,8 +1390,6 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
