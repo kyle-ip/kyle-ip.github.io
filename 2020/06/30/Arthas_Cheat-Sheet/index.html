@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Kylo&#39;s Notebook</title>
+    <title>Arthas Cheat Sheet · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -204,12 +204,23 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Kylo&#39;s Notebook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Arthas Cheat Sheet</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>Kylo's Notebook</a>
 </header>
@@ -221,24 +232,76 @@
 
 
 
+
+height:100vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(https://api.ixiaowai.cn/mcapi/mcapi.php)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            Arthas Cheat Sheet
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Java">Java</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">1,183</span>Reading time: <span class="post-count reading-time">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/06/30</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -339,134 +402,172 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2020/09/24/Kafka_prod-env-assess/" >
-            
-                <span>Kafka 生产环境资源评估</span>
-        </a>
-        <div class="abstract-content">
-            最近需要规划一套 Kafka 集群，由于之前一直没有做过生产环境的资源评估，想尝试整理出一份技术方案，希望可以为后续的项目提供参考。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p>Arthas 是 Alibaba 开源的 Java 诊断工具，可用于在线诊断、动态跟踪 Java 程序，实时监控 JVM 状态（详情参考 <a href="https://arthas.aliyun.com/doc" target="_blank" rel="noopener">官方用户文档</a> 介绍）。</p>
+<p>阿里云知行动手实验室提供了 <a href="https://start.aliyun.com/handson-lab?category=arthas" target="_blank" rel="noopener">在线教程</a>，本文将基于该教程整理了基本用法，可为日常使用提供更方便的参考。</p>
+</blockquote>
+<h1 id="Arthas-Cheat-Sheet"><a href="#Arthas-Cheat-Sheet" class="headerlink" title="Arthas Cheat Sheet"></a>Arthas Cheat Sheet</h1><h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>下载 Arthas 启动程序，选择监控的 Java 进程：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://arthas.aliyun.com/arthas-boot.jar</span><br><span class="line">java -jar arthas-boot.jar</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>基本命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">help                # 帮助信息</span><br><span class="line"><span class="meta">#</span><span class="bash"> cmd -h</span></span><br><span class="line"></span><br><span class="line">keymap              # 快捷键</span><br><span class="line"></span><br><span class="line">dashboard           # 监控面板（q/Ctrl+C 退出）</span><br><span class="line"></span><br><span class="line">jvm                 # JVM 详细信息</span><br><span class="line"></span><br><span class="line">thread 1            # 线程 1 的栈信息</span><br><span class="line"><span class="meta">#</span><span class="bash"> thread 1 | grep <span class="string">'main('</span>    线程 1 的 main class</span></span><br><span class="line"></span><br><span class="line">sc -d * MathGame    # 已加载的类</span><br><span class="line"></span><br><span class="line">jad demo.MathGame   # 反编译（包名.类名）</span><br><span class="line"></span><br><span class="line">watch demo.MathGame primeFactors returnObj    # 函数的参数/返回值/异常信息。</span><br><span class="line"></span><br><span class="line">history             # 历史命令</span><br><span class="line"></span><br><span class="line">exot/stop           # 退出当前 Session / Arthas</span><br></pre></td></tr></table></figure>
+
+<p>要监控 Spring Boot 程序，可指定目标 ip、Java 进程。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java -jar arthas-boot.jar --target-ip 0.0.0.0</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>各种变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sysprop             # System Properties</span><br><span class="line"><span class="meta">#</span><span class="bash"> sysprop java.version    </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sysprop | grep java.version    指定单个 key</span></span><br><span class="line">sysprop key value   # 设置新的值</span><br><span class="line"></span><br><span class="line">sysenv              # 环境变量</span><br></pre></td></tr></table></figure>
+
+<p>类和方法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sc javax.servlet.Filter    # 已加载的类（如果是接口，则查看所有实现类）</span><br><span class="line"><span class="meta">#</span><span class="bash"> sc -d *Filter    类的详细信息</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"></span><br><span class="line">sm java.math.RoundingMode  # 类的方法、属性等</span><br><span class="line"><span class="meta">#</span><span class="bash"> sm -d java.math.RoundingMode</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sm java.math.RoundingMode &lt;init&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>反编译</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jad com.example.demo.arthas.user.UserController    </span><br><span class="line"><span class="meta">#</span><span class="bash"> --<span class="built_in">source</span>-only    只打印源码</span></span><br></pre></td></tr></table></figure>
+
+<p>动态执行：</p>
+<ul>
+<li><p><a href="https://commons.apache.org/proper/commons-ognl/language-guide.html" target="_blank" rel="noopener">OGNL 表达式</a></p>
+</li>
+<li><p><a href="https://github.com/alibaba/arthas/issues/71" target="_blank" rel="noopener">特殊用法</a></p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ognl '@java.lang.System@out.println("hello ognl")'    # 在被监控进程中执行代码</span><br><span class="line"></span><br><span class="line">sc -d com.example.demo.arthas.user.UserController | grep classLoaderHash    # 查找 UserController 的 ClassLoader（查找其 hashcode）</span><br><span class="line">ognl -c 1be6f5c3 @com.example.demo.arthas.user.UserController@logger</span><br><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader  @org.springframework.boot.SpringApplication@logger</span><br><span class="line"></span><br><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader [-x 2] @com.example.demo.arthas.user.UserController@logger    # 查看静态字段</span><br><span class="line"></span><br><span class="line">ognl '#value1=@System@getProperty("java.home"), #value2=@System@getProperty("java.runtime.name"), &#123;#value1, #value2&#125;'    # 执行多行表达式，赋值给临时变量，返回一个 List</span><br></pre></td></tr></table></figure>
+
+<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><h3 id="排查函数调用异常"><a href="#排查函数调用异常" class="headerlink" title="排查函数调用异常"></a>排查函数调用异常</h3><p>调用接口返回 500 错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:61000/user/0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"timestamp"</span>:<span class="number">1550223186170</span>,<span class="attr">"status"</span>:<span class="number">500</span>,<span class="attr">"error"</span>:<span class="string">"Internal Server Error"</span>,<span class="attr">"exception"</span>:<span class="string">"java.lang.IllegalArgumentException"</span>,<span class="attr">"message"</span>:<span class="string">"id &lt; 1"</span>,<span class="attr">"path"</span>:<span class="string">"/user/0"</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该接口相关的 <code>Controller</code> 是 <code>UserController</code>，使用 Arthas 启动监控（参考 <a href="https://arthas.aliyun.com/doc/advice-class.html" target="_blank" rel="noopener">返回值表达式</a>）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">watch com.example.demo.arthas.user.UserController * '&#123;params, throwExp&#125;'    </span><br><span class="line"><span class="meta">#</span><span class="bash"> 类名 方法名 返回值表达式（OGNL，支持 loader, clazz, method, target, params, returnObj, throwExp, isBefore, isThrow, isReturn）</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 只捕获抛出异常时的请求</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> watch com.example.demo.arthas.user.UserController * <span class="string">"&#123;params[0],throwExp&#125;"</span> -e</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 按照耗时进行过滤</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> watch com.example.demo.arthas.user.UserController * <span class="string">'&#123;params, returnObj&#125;'</span> <span class="string">'#cost&gt;200'</span></span></span><br></pre></td></tr></table></figure>
+
+<p>再次请求接口，在 Arthas 窗口有异常信息打印：</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Affect(<span class="keyword">class</span> count: <span class="number">1</span> , <span class="function"><span class="keyword">method</span> <span class="title">count</span>:</span> <span class="number">2</span>) cost <span class="keyword">in</span> <span class="number">53</span> ms, listenerId: <span class="number">3</span></span><br><span class="line"><span class="function"><span class="keyword">method</span>=<span class="title">com</span>.<span class="title">example</span>.<span class="title">demo</span>.<span class="title">arthas</span>.<span class="title">user</span>.<span class="title">UserController</span>.<span class="title">findUserById</span> <span class="title">location</span>=<span class="title">AtExceptionExit</span></span></span><br><span class="line"><span class="function"><span class="title">ts</span>=2021-03-06 20:</span><span class="number">41</span>:<span class="number">43</span>; [cost=<span class="number">0.402354</span>ms] <span class="keyword">result</span>=@ArrayList[</span><br><span class="line">    @Integer[<span class="number">0</span>],</span><br><span class="line">    @IllegalArgumentException[java.lang.IllegalArgumentException: id &lt; <span class="number">1</span>],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h3 id="热更新代码"><a href="#热更新代码" class="headerlink" title="热更新代码"></a>热更新代码</h3><p>接上，对于上述报错的 <code>UserController</code>，使用 Arthas 反编译，输出到 <code>/tmp/UserController.java</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jad --source-only com.example.demo.arthas.user.UserController &gt; /tmp/UserController.java</span><br></pre></td></tr></table></figure>
+
+<p>查找 <code>UserController</code> 的 ClassLoader：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc -d *UserController | grep classLoaderHash</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">classLoaderHash   19469ea2</span><br><span class="line"><span class="meta">#</span><span class="bash"> 可见是 LaunchedURLClassLoader@1be6f5c3 加载 UserController</span></span><br></pre></td></tr></table></figure>
+
+<p>修改 <code>/tmp/UserController.java</code> 使之满足条件不再抛出 <code>IllegalArgumentException</code>。</p>
+<p>编译修改好的 <code>UserController</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mc --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader /tmp/UserController.java -d /tmp</span><br><span class="line"><span class="meta">#</span><span class="bash"> 或 mc -c 19469ea2 /tmp/UserController.java -d /tmp</span></span><br></pre></td></tr></table></figure>
+
+<p>重新加载编译好的 <code>UserController.class</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redefine /tmp/com/example/demo/arthas/user/UserController.class</span><br></pre></td></tr></table></figure>
+
+<p>再次请求接口，可见已正常返回：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:61000/user/0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;"id":0,"name":"name0"&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置日志级别"><a href="#设置日志级别" class="headerlink" title="设置日志级别"></a>设置日志级别</h3><p>查找 ClassLoader：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc -d com.example.demo.arthas.user.UserController | grep classLoaderHash</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">classLoaderHash   <span class="number">1</span>be6f5c3</span><br></pre></td></tr></table></figure>
+
+<p>获取 logger：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader '@com.example.demo.arthas.user.UserController@logger'</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@Logger</span>[</span><br><span class="line">    serialVersionUID=<span class="variable">@Long</span>[<span class="number">5454405123156820674</span>],</span><br><span class="line">    FQCN=<span class="variable">@String</span>[ch.qos.logback.classic.Logger],</span><br><span class="line">    name=<span class="variable">@String</span>[com.example.demo.arthas.user.UserController],</span><br><span class="line">    level=null,</span><br><span class="line">    effectiveLevelInt=<span class="variable">@Integer</span>[<span class="number">20000</span>],</span><br><span class="line">    parent=<span class="variable">@Logger</span>[Logger[com.example.demo.arthas.user]],</span><br><span class="line">    childrenList=null,</span><br><span class="line">    aai=null,</span><br><span class="line">    additive=<span class="variable">@Boolean</span>[true],</span><br><span class="line">    loggerContext=<span class="variable">@LoggerContext</span>[ch.qos.logback.classic.LoggerContext[default]],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>可见实际使用的日志模块是 logback，level 为 null（最终 level 是从root logger里来的）。单独设置 UserController 的 logger level 为 DEBUG：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader '@com.example.demo.arthas.user.UserController@logger.setLevel(@ch.qos.logback.classic.Level@DEBUG)'</span><br></pre></td></tr></table></figure>
+
+<p>修改全局 logger lever：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader '@org.slf4j.LoggerFactory@getLogger("root").setLevel(@ch.qos.logback.classic.Level@DEBUG)'</span><br></pre></td></tr></table></figure>
+
+<h2 id="应用案例"><a href="#应用案例" class="headerlink" title="应用案例"></a>应用案例</h2><ul>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-ognl-update-logger-level-cn" target="_blank" rel="noopener">动态更新应用 Logger Level</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-web-console-cn" target="_blank" rel="noopener">Web Console</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-watch-method-exception-cn" target="_blank" rel="noopener">排查函数调用异常</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-thread-cn" target="_blank" rel="noopener">查找 Top N 线程</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-save-log-cn" target="_blank" rel="noopener">执行结果存日志</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-logger-config-problem-cn" target="_blank" rel="noopener">排查 logger 冲突问题</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-jad-mc-redefine-cn" target="_blank" rel="noopener">热更新代码</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-http-api-cn" target="_blank" rel="noopener">Http API 案例</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-http-404-cn" target="_blank" rel="noopener">排查 HTTP 请求返回 404</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-http-401-cn" target="_blank" rel="noopener">排查 HTTP 请求返回 401</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-get-spring-context-cn" target="_blank" rel="noopener">获取 Spring 上下文</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-classloader-cn" target="_blank" rel="noopener">ClassLoader 相关</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-async-jobs-cn" target="_blank" rel="noopener">后台异步任务</a></p>
+</li>
+<li><p><a href="https://start.aliyun.com/handson/arthas/case-boot-details-cn" target="_blank" rel="noopener">arthas-boot 支持的参数</a></p>
+</li>
+<li><p><a href="https://github.com/alibaba/arthas/issues?q=label%3Auser-case" target="_blank" rel="noopener">用户案例</a></p>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzU2MTY2MjE4OQ==&action=getalbum&album_id=1430941903897460741&scene=173&from_msgid=2247483693&from_itemidx=1&count=3#wechat_redirect" target="_blank" rel="noopener">…</a></p>
+</li>
+</ul>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/05/21/Kafka_offset-reset/" >
-            
-                <span>Kafka 位移重置</span>
-        </a>
-        <div class="abstract-content">
-            Kafka 当然可以回溯...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/21</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/05/21/Kafka_dynamic-config/" >
-            
-                <span>Kafka 动态配置</span>
-        </a>
-        <div class="abstract-content">
-            Kafka 社区于 1.1.0 版本中正式引入了动态 Broker 参数（Dynamic Broker Configs）。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/21</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/05/20/Kafka_common-scripts/" >
-            
-                <span>Kafka 常用脚本</span>
-        </a>
-        <div class="abstract-content">
-            最近的项目中用到 Kafka，在初步了解之下发现相关的配置还挺多的，打算最近整理一些与 Kafka 运维监控相关的笔记，留作后续学习、项目上线后运维使用。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Kafka">Kafka</a>
-    
-</div>
-            
-        </div>
-    </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2020/09/24/Kafka_prod-env-assess/" title= "Kafka 生产环境资源评估">
+                    <div class="nextTitle">Kafka 生产环境资源评估</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2020/06/30/JVM_java-memory-area/" title= "Java 内存区域">
+                    <div class="prevTitle">Java 内存区域</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
     
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -555,6 +656,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:100vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Arthas-Cheat-Sheet"><span class="toc-number">1.</span> <span class="toc-text">Arthas Cheat Sheet</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本使用"><span class="toc-number">1.1.</span> <span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题排查"><span class="toc-number">1.2.</span> <span class="toc-text">问题排查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#排查函数调用异常"><span class="toc-number">1.2.1.</span> <span class="toc-text">排查函数调用异常</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#热更新代码"><span class="toc-number">1.2.2.</span> <span class="toc-text">热更新代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置日志级别"><span class="toc-number">1.2.3.</span> <span class="toc-text">设置日志级别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用案例"><span class="toc-number">1.3.</span> <span class="toc-text">应用案例</span></a></li></ol></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1204,6 +1323,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({

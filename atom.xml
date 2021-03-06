@@ -421,15 +421,15 @@
   </entry>
   
   <entry>
-    <title>Java 内存区域</title>
-    <link href="https://yipwinghong.github.io/2020/06/30/JVM_java-memory-area/"/>
-    <id>https://yipwinghong.github.io/2020/06/30/JVM_java-memory-area/</id>
+    <title>Arthas Cheat Sheet</title>
+    <link href="https://yipwinghong.github.io/2020/06/30/Arthas_Cheat-Sheet/"/>
+    <id>https://yipwinghong.github.io/2020/06/30/Arthas_Cheat-Sheet/</id>
     <published>2020-06-30T03:48:17.000Z</published>
-    <updated>2021-01-21T13:53:00.000Z</updated>
+    <updated>2021-03-06T13:40:53.925Z</updated>
     
     <summary type="html">
     
-      再不更新就变年更了...= =
+      Alibaba 开源的 Java 诊断工具
     
     </summary>
     
@@ -442,21 +442,23 @@
   </entry>
   
   <entry>
-    <title>关于使用思维导图做笔记</title>
-    <link href="https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/"/>
-    <id>https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/</id>
-    <published>2020-04-07T16:40:08.000Z</published>
-    <updated>2021-01-02T10:53:22.000Z</updated>
+    <title>Java 内存区域</title>
+    <link href="https://yipwinghong.github.io/2020/06/30/JVM_java-memory-area/"/>
+    <id>https://yipwinghong.github.io/2020/06/30/JVM_java-memory-area/</id>
+    <published>2020-06-30T03:48:17.000Z</published>
+    <updated>2021-03-05T13:36:33.146Z</updated>
     
     <summary type="html">
     
-      ProcessON 是个好工具~
+      再不更新就变年更了...= =
     
     </summary>
     
     
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
     
   </entry>
   

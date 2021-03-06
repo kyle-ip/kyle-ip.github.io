@@ -275,7 +275,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2,305</span>Reading time: <span class="post-count reading-time">9 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2,357</span>Reading time: <span class="post-count reading-time">9 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -453,10 +453,12 @@ height:100vh;
 <li>元空间（Meta Area）</li>
 </ul>
 </li>
+<li>其他区域<ul>
+<li>JIT 代码缓存（Code Cache）</li>
+</ul>
+</li>
 </ul>
 </blockquote>
-
-
 
 <h1 id="线程区域"><a href="#线程区域" class="headerlink" title="线程区域"></a>线程区域</h1><p>该区域为每个线程独占内存，包括程序计数器、本地方法栈、Java 虚拟机栈。</p>
 <h2 id="程序计数器（Program-Counter-Register）"><a href="#程序计数器（Program-Counter-Register）" class="headerlink" title="程序计数器（Program Counter Register）"></a>程序计数器（Program Counter Register）</h2><p>对于 Java 方法，记录正在执行的字节码指令的地址。</p>
@@ -527,16 +529,12 @@ height:100vh;
 </ul>
 <h1 id="共享区域"><a href="#共享区域" class="headerlink" title="共享区域"></a>共享区域</h1><h2 id="堆（Heap）"><a href="#堆（Heap）" class="headerlink" title="堆（Heap）"></a>堆（Heap）</h2><p>为 Java 程序中的对象分配内存，GC 的主要区域。</p>
 <ul>
-<li><p>存放几乎所有对象实例和数组（了解“JIT 编译器”、“逃逸分析”，可实现栈上分配、标量替换优化技术）；</p>
-</li>
-<li><p>对于 byte、char 以及 short 这三种类型的字段或者数组单元，它们在堆上占用的空间分别为 1byte、2bytes，以及 2bytes，与这些类型的值域相吻合。</p>
-</li>
-<li><p>现代的垃圾收集器基本都是采用分代收集算法，针对 <strong>新生代</strong> 及 <strong>老年代</strong>；</p>
-</li>
-<li><p>可划分出多个线程私有的分配缓冲区（TLAB）：与存放内容无关，都是存储对象实例。</p>
-</li>
-<li><p>不需要连续的物理内存，可以动态增加其内存，失败时会抛出 <strong>OutOfMemoryError</strong> 异常。</p>
-</li>
+<li>存放几乎所有对象实例和数组（了解“JIT 编译器”、“逃逸分析”，可实现栈上分配、标量替换优化技术）。</li>
+<li>对于 Oracle Hotspot JVM 而言，可以明确所有对象实例都是在堆上创建（包括静态遍历和 Intern 字符串缓存），参考 <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/performance-enhancements-7.html#escapeAnalysis" target="_blank" rel="noopener">文档</a>。</li>
+<li>对于 byte、char 以及 short 这三种类型的字段或者数组单元，它们在堆上占用的空间分别为 1byte、2bytes，以及 2bytes，与这些类型的值域相吻合。</li>
+<li>现代的垃圾收集器基本都是采用分代收集算法，针对 <strong>新生代</strong> 及 <strong>老年代</strong>；</li>
+<li>可划分出多个线程私有的分配缓冲区（TLAB）：与存放内容无关，都是存储对象实例。</li>
+<li>不需要连续的物理内存，可以动态增加其内存，失败时会抛出 <strong>OutOfMemoryError</strong> 异常。</li>
 </ul>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/G1%20%E6%94%B6%E9%9B%86%E5%99%A81.png" alt="G1 收集器1.png"></p>
 <p>主流的 JVM 支持堆扩展，通过 <code>-Xms</code>（初始值）和 <code>-Xmx</code>（最大值）指定一个程序的堆内存大小。</p>
@@ -544,8 +542,6 @@ height:100vh;
 
 <p>指定新生代大小：<code>-Xmn</code>，所以堆内存为：</p>
 <figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-Xms, -Xmx == -Xmn + 老年代</span></span><br></pre></td></tr></table></figure>
-
-
 
 <h3 id="新生代（Young-Generation）"><a href="#新生代（Young-Generation）" class="headerlink" title="新生代（Young Generation）"></a>新生代（Young Generation）</h3><ul>
 <li><p>大多数对象（80%）生存时间很短，主要使用复制算法。</p>
@@ -595,8 +591,8 @@ height:100vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2020/09/24/Kafka_prod-env-assess/" title= "Kafka 生产环境资源评估">
-                    <div class="nextTitle">Kafka 生产环境资源评估</div>
+                <a href= "/2020/06/30/Arthas_Cheat-Sheet/" title= "Arthas Cheat Sheet">
+                    <div class="nextTitle">Arthas Cheat Sheet</div>
                 </a>
             
         </li>
@@ -1032,9 +1028,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 39
+        Total : 40
         </div>
         <!-- search  -->
         
@@ -1145,6 +1148,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_prod-env-assess/" >Kafka 生产环境资源评估</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/Arthas_Cheat-Sheet/" >Arthas Cheat Sheet</a>
         </li>
     
     
@@ -1284,25 +1292,25 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="Design"><span class="iconfont-archer">&#xe606;</span>Design</span>
     
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
@@ -1384,7 +1392,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
 </html>
 
 
