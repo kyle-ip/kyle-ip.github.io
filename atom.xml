@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-03-06T13:47:03.605Z</updated>
+  <updated>2021-03-17T13:56:20.736Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>基于记忆规律的学习方法</title>
+    <link href="https://yipwinghong.github.io/2021/03/17/2021-03-17_diary/"/>
+    <id>https://yipwinghong.github.io/2021/03/17/2021-03-17_diary/</id>
+    <published>2021-03-17T13:46:57.000Z</published>
+    <updated>2021-03-17T13:56:20.736Z</updated>
+    
+    <summary type="html">
+    
+      《考试脑科学》阅读笔记
+    
+    </summary>
+    
+    
+    
+      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>Arthas Cheat Sheet</title>
@@ -42,7 +61,7 @@
     <link href="https://yipwinghong.github.io/2021/02/21/2021-02-21_diary/"/>
     <id>https://yipwinghong.github.io/2021/02/21/2021-02-21_diary/</id>
     <published>2021-02-21T15:59:57.000Z</published>
-    <updated>2021-03-16T14:33:41.252Z</updated>
+    <updated>2021-03-17T13:45:14.436Z</updated>
     
     <summary type="html">
     
@@ -61,7 +80,7 @@
     <link href="https://yipwinghong.github.io/2021/01/31/DDIA_note-13/"/>
     <id>https://yipwinghong.github.io/2021/01/31/DDIA_note-13/</id>
     <published>2021-01-31T13:21:22.000Z</published>
-    <updated>2021-02-01T11:53:30.000Z</updated>
+    <updated>2021-03-17T13:46:36.554Z</updated>
     
     <summary type="html">
     
@@ -75,7 +94,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -84,7 +103,7 @@
     <link href="https://yipwinghong.github.io/2021/01/30/DDIA_note-12/"/>
     <id>https://yipwinghong.github.io/2021/01/30/DDIA_note-12/</id>
     <published>2021-01-30T15:45:58.000Z</published>
-    <updated>2021-01-31T13:20:54.000Z</updated>
+    <updated>2021-03-17T13:46:23.283Z</updated>
     
     <summary type="html">
     
@@ -98,7 +117,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -107,7 +126,7 @@
     <link href="https://yipwinghong.github.io/2021/01/29/DDIA_note-11/"/>
     <id>https://yipwinghong.github.io/2021/01/29/DDIA_note-11/</id>
     <published>2021-01-29T12:11:01.000Z</published>
-    <updated>2021-03-01T13:06:11.353Z</updated>
+    <updated>2021-03-17T13:46:32.278Z</updated>
     
     <summary type="html">
     
@@ -121,7 +140,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -130,7 +149,7 @@
     <link href="https://yipwinghong.github.io/2021/01/28/DDIA_note-10/"/>
     <id>https://yipwinghong.github.io/2021/01/28/DDIA_note-10/</id>
     <published>2021-01-28T13:19:01.000Z</published>
-    <updated>2021-01-28T13:21:32.000Z</updated>
+    <updated>2021-03-17T13:46:27.940Z</updated>
     
     <summary type="html">
     
@@ -144,7 +163,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -153,7 +172,7 @@
     <link href="https://yipwinghong.github.io/2021/01/27/DDIA_note-9/"/>
     <id>https://yipwinghong.github.io/2021/01/27/DDIA_note-9/</id>
     <published>2021-01-27T13:06:01.000Z</published>
-    <updated>2021-03-01T13:04:17.470Z</updated>
+    <updated>2021-03-17T13:46:55.877Z</updated>
     
     <summary type="html">
     
@@ -167,7 +186,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -176,7 +195,7 @@
     <link href="https://yipwinghong.github.io/2021/01/22/DDIA_note-8/"/>
     <id>https://yipwinghong.github.io/2021/01/22/DDIA_note-8/</id>
     <published>2021-01-22T15:11:01.000Z</published>
-    <updated>2021-01-27T13:19:40.000Z</updated>
+    <updated>2021-03-17T13:46:53.948Z</updated>
     
     <summary type="html">
     
@@ -190,7 +209,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -199,7 +218,7 @@
     <link href="https://yipwinghong.github.io/2021/01/21/DDIA_note-7/"/>
     <id>https://yipwinghong.github.io/2021/01/21/DDIA_note-7/</id>
     <published>2021-01-21T11:37:00.000Z</published>
-    <updated>2021-01-27T13:20:08.000Z</updated>
+    <updated>2021-03-17T13:46:50.942Z</updated>
     
     <summary type="html">
     
@@ -213,7 +232,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -222,7 +241,7 @@
     <link href="https://yipwinghong.github.io/2021/01/20/DDIA_note-6/"/>
     <id>https://yipwinghong.github.io/2021/01/20/DDIA_note-6/</id>
     <published>2021-01-20T15:11:27.000Z</published>
-    <updated>2021-01-27T13:20:20.000Z</updated>
+    <updated>2021-03-17T13:46:48.413Z</updated>
     
     <summary type="html">
     
@@ -236,7 +255,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -245,7 +264,7 @@
     <link href="https://yipwinghong.github.io/2021/01/19/DDIA_note-5/"/>
     <id>https://yipwinghong.github.io/2021/01/19/DDIA_note-5/</id>
     <published>2021-01-19T13:42:41.000Z</published>
-    <updated>2021-01-27T13:21:06.000Z</updated>
+    <updated>2021-03-17T13:46:45.772Z</updated>
     
     <summary type="html">
     
@@ -259,7 +278,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -268,7 +287,7 @@
     <link href="https://yipwinghong.github.io/2021/01/18/DDIA_note-4/"/>
     <id>https://yipwinghong.github.io/2021/01/18/DDIA_note-4/</id>
     <published>2021-01-18T15:35:41.000Z</published>
-    <updated>2021-01-27T13:20:56.000Z</updated>
+    <updated>2021-03-17T13:46:43.538Z</updated>
     
     <summary type="html">
     
@@ -282,7 +301,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -291,7 +310,7 @@
     <link href="https://yipwinghong.github.io/2021/01/13/DDIA_note-3/"/>
     <id>https://yipwinghong.github.io/2021/01/13/DDIA_note-3/</id>
     <published>2021-01-13T14:30:45.000Z</published>
-    <updated>2021-03-01T13:06:13.381Z</updated>
+    <updated>2021-03-17T13:46:41.481Z</updated>
     
     <summary type="html">
     
@@ -305,7 +324,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -314,7 +333,7 @@
     <link href="https://yipwinghong.github.io/2021/01/10/DDIA_note-2/"/>
     <id>https://yipwinghong.github.io/2021/01/10/DDIA_note-2/</id>
     <published>2021-01-10T09:03:11.000Z</published>
-    <updated>2021-01-27T13:20:40.000Z</updated>
+    <updated>2021-03-17T13:46:39.039Z</updated>
     
     <summary type="html">
     
@@ -328,7 +347,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -337,7 +356,7 @@
     <link href="https://yipwinghong.github.io/2021/01/08/DDIA_note-1/"/>
     <id>https://yipwinghong.github.io/2021/01/08/DDIA_note-1/</id>
     <published>2021-01-08T13:23:21.000Z</published>
-    <updated>2021-03-01T13:05:56.227Z</updated>
+    <updated>2021-03-17T13:46:25.741Z</updated>
     
     <summary type="html">
     
@@ -351,7 +370,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Design" scheme="https://yipwinghong.github.io/tags/Design/"/>
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
@@ -370,9 +389,9 @@
     
     
     
-      <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
@@ -438,27 +457,6 @@
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
       <category term="Kafka" scheme="https://yipwinghong.github.io/tags/Kafka/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java 内存区域</title>
-    <link href="https://yipwinghong.github.io/2020/06/30/JVM_java-memory-area/"/>
-    <id>https://yipwinghong.github.io/2020/06/30/JVM_java-memory-area/</id>
-    <published>2020-06-30T03:48:17.000Z</published>
-    <updated>2021-03-05T13:36:33.146Z</updated>
-    
-    <summary type="html">
-    
-      再不更新就变年更了...= =
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
     
   </entry>
   
