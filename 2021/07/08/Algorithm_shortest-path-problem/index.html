@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>最短路径问题常用算法 · Kylo&#39;s Notebook</title>
+    <title>最短路径问题相关算法 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >Kylo&#39;s Notebook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">最短路径问题常用算法</a>
+                <a href="#" class="post-name">最短路径问题相关算法</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            最短路径问题常用算法
+            最短路径问题相关算法
             <!-- 404 -->
             
         </h1>
@@ -404,17 +404,17 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="最短路径问题常用算法"><a href="#最短路径问题常用算法" class="headerlink" title="最短路径问题常用算法"></a>最短路径问题常用算法</h1><p>第一次写算法相关的总结类文章，对先前学习到的知识点做个回顾，也尝试用精简的文字描述清楚。</p>
+        <h1 id="最短路径问题相关算法"><a href="#最短路径问题相关算法" class="headerlink" title="最短路径问题相关算法"></a>最短路径问题相关算法</h1><p>第一次写算法相关的总结类文章，对先前学习到的知识点做个回顾，也尝试用精简的文字描述清楚。</p>
 <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>图论中有权图（Weight Graph）最经典的问题是最短路径问题（Shortest Path）：即从图上的某一点到达另外一点，找到一条路径，使得权值之和最小（在下文中，路径的长短即权值之和的大小）。</p>
 <p>对于无权图的最短路径，只需要用 BFS 求解即可（即选取最少边的路径）；但对于有权图，绕更多边的路径走，权值之和则可能会更低。</p>
 <p>单源最短路径求解：起始点是固定点，求解从源点 src 到图中任一点的最短路径。常用的算法是 Dijkstra 算法和 Moore-Bellman-Ford 算法。</p>
 <p>要求出所有点的最短路径，则需要使用求所有点对的最短路径算法：Floyd 算法。</p>
 <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>为了更方便地描述算法，先给出有权图的 Java 实现（已精简）：</p>
 <p>有权边 <code>WeightedEdge</code>：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedEdge</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">WeightedEdge</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 起点，终点，权值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> v, w, weight;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeightedEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w, <span class="keyword">int</span> weight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.v = v;</span><br><span class="line">        <span class="keyword">this</span>.w = w;</span><br><span class="line">        <span class="keyword">this</span>.weight = weight;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getV</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> v;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getW</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> w;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> weight;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedEdge</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">WeightedEdge</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 起点，终点，权值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> v, w, weight;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeightedEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w, <span class="keyword">int</span> weight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.v = v;</span><br><span class="line">        <span class="keyword">this</span>.w = w;</span><br><span class="line">        <span class="keyword">this</span>.weight = weight;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getV</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> v;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getW</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> w;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> weight;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>有权图 <code>WeightedGraph</code>：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 顶点数，边数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> V;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> E;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 邻接表：使用红黑树描述</span></span><br><span class="line"><span class="comment">     * [</span></span><br><span class="line"><span class="comment">     *      0: &#123;1: 3, 2: 2, 3: -2&#125;,</span></span><br><span class="line"><span class="comment">     *      1: (2: 2, 3: 2, 4: 1)</span></span><br><span class="line"><span class="comment">     * ]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;Integer, Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取权值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v, w)) &#123;</span><br><span class="line">            <span class="keyword">return</span> adj[v].get(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">"No edge %d-%d"</span>, v, w));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     <span class="comment">// 边是否存在</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> adj[v].containsKey(w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 构造方法：略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 顶点数，边数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> V;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> E;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 邻接表：使用红黑树描述</span></span><br><span class="line"><span class="comment">     * [</span></span><br><span class="line"><span class="comment">     *      0: &#123;1: 3, 2: 2, 3: -2&#125;,</span></span><br><span class="line"><span class="comment">     *      1: (2: 2, 3: 2, 4: 1)</span></span><br><span class="line"><span class="comment">     * ]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;Integer, Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取权值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v, w)) &#123;</span><br><span class="line">            <span class="keyword">return</span> adj[v].get(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">"No edge %d-%d"</span>, v, w));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     <span class="comment">// 边是否存在</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> adj[v].containsKey(w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="Dijkstra-算法"><a href="#Dijkstra-算法" class="headerlink" title="Dijkstra 算法"></a>Dijkstra 算法</h2><p>该算法适用于无负权边的带权图（权值 &gt;= 0，符合大多数情况），数组变量 <code>dis</code> 表示从 0 到 i 的最小权值之和，每轮循环：</p>
 <ul>
@@ -455,7 +455,7 @@ height:100vh;
 </li>
 <li><p>上面的实现利用了最小堆（优先级队列）记录边，因此无需判断所有顶点，因此 Time: O(E*log(E))。</p>
 </li>
-<li><p>使用索引堆，可进一步优化 Time: O(V*log(E))。</p>
+<li><p>使用索引堆（Index Heap），可进一步优化到 Time: O(V*log(E))。</p>
 </li>
 </ul>
 <h2 id="Moore-Bellman-Ford-算法"><a href="#Moore-Bellman-Ford-算法" class="headerlink" title="Moore-Bellman-Ford 算法"></a>Moore-Bellman-Ford 算法</h2><p>相比起 Dijkstra 算法，Moore-Bellman-Ford 算法的优势是不受负权边的影响，是在无向图中也成立的有向图算法（因为无向图可以理解为对于每条边都有反向边的有向图）。</p>
@@ -465,7 +465,7 @@ height:100vh;
 </li>
 <li><p>定义松弛操作（Repaxation）：迂回计算最短路径，找到多经过一条边得到的最短距离。因此每进行一次松弛操作，即找到从 <code>s</code> 到 <code>b</code> 的经过边数不超过 <code>k + 1</code> 的最短距离。比如下图中 <strong>0-B-A</strong> 比 <strong>0-A</strong> 小、<strong>0-A-B</strong> 比 <strong>0-B</strong> 小：</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">     <span class="number">8</span></span><br><span class="line"> +------[B]</span><br><span class="line"> |   <span class="number">6</span>   | <span class="number">-3</span></span><br><span class="line">[<span class="number">0</span>]-----[A]</span><br></pre></td></tr></table></figure>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dis[<span class="string">A</span>] = min(dis[<span class="string">A</span>], dis[<span class="string">B</span>] + weight[<span class="string">B</span>][<span class="symbol">A</span>]);</span><br><span class="line">dis[<span class="string">B</span>] = min(dis[<span class="string">A</span>], dis[<span class="string">A</span>] + weight[<span class="string">A</span>][<span class="symbol">B</span>]);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dis[A] = min(dis[A], dis[B] + weight[B][A]);</span><br><span class="line">dis[B] = min(dis[A], dis[A] + weight[A][B]);</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>对所有边进行 [1, v) 共 <code>v-1</code> 轮松弛操作，则求出了到所有点经过的边数最多为 [1, v) 的最短路径。</p>
 </li>
@@ -705,7 +705,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#最短路径问题常用算法"><span class="toc-number">1.</span> <span class="toc-text">最短路径问题常用算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题描述"><span class="toc-number">1.1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-number">1.2.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dijkstra-算法"><span class="toc-number">1.3.</span> <span class="toc-text">Dijkstra 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Moore-Bellman-Ford-算法"><span class="toc-number">1.4.</span> <span class="toc-text">Moore-Bellman-Ford 算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SPFA-算法"><span class="toc-number">1.4.1.</span> <span class="toc-text">SPFA 算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Floyd-算法"><span class="toc-number">1.5.</span> <span class="toc-text">Floyd 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#最短路径问题相关算法"><span class="toc-number">1.</span> <span class="toc-text">最短路径问题相关算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题描述"><span class="toc-number">1.1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-number">1.2.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dijkstra-算法"><span class="toc-number">1.3.</span> <span class="toc-text">Dijkstra 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Moore-Bellman-Ford-算法"><span class="toc-number">1.4.</span> <span class="toc-text">Moore-Bellman-Ford 算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SPFA-算法"><span class="toc-number">1.4.1.</span> <span class="toc-text">SPFA 算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Floyd-算法"><span class="toc-number">1.5.</span> <span class="toc-text">Floyd 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -1160,7 +1160,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题常用算法</a>
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题相关算法</a>
         </li>
     
     
@@ -1490,17 +1490,17 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
@@ -1514,17 +1514,17 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="C++"><span class="iconfont-archer">&#xe606;</span>C++</span>
-    
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="C++"><span class="iconfont-archer">&#xe606;</span>C++</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
