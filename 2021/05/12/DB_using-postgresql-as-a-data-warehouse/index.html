@@ -275,7 +275,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2,878</span>Reading time: <span class="post-count reading-time">10 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2,861</span>Reading time: <span class="post-count reading-time">10 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -527,9 +527,9 @@ height:100vh;
 <p>  注意：请不要将单个宽表替换为需要对每个查询进行联接的多个表。这可能会比较慢（尽管始终会测量）。</p>
 </blockquote>
 <p>经验法则 —— 更倾向于希望使用较少的列，而实践中这样做性能提升通常不会很明显。 </p>
-<h2 id="考虑数据数据仓库的规模"><a href="#考虑数据数据仓库的规模" class="headerlink" title="考虑数据数据仓库的规模"></a>考虑数据数据仓库的规模</h2><p>Postgres 和基于云的数据仓库最后一个主要区别是极大规模。与 Postgres 不同，基于云的数据仓库是从一开始就被设计为分布式系统，使之可以随着数据大小的增长而线性地提高处理能力。</p>
-<p>我对于数据库太大而应该移至分布式系统的情况没有很好的经验法则， 但当您面临这种情况时，您可能已具备处理迁移和权衡因素的专业知识。在一次简单的测试中，表行数在 50 到 100M 之间时 Postgres 的表现非常好 —— 通常与 Redshift 等数据仓库表现结果一致。</p>
-<p>但是性能取决于很多因素 —— 磁盘与固态硬盘，CPU，数据结构，查询类型等，因此不进行直接的测试很难一概而论。</p>
+<h2 id="考虑数据数据仓库的规模"><a href="#考虑数据数据仓库的规模" class="headerlink" title="考虑数据数据仓库的规模"></a>考虑数据数据仓库的规模</h2><p>与 Postgres 不同，基于云的数据仓库是从一开始就被设计为分布式系统，使之可以随着数据大小的增长而线性地提高处理能力。</p>
+<p>一般来说，当数据库规模太大需要迁移为分布式系统的情况没有很好的经验法则， 但当面临这种情况时，开发者很可能已具备处理迁移和权衡因素的专业知识。在一次简单的测试中，表行数在 50 到 100M 之间时 Postgres 的表现非常好（通常与 Redshift 等数据仓库表现结果一致）。</p>
+<p>但是性能取决于很多因素：磁盘与固态硬盘，CPU，数据结构，查询类型等，因此不进行直接的测试很难一概而论。</p>
 <p>如果要将 Postgres 扩展到数十亿行，可以考虑使用 Citus。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
@@ -1480,31 +1480,31 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
         <span class="sidebar-tag-name" data-tags="C++"><span class="iconfont-archer">&#xe606;</span>C++</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
