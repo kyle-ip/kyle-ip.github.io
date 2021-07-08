@@ -408,74 +408,48 @@ height:100vh;
 <p>懒得每节都看的话可以直接参考下图：<br><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Git%20%E5%9B%BE%E8%A7%A3.png" alt="Git 图解"></p>
 <h2 id="仓库管理"><a href="#仓库管理" class="headerlink" title="仓库管理"></a>仓库管理</h2><p>代码提交过程</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 工作区         -&gt;      暂存区      -&gt;       HEAD     -&gt;       远端仓库</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> WorkingDir  -(add)-&gt;  Index  -(commit)-&gt;  HEAD  -(push)-&gt;   RemoteRepository</span></span><br></pre></td></tr></table></figure>
-
 <p>创建本地仓库</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir d &amp;&amp; cd !$</span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
-
 <h3 id="保存工作"><a href="#保存工作" class="headerlink" title="保存工作"></a>保存工作</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git stash</span><br><span class="line">	[-u]						# 包括 untracked 文件（新建的）</span><br><span class="line">git stash pop					# 回到最后一个保存的状态，并删除该 stash</span><br><span class="line">git stash clear					# 删除所有 stash</span><br></pre></td></tr></table></figure>
-
 <p>可保存多次、读取</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git stash list					# 查看所有 stash</span><br><span class="line">git stash apply &lt;stashId&gt;		# 读取某次 stash，不删除</span><br><span class="line">git checkout &lt;stashId&gt; -- &lt;filename&gt;		# 读取某次 stash 中某个文件的更改</span><br></pre></td></tr></table></figure>
-
-
-
 <h3 id="提交代码"><a href="#提交代码" class="headerlink" title="提交代码"></a>提交代码</h3><p>添加/ 放弃更改（到本地仓库暂存区）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 添加</span></span><br><span class="line">git add filename</span><br><span class="line">git add *</span><br><span class="line">	[-i]		# 交互式添加文件到暂存区</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 放弃</span></span><br><span class="line">git checkout &lt;filename&gt;</span><br><span class="line">git checkout .</span><br></pre></td></tr></table></figure>
-
 <p>提交更改（到本地仓库 HEAD，指向最后一次提交的结果）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git commit -m ":memo: first commit"</span><br><span class="line">git commit --amend					# 修改上一个 commit 的描述</span><br></pre></td></tr></table></figure>
-
 <p>合并多次提交（为一次）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rebase -i HEAD~4		# 最近四次提交合并为一次</span><br></pre></td></tr></table></figure>
-
 <p>查看所有新建的/有提交记录的文件（untracked/ tracked）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git ls-files -t				# tracked</span><br><span class="line">git ls-files --others		# untracked</span><br></pre></td></tr></table></figure>
-
 <p>查看所有忽略的文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git ls-files --others -i --exclude-standard</span><br></pre></td></tr></table></figure>
-
-
-
 <h3 id="远端仓库"><a href="#远端仓库" class="headerlink" title="远端仓库"></a>远端仓库</h3><p>远端仓库默认名为 origin，查看远程库信息：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
-
 <p>克隆仓库（到本地），如克隆远端仓库，则会其别名为”origin“：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone /path/to/repository					# 本地</span><br><span class="line">git clone username@host:/path/to/repository		# 服务器</span><br></pre></td></tr></table></figure>
-
 <p>关联仓库（本地已存在的仓库与远端仓库关联）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin git@github.com:ywh/learngit.git</span><br></pre></td></tr></table></figure>
-
 <p>更新本地仓库：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure>
-
 <p>连接远端仓库：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin &lt;server&gt;</span><br></pre></td></tr></table></figure>
-
 <p>推送到远端仓库（到指定分支）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git push origin dev				# 把本地推送到远端 dev 分支</span><br><span class="line">git push origin/mybranch -u		# 推送到指定分支</span><br></pre></td></tr></table></figure>
-
 <h3 id="删除操作"><a href="#删除操作" class="headerlink" title="删除操作"></a>删除操作</h3><p>删除文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rm &lt;filename&gt;					# 删除本地文件</span><br><span class="line">git rm &lt;filename&gt;				# 删除版本库文件</span><br><span class="line">git commit</span><br><span class="line">git checkout -- &lt;filename&gt;		# 从版本库恢复删除的文件</span><br></pre></td></tr></table></figure>
-
 <p>强制删除新建的文件（未提交过的）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clean &lt;filename&gt; -f		# 不指定文件名则删除全部；删除的文件无法找回</span><br><span class="line">					[-df]	# 删除目录</span><br></pre></td></tr></table></figure>
-
 <h2 id="标签管理"><a href="#标签管理" class="headerlink" title="标签管理"></a>标签管理</h2><p>标签用于标记一个版本，表示版本库的一个快照（类似分支上的一个提交，但不能移动）。</p>
 <p>查看标签：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git tag</span><br><span class="line">git show &lt;tagname&gt;</span><br></pre></td></tr></table></figure>
-
 <p>切换分支，在分支上打上标签（最新的提交上）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch</span><br><span class="line">git checkout master</span><br><span class="line">git tag v1.0</span><br></pre></td></tr></table></figure>
-
 <p>在指定的提交上打上标签：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git log --pretty=oneline --abbrev-commit		# 获取提交 id</span><br><span class="line">git tag 1.0.0 &lt;commitId&gt; -m "xxx"				# 根据提交 id 的前 10 位选定，打上标签</span><br></pre></td></tr></table></figure>
-
 <p>推送标签（的提交）到远端：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git push origin v1.0			</span><br><span class="line">git push origin --tags			# 所有未提交的标签</span><br></pre></td></tr></table></figure>
-
 <p>删除标签：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git tag -d v0.1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如要删除的标签已经推送到远端，还需要执行：</span></span><br><span class="line">git push origin :refs/tags/v0.1</span><br></pre></td></tr></table></figure>
-
 <h2 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h2><h3 id="管理策略"><a href="#管理策略" class="headerlink" title="管理策略"></a>管理策略</h3><p>分支管理建议遵顼以下原则：</p>
 <ul>
 <li><p><code>master</code> 分支应该是非常稳定的，仅用来发布新版本，平时不能在上面工作；</p>
@@ -524,82 +498,57 @@ height:100vh;
 <p>其中 X、Y、Z 为非负整数，禁止数字前补 0，每个数值递增。</p>
 <p>查看分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git branch </span><br><span class="line">	[-vv]		# 本地分支关联远端的情况</span><br><span class="line">	[-r]		# 远端</span><br><span class="line">	[-a]		# 本地 + 远端</span><br></pre></td></tr></table></figure>
-
 <p>查看远程分支和本地分支对应关系：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote show origin</span><br></pre></td></tr></table></figure>
-
 <p>关联远端分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -u origin/mybranch</span><br></pre></td></tr></table></figure>
-
 <h3 id="使用分支"><a href="#使用分支" class="headerlink" title="使用分支"></a>使用分支</h3><p>指定远程分支链接：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch --set-upstream-to=origin/dev dev</span><br></pre></td></tr></table></figure>
-
 <p>创建（并切换）分支、重命名：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b branch_x		# 分支在推送到远端之前只在本地可见</span><br><span class="line">git checkout -b dev origin/dev	# 创建本地 dev 分支，并于远端 origin/dev 分支关联</span><br><span class="line">git branch -m branch_y			# 重命名</span><br></pre></td></tr></table></figure>
-
 <p>切换分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout - 					# 上一个分支</span><br></pre></td></tr></table></figure>
-
 <p>合并分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git checkout master				# 切换到 master</span><br><span class="line">git merge &lt;branch&gt;				# 合并 branch 到 master</span><br><span class="line"><span class="meta">#</span><span class="bash"> 合并分支默认采用 Fast forward 模式，删除分支后会丢弃分支信息</span></span><br><span class="line">git merge --no-ff -m "merge with no-ff" &lt;branch&gt;		# 合并分支时生产一个新的 commit，分支历史上可以看出分支信息</span><br></pre></td></tr></table></figure>
-
 <p>把 A 分支的某个 commit 放到 B 分支上：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout B &amp;&amp; git cherry-pick &lt;commitId&gt;</span><br></pre></td></tr></table></figure>
-
 <h3 id="删除操作-1"><a href="#删除操作-1" class="headerlink" title="删除操作"></a>删除操作</h3><p>删除分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch -d branch_x							# 本地</span><br><span class="line">git push origin --delete &lt;remote-branchname&gt;	# 远端</span><br><span class="line">git push origin :&lt;remote-branchname&gt;			# 远端</span><br></pre></td></tr></table></figure>
-
 <p>删除已经合并到 master 的分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch --merged master | grep -v '^\*\|  master' | xargs -n 1 git branch -d</span><br></pre></td></tr></table></figure>
-
 <p>删除远端已删除、本地剩余的分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote prune origin</span><br></pre></td></tr></table></figure>
-
 <h3 id="保存备份"><a href="#保存备份" class="headerlink" title="保存备份"></a>保存备份</h3><p>把某个分支导出成一个文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git bundle create &lt;file&gt; &lt;branch&gt;</span><br></pre></td></tr></table></figure>
-
 <p>新建一个分支，内容为上面导出的文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone repo.bundle &lt;targetDir&gt; -b &lt;branchName&gt;</span><br></pre></td></tr></table></figure>
-
 <h3 id="Feature-分支"><a href="#Feature-分支" class="headerlink" title="Feature 分支"></a>Feature 分支</h3><p>当添加实验性的新功能、又不希望把主分支搞乱的时候可以新建一个 Feature 分支。</p>
 <p>假设原在 dev 分支上开发，需要临时添加实验性的新功能 feature-vulcan，创建分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b feature-vulcan</span><br></pre></td></tr></table></figure>
-
 <p>开发完成后提交：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add &lt;filename&gt;</span><br><span class="line">git commit -m "xxx"</span><br></pre></td></tr></table></figure>
-
 <p>切换回 dev 分支，准备合并：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev</span><br></pre></td></tr></table></figure>
-
 <p>但该新功能收到指示需要取消，需要删除分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -D feature-vulcan</span><br></pre></td></tr></table></figure>
-
 <h3 id="Bug-分支"><a href="#Bug-分支" class="headerlink" title="Bug 分支"></a>Bug 分支</h3><p>当出现紧急情况需要修复 bug，当前工作又还未完成，可以使用 stash 先把当前工作保存、再创建临时分支修复 bug，恢复现场后再继续工作。</p>
 <p>假设在 dev 分支上工作，此时 master 分支上出现紧急 bug，先保存当前工作：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git stash</span><br></pre></td></tr></table></figure>
-
 <p>在 master 分支上创建临时分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br><span class="line">git checkout -b issue-101</span><br></pre></td></tr></table></figure>
-
 <p>修复后提交代码：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add &lt;filename&gt;</span><br><span class="line">git commit -m "fix bug 101"</span><br></pre></td></tr></table></figure>
-
 <p>切换回出现 bug 的分支，合并，删除临时分支：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br><span class="line">git merge --no-ff -m "merged bug fix 101" issue-101</span><br></pre></td></tr></table></figure>
-
 <p>切换回 dev 分支上继续工作：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev</span><br><span class="line">git stash list</span><br><span class="line">git stash pop</span><br></pre></td></tr></table></figure>
-
 <h3 id="合并多个-commit"><a href="#合并多个-commit" class="headerlink" title="合并多个 commit"></a>合并多个 commit</h3><p>（建议只在自己的分支上使用）使用 rebase 可以合并多个 commit 为一个完整的 commit。</p>
 <p>比如在一个分支上的修改：</p>
 <figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; B -&gt; C -D</span><br></pre></td></tr></table></figure>
-
 <p>后面的 B、C、D 合并为一个完整提交，再推送到远端仓库：</p>
 <figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; B<span class="string">'</span></span><br></pre></td></tr></table></figure>
-
 <p>可执行命令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git rebase -i [start] [end]		# 区间是前开后闭的，如果不指定区间中间，则直接合并到 HEAD 指向的 commit</span><br><span class="line">git rebase -i 32bs22			# -i 表示交互式编辑合并操作</span><br><span class="line">git rebase -i HEAD~3</span><br></pre></td></tr></table></figure>
-
 <p>其中交互式的编辑指令：</p>
 <ul>
 <li><p>pick/ p：保留该 commit</p>
@@ -619,96 +568,64 @@ height:100vh;
 </ul>
 <h3 id="将某段-commit-粘贴到另一分支"><a href="#将某段-commit-粘贴到另一分支" class="headerlink" title="将某段 commit 粘贴到另一分支"></a>将某段 commit 粘贴到另一分支</h3><p>比如在某个分支上开发，有时需要将整段提交都应用到另一分支上，比如把下面 dev 分支上的 C、D、E 都合并到 master 分支的 G 后面：</p>
 <figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A<span class="function"> -&gt;</span> B<span class="function"> -&gt;</span> C<span class="function"> -&gt;</span> D<span class="function"> -&gt;</span> E<span class="function"> -&gt;</span> F		(dev)</span><br><span class="line"> <span class="string">\</span></span><br><span class="line"><span class="function">  -&gt;</span> G							(master)</span><br></pre></td></tr></table></figure>
-
 <p> 可执行命令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git rebase [start] [end] --onto [branchName]		# 区间是前开后闭的，此处要指定 B 到 E 的 id</span><br><span class="line">git rebase 90bc0045b^ 5de0da9f2 --onto master</span><br></pre></td></tr></table></figure>
-
 <p>注意粘贴后 HEAD 处于游离状态，<code>git</code> 只是将 C ~ E 部分的内容复制一份粘贴到了 master 所指向的提交后面，还需要将 master 所指向的提交 id 设置为当前 HEAD 所指向的提交 id：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout master				# 切换到主分支，输出：this may be a good time to do so with: git branch &lt;new-branch-name&gt; 0c72e64</span><br><span class="line">git reset --hard 0c72e64</span><br></pre></td></tr></table></figure>
-
-
-
 <h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><h3 id="查看日志"><a href="#查看日志" class="headerlink" title="查看日志"></a>查看日志</h3><p>查看当前状态（修改的、提交的、冲突的）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
-
 <p>查看本地仓库日志：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git log</span><br><span class="line">	[--author=ywh]			# 筛选作者为 ywh 的</span><br><span class="line">	[--pretty=oneline]		# 一个压缩后的每一条提交记录只占一行的输出\</span><br><span class="line">	[--name-status]			# 查看变更文件</span><br></pre></td></tr></table></figure>
-
 <p>查找相关记录：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --all --grep='&lt;content&gt;'</span><br></pre></td></tr></table></figure>
-
 <p>简化查看提交历史：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git log --pretty=oneline --graph --decorate --all</span><br><span class="line">git log --pretty=oneline --graph --abbrev-commit		# 上新下旧</span><br></pre></td></tr></table></figure>
-
 <p>以树形结构查看所有分支日志：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --graph --oneline --decorate --all</span><br></pre></td></tr></table></figure>
-
 <p>查看两周内的改动：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git whatchanged --since='2 weeks ago'</span><br></pre></td></tr></table></figure>
-
 <p>查看本地更新过 HEAD 的 git 命令记录，如 commit、amend、cherry-pick、reset、revert 等，可以找到 commitId 并 reset 到任意一次：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reflog</span><br></pre></td></tr></table></figure>
-
 <h3 id="错误恢复"><a href="#错误恢复" class="headerlink" title="错误恢复"></a>错误恢复</h3><p>回退版本：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard HEAD^			# 到上一版本</span><br><span class="line">git reset --hard commitId		# 到指定版本</span><br></pre></td></tr></table></figure>
-
 <p>本次操作失误后撤销修改：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- &lt;filename&gt;		# 放弃工作区的修改，有两种情况</span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件自修改后还没有被放到暂存区，撤销修改就回到和版本库一样的状态（最近一次 git gommit）</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件已经添加到暂存区后又作了修改，撤销修改就回到添加到暂存区后的状态（最近一次 git add）</span></span><br></pre></td></tr></table></figure>
-
 <p>本地操作失误后（已添加到暂存区）撤销修改：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD &lt;filename&gt;		# 把已经 git add 的重新放回工作区</span><br></pre></td></tr></table></figure>
-
 <p>本地操作失误后（已提交到版本库）撤销修改：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard HEAD^			# 回退到上一版本</span><br></pre></td></tr></table></figure>
-
 <p>丢弃本地所有改动和提交，获取远端的最新版本，并把本地主分支指向它：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch --all &amp;&amp; git reset --hard origin/master</span><br></pre></td></tr></table></figure>
-
 <p>回到某个 commit 的状态，删除后面所有 commit：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git reset &lt;commit-id&gt;			# 默认就是 -mixed 参数。</span><br><span class="line"></span><br><span class="line">git reset –mixed HEAD^			# 回退至上个版本，它将重置HEAD到另外一个commit,并且重置暂存区以便和HEAD相匹配，但是也到此为止，工作区不会被更改。</span><br><span class="line"></span><br><span class="line">git reset –soft HEAD~3			# 回退至三个版本之前，只回退了commit的信息，暂存区和工作区与回退之前保持一致。如果还要提交直接commit即可  </span><br><span class="line"></span><br><span class="line">git reset –hard &lt;commitId&gt;  	# 彻底回退到指定 commitId 的状态，暂存区和工作区也会变为指定commit-id版本的内容</span><br></pre></td></tr></table></figure>
-
 <p>把所有的改动重新放回工作区，删除所有 commit（目的是重新提交第一个 commit）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git update-ref -d HEAD</span><br></pre></td></tr></table></figure>
-
 <h3 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h3><p>当 merge 出现冲突时，可查看冲突的文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br><span class="line"><span class="meta">#</span><span class="bash"> 此时直接打开文件 查看 &lt;&lt;&lt;&lt;&lt;&lt;&lt;，=======，&gt;&gt;&gt;&gt;&gt;&gt;&gt; 标记的内容，修改后保存重新提交即可（add、commit）</span></span><br></pre></td></tr></table></figure>
-
 <p>预览差异：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git diff &lt;sourceBarnch&gt; &lt;targetBranch&gt;		# 对比两个分支</span><br><span class="line">git diff &lt;sourceCommitId&gt; &lt;targetCommitId&gt;	# 对比两个提交</span><br><span class="line">git diff --cached		# 对比暂存区和最近版本的不同</span><br><span class="line">git diff HEAD			# 对比暂存区、工作区和最近版本的不同</span><br></pre></td></tr></table></figure>
-
 <p>查看某个文件、任意分支的内容：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git show &lt;branch&gt;:&lt;filename&gt;</span><br></pre></td></tr></table></figure>
-
 <p>查看某段代码的作者：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git blame &lt;filename&gt;</span><br></pre></td></tr></table></figure>
-
 <h2 id="配置及其他操作"><a href="#配置及其他操作" class="headerlink" title="配置及其他操作"></a>配置及其他操作</h2><h3 id="忽略文件"><a href="#忽略文件" class="headerlink" title="忽略文件"></a>忽略文件</h3><p>编写 <code>.gitignore</code> 文件可以避免目录中的指定文件被提交，比如（可通过 <code>git status</code> 检验）：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Windows:</span></span><br><span class="line">Thumbs.db</span><br><span class="line">ehthumbs.db</span><br><span class="line">Desktop.ini</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python:</span></span><br><span class="line">*.py[cod]</span><br><span class="line">*.so</span><br><span class="line">*.egg</span><br><span class="line">*.egg-info</span><br><span class="line">dist</span><br><span class="line">build</span><br><span class="line"></span><br><span class="line"><span class="comment"># My configurations:</span></span><br><span class="line">db.ini</span><br><span class="line">deploy_key_rsa</span><br></pre></td></tr></table></figure>
-
 <p>如果某些文件被 <code>.gitignore</code> 匹配，但又希望提交，可以强制添加：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add -f a.egg</span><br></pre></td></tr></table></figure>
-
 <p>检查 <code>.gitignore</code>，会提示在哪行的规则匹配了指定的文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git check-ignore -v a.class</span><br></pre></td></tr></table></figure>
-
 <h3 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h3><p>设置姓名和邮箱地址：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name "Firstname Lastname"</span><br><span class="line">git config --global user.email "Email"</span><br></pre></td></tr></table></figure>
-
 <p>修改作者名：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend --author='Author Name &lt;email@address.com&gt;'</span><br></pre></td></tr></table></figure>
-
 <p>设置 SSH Key：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -ty rsa -C "EMail"</span><br><span class="line">cat ~/.ssh/id_rsa.pub		# 保存到 GitHub</span><br></pre></td></tr></table></figure>
-
 <h3 id="优化显式效果"><a href="#优化显式效果" class="headerlink" title="优化显式效果"></a>优化显式效果</h3><p>内建图形化工具：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitk</span><br></pre></td></tr></table></figure>
-
 <p>彩色的 git 输出：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> git config --global color.ui [<span class="literal">true</span>| auto]</span></span><br><span class="line">git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset' --abbrev-commit --"		# git log 输出颜色</span><br></pre></td></tr></table></figure>
-
 <p>显示历史记录时，每个提交的信息只显示一行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config format.pretty oneline</span><br></pre></td></tr></table></figure>
-
 <h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
 <li><p>如果当前修改的文档在本地的 master 上，然后想把这个修改迁移到一个 branch 上，这样方便做 PR，如果这些修改还没有被 add，那么可以使用 <code>git checkout -b new_branch_name</code> 来完成。</p>
 </li>
@@ -1321,9 +1238,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 60
+        Total : 61
         </div>
         <!-- search  -->
         
@@ -1336,6 +1260,11 @@ top:100vh;
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题相关算法</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1669,17 +1598,17 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
@@ -1701,9 +1630,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     

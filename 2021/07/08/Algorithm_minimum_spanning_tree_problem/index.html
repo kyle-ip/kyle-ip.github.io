@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统 · Kylo&#39;s Notebook</title>
+    <title>最小生成树问题相关算法 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,7 +218,7 @@
                 <a href="/" >Kylo&#39;s Notebook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
+                <a href="#" class="post-name">最小生成树问题相关算法</a>
             </div>
     </div>
     
@@ -248,7 +248,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统
+            最小生成树问题相关算法
             <!-- 404 -->
             
         </h1>
@@ -269,18 +269,18 @@ height:100vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "设计">设计</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "算法">算法</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2,625</span>Reading time: <span class="post-count reading-time">9 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2,969</span>Reading time: <span class="post-count reading-time">12 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2020/12/02</span>
+                    <span class="post-intro-time">2021/07/08</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -404,185 +404,100 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>本章结构如下：</p>
-<blockquote class="pullquote mindmap mindmap-md"><ul>
-<li>可靠、可扩展与可维护的应用系统<ul>
-<li>可靠性（Reliability）<ul>
-<li>硬件故障</li>
-<li>软件故障</li>
-<li>人为失误</li>
-</ul>
-</li>
-<li>可扩展性（Scalability）<ul>
-<li>描述负载</li>
-<li>描述性能</li>
-<li>系统扩展<ul>
-<li>自动与手动</li>
-<li>水平与垂直</li>
-<li>有状态与无状态</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>可维护性（Maintainability）<ul>
-<li>可运维性</li>
-<li>简单性<ul>
-<li>复杂系统</li>
-<li>设计抽象</li>
-</ul>
-</li>
-<li>可演化性<ul>
-<li>应对需求变化</li>
-<li>敏捷开发模式</li>
-<li>简单与抽象</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>* 存储架构<ul>
-<li>数据库基本架构<ul>
-<li>客户端通信管理</li>
-<li>进程管理</li>
-<li>查询处理</li>
-<li>事务存储管理</li>
-<li>共享组件与工具</li>
-</ul>
-</li>
-<li>传统架构<ul>
-<li>客户端组件</li>
-<li>代理中间件</li>
-<li>单元化架构</li>
-</ul>
-</li>
-<li>分布式架构<ul>
-<li>PGXC</li>
-<li>NewSQL</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+        <h1 id="最小生成树问题相关算法"><a href="#最小生成树问题相关算法" class="headerlink" title="最小生成树问题相关算法"></a>最小生成树问题相关算法</h1><blockquote>
+<p>  接上回，本次介绍另一类问题的相关算法。</p>
 </blockquote>
-<p>定义数据系统：</p>
+<p>在图论领域，有权图（Weight Graph）最经典的问题是最小生成树问题（Minimum Spanning Tree）：对于一个 n 个节点的 <strong>连通图</strong>，求出包含原图 n 个节点、且确保所有边权值之和最小的连通子图，则为最小生成树（MST）。</p>
+<p>先给出有权图的 Java 实现（省略细节），有权边 <code>WeightedEdge</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedEdge</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">WeightedEdge</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 起点，终点，权值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> v, w, weight;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeightedEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w, <span class="keyword">int</span> weight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.v = v;</span><br><span class="line">        <span class="keyword">this</span>.w = w;</span><br><span class="line">        <span class="keyword">this</span>.weight = weight;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有权图 <code>WeightedGraph</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 顶点数，边数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> V;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> E;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 邻接表：使用红黑树描述</span></span><br><span class="line"><span class="comment">     * [</span></span><br><span class="line"><span class="comment">     *      0: &#123;1: 3, 2: 2, 3: -2&#125;,</span></span><br><span class="line"><span class="comment">     *      1: (2: 2, 3: 2, 4: 1)</span></span><br><span class="line"><span class="comment">     * ]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;Integer, Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取权值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v, w)) &#123;</span><br><span class="line">            <span class="keyword">return</span> adj[v].get(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">"No edge %d-%d"</span>, v, w));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     <span class="comment">// 边是否存在</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> adj[v].containsKey(w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="连通性判断"><a href="#连通性判断" class="headerlink" title="连通性判断"></a>连通性判断</h2><p>对于一个图，可求解出最小生成树的前提是该图为 <strong>连通图</strong>，即图中任意两个节点之间都能找到至少一条路径相连。</p>
+<p>对于非连通图，每个连通子图都称为一个 <strong>连通分量</strong>。</p>
+<p>因此判断图是否连通可使用以下深度优先遍历（DFS）算法：</p>
 <ul>
-<li><p>应用系统需求广泛，单个组件往往无法满足所有数据处理与存储需求。因而需要将任务分解，每个组件负责高效完成其中一部分，多个组件依靠应用层代码驱动有机衔接起来。</p>
+<li><p>使用变量 <code>int left</code> 记录待访问节点数（初始化为图节点总数 <code>V</code>），数组 <code>boolean[] visited</code> 记录节点访问状态（避免重复访问）。</p>
 </li>
-<li><p>数据系统包括数据库、高速缓存、索引、流式处理、批处理等不同访问方式的系统。</p>
+<li><p>从任意一个节点 <code>v</code> 出发深度优先遍历图，每经过一个未被访问的邻接节点 <code>w</code> 即标记为已访问 <code>visited[w] = true;</code>，并把待访问节点数 -1 <code>left--</code>，否则跳过。</p>
 </li>
-<li><p>区别于计算密集型应用（compute intensi ve），数据密集型应用（data intensiive）的 CPU 的处理能力不是第一限制性因素，关键在于数据量、数据复杂度及数据快速多变性。</p>
+<li><p>当从 <code>v</code> 出发的深度优先遍历结束，表示已找到一个连通分量。此时判断待访问节点数 <code>left</code> 是否为 0，是则表示刚才已完成整图遍历，该图为连通图，否则为非连通图。</p>
 </li>
 </ul>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1-%E6%95%B0%E6%8D%AE%E7%B3%BB%E7%BB%9F.png" alt="数据系统"></p>
-<h1 id="可靠性（Reliability）"><a href="#可靠性（Reliability）" class="headerlink" title="可靠性（Reliability）"></a>可靠性（Reliability）</h1><p>人们对软件系统的期望：</p>
-<ul>
-<li><p>应用程序执行用户所期望的功能。</p>
-</li>
-<li><p>可以容忍用户出现错误或者不正确的软件使用方法。</p>
-</li>
-<li><p>性能可以应对典型场景、合理负载压力和数据量。</p>
-</li>
-<li><p>系统可防止任何未经授权的访问和滥用。</p>
-</li>
-</ul>
-<p>因此，可靠性意味着即使发生故障，系统也可以正常工作。</p>
-<ul>
-<li><p><strong>容错、弹性</strong>：在预算范围内，系统可应对特定类型的故障。</p>
-</li>
-<li><p><strong>故障与失效</strong>：分别指组件与系统整体的层面。</p>
-</li>
-</ul>
-<p>要确保系统可靠性，通常需要克服三个方面的故障：硬件故障、软件故障、人为故障。</p>
+<p>基本实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Stack&lt;Integer&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line"><span class="keyword">boolean</span>[] visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[V];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从 0 出发遍历图，判断图是否联通。</span></span><br><span class="line">stack.push(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">int</span> left = V - <span class="number">1</span>;</span><br><span class="line">visited[<span class="number">0</span>] = <span class="keyword">true</span>;</span><br><span class="line"><span class="keyword">while</span> (!stack.empty()) &#123;</span><br><span class="line">    <span class="keyword">int</span> v = stack.pop();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(v)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (visited[w]) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 每遇到一个未访问的邻接顶点，则 left--。</span></span><br><span class="line">        left--;</span><br><span class="line">        visited[w] = <span class="keyword">true</span>;</span><br><span class="line">        stack.push(w);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 图不联通，返回。</span></span><br><span class="line"><span class="keyword">return</span> left == <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="切分定理（Bipartite）"><a href="#切分定理（Bipartite）" class="headerlink" title="切分定理（Bipartite）"></a>切分定理（Bipartite）</h2><p>将一个图中的顶点分为两部分，称为一个 <strong>切分</strong>。其中一条边的两个端点属于切分不同的两边，则该边称为 <strong>横切边</strong>。</p>
+<p>如果考虑边的权值，横切边的最短边就属于最小生成树（<strong>切分定理</strong>）。</p>
 <blockquote>
-<p> P.S. 容错测试：Netflix Chaos Monkey</p>
+<h3 id="二分图"><a href="#二分图" class="headerlink" title="二分图"></a>二分图</h3><p>  基于切分的定义引入二分图的概念：在图中能找到一个切分，其所有的边都是横切边，则该图为 <strong>二分图（Bipartite Graph）</strong>：所有顶点可以分成边不相交的两部分（A 部分的点只于 B 部分相连，不与内部的点相连），所有的边的两个端点隶属于不同的部分。</p>
+<p>  二分图的概念常见于无权图的匹配问题（Matching）、最大流问题（Max Flow），经典的算法有 Hungarian 算法。</p>
 </blockquote>
-<h2 id="硬件故障"><a href="#硬件故障" class="headerlink" title="硬件故障"></a>硬件故障</h2><ul>
-<li><p>为硬件添加冗余来减少系统故障率：磁盘配置 RAID，服务器配备双电源，热插拔 CPU，数据中心添加备用电源、发电机等。</p>
-</li>
-<li><p>结合软件容错成为容忍多机失效的补充手段。</p>
-</li>
-</ul>
-<h2 id="软件故障"><a href="#软件故障" class="headerlink" title="软件故障"></a>软件故障</h2><p>认真检查依赖的假设条件与系统之间交互，进行全面的测试，进程隔离，允许进程崩溃并自动重启，反复评估，监控并分析生产环节的行为表现。</p>
-<h2 id="人为失误"><a href="#人为失误" class="headerlink" title="人为失误"></a>人为失误</h2><ul>
-<li><p>以最小出错的方式来设计系统。</p>
-</li>
-<li><p>分离最容易出错的地方、容易引发故障的接口（提供功能齐全、非生产用的沙箱环境）。</p>
-</li>
-<li><p>充分的测试：单元测试，集成测试，系统测试，自动化测试（覆盖边界条件）。</p>
-</li>
-<li><p>当出现人为失误时，提供快速的恢复机制以尽最减少故障影响。</p>
-</li>
-<li><p>设置详细而清晰的监控子系统，包括性能指标和错误率。</p>
-</li>
-<li><p>推行管理流程并加以培训。</p>
-</li>
-</ul>
-<h1 id="可扩展性（Scalability）"><a href="#可扩展性（Scalability）" class="headerlink" title="可扩展性（Scalability）"></a>可扩展性（Scalability）</h1><p>可扩展性即当负载参数（数据量、流量或复杂性）增加时，系统应以合理的方式来匹配增长，保持良好性能。</p>
-<h2 id="描述负载"><a href="#描述负载" class="headerlink" title="描述负载"></a>描述负载</h2><p>负载参数的最佳选择取决于系统的体系结构，它可能是 Web 服务器的每秒请求处理次数，数据库中写入的比例，聊天室的同时活动用户数量，缓存命中率等。</p>
-<p>有时平均值很重要，有时系统瓶颈则来自于少数峰值。</p>
-<h2 id="描述性能"><a href="#描述性能" class="headerlink" title="描述性能"></a>描述性能</h2><p>负载增加，需要考虑如果系统资源不变、性能会发生什么变化？或者保持性能不变，需要增加多少资源。</p>
+<p>介绍切分的概念，是为了引入在遍历图的过程中，把节点划归到不同子集的技巧，这种做法在介绍 Prim 算法时再做具体说明。</p>
+<h2 id="并查集（Union-Find）"><a href="#并查集（Union-Find）" class="headerlink" title="并查集（Union Find）"></a>并查集（Union Find）</h2><p>并查集是一种多叉树，其包含两种基本操作：合并和查询。假设待加入并查集的节点共 n 个。</p>
 <ul>
-<li><p>批处理系统中通常关心吞吐量（单位时间内可处理的记录条数、指定数据集上运行作业所需的总时间）。</p>
+<li><p>初始化：对于所有的 n 个点 [0, n-1]，代表每个点的集合都初始化为自身，比如 0 =&gt; {0}, 1 =&gt; {1}, …, n-1 =&gt; {n-1}。</p>
 </li>
-<li><p>在线系统中更着重服务的响应时间：客户端从发送请求到接收响应之间的间隔（除了处理请求时间还包括来回网络延迟和各种排队延迟），必须在客户端测量。</p>
+<li><p>合并：将两个节点所表示的集合（表示为树）合并为一个集合，即将代表其中一个节点的树的根，嫁接到另一个节点表示的树的孩子上。</p>
 </li>
-<li><p>SLO（服务质量目标）和 SLA（服务质量协议）关注百分位数：比如 p95 即 95% 分位数为 200ms，要求 95% 的请求快于 200ms，允许 5% 的请求需要更长时间。</p>
-</li>
-<li><p>对于后台服务，如果一次完整的服务里包含了多次请求调用，此时高百分位数指标尤为重要，因为最终用户仍然需要等待最慢的调用完成。即使只有很小百分比的请求缓慢，如果用户频发触发这种调用，最终总体变慢的概率就会增加（长尾效应）。</p>
+<li><p>查找：查找节点所在的集合，即根节点。</p>
 </li>
 </ul>
-<h2 id="系统扩展"><a href="#系统扩展" class="headerlink" title="系统扩展"></a>系统扩展</h2><p>超大规模系统往往针对特定应用而高度定制，很难有一种通用的架构。</p>
-<p>背后取舍因素包括数据读取量、写入量 、待存储的数据量、数据的复杂程度、响应时间要求、访问模式等，或者上述因素的叠加，再加上其他更复杂的问题。</p>
-<p>但可扩展架构通常都是从通用模块逐步构建而来，背后往往有规律可循。</p>
-<h3 id="自动与手动"><a href="#自动与手动" class="headerlink" title="自动与手动"></a>自动与手动</h3><p>某些系统具有弹性特征，它可以自动检测负载增加，然后自动添加更多计算资源，而其他系统则是手动扩展（人工分析性能表现决定添加更多计算）。</p>
-<p>如果负载高度不可预测，则自动弹性系统会更加高效，但或许手动方式可以减少执行期间的意外情况。</p>
-<h3 id="水平与垂直"><a href="#水平与垂直" class="headerlink" title="水平与垂直"></a>水平与垂直</h3><p>在垂直扩展（即升级到更强大的机器）和水平扩展（即将负载分布到多个更小的机器）之间做取舍。在多台机器上分配负载也被称为无共享体系结构。</p>
-<p>在单台机器上运行的系统通常更简单，然而高端机器可能非常昂贵，且扩展水平有限，最终往往还是无法避免需要水平扩展。</p>
-<p>好的架构通常要做些实际取舍：使用几个强悍的服务器仍可以比大量的小型虚拟机来得更简单、便宜。</p>
-<h3 id="有状态与无状态"><a href="#有状态与无状态" class="headerlink" title="有状态与无状态"></a>有状态与无状态</h3><p>把无状态服务分布然后扩展至多台机器相对比较容易，而有状态服务从单个节点扩展到分布式多机环境的复杂性会大大增加。</p>
-<p>通常做法是将数据库运行在一个节点上（垂直扩展），直到高扩展性或高可用性的要求迫使不得不做水平扩展。</p>
-<h1 id="可维护性（Maintainability）"><a href="#可维护性（Maintainability）" class="headerlink" title="可维护性（Maintainability）"></a>可维护性（Maintainability）</h1><p>随着时间推移，许多新的人员参与到系统开发和运维以维护现有功能或适配新场景等，系统都应高效运转。</p>
-<p>系统的可维护性，即可运维性、简单性和可演化性。</p>
-<h2 id="可运维性"><a href="#可运维性" class="headerlink" title="可运维性"></a>可运维性</h2><p>方便运营团队保持系统平稳运行，数据系统设计：</p>
+<p>由于本文旨在总结最小生成树相关算法，并查集不是重点，只做简要说明并直接给出实现代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnionFind</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 父节点：parent[p] 即 p 的父节点。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] parent;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 集合大小（优化树结构）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] size;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化：[0, n) 所有节点的父节点都是它自身，集合大小都为 1。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UnionFind</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        parent = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">        size = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            parent[i] = i;</span><br><span class="line">            size[i] = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询：从给定节点迭代向其父节点查询，直到根节点。并更新沿途访问节点的根节点。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> p)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (p != parent[p]) &#123;</span><br><span class="line">            parent[p] = find(parent[p]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> parent[p];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 判断两个点是否相连。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isConnected</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> find(p) == find(q);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 合并：两个给定的节点迭代查询到根节点，如果它们有共同根节点则直接返回，否则把其中的一个的根节点接到另一个根节点上（节点数更多的作为根节点）。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">union</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 不去重（根的值相同也合并）。</span></span><br><span class="line">        <span class="comment">// parent[find(parent, p)] = find(parent, q);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 去重（根的值相同不合并）。</span></span><br><span class="line">        <span class="keyword">int</span> pRoot = find(p), qRoot = find(q);</span><br><span class="line">        <span class="keyword">if</span> (pRoot == qRoot) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (size[p] &gt; size [q]) &#123;</span><br><span class="line">            parent[qRoot] = pRoot;</span><br><span class="line">            size[pRoot] += size[qRoot];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            parent[pRoot] = qRoot;</span><br><span class="line">            size[qRoot] += size[pRoot];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 求大小：某个节点的大小等于其根节点的节点数。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">(<span class="keyword">int</span> p)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size[find(p)];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 联通分量个数：父节点为其自身的点的数量。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">cc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; parent.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (parent[i] == i) &#123;</span><br><span class="line">                cnt++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cnt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有了以上基础，就可以开始进入最小生成树的求解了。</p>
+<h2 id="Kruskal-算法"><a href="#Kruskal-算法" class="headerlink" title="Kruskal 算法"></a>Kruskal 算法</h2><p>Kruskal 算法本质是贪心算法：每次尽量使用短边。</p>
+<p>每次按权值从小到大选取图上不会构成环的短边，直到覆盖所有顶点。</p>
 <ul>
-<li><p>提供对系统运行时行为和内部的可观测性，方便监控。</p>
+<li><p>每次选择一个最短边，如果这个边没有形成环，则相当于对一个切分选择了最短横切边。</p>
 </li>
-<li><p>支持自动化，与标准工具集成。</p>
-</li>
-<li><p>避免绑定特定的机器，在整个系统不间断运行的同时允许机器停机维护。</p>
-</li>
-<li><p>提供良好的文档和易于理解的操作模式， 诸如“如果 X，会发生 Y”。</p>
-</li>
-<li><p>提供良好的默认配置，且允许管理员在需要时方便地修改默认值。</p>
-</li>
-<li><p>尝试自我修复，在需要时让管理员手动控制系统状态。</p>
-</li>
-<li><p>行为可预测，减少意外发生。</p>
+<li><p>判断是否成环：可以使用 <strong>DFS</strong>（O(V+E)）或 <strong>并查集</strong>（接近 O(E)）。</p>
 </li>
 </ul>
-<h2 id="简单性"><a href="#简单性" class="headerlink" title="简单性"></a>简单性</h2><p>即简化系统复杂性，使新工程师能够轻松理解系统（不是 UI 简单）。</p>
-<h3 id="复杂系统"><a href="#复杂系统" class="headerlink" title="复杂系统"></a>复杂系统</h3><p>随着项目越来越大，系统会越来越复杂和难以理解。</p>
+<p>并查集用于存放图的节点，并判断节点是否直接或间接相连。</p>
+<p>比如 <strong>1-2</strong>、<strong>2-3</strong> 被添加到 <code>uf</code>，当 <strong>1-3</strong> 被尝试添加到 <code>uf</code> 时，会被判断为 1 和 3 已通过 2 相连，因此不再处理。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">   [<span class="number">3</span>]</span><br><span class="line"> X    \ ✔</span><br><span class="line">[<span class="number">1</span>]---[<span class="number">2</span>]</span><br><span class="line">    ✔</span><br></pre></td></tr></table></figure>
+<p>在这里直接给出使用并查集可在判断路径是成环时，优化节点查找效率的结论（接近 O(E)），感兴趣的话可以自己探究一下。</p>
+<p>基本实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;WeightedEdge&gt; <span class="title">mstKruskal</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 省略环的判断，以下代码仅在连通图中有效。</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 把所有边添加到 edges。</span></span><br><span class="line">        List&lt;WeightedEdge&gt; edges = <span class="keyword">new</span> ArrayList&lt;&gt;(E);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(v)) &#123;</span><br><span class="line">                <span class="comment">// 不重复添加。</span></span><br><span class="line">                <span class="keyword">if</span> (v &lt; w) &#123;</span><br><span class="line">                    edges.add(<span class="keyword">new</span> WeightedEdge(v, w, getWeight(v, w)));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 按权值从小到大排序。</span></span><br><span class="line">        Collections.sort(edges);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用并查集判断每次取出的边是否与先前已取出的边形成环，不成环则收集。</span></span><br><span class="line">        </span><br><span class="line">        List&lt;WeightedEdge&gt; mst = <span class="keyword">new</span> ArrayList&lt;&gt;(V - <span class="number">1</span>);</span><br><span class="line">        UnionFind uf = <span class="keyword">new</span> UnionFind(V);</span><br><span class="line">        <span class="keyword">for</span> (WeightedEdge edge : edges) &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 比如 1-2 与 2-3 都已添加到 uf 中，则下次通过 uf 可判断 1 和 3 已相连，不需要再添加到 mst。</span></span><br><span class="line">            <span class="keyword">if</span> (uf.isConnected(edge.getV(), edge.getW())) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            mst.add(edge);</span><br><span class="line">            uf.union(edge.getV(), edge.getW());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mst;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实现细节：</p>
 <ul>
-<li><p>复杂性拖慢开发效率，增加维护成本，通常表现为：状态空间的膨胀，模块紧耦合，令入纠结的相互依赖关系，不一致的命名和术语，为了性能而采取的特殊处理，为解决某特定问题而引入的特殊框架等。</p>
+<li><p>使用一个数组 <code>edges</code> 记录所有的边，并按权值从小到大排列。</p>
 </li>
-<li><p>维护困难：导致预算超支和开发滞后。复杂的软件系统变更引入潜在错误的风险会显著加大，开发人员更加难以准确理解、评估或者更加容易忽略相关系统行为，包括背后的假设、潜在的后果、设计之外的模块交互等。</p>
+<li><p>初始化一个大小为 <code>V</code> 的并查集 <code>uf</code>，默认所有的边都不成环（表示为并查集中的点都不相连）。</p>
+</li>
+<li><p>遍历集合 <code>edges</code>，如果该边的两个顶点（<code>v</code> 和 <code>w</code>）在 <code>uf</code> 中没有相连，则添加到 <code>mst</code> 集合中，并在 <code>uf</code> 中连接 <code>v</code> 和 <code>w</code>。</p>
 </li>
 </ul>
-<h3 id="设计抽象"><a href="#设计抽象" class="headerlink" title="设计抽象"></a>设计抽象</h3><p>简化系统设计意味着消除意外方面的复杂性。最好手段之一是抽象：</p>
+<p>时间复杂度：O(E*log(E))</p>
+<h2 id="Prim-算法"><a href="#Prim-算法" class="headerlink" title="Prim 算法"></a>Prim 算法</h2><p>Prim 算法将图中的顶点分为两部分，其核心是不断操作更新切分：</p>
 <ul>
-<li><p>好的设计抽象可以隐藏大量的实现细节，并对外提供干净易懂的接口。</p>
+<li><p>从 1: V-1 开始，选取两个顶点（切分 from）、与其他点（切分 to）分别组成两个切分。</p>
 </li>
-<li><p>可用于各种不同的应用程序，复用远比多次重复实现更有效率。</p>
+<li><p>选取这两个切分的最短横切边，添加到 MST 集合，并把顶点更新到切分 from（由于切分更新，此时横切边可能发生改变）。</p>
 </li>
-<li><p>带来更高质量的软件。</p>
+<li><p>循环执行，直到切分 to 的所有节点都被转移到切分 from（不存在切分），即得到 MST。</p>
 </li>
 </ul>
-<p>质量过硬的抽象组件所带来的好处可使运行其上的所有应用轻松获益。</p>
-<h2 id="可演化性"><a href="#可演化性" class="headerlink" title="可演化性"></a>可演化性</h2><p>工程师能够轻松地对系统进行改进，并根据需求变化将其适配到非典型场景，也称为可延伸性、易修改性或可塑性。</p>
-<h3 id="应对需求变化"><a href="#应对需求变化" class="headerlink" title="应对需求变化"></a>应对需求变化</h3><p>适配新的外部环境、新的用例、业务优先级的变化、用户要求的新功能、新平台取代旧平台、法律或监管要求的变化、业务增长促使架构的演变等。</p>
-<h3 id="敏捷开发模式"><a href="#敏捷开发模式" class="headerlink" title="敏捷开发模式"></a>敏捷开发模式</h3><p>在组织流程方面敏捷开发模式为适应变化提供了很好的参考。其中很多技术工具和模式可帮助在频繁变化的环境中开发软件，例如测试驱动开发和重构（目前多数还只是针对小规模、本地模式环境，例如同一应用程序中的几个源代码文件）。</p>
-<h3 id="简单与抽象"><a href="#简单与抽象" class="headerlink" title="简单与抽象"></a>简单与抽象</h3><p>由于目标是可以轻松地修改数据系统，使其适应不断变化的需求，这和简单性与抽象性密切相关：简单易懂的系统更容易修改。 其中数据系统级的敏捷性即可演化性。</p>
+<p>先直接给出基本实现，再进一步分析实现的细节：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;WeightedEdge&gt; <span class="title">mstPrim</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 省略环的判断，以下代码仅在连通图中有效。</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 标记节点当前归属的切分。</span></span><br><span class="line">        <span class="keyword">boolean</span>[] visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[V];</span><br><span class="line">        visited[<span class="number">0</span>] = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用最小堆（堆顶元素必然是最短边），初始化添加顶点 0 的所有邻接边。</span></span><br><span class="line">        Queue&lt;WeightedEdge&gt; pq = <span class="keyword">new</span> PriorityQueue&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(<span class="number">0</span>)) &#123;</span><br><span class="line">            pq.add(<span class="keyword">new</span> WeightedEdge(<span class="number">0</span>, w, getWeight(<span class="number">0</span>, w)));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;WeightedEdge&gt; mst = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span> (!pq.isEmpty()) &#123;</span><br><span class="line">            <span class="comment">// 每轮循环取出最短边，如果边的两点已归属于 true 切分，表示该边非横切边，跳过。</span></span><br><span class="line">            WeightedEdge minEdge = pq.remove();</span><br><span class="line">            <span class="keyword">if</span> (visited[minEdge.getV()] &amp;&amp; visited[minEdge.getW()]) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 收集最短横切边，并把该边当前归属于 false 切分的点划归 true。</span></span><br><span class="line">            mst.add(minEdge);</span><br><span class="line">            <span class="keyword">int</span> newV = visited[minEdge.getV()] ? minEdge.getW() : minEdge.getV();</span><br><span class="line">            visited[newV] = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 遍历新加入的 true 切分的点的邻接顶点，把未访问（即归属于 false 切分）的顶点添加到最小堆。</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(newV)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!visited[w]) &#123;</span><br><span class="line">                    pq.add(<span class="keyword">new</span> WeightedEdge(newV, w, getWeight(newV, w)));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mst;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与其他 DFS、BFS 算法的实现类似，Prim 算法的实现也是基于 <code>boolean[] visited</code> 数组，只是数组的值有了另一层面的意义：用于表示节点划归到不同的切分。对于初始节点 0，划归到 <code>true</code> 切分，其余节点为 <code>false</code> 切分。</p>
+<p>使用最小堆存放节点 0 的所有邻边，判断条件为权值的大小，使得随时可以 O(log(E)) 的代价取出最短边。</p>
+<p>循环执行以下步骤直到最小堆为空，其间使用 <code>mst</code> 集合收集最小生成树的边，最终返回即可：</p>
+<ul>
+<li><p>遍历最小堆，每轮循环取出堆顶的最短边，如果该边的两点已归属于 <code>true</code> 切分，表示该边非横切边，因此跳过。</p>
+</li>
+<li><p>否则收集最短边到 <code>mst</code> 集，并把改横切边上，当前归属于 <code>false</code> 切分的端点 v 划归到 <code>true</code> 切分。</p>
+</li>
+<li><p>遍历新加入 <code>true</code> 的节点 <code>v</code> 的所有邻接节点 <code>w</code>，把其中未访问（即还属于 <code>false</code> 切分）的节点添加到最小堆。</p>
+</li>
+</ul>
+<p>时间复杂度：由于使用了最小堆，可快速找到最短横切边，时间复杂度从 O(V*E) 优化到 O(E*log(E))，如改用索引堆（Index Heap）则可以进一步优化到 O(E*log(V))。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了最小生成树问题两种最经典的算法，实际上除此之外还有 Fredman-Tarjan 算法（Time: O(E+V*log(V))）、Chazelle 算法（Time: O(E*)），限于篇幅就不再一一介绍了，感兴趣的话可以自行查阅相关资料。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><p><a href="https://en.wikipedia.org/wiki/Kruskal&#39;s_algorithm" target="_blank" rel="noopener">Kruskal’s algorithm - Wikipedia</a></p>
+</li>
+<li><p><a href="https://en.wikipedia.org/wiki/Prim&#39;s_algorithm" target="_blank" rel="noopener">Prim’s algorithm - Wikipedia</a></p>
+</li>
+</ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -591,17 +506,12 @@ height:100vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2020/12/04/DDIA_note-2/" title= "《DDIA》阅读笔记（二）：数据模型与查询语言">
-                    <div class="nextTitle">《DDIA》阅读笔记（二）：数据模型与查询语言</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2020/10/08/Maven_external_dependencies_management/" title= "Maven 打包依赖外置">
-                    <div class="prevTitle">Maven 打包依赖外置</div>
+                <a href= "/2021/07/08/Algorithm_shortest-path-problem/" title= "最短路径问题相关算法">
+                    <div class="prevTitle">最短路径问题相关算法</div>
                 </a>
             
         </li>
@@ -739,7 +649,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#可靠性（Reliability）"><span class="toc-number">1.</span> <span class="toc-text">可靠性（Reliability）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#硬件故障"><span class="toc-number">1.1.</span> <span class="toc-text">硬件故障</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#软件故障"><span class="toc-number">1.2.</span> <span class="toc-text">软件故障</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#人为失误"><span class="toc-number">1.3.</span> <span class="toc-text">人为失误</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#可扩展性（Scalability）"><span class="toc-number">2.</span> <span class="toc-text">可扩展性（Scalability）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#描述负载"><span class="toc-number">2.1.</span> <span class="toc-text">描述负载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#描述性能"><span class="toc-number">2.2.</span> <span class="toc-text">描述性能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统扩展"><span class="toc-number">2.3.</span> <span class="toc-text">系统扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#自动与手动"><span class="toc-number">2.3.1.</span> <span class="toc-text">自动与手动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#水平与垂直"><span class="toc-number">2.3.2.</span> <span class="toc-text">水平与垂直</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#有状态与无状态"><span class="toc-number">2.3.3.</span> <span class="toc-text">有状态与无状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#可维护性（Maintainability）"><span class="toc-number">3.</span> <span class="toc-text">可维护性（Maintainability）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#可运维性"><span class="toc-number">3.1.</span> <span class="toc-text">可运维性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单性"><span class="toc-number">3.2.</span> <span class="toc-text">简单性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#复杂系统"><span class="toc-number">3.2.1.</span> <span class="toc-text">复杂系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设计抽象"><span class="toc-number">3.2.2.</span> <span class="toc-text">设计抽象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可演化性"><span class="toc-number">3.3.</span> <span class="toc-text">可演化性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#应对需求变化"><span class="toc-number">3.3.1.</span> <span class="toc-text">应对需求变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#敏捷开发模式"><span class="toc-number">3.3.2.</span> <span class="toc-text">敏捷开发模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单与抽象"><span class="toc-number">3.3.3.</span> <span class="toc-text">简单与抽象</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#最小生成树问题相关算法"><span class="toc-number">1.</span> <span class="toc-text">最小生成树问题相关算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#连通性判断"><span class="toc-number">1.1.</span> <span class="toc-text">连通性判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#切分定理（Bipartite）"><span class="toc-number">1.2.</span> <span class="toc-text">切分定理（Bipartite）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#二分图"><span class="toc-number">1.2.1.</span> <span class="toc-text">二分图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并查集（Union-Find）"><span class="toc-number">1.3.</span> <span class="toc-text">并查集（Union Find）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kruskal-算法"><span class="toc-number">1.4.</span> <span class="toc-text">Kruskal 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prim-算法"><span class="toc-number">1.5.</span> <span class="toc-text">Prim 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>

@@ -408,7 +408,8 @@ height:100vh;
 <p>写于肺炎疫情爆发、宅在家 10 天后的二月第一天，顺便纪念第三个被炸的微博号，Fuck you Sina Weibo!</p>
 </blockquote>
 <h1 id="Young-GC：GC-后对象进入-Survivor"><a href="#Young-GC：GC-后对象进入-Survivor" class="headerlink" title="Young GC：GC 后对象进入 Survivor"></a>Young GC：GC 后对象进入 Survivor</h1><p>当为对象分配内存时 Eden 不足，触发 Young GC，清理垃圾并把存活对象迁入 To Survivor。</p>
-<h2 id="JVM-参数"><a href="#JVM-参数" class="headerlink" title="JVM 参数"></a>JVM 参数</h2><table>
+<h2 id="JVM-参数"><a href="#JVM-参数" class="headerlink" title="JVM 参数"></a>JVM 参数</h2><div class="table-container">
+<table>
 <thead>
 <tr>
 <th>序号</th>
@@ -416,7 +417,8 @@ height:100vh;
 <th>备注</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1</td>
 <td>-XX:NewSize=5242880<br />-XX:MaxNewSize=5242880</td>
 <td>新生代初始值和最大值：5MB</td>
@@ -451,10 +453,11 @@ height:100vh;
 <td>-XX:+PrintGCDetails<br />-XX:+PrintGCTimeStamps<br />-Xloggc:gc.log</td>
 <td>输出日志</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h2 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h2><p>分配三个 byte 数组，每个都是 1024 * 1024 byte == 1MB，再分配一个 2MB 的数组</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> Integer MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 分配三个数组，每个都是 1MB，并置为 null</span></span><br><span class="line">        <span class="keyword">byte</span>[] array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[MB];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[MB];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[MB];</span><br><span class="line">        array1 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 此时前三个已经变成垃圾，Eden 剩余 4 - 3 == 1MB，无法存放 2MB 对象，触发 Young GC</span></span><br><span class="line">        <span class="keyword">byte</span>[] array2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * MB];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>先分配三个数组（array1），每个都是 1MB，并置为 null（在下次 GC 时会被清理）。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/ygc-log-01.png?x-oss-process=image/resize,p_50" alt=""></p>
 <p>当为 array2 分配 2MB 内存时，Eden 区不足，先触发 Young GC：</p>
@@ -463,17 +466,13 @@ height:100vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/ygc-log-03.png?x-oss-process=image/resize,p_50" alt="image-20200202120520819"></p>
 <p>运行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar -XX:NewSize=5242880 -XX:MaxNewSize=5242880 -XX:InitialHeapSize=10485760 -XX:MaxHeapSize=10485760 -XX:SurvivorRatio=8 -XX:PretenureSizeThreshold=10485760 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log Demo.jar</span><br></pre></td></tr></table></figure>
-
 <h2 id="日志解析"><a href="#日志解析" class="headerlink" title="日志解析"></a>日志解析</h2><p>输出日志如下：</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Java HotSpot(TM) <span class="number">64</span>-Bit Server VM (<span class="number">25.181</span>-b13) <span class="keyword">for</span> windows-amd64 JRE (<span class="number">1.8</span><span class="number">.0</span>_181-b13), built on Jul  <span class="number">7</span> <span class="number">2018</span> <span class="number">04</span>:<span class="number">01</span>:<span class="number">33</span> by <span class="string">"java_re"</span> with MS VC++ <span class="number">10.0</span> (VS2010)</span><br><span class="line">Memory: <span class="number">4</span>k page, physical <span class="number">16658532</span>k(<span class="number">7782036</span>k free), swap <span class="number">17707108</span>k(<span class="number">3801772</span>k free)</span><br><span class="line">CommandLine flags: -XX:InitialHeapSize=<span class="number">10485760</span> -XX:MaxHeapSize=<span class="number">10485760</span> -XX:MaxNewSize=<span class="number">5242880</span> -XX:NewSize=<span class="number">5242880</span> -XX:OldPLABSize=<span class="number">16</span> -XX:PretenureSizeThreshold=<span class="number">10485760</span> -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=<span class="number">8</span> -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:-UseLargePagesIndividualAllocation -XX:+UseParNewGC </span><br><span class="line"><span class="number">0.113</span>: [GC (Allocation Failure) <span class="number">0.114</span>: [ParNew: <span class="number">3892</span>K-&gt;<span class="number">440</span>K(<span class="number">4608</span>K), <span class="number">0.0011414</span> secs] <span class="number">3892</span>K-&gt;<span class="number">1466</span>K(<span class="number">9728</span>K), <span class="number">0.0018413</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">Heap</span><br><span class="line"> par new generation   total <span class="number">4608</span>K, used <span class="number">3674</span>K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffb00000</span>, <span class="number">0x00000000ffb00000</span>)</span><br><span class="line">  eden space <span class="number">4096</span>K,  <span class="number">78</span>% used [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ff928650</span>, <span class="number">0x00000000ffa00000</span>)</span><br><span class="line">  <span class="keyword">from</span> space <span class="number">512</span>K,  <span class="number">86</span>% used [<span class="number">0x00000000ffa80000</span>, <span class="number">0x00000000ffaee310</span>, <span class="number">0x00000000ffb00000</span>)</span><br><span class="line">  to   space <span class="number">512</span>K,   <span class="number">0</span>% used [<span class="number">0x00000000ffa00000</span>, <span class="number">0x00000000ffa00000</span>, <span class="number">0x00000000ffa80000</span>)</span><br><span class="line"> concurrent mark-sweep generation total <span class="number">5120</span>K, used <span class="number">1026</span>K [<span class="number">0x00000000ffb00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line"> Metaspace       used <span class="number">3322</span>K, capacity <span class="number">4496</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">  <span class="keyword">class</span> <span class="symbol">space</span>    <span class="symbol">used</span> <span class="symbol">365K, <span class="symbol">capacity</span></span> <span class="symbol">388K, <span class="symbol">committed</span></span> <span class="symbol">512K, <span class="symbol">reserved</span></span> <span class="symbol">1048576K</span></span><br></pre></td></tr></table></figure>
-
 <p>以上日志分为三个部分：</p>
 <p>第一部分为 JVM 的基本信息，包括 JVM 版本，JRE 版本，发行时间，运行的平台、页大小、物理内存、交换空间的最大值和空闲值等。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Java HotSpot(TM) <span class="number">64</span>-Bit Server VM (<span class="number">25.181</span>-b13) <span class="keyword">for</span> windows-amd64 JRE (<span class="number">1.8</span><span class="number">.0</span>_181-b13), built on Jul  <span class="number">7</span> <span class="number">2018</span> <span class="number">04</span>:<span class="number">01</span>:<span class="number">33</span> by <span class="string">"java_re"</span> with MS VC++ <span class="number">10.0</span> (VS2010)</span><br><span class="line">Memory: <span class="number">4</span>k page, physical <span class="number">16658532</span>k(<span class="number">7782036</span>k free), swap <span class="number">17707108</span>k(<span class="number">3801772</span>k free)</span><br></pre></td></tr></table></figure>
-
 <p>第二部分为 JVM 的配置参数，在上一节已有说明。</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CommandLine <span class="string">flags:</span> -<span class="string">XX:</span>InitialHeapSize=<span class="number">10485760</span> -<span class="string">XX:</span>MaxHeapSize=<span class="number">10485760</span> -<span class="string">XX:</span>MaxNewSize=<span class="number">5242880</span> -<span class="string">XX:</span>NewSize=<span class="number">5242880</span> -<span class="string">XX:</span>OldPLABSize=<span class="number">16</span> -<span class="string">XX:</span>PretenureSizeThreshold=<span class="number">10485760</span> -<span class="string">XX:</span>+PrintGC -<span class="string">XX:</span>+PrintGCDetails -<span class="string">XX:</span>+PrintGCTimeStamps -<span class="string">XX:</span>SurvivorRatio=<span class="number">8</span> -<span class="string">XX:</span>+UseCompressedClassPointers -<span class="string">XX:</span>+UseCompressedOops -<span class="string">XX:</span>+UseConcMarkSweepGC -<span class="string">XX:</span>-UseLargePagesIndividualAllocation -<span class="string">XX:</span>+UseParNewGC</span><br></pre></td></tr></table></figure>
-
 <p>第三部分提示堆内存分配失败（Allocation Failure）、触发 GC：</p>
 <ul>
 <li><p>系统运行了 0.113s 后 Eden 分配失败，触发 Young GC，需要使用 ParNew 收集器回收新生代代；</p>
@@ -489,7 +488,6 @@ height:100vh;
 </ul>
 <p>需要注意的是代码中分配 3MB的数组（即 3072KB），实际占用 3892KB，因为除了存储数组还附带其他元信息，以及一些“其他对象”（将会被迁到 To Survivor）。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0.113</span>: [GC (Allocation Failure) <span class="number">0.114</span>: [ParNew: <span class="number">3892</span>K-&gt;<span class="number">440</span>K(<span class="number">4608</span>K), <span class="number">0.0011414</span> secs] <span class="number">3892</span>K-&gt;<span class="number">1466</span>K(<span class="number">9728</span>K), <span class="number">0.0018413</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs]</span><br></pre></td></tr></table></figure>
-
 <p>第四部分是 JVM 退出前堆具体使用情况：</p>
 <ul>
 <li><p>新生代代共 4608KB 可用内存，使用了 3674 KB；</p>
@@ -502,9 +500,9 @@ height:100vh;
 </li>
 </ul>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Heap</span><br><span class="line"> par new generation   total <span class="number">4608</span>K, used <span class="number">3674</span>K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffb00000</span>, <span class="number">0x00000000ffb00000</span>)</span><br><span class="line">  eden space <span class="number">4096</span>K,  <span class="number">78</span>% used [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ff928650</span>, <span class="number">0x00000000ffa00000</span>)</span><br><span class="line">  <span class="keyword">from</span> space <span class="number">512</span>K,  <span class="number">86</span>% used [<span class="number">0x00000000ffa80000</span>, <span class="number">0x00000000ffaee310</span>, <span class="number">0x00000000ffb00000</span>)</span><br><span class="line">  to   space <span class="number">512</span>K,   <span class="number">0</span>% used [<span class="number">0x00000000ffa00000</span>, <span class="number">0x00000000ffa00000</span>, <span class="number">0x00000000ffa80000</span>)</span><br><span class="line"> concurrent mark-sweep generation total <span class="number">5120</span>K, used <span class="number">1026</span>K [<span class="number">0x00000000ffb00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line"> Metaspace       used <span class="number">3322</span>K, capacity <span class="number">4496</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">  <span class="keyword">class</span> <span class="symbol">space</span>    <span class="symbol">used</span> <span class="symbol">365K, <span class="symbol">capacity</span></span> <span class="symbol">388K, <span class="symbol">committed</span></span> <span class="symbol">512K, <span class="symbol">reserved</span></span> <span class="symbol">1048576K</span></span><br></pre></td></tr></table></figure>
-
 <h1 id="Young-GC：GC-后进入老年代"><a href="#Young-GC：GC-后进入老年代" class="headerlink" title="Young GC：GC 后进入老年代"></a>Young GC：GC 后进入老年代</h1><p>触发 Young GC 清理垃圾，对于存活时间足够长的对象迁入老年代。</p>
 <h2 id="JVM-参数-1"><a href="#JVM-参数-1" class="headerlink" title="JVM 参数"></a>JVM 参数</h2><p>参考上面章节，其中有以下改动：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -513,7 +511,8 @@ height:100vh;
 <th>备注</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1</td>
 <td>-XX:NewSize=10485760<br />-XX:MaxNewSize=10485760</td>
 <td>新生代初始值和最大值：10MB</td>
@@ -533,11 +532,12 @@ height:100vh;
 <td>-XX:MaxTenuringThreshold=15</td>
 <td>进入老年代的对象年龄阈值：15</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>因此 Eden 改为 8MB，Survivor 各 1MB，老年代 10MB，堆共 20MB。</p>
 <h2 id="测试代码-1"><a href="#测试代码-1" class="headerlink" title="测试代码 1"></a>测试代码 1</h2><p>分配三个 byte 数组，每个都是 2MB，再分配一个 128KB 的数组、一个 2MB 的数组。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 分配三个数组，每个都是 2MB</span></span><br><span class="line">        <span class="keyword">byte</span>[] array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">128</span> * <span class="number">1024</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 由于以上代码已占用 Eden 区 6.125MB，不足与再为 array3 分配内存，因此触发 GC</span></span><br><span class="line">        <span class="keyword">byte</span>[] array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>先分配三个数组（array1），每个都是 2MB，并置为 null（在下次 GC 时会被清理），再分配一个 128KB 的数组（array2）。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/ygc-log-04.png?x-oss-process=image/resize,p_50" alt="image-20200202122156522"></p>
 <p>当为 array3 分配 2MB 内存时，Eden 区不足，先触发 Young GC：</p>
@@ -546,10 +546,8 @@ height:100vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/ygc-log-06.png?x-oss-process=image/resize,p_50" alt="image-20200202122707703"></p>
 <p>运行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar -XX:NewSize=10485760 -XX:MaxNewSize=10485760 -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:SurvivorRatio=8 -XX:PretenureSizeThreshold=10485760 -XX:MaxTenuringThreshold=15 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log Demo.jar</span><br></pre></td></tr></table></figure>
-
 <h2 id="日志解析-1"><a href="#日志解析-1" class="headerlink" title="日志解析 1"></a>日志解析 1</h2><p>输出日志如下（省略部分）：</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0.387</span>: [GC (Allocation Failure) <span class="number">0.387</span>: [ParNew: <span class="number">7690</span>K-&gt;<span class="number">537</span>K(<span class="number">9216</span>K), <span class="number">0.0013235</span> secs] <span class="number">7690</span>K-&gt;<span class="number">537</span>K(<span class="number">19456</span>K), <span class="number">0.0015702</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">Heap</span><br><span class="line"> par new generation   total <span class="number">9216</span>K, used <span class="number">2749</span>K [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ff600000</span>)</span><br><span class="line">  eden space <span class="number">8192</span>K,  <span class="number">27</span>% used [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000fee290e0</span>, <span class="number">0x00000000ff400000</span>)</span><br><span class="line">  <span class="keyword">from</span> space <span class="number">1024</span>K,  <span class="number">52</span>% used [<span class="number">0x00000000ff500000</span>, <span class="number">0x00000000ff586528</span>, <span class="number">0x00000000ff600000</span>)</span><br><span class="line">  to   space <span class="number">1024</span>K,   <span class="number">0</span>% used [<span class="number">0x00000000ff400000</span>, <span class="number">0x00000000ff400000</span>, <span class="number">0x00000000ff500000</span>)</span><br><span class="line"> concurrent mark-sweep generation total <span class="number">10240</span>K, used <span class="number">0</span>K [<span class="number">0x00000000ff600000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line"> Metaspace       used <span class="number">3000</span>K, capacity <span class="number">4496</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">  <span class="keyword">class</span> <span class="symbol">space</span>    <span class="symbol">used</span> <span class="symbol">333K, <span class="symbol">capacity</span></span> <span class="symbol">388K, <span class="symbol">committed</span></span> <span class="symbol">512K, <span class="symbol">reserved</span></span> <span class="symbol">1048576K</span></span><br></pre></td></tr></table></figure>
-
 <p>先从代码的角度分析：</p>
 <ul>
 <li><p>array1 的创建与三次赋值，在 Eden 区创建了三个 2MB 的数组，最后设置为 null，因此 Eden 此时占用 6MB、空闲 2MB；</p>
@@ -561,16 +559,12 @@ height:100vh;
 </ul>
 <p>在 GC 之前新生代代占用 7690KB，即 array1 + array2 + “其他对象”，清理后剩余 537KB（即新生代代最初创建的“其他对象”，再加上 128KB 的 array2）。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ParNew: <span class="number">7690</span>K-&gt;<span class="number">537</span>K(<span class="number">9216</span>K), <span class="number">0.0013235</span> secs]</span><br></pre></td></tr></table></figure>
-
 <p>此时剩余 From Survivor 占用 52%，经历一次 Young GC 后存活的 array2 和“其他对象”，此时他们 1 岁。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> space <span class="number">1024</span>K,  <span class="number">52</span>% used [<span class="number">0x00000000ff500000</span>, <span class="number">0x00000000ff586528</span>, <span class="number">0x00000000ff600000</span>)</span><br></pre></td></tr></table></figure>
-
 <p>此时 Eden 区占用 27% 约 2MB，即经历 Young GC 后分配的 array3。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eden space <span class="number">8192</span>K,  <span class="number">27</span>% used [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000fee290e0</span>, <span class="number">0x00000000ff400000</span>)</span><br></pre></td></tr></table></figure>
-
 <h2 id="测试代码-2"><a href="#测试代码-2" class="headerlink" title="测试代码 2"></a>测试代码 2</h2><p>补充代码：在上述基础上，再继续分配内存，再让 array3 指向 null；当为 array4 分配 2MB 内存时将 Eden 会不足，触发 GC。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">byte</span>[] array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">128</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">        array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">128</span> * <span class="number">1024</span>];</span><br><span class="line">        array3 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 此时分配一个 2MB 的数组失败，触发第二次 Young GC</span></span><br><span class="line">        <span class="keyword">byte</span>[] array4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>对于为 array3 继续分配 2MB 数组与前面图示相同，此处不再赘述。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/ygc-log-07.png?x-oss-process=image/resize,p_50" alt="image-20200202124135125"></p>
 <p>创建 array4 前发现空间不足，触发 Young GC：由于 array2 和“其他对象”都“太老了”，被迁入老年代：</p>
@@ -579,20 +573,15 @@ height:100vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/ygc-log-08.png?x-oss-process=image/resize,p_50" alt="image-20200202125055198"></p>
 <h2 id="日志解析-2"><a href="#日志解析-2" class="headerlink" title="日志解析 2"></a>日志解析 2</h2><p>输出日志如下（省略部分）：</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0.118</span>: [GC (Allocation Failure) <span class="number">0.118</span>: [ParNew: <span class="number">8185</span>K-&gt;<span class="number">606</span>K(<span class="number">9216</span>K), <span class="number">0.0005936</span> secs] <span class="number">8185</span>K-&gt;<span class="number">606</span>K(<span class="number">19456</span>K), <span class="number">0.0007441</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line"><span class="number">0.119</span>: [GC (Allocation Failure) <span class="number">0.119</span>: [ParNew: <span class="number">6907</span>K-&gt;<span class="number">0</span>K(<span class="number">9216</span>K), <span class="number">0.0021618</span> secs] <span class="number">6907</span>K-&gt;<span class="number">570</span>K(<span class="number">19456</span>K), <span class="number">0.0022048</span> secs] [Times: user=<span class="number">0.03</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">Heap</span><br><span class="line"> par new generation   total <span class="number">9216</span>K, used <span class="number">2130</span>K [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ff600000</span>)</span><br><span class="line">  eden space <span class="number">8192</span>K,  <span class="number">26</span>% used [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000fee14930</span>, <span class="number">0x00000000ff400000</span>)</span><br><span class="line">  <span class="keyword">from</span> space <span class="number">1024</span>K,   <span class="number">0</span>% used [<span class="number">0x00000000ff400000</span>, <span class="number">0x00000000ff400000</span>, <span class="number">0x00000000ff500000</span>)</span><br><span class="line">  to   space <span class="number">1024</span>K,   <span class="number">0</span>% used [<span class="number">0x00000000ff500000</span>, <span class="number">0x00000000ff500000</span>, <span class="number">0x00000000ff600000</span>)</span><br><span class="line"> concurrent mark-sweep generation total <span class="number">10240</span>K, used <span class="number">570</span>K [<span class="number">0x00000000ff600000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line"> Metaspace       used <span class="number">3344</span>K, capacity <span class="number">4496</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">  <span class="keyword">class</span> <span class="symbol">space</span>    <span class="symbol">used</span> <span class="symbol">369K, <span class="symbol">capacity</span></span> <span class="symbol">388K, <span class="symbol">committed</span></span> <span class="symbol">512K, <span class="symbol">reserved</span></span> <span class="symbol">1048576K</span></span><br></pre></td></tr></table></figure>
-
 <p>第一次 GC 分析同上，重点看第二次 GC 日志：经过一次 Young GC 后，Eden 区被清理完。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ParNew: <span class="number">6907</span>K-&gt;<span class="number">0</span>K(<span class="number">9216</span>K), <span class="number">0.0021618</span> secs]</span><br></pre></td></tr></table></figure>
-
 <p>由于年龄 1 + 年龄 2 +…+ 年龄 n 的对象总大小超过了 Survivor 区的 50%，年龄 n 以上就会进入老年代</p>
 <p>此处总大小超过 50% 的年龄 1 对象（array2、“其他对象”）会直接进入老年代。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">concurrent mark-sweep generation total <span class="number">10240</span>K, used <span class="number">570</span>K [<span class="number">0x00000000ff600000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br></pre></td></tr></table></figure>
-
 <p>由于 GC 过后对象被迁入老年代，所以两个 Survivor 都是空的：</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> space <span class="number">1024</span>K,   <span class="number">0</span>% used [<span class="number">0x00000000ff400000</span>, <span class="number">0x00000000ff400000</span>, <span class="number">0x00000000ff500000</span>)</span><br><span class="line">to   space <span class="number">1024</span>K,   <span class="number">0</span>% used [<span class="number">0x00000000ff500000</span>, <span class="number">0x00000000ff500000</span>, <span class="number">0x00000000ff600000</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="Full-GC：GC-后对象进入老年代"><a href="#Full-GC：GC-后对象进入老年代" class="headerlink" title="Full GC：GC 后对象进入老年代"></a>Full GC：GC 后对象进入老年代</h1><h2 id="JVM-参数-2"><a href="#JVM-参数-2" class="headerlink" title="JVM 参数"></a>JVM 参数</h2><table>
+<h1 id="Full-GC：GC-后对象进入老年代"><a href="#Full-GC：GC-后对象进入老年代" class="headerlink" title="Full GC：GC 后对象进入老年代"></a>Full GC：GC 后对象进入老年代</h1><h2 id="JVM-参数-2"><a href="#JVM-参数-2" class="headerlink" title="JVM 参数"></a>JVM 参数</h2><div class="table-container">
+<table>
 <thead>
 <tr>
 <th>序号</th>
@@ -600,7 +589,8 @@ height:100vh;
 <th>备注</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1</td>
 <td>-XX:NewSize=10485760<br />-XX:MaxNewSize=10485760</td>
 <td>新生代初始值和最大值：10MB</td>
@@ -640,11 +630,12 @@ height:100vh;
 <td>-XX:+PrintGCDetails<br />-XX:+PrintGCTimeStamps<br />-Xloggc:gc.log</td>
 <td>输出日志</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>主要是降低进入老年代的对象内存阈值，使超过 3MB 的对象直接进入老年代。</p>
 <h2 id="测试代码-1"><a href="#测试代码-1" class="headerlink" title="测试代码"></a>测试代码</h2><p>创建多个数组（其中 array1 为 4MB，被认为是大对象）：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] array4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] array5 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">128</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array6 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>创建 array1，由于占用内存大于阈值，直接分配到老年代：</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/fgc-log-01.png?x-oss-process=image/resize,p_50" alt="image-20200202125424292"></p>
 <p>（注意此处 array1 已经置为 null，忘记改成虚线了）创建 array2 ~ array5，直接在 Eden 区分配内存：</p>
@@ -662,15 +653,12 @@ height:100vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/blog/fgc-log-04.png?x-oss-process=image/resize,p_50" alt="image-20200202131229114"></p>
 <p>运行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar -XX:NewSize=10485760 -XX:MaxNewSize=10485760 -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=3145728 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log Demo.jar</span><br></pre></td></tr></table></figure>
-
 <h2 id="日志解析-1"><a href="#日志解析-1" class="headerlink" title="日志解析"></a>日志解析</h2><p>输出日志如下（省略部分）：</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0.114</span>: [GC (Allocation Failure) <span class="number">0.114</span>: [ParNew (promotion failed): <span class="number">8185</span>K-&gt;<span class="number">8752</span>K(<span class="number">9216</span>K), <span class="number">0.0037134</span> secs]<span class="number">0.118</span>: [CMS: <span class="number">8194</span>K-&gt;<span class="number">6680</span>K(<span class="number">10240</span>K), <span class="number">0.0030624</span> secs] <span class="number">12281</span>K-&gt;<span class="number">6680</span>K(<span class="number">19456</span>K), [Metaspace: <span class="number">3323</span>K-&gt;<span class="number">3323</span>K(<span class="number">1056768</span>K)], <span class="number">0.0071795</span> secs] [Times: user=<span class="number">0.01</span> sys=<span class="number">0.00</span>, real=<span class="number">0.01</span> secs] </span><br><span class="line">Heap</span><br><span class="line"> par new generation   total <span class="number">9216</span>K, used <span class="number">2213</span>K [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ff600000</span>)</span><br><span class="line">  eden space <span class="number">8192</span>K,  <span class="number">27</span>% used [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000fee297a8</span>, <span class="number">0x00000000ff400000</span>)</span><br><span class="line">  <span class="keyword">from</span> space <span class="number">1024</span>K,   <span class="number">0</span>% used [<span class="number">0x00000000ff500000</span>, <span class="number">0x00000000ff500000</span>, <span class="number">0x00000000ff600000</span>)</span><br><span class="line">  to   space <span class="number">1024</span>K,   <span class="number">0</span>% used [<span class="number">0x00000000ff400000</span>, <span class="number">0x00000000ff400000</span>, <span class="number">0x00000000ff500000</span>)</span><br><span class="line"> concurrent mark-sweep generation total <span class="number">10240</span>K, used <span class="number">6680</span>K [<span class="number">0x00000000ff600000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line"> Metaspace       used <span class="number">3344</span>K, capacity <span class="number">4496</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">  <span class="keyword">class</span> <span class="symbol">space</span>    <span class="symbol">used</span> <span class="symbol">369K, <span class="symbol">capacity</span></span> <span class="symbol">388K, <span class="symbol">committed</span></span> <span class="symbol">512K, <span class="symbol">reserved</span></span> <span class="symbol">1048576K</span></span><br></pre></td></tr></table></figure>
-
 <p>首先为 array1 分配了 4MB 的数组，被认为是大对象、直接进入老年代（剩余 10 - 4 == 6MB），随后不再引用；</p>
 <p>再连续分配 4 个数组 array2 ~ array5 到 Eden 区，Eden 区占用 6.125MB、剩余 1.875MB；由于剩余空间不足以为 array6 分配 2MB 内存，此时触发 Young GC。</p>
 <p>可见 GC 后 Eden 占用不降反升，因为几个对象全部都被引用，无法回收。</p>
 <figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="name">ParNew</span> (<span class="name">promotion</span> failed): <span class="number">8185</span>K-&gt;8752K(<span class="name">9216K</span>), <span class="number">0.0037134</span> secs]</span><br></pre></td></tr></table></figure>
-
 <p>此时无法直接把这些对象（3 个 2MB、1 个 128KB）迁入老年代（剩余 6MB），因此触发 Full GC：</p>
 <ul>
 <li><p>先往老年代迁入 2 个 2MB 数组，剩余空间不足；</p>
@@ -681,15 +669,10 @@ height:100vh;
 </li>
 </ul>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[CMS: <span class="number">8194</span>K-&gt;<span class="number">6680</span>K(<span class="number">10240</span>K), <span class="number">0.0030624</span> secs] <span class="number">12281</span>K-&gt;<span class="number">6680</span>K(<span class="number">19456</span>K)</span><br></pre></td></tr></table></figure>
-
 <p>并触发一次元空间的 GC：</p>
 <figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="name">Metaspace:</span> <span class="number">3323</span>K-&gt;3323K(<span class="name">1056768K</span>)]</span><br></pre></td></tr></table></figure>
-
 <p>由于 Full GC 后新生代代对象已迁入老年代，最后在 Eden 为 array6 分配 2MB。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eden space <span class="number">8192</span>K,  <span class="number">27</span>% used [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000fee297a8</span>, <span class="number">0x00000000ff400000</span>)</span><br></pre></td></tr></table></figure>
-
-
-
 <p>以上。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
@@ -1284,9 +1267,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 60
+        Total : 61
         </div>
         <!-- search  -->
         
@@ -1299,6 +1289,11 @@ top:100vh;
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题相关算法</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1632,17 +1627,17 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
@@ -1664,9 +1659,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     

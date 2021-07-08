@@ -355,30 +355,21 @@
 <p>Go Modules 解决了利用 <code>GOPATH</code> 管理依赖的以上问题，并且由于是官方指定工具，更推荐使用。</p>
 <h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><h3 id="创建并发布-Module"><a href="#创建并发布-Module" class="headerlink" title="创建并发布 Module"></a>创建并发布 Module</h3><p>Module 目录：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hello/</span><br><span class="line">    hello.<span class="keyword">go</span></span><br><span class="line">    hello_test.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
-
 <p><code>hello.go</code></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Hello</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Hello, world."</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><code>hello_test.go</code></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"testing"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestHello</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">    want := <span class="string">"Hello, world."</span></span><br><span class="line">    <span class="keyword">if</span> got := Hello(); got != want &#123;</span><br><span class="line">        t.Errorf(<span class="string">"Hello() = %q, want %q"</span>, got, want)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>测试：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go test -v</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">=== RUN   TestHello</span></span><br><span class="line"><span class="bullet">--- </span>PASS: TestHello (0.00s)</span><br><span class="line">PASS</span><br><span class="line">ok      <span class="emphasis">_/C_</span>/Users/yipwi/Desktop/hello  0.071s</span><br></pre></td></tr></table></figure>
-
 <p>在 Module 目录下执行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go mod init github.com/yipwinghong/hello</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span>: creating <span class="keyword">new</span> <span class="keyword">go</span>.<span class="keyword">mod</span>: module github.<span class="keyword">com</span>/yipwinghong/hello</span><br><span class="line"><span class="keyword">go</span>: <span class="keyword">to</span> <span class="built_in">add</span> module requirements <span class="built_in">and</span> sum<span class="variable">s:</span></span><br><span class="line">        <span class="keyword">go</span> <span class="keyword">mod</span> tidy</span><br></pre></td></tr></table></figure>
-
 <p>在 Module 目录下生成了包含 module 声明和 go 版本信息的 <code>go.mod</code> 文件：</p>
 <figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hello/</span><br><span class="line">    hello.<span class="built_in">go</span></span><br><span class="line">    hello_test.<span class="built_in">go</span></span><br><span class="line">    <span class="built_in">go</span>.<span class="built_in">mod</span></span><br></pre></td></tr></table></figure>
-
 <p>如果将 Module 推送到 GitHub 上对应的 repository，则可以使用如下命令下载 <code>hello_world</code>。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">go get github.com/yipwinghong/hello_world</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定版本</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> go get github.com/yipwinghong/hello_world@vX.X.X</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="发布-Module"><a href="#发布-Module" class="headerlink" title="发布 Module"></a>发布 Module</h3><p>Module 支持 [语义化版本](<a href="https://semver.org/" target="_blank" rel="noopener">Semantic Versioning 2.0.0 | Semantic Versioning (semver.org)</a>)：x.x.x，其中三位数字分别表示：</p>
+<h3 id="发布-Module"><a href="#发布-Module" class="headerlink" title="发布 Module"></a>发布 Module</h3><p>Module 支持 <a href="[Semantic Versioning 2.0.0 | Semantic Versioning (semver.org">语义化版本</a>](<a href="https://semver.org/))：x.x.x，其中三位数字分别表示：" target="_blank" rel="noopener">https://semver.org/))：x.x.x，其中三位数字分别表示：</a></p>
 <ul>
 <li><p>主版本号：不兼容的 API 修改。</p>
 </li>
@@ -389,29 +380,19 @@
 </ul>
 <p>把上面创建的 Module 推送到 GitHub：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line"><span class="meta">#</span><span class="bash"> git remote add v1.0.0 https://github.com/yipwinghong/hello.git</span></span><br><span class="line">git checkout -b v1.0.0</span><br><span class="line"></span><br><span class="line">git add -A</span><br><span class="line">git tag -a v1.0.0 -m ':tada: new release'</span><br><span class="line">git commit -m ":tada: first commit"</span><br><span class="line">git remote add v1.0.0 git@github.com:yipwinghong/hello.git</span><br><span class="line">git push -u v1.0.0 v1.0.0</span><br></pre></td></tr></table></figure>
-
 <h3 id="为-Module-添加依赖"><a href="#为-Module-添加依赖" class="headerlink" title="为 Module 添加依赖"></a>为 Module 添加依赖</h3><p>修改 <code>hello.go</code>：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"rsc.io/quote"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Hello</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> quote.Hello()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>添加依赖：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> mod tidy</span><br></pre></td></tr></table></figure>
-
 <p>此时可见新增了一个 <code>go.sum</code> 文件，且 <code>go.mod</code> 被更新：</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">module github.com/yipwinghong/hello</span><br><span class="line"></span><br><span class="line">go <span class="number">1.16</span></span><br><span class="line"></span><br><span class="line">require rsc.io/quote v1<span class="number">.5</span><span class="number">.2</span></span><br></pre></td></tr></table></figure>
-
 <p>更新到 GitHub repository：</p>
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">add</span><span class="bash"> -A</span></span><br><span class="line">git tag -a v1.<span class="number">0.1</span> -m <span class="string">'add dependency'</span></span><br><span class="line">git commit -m <span class="string">':arrow_up: add dependency'</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
-
 <h3 id="使用-Module"><a href="#使用-Module" class="headerlink" title="使用 Module"></a>使用 Module</h3><p>创建一个测试项目，使用刚才的 Module：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">main/</span><br><span class="line">    main.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
-
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"github.com/yipwinghong/hello"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    Hello()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>把测试项目初始化为 Module，更新依赖：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go mod init test</span><br><span class="line">go mod tidy</span><br></pre></td></tr></table></figure>
-
-
-
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -977,9 +958,16 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 60
+        Total : 61
         </div>
         <!-- search  -->
         
@@ -992,6 +980,11 @@
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题相关算法</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1325,17 +1318,17 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
@@ -1357,9 +1350,9 @@
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
