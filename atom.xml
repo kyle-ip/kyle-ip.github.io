@@ -101,15 +101,15 @@
   </entry>
   
   <entry>
-    <title>Java 多态、重写与桥接方法</title>
-    <link href="https://yipwinghong.github.io/2021/06/19/Java_override-and-bridge-method/"/>
-    <id>https://yipwinghong.github.io/2021/06/19/Java_override-and-bridge-method/</id>
-    <published>2021-06-19T14:48:17.000Z</published>
-    <updated>2021-06-21T23:57:57.497Z</updated>
+    <title>一致性哈希</title>
+    <link href="https://yipwinghong.github.io/2021/06/19/Algorithm_consistent-hashing/"/>
+    <id>https://yipwinghong.github.io/2021/06/19/Algorithm_consistent-hashing/</id>
+    <published>2021-06-19T15:37:00.000Z</published>
+    <updated>2021-07-09T09:06:33.797Z</updated>
     
     <summary type="html">
     
-      在 JVM 层面理解方法重写。
+      原文链接：http://tom-e-white.com/2007/11/consistent-hashing.html
     
     </summary>
     
@@ -117,7 +117,7 @@
     
       <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
+      <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
@@ -162,23 +162,21 @@
   </entry>
   
   <entry>
-    <title>Java 程序员的 C++</title>
-    <link href="https://yipwinghong.github.io/2021/06/05/Java_cpp-for-java-programmers/"/>
-    <id>https://yipwinghong.github.io/2021/06/05/Java_cpp-for-java-programmers/</id>
-    <published>2021-06-05T08:41:00.000Z</published>
-    <updated>2021-07-08T03:10:49.032Z</updated>
+    <title>基于记忆规律的学习方法</title>
+    <link href="https://yipwinghong.github.io/2021/06/05/2021-06-05_diary/"/>
+    <id>https://yipwinghong.github.io/2021/06/05/2021-06-05_diary/</id>
+    <published>2021-06-05T13:46:57.000Z</published>
+    <updated>2021-07-09T06:51:27.840Z</updated>
     
     <summary type="html">
     
-      原文链接：https://blog.scottlogic.com/2021/04/22/losing-the-fear.html
+      《考试脑科学》阅读笔记
     
     </summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="C++" scheme="https://yipwinghong.github.io/tags/C/"/>
+      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
     
   </entry>
   
@@ -227,7 +225,7 @@
     <link href="https://yipwinghong.github.io/2021/05/12/DB_using-postgresql-as-a-data-warehouse/"/>
     <id>https://yipwinghong.github.io/2021/05/12/DB_using-postgresql-as-a-data-warehouse/</id>
     <published>2021-05-12T10:59:41.000Z</published>
-    <updated>2021-07-08T09:30:10.137Z</updated>
+    <updated>2021-07-09T06:48:09.442Z</updated>
     
     <summary type="html">
     
@@ -244,76 +242,15 @@
   </entry>
   
   <entry>
-    <title>一致性哈希</title>
-    <link href="https://yipwinghong.github.io/2021/04/12/Algorithm_consistent-hashing/"/>
-    <id>https://yipwinghong.github.io/2021/04/12/Algorithm_consistent-hashing/</id>
-    <published>2021-04-12T15:37:00.000Z</published>
-    <updated>2021-06-21T23:57:57.481Z</updated>
+    <title>Java 程序员的 C++</title>
+    <link href="https://yipwinghong.github.io/2021/03/17/Java_cpp-for-java-programmers/"/>
+    <id>https://yipwinghong.github.io/2021/03/17/Java_cpp-for-java-programmers/</id>
+    <published>2021-03-17T08:41:00.000Z</published>
+    <updated>2021-07-09T06:51:56.227Z</updated>
     
     <summary type="html">
     
-      原文链接：http://tom-e-white.com/2007/11/consistent-hashing.html
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>基于记忆规律的学习方法</title>
-    <link href="https://yipwinghong.github.io/2021/03/17/2021-03-17_diary/"/>
-    <id>https://yipwinghong.github.io/2021/03/17/2021-03-17_diary/</id>
-    <published>2021-03-17T13:46:57.000Z</published>
-    <updated>2021-06-21T23:57:57.481Z</updated>
-    
-    <summary type="html">
-    
-      《考试脑科学》阅读笔记
-    
-    </summary>
-    
-    
-    
-      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>选择合适的数据库</title>
-    <link href="https://yipwinghong.github.io/2021/03/12/DB_right-database/"/>
-    <id>https://yipwinghong.github.io/2021/03/12/DB_right-database/</id>
-    <published>2021-03-12T08:41:00.000Z</published>
-    <updated>2021-06-21T23:57:57.481Z</updated>
-    
-    <summary type="html">
-    
-      原文链接：https://blog.andyet.com/2014/10/01/right-database
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Arthas Cheat Sheet</title>
-    <link href="https://yipwinghong.github.io/2021/03/06/Arthas_Cheat-Sheet/"/>
-    <id>https://yipwinghong.github.io/2021/03/06/Arthas_Cheat-Sheet/</id>
-    <published>2021-03-06T13:45:17.000Z</published>
-    <updated>2021-06-21T23:57:57.481Z</updated>
-    
-    <summary type="html">
-    
-      Alibaba 开源的 Java 诊断工具
+      原文链接：https://blog.scottlogic.com/2021/04/22/losing-the-fear.html
     
     </summary>
     
@@ -423,6 +360,75 @@
     <summary type="html">
     
       《DDIA》阅读笔记（八）：分布式系统的挑战
+    
+    </summary>
+    
+    
+      <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>《DDIA》阅读笔记（七）：事务</title>
+    <link href="https://yipwinghong.github.io/2021/01/27/DDIA_note-9/"/>
+    <id>https://yipwinghong.github.io/2021/01/27/DDIA_note-9/</id>
+    <published>2021-01-27T13:06:01.000Z</published>
+    <updated>2021-06-21T23:57:57.497Z</updated>
+    
+    <summary type="html">
+    
+      《DDIA》阅读笔记（七）：事务
+    
+    </summary>
+    
+    
+      <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>《DDIA》阅读笔记（六）：数据分区</title>
+    <link href="https://yipwinghong.github.io/2021/01/22/DDIA_note-8/"/>
+    <id>https://yipwinghong.github.io/2021/01/22/DDIA_note-8/</id>
+    <published>2021-01-22T15:11:01.000Z</published>
+    <updated>2021-06-21T23:57:57.497Z</updated>
+    
+    <summary type="html">
+    
+      《DDIA》阅读笔记（六）：数据分区
+    
+    </summary>
+    
+    
+      <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>《DDIA》阅读笔记（五）：数据复制（无主节点）</title>
+    <link href="https://yipwinghong.github.io/2021/01/21/DDIA_note-7/"/>
+    <id>https://yipwinghong.github.io/2021/01/21/DDIA_note-7/</id>
+    <published>2021-01-21T11:37:00.000Z</published>
+    <updated>2021-06-21T23:57:57.497Z</updated>
+    
+    <summary type="html">
+    
+      《DDIA》阅读笔记（五）：数据复制（无主节点）
     
     </summary>
     
