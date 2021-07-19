@@ -16,13 +16,36 @@
     <meta name="author" content="Kylo Yip">
     <meta name="renderer" content="webkit">
     <meta name="copyright" content="Kylo Yip">
+	
+	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="/live2d-widget/autoload.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
+	
     
     <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
+    <meta name="description" content="有权图的另一类经典问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最小生成树问题">
+<meta property="og:url" content="https://yipwinghong.github.io/2021/07/08/Algorithm_minimum_spanning_tree_problem/index.html">
+<meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:description" content="有权图的另一类经典问题。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/MST.png">
+<meta property="article:published_time" content="2021-07-08T12:10:14.000Z">
+<meta property="article:modified_time" content="2021-07-18T13:29:36.460Z">
+<meta property="article:author" content="Kylo Yip">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/MST.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>最小生成树问题相关算法 · Kylo&#39;s Notebook</title>
+    
+    <link rel="alternate" href="/atom.xml" title="Kylo&#39;s Notebook" type="application/atom+xml">
+    
+    <title>最小生成树问题 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -75,8 +98,8 @@
 
 </style>
 
-    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
     
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     
@@ -190,9 +213,10 @@
     <link rel="icon" href= "/assets/favicon.ico" />
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
-    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
     <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
     <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
     
     <!-- fancybox -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
@@ -200,8 +224,7 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.1"></head>
 
     
         <body class="post-body">
@@ -209,21 +232,52 @@
     
 <header class="header">
 
-    <div class="read-progress"></div>
-    <div class="header-sidebar-menu">&#xe775;</div>
-    <!-- post页的toggle banner  -->
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu header-sidebar-menu-rounded">
+        
+            
+            <i class="fas fa-bars"></i>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>Kylo's Notebook</a>
+    <!-- toggle banner for post layout -->
+    
     
     <div class="banner">
-            <div class="blog-title">
-                <a href="/" >Kylo&#39;s Notebook</a>
-            </div>
-            <div class="post-title">
-                <a href="#" class="post-name">最小生成树问题相关算法</a>
-            </div>
+    
+        <div class="blog-title header-element">
+            <a href="/" >Kylo&#39;s Notebook</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">最小生成树问题</a>
+        </div>
     </div>
     
-    <a class="home-link" href=/>Kylo's Notebook</a>
 </header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top back-top-rounded">
+        
+            
+            <i class="fas fa-chevron-up"></i>
+            
+        </div>
+    </div>
+</footer>
     <div class="wrapper">
         <div class="site-intro" style="
 
@@ -248,7 +302,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            最小生成树问题相关算法
+            最小生成树问题
             <!-- 404 -->
             
         </h1>
@@ -275,7 +329,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2,963</span>Reading time: <span class="post-count reading-time">12 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3,010</span>Reading time: <span class="post-count reading-time">13 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -404,15 +458,20 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="最小生成树问题相关算法"><a href="#最小生成树问题相关算法" class="headerlink" title="最小生成树问题相关算法"></a>最小生成树问题相关算法</h1><blockquote>
+        <h1 id="最小生成树问题"><a href="#最小生成树问题" class="headerlink" title="最小生成树问题"></a>最小生成树问题</h1><blockquote>
 <p>  接上回，本次介绍另一类问题的相关算法。</p>
 </blockquote>
-<p>在图论领域，有权图（Weight Graph）最经典的问题是最小生成树问题（Minimum Spanning Tree）：对于一个 n 个节点的 <strong>连通图</strong>，求出包含原图 n 个节点、且确保所有边权值之和最小的连通子图，则为最小生成树（MST）。</p>
-<p>先给出有权图的 Java 实现（省略细节），有权边 <code>WeightedEdge</code>：</p>
+<p>在图论领域，有权图（Weight Graph）最经典的问题是最小生成树问题（Minimum Spanning Tree）：对于一个 n 个节点的 <strong>连通图</strong>，求出包含原图 n 个节点、且确保所有边权值之和最小的连通子图，则为 <strong>最小生成树（MST）</strong>。</p>
+<p>有权图与其最小生成树：</p>
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/MST.png" alt="MST" style="zoom:80%;" />
+
+
+
+<p>先给出有权图的 Java 实现（省略细节），有权边 <code>WeightedEdge</code>（兼容有向、无向）：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedEdge</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">WeightedEdge</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 起点，终点，权值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> v, w, weight;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeightedEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w, <span class="keyword">int</span> weight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.v = v;</span><br><span class="line">        <span class="keyword">this</span>.w = w;</span><br><span class="line">        <span class="keyword">this</span>.weight = weight;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>有权图 <code>WeightedGraph</code>：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 顶点数，边数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> V;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> E;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 邻接表：使用红黑树描述</span></span><br><span class="line"><span class="comment">     * [</span></span><br><span class="line"><span class="comment">     *      0: &#123;1: 3, 2: 2, 3: -2&#125;,</span></span><br><span class="line"><span class="comment">     *      1: (2: 2, 3: 2, 4: 1)</span></span><br><span class="line"><span class="comment">     * ]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;Integer, Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取权值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v, w)) &#123;</span><br><span class="line">            <span class="keyword">return</span> adj[v].get(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">"No edge %d-%d"</span>, v, w));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     <span class="comment">// 边是否存在</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> adj[v].containsKey(w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 顶点数，边数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> V, E;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 邻接表：使用红黑树描述</span></span><br><span class="line"><span class="comment">     * [</span></span><br><span class="line"><span class="comment">     *      0: &#123;1: 3, 2: 2, 3: -2&#125;,</span></span><br><span class="line"><span class="comment">     *      1: (2: 2, 3: 2, 4: 1)</span></span><br><span class="line"><span class="comment">     * ]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;Integer, Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取权值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v, w)) &#123;</span><br><span class="line">            <span class="keyword">return</span> adj[v].get(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">"No edge %d-%d"</span>, v, w));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     <span class="comment">// 边是否存在</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> adj[v].containsKey(w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="连通性判断"><a href="#连通性判断" class="headerlink" title="连通性判断"></a>连通性判断</h2><p>对于一个图，可求解出最小生成树的前提是该图为 <strong>连通图</strong>，即图中任意两个节点之间都能找到至少一条路径相连。</p>
 <p>对于非连通图，每个连通子图都称为一个 <strong>连通分量</strong>。</p>
@@ -474,9 +533,12 @@ height:100vh;
 </li>
 </ul>
 <p>时间复杂度：O(E*log(E))</p>
+<blockquote>
+<p>  点击链接可查看动图：<a href="https://www.cs.usfca.edu/~galles/visualization/Kruskal.html" target="_blank" rel="noopener">Kruskal MST Visualzation (usfca.edu)</a></p>
+</blockquote>
 <h2 id="Prim-算法"><a href="#Prim-算法" class="headerlink" title="Prim 算法"></a>Prim 算法</h2><p>Prim 算法将图中的顶点分为两部分，其核心是不断操作更新切分：</p>
 <ul>
-<li><p>从 1: V-1 开始，选取两个顶点（切分 from）、与其他点（切分 to）分别组成两个切分。</p>
+<li><p>从边数之比为 1: V-1 开始，选取两个顶点（切分 from）、与其他点（切分 to）分别组成两个切分。</p>
 </li>
 <li><p>选取这两个切分的最短横切边，添加到 MST 集合，并把顶点更新到切分 from（由于切分更新，此时横切边可能发生改变）。</p>
 </li>
@@ -498,11 +560,16 @@ height:100vh;
 </li>
 </ul>
 <p>时间复杂度：由于使用了最小堆，可快速找到最短横切边，时间复杂度从 O(V*E) 优化到 O(E*log(E))，如改用索引堆（Index Heap）则可以进一步优化到 O(E*log(V))。</p>
+<blockquote>
+<p>  点击链接可查看动图：<a href="https://www.cs.usfca.edu/~galles/visualization/Prim.html" target="_blank" rel="noopener">Prim MST Visualzation (usfca.edu)</a></p>
+</blockquote>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了最小生成树问题两种最经典的算法，实际上除此之外还有 Fredman-Tarjan 算法（Time: O(E+V*log(V))）、Chazelle 算法（Time: O(E*)），限于篇幅就不再一一介绍了，感兴趣的话可以自行查阅相关资料。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><p><a href="https://en.wikipedia.org/wiki/Kruskal' target="_blank" rel="noopener"s_algorithm">Kruskal’s algorithm - Wikipedia</a></p>
 </li>
 <li><p><a href="https://en.wikipedia.org/wiki/Prim' target="_blank" rel="noopener"s_algorithm">Prim’s algorithm - Wikipedia</a></p>
+</li>
+<li><p><a href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html" target="_blank" rel="noopener">Data Structure Visualization (usfca.edu)</a></p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -513,12 +580,17 @@ height:100vh;
     <ul class="post-paginator">
         <li class="next">
             
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2021/07/09/Algorithm_max-flow-problem/" title= "最大流问题">
+                    <div class="nextTitle">最大流问题</div>
+                </a>
+            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/07/08/Algorithm_shortest-path-problem/" title= "最短路径问题相关算法">
-                    <div class="prevTitle">最短路径问题相关算法</div>
+                <a href= "/2021/07/08/Algorithm_shortest-path-problem/" title= "最短路径问题">
+                    <div class="prevTitle">最短路径问题</div>
                 </a>
             
         </li>
@@ -544,6 +616,9 @@ height:100vh;
 <!-- City版安装代码已完成 -->
     
     
+     
+    <!-- utteranc评论 -->
+
     <!-- partial('_partial/comment/changyan') -->
     <!--PC版-->
 
@@ -552,7 +627,11 @@ height:100vh;
     
 
     <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
 </main>
+
             <!-- profile -->
             
         </div>
@@ -577,8 +656,8 @@ height:100vh;
         
             
                 <span class="iconfont-archer wechat" title=wechat>
-                  
-                  <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
                 </span>
             
         
@@ -606,6 +685,10 @@ height:100vh;
         
     
         
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
     
         
     
@@ -628,6 +711,8 @@ height:100vh;
     <div class="copyright">
         <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
     </div>
+    <!-- website approve for Chinese user -->
+    
     <!-- 不蒜子  -->
     
     <div class="busuanzi-container">
@@ -656,10 +741,9 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#最小生成树问题相关算法"><span class="toc-number">1.</span> <span class="toc-text">最小生成树问题相关算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#连通性判断"><span class="toc-number">1.1.</span> <span class="toc-text">连通性判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#切分定理（Bipartite）"><span class="toc-number">1.2.</span> <span class="toc-text">切分定理（Bipartite）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#二分图"><span class="toc-number">1.2.1.</span> <span class="toc-text">二分图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并查集（Union-Find）"><span class="toc-number">1.3.</span> <span class="toc-text">并查集（Union Find）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kruskal-算法"><span class="toc-number">1.4.</span> <span class="toc-text">Kruskal 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prim-算法"><span class="toc-number">1.5.</span> <span class="toc-text">Prim 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#最小生成树问题"><span class="toc-number">1.</span> <span class="toc-text">最小生成树问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#连通性判断"><span class="toc-number">1.1.</span> <span class="toc-text">连通性判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#切分定理（Bipartite）"><span class="toc-number">1.2.</span> <span class="toc-text">切分定理（Bipartite）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#二分图"><span class="toc-number">1.2.1.</span> <span class="toc-text">二分图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并查集（Union-Find）"><span class="toc-number">1.3.</span> <span class="toc-text">并查集（Union Find）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kruskal-算法"><span class="toc-number">1.4.</span> <span class="toc-text">Kruskal 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prim-算法"><span class="toc-number">1.5.</span> <span class="toc-text">Prim 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
     
-    <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
         <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
@@ -1093,9 +1177,30 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 60
+        Total : 63
         </div>
         <!-- search  -->
         
@@ -1111,12 +1216,47 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题相关算法</a>
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/Go_error_handling/" >Go 异常处理</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题相关算法</a>
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-io-monitoring/" >Linux 系统 I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-memory-monitoring/" >Linux 系统内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/OS_linux-cpu-monitoring/" >Linux 系统 CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/OS_system_initialization/" >操作系统 - 架构与系统初始化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservice/" >微服务概览与治理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/Algorithm_max-flow-problem/" >最大流问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题</a>
         </li>
     
     
@@ -1270,7 +1410,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_prod-env-assess/" >Kafka 生产环境资源评估</a>
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_cheat-sheet/" >Kafka Cheat Sheet</a>
         </li>
     
     
@@ -1339,6 +1479,11 @@ top:100vh;
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2020/01/01/JVM_mindmap/" >Java 虚拟机与并发编程</a>
+        </li>
+    
+    
     
     
     
@@ -1349,91 +1494,57 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/01</span><a class="archive-post-title" href= "/2019/11/01/Design_design-patterns/" >设计模式与设计原则</a>
+            <span class="archive-post-date">12/05</span><a class="archive-post-title" href= "/2019/12/05/Design_design-patterns/" >设计模式与设计原则</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2019/10/30/JVM_mindmap/" >Java 虚拟机与并发编程</a>
+            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2019/10/04/Python_async-programming/" >Python 异步编程总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/21</span><a class="archive-post-title" href= "/2019/05/21/Kafka_offset-reset/" >Kafka 位移重置</a>
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2019/09/19/Python_data-structure/" >Python 数据结构应用</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/21</span><a class="archive-post-title" href= "/2019/05/21/Kafka_dynamic-config/" >Kafka 动态配置</a>
+            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Kafka_common-scripts/" >Kafka 常用脚本</a>
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2019/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/06</span><a class="archive-post-title" href= "/2019/05/06/Kafka_basic-conceptions/" >Kafka 基本概念</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
-    <div class="archive-year"> 2018 </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2018/10/04/Python_async-programming/" >Python 异步编程总结</a>
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2019/06/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2018/09/19/Python_data-structure/" >Python 数据结构应用</a>
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2019/06/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2018/09/13/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2019/05/30/Vue_user-guide-4/" >Vue 学习笔记：前端路由、请求发送和状态管理</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2018/09/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href= "/2019/05/24/Vue_user-guide-3/" >Vue 学习笔记：组件</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/30</span><a class="archive-post-title" href= "/2018/08/30/Vue_user-guide-4/" >Vue 学习笔记：前端路由、请求发送和状态管理</a>
+            <span class="archive-post-date">05/23</span><a class="archive-post-title" href= "/2019/05/23/Vue_user-guide-2/" >Vue 学习笔记（2）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2018/08/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Vue_user-guide-3/" >Vue 学习笔记：组件</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2018/08/23/Vue_user-guide-2/" >Vue 学习笔记（2）</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2018/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/Vue_user-guide-1/" >Vue 学习笔记（1）</a>
+            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Vue_user-guide-1/" >Vue 学习笔记（1）</a>
         </li>
     
     </div>
@@ -1457,29 +1568,35 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
-    
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -1566,7 +1683,7 @@ jsonContent:
     });
 </script>
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+</body>
 </html>
 
 

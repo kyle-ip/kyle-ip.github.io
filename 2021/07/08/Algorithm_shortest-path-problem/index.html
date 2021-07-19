@@ -16,13 +16,36 @@
     <meta name="author" content="Kylo Yip">
     <meta name="renderer" content="webkit">
     <meta name="copyright" content="Kylo Yip">
+	
+	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="/live2d-widget/autoload.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
+	
     
     <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
+    <meta name="description" content="第一次写算法相关的总结类文章...">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最短路径问题">
+<meta property="og:url" content="https://yipwinghong.github.io/2021/07/08/Algorithm_shortest-path-problem/index.html">
+<meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:description" content="第一次写算法相关的总结类文章...">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Shortest%20Path.png">
+<meta property="article:published_time" content="2021-07-07T16:26:00.000Z">
+<meta property="article:modified_time" content="2021-07-18T13:29:36.460Z">
+<meta property="article:author" content="Kylo Yip">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Shortest%20Path.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>最短路径问题相关算法 · Kylo&#39;s Notebook</title>
+    
+    <link rel="alternate" href="/atom.xml" title="Kylo&#39;s Notebook" type="application/atom+xml">
+    
+    <title>最短路径问题 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -75,8 +98,8 @@
 
 </style>
 
-    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
     
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     
@@ -190,9 +213,10 @@
     <link rel="icon" href= "/assets/favicon.ico" />
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
-    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
     <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
     <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
     
     <!-- fancybox -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
@@ -200,8 +224,7 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.1"></head>
 
     
         <body class="post-body">
@@ -209,21 +232,52 @@
     
 <header class="header">
 
-    <div class="read-progress"></div>
-    <div class="header-sidebar-menu">&#xe775;</div>
-    <!-- post页的toggle banner  -->
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu header-sidebar-menu-rounded">
+        
+            
+            <i class="fas fa-bars"></i>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>Kylo's Notebook</a>
+    <!-- toggle banner for post layout -->
+    
     
     <div class="banner">
-            <div class="blog-title">
-                <a href="/" >Kylo&#39;s Notebook</a>
-            </div>
-            <div class="post-title">
-                <a href="#" class="post-name">最短路径问题相关算法</a>
-            </div>
+    
+        <div class="blog-title header-element">
+            <a href="/" >Kylo&#39;s Notebook</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">最短路径问题</a>
+        </div>
     </div>
     
-    <a class="home-link" href=/>Kylo's Notebook</a>
 </header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top back-top-rounded">
+        
+            
+            <i class="fas fa-chevron-up"></i>
+            
+        </div>
+    </div>
+</footer>
     <div class="wrapper">
         <div class="site-intro" style="
 
@@ -248,7 +302,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            最短路径问题相关算法
+            最短路径问题
             <!-- 404 -->
             
         </h1>
@@ -275,7 +329,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,326</span>Reading time: <span class="post-count reading-time">14 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3,454</span>Reading time: <span class="post-count reading-time">15 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -404,7 +458,7 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="最短路径问题相关算法"><a href="#最短路径问题相关算法" class="headerlink" title="最短路径问题相关算法"></a>最短路径问题相关算法</h1><blockquote>
+        <h1 id="最短路径问题"><a href="#最短路径问题" class="headerlink" title="最短路径问题"></a>最短路径问题</h1><blockquote>
 <p>  第一次写算法相关的总结类文章，对以前学习到的知识点做个回顾，也尝试用精简的文字描述清楚。</p>
 </blockquote>
 <p>最短路径问题（Shortest Path）：从图上的某一点到达另外一点，找到一条路径，使得权值之和最小（在下文中，路径的长短即权值之和的大小）。</p>
@@ -416,8 +470,10 @@ height:100vh;
 <li><p>如要求出图中所有点的最短路径，则需要适用于求所有点对的最短路径算法：Floyd 算法。</p>
 </li>
 </ul>
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Shortest%20Path.png" alt="Shortest Path" style="zoom:80%;" />
+
 <p>为了更方便地描述算法，先给出有权图的 Java 实现（省略细节）。</p>
-<p>有权边 <code>WeightedEdge</code>：</p>
+<p>有权边 <code>WeightedEdge</code>（兼容有向、无向）：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedEdge</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">WeightedEdge</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 起点，终点，权值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> v, w, weight;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeightedEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w, <span class="keyword">int</span> weight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.v = v;</span><br><span class="line">        <span class="keyword">this</span>.w = w;</span><br><span class="line">        <span class="keyword">this</span>.weight = weight;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>有权图 <code>WeightedGraph</code>：</p>
@@ -439,7 +495,7 @@ height:100vh;
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">     <span class="number">3</span></span><br><span class="line"> +------[B]</span><br><span class="line"> |   <span class="number">1</span>   | <span class="number">1</span></span><br><span class="line">[O]-----[A]</span><br><span class="line"> |   <span class="number">4</span>   | <span class="number">1</span></span><br><span class="line"> +------[C]</span><br></pre></td></tr></table></figure>
 
 <p>基本实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title">dijkstra</span><span class="params">(<span class="keyword">int</span> src, <span class="keyword">int</span> dest)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] dis = <span class="keyword">new</span> <span class="keyword">int</span>[V], prev = <span class="keyword">new</span> <span class="keyword">int</span>[V];</span><br><span class="line">        Arrays.fill(dis, Integer.MAX_VALUE);</span><br><span class="line">        Arrays.fill(prev, -<span class="number">1</span>);</span><br><span class="line">        dis[src] = <span class="number">0</span>;</span><br><span class="line">        prev[src] = src;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// visited 用于记录“已确定最短距离”的顶点。</span></span><br><span class="line">        <span class="keyword">boolean</span>[] visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[V];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用最小堆用于高效提取 dis 最小的顶点（同一个点可能存在多份）。</span></span><br><span class="line">        <span class="comment">// 而最小值必然是最近更新的结果，即距离已更新点 v 最近的点。</span></span><br><span class="line">        PriorityQueue&lt;<span class="keyword">int</span>[]&gt; pq = <span class="keyword">new</span> PriorityQueue&lt;&gt;(Comparator.comparingInt(a -&gt; a[<span class="number">1</span>]));</span><br><span class="line">        pq.add(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;src, <span class="number">0</span>&#125;);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 每轮循环可决定（到达）一个点的最短距离。</span></span><br><span class="line">        <span class="keyword">while</span> (!pq.isEmpty()) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 1. 利用最小堆找到 dis 最小值的顶点。</span></span><br><span class="line">            <span class="keyword">int</span> v = pq.poll()[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 2. 更新顶点状态，如果该点已经确定最短路径则跳过。</span></span><br><span class="line">            <span class="keyword">if</span> (visited[v]) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            visited[v] = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//            // 找到到达终点的最短路径可提前结束（对于 Bellman Ford 算法，由于存在松弛操作，不能提前终止）。</span></span><br><span class="line"><span class="comment">//            if (v == dest) &#123;</span></span><br><span class="line"><span class="comment">//                break;</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 3. 根据刚才确定的解，更新邻接顶点的 dis 值。</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(v)) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 如果 w 未确定最短路径，且其目前的 dis 值大于经由 v 到达 w 的距离，则更新 dis[w] 并添加到最小堆。</span></span><br><span class="line">                <span class="comment">// 比如：</span></span><br><span class="line">                <span class="comment">//           3</span></span><br><span class="line">                <span class="comment">//       +------[w]</span></span><br><span class="line">                <span class="comment">//       |       | 1</span></span><br><span class="line">                <span class="comment">//      [0]-----[v]</span></span><br><span class="line">                <span class="comment">//           1</span></span><br><span class="line">                <span class="comment">// 此时 w 仍未确定，需要重新放入最小堆，用作下次继续更新。</span></span><br><span class="line">                <span class="keyword">if</span> (!visited[w] &amp;&amp; dis[w] &gt; dis[v] + getWeight(v, w)) &#123;</span><br><span class="line">                    dis[w] = dis[v] + getWeight(v, w);</span><br><span class="line">                    pq.add(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;w, dis[w]&#125;);</span><br><span class="line">                    prev[w] = v;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 根据 prev 数组求整个路径。</span></span><br><span class="line">        LinkedList&lt;Integer&gt; ret = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span> (!visited[dest]) &#123;</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> cur = dest;</span><br><span class="line">        <span class="keyword">while</span> (cur != src) &#123;</span><br><span class="line">            ret.addFirst(cur);</span><br><span class="line">            cur = prev[cur];</span><br><span class="line">        &#125;</span><br><span class="line">        ret.addFirst(src);</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title">shortestPathDijkstra</span><span class="params">(<span class="keyword">int</span> src, <span class="keyword">int</span> dest)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] dis = <span class="keyword">new</span> <span class="keyword">int</span>[V], prev = <span class="keyword">new</span> <span class="keyword">int</span>[V];</span><br><span class="line">        Arrays.fill(dis, Integer.MAX_VALUE);</span><br><span class="line">        Arrays.fill(prev, -<span class="number">1</span>);</span><br><span class="line">        dis[src] = <span class="number">0</span>;</span><br><span class="line">        prev[src] = src;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// visited 用于记录“已确定最短距离”的顶点。</span></span><br><span class="line">        <span class="keyword">boolean</span>[] visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[V];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用最小堆用于高效提取 dis 最小的顶点（同一个点可能存在多份）。</span></span><br><span class="line">        <span class="comment">// 而最小值必然是最近更新的结果，即距离已更新点 v 最近的点。</span></span><br><span class="line">        PriorityQueue&lt;<span class="keyword">int</span>[]&gt; pq = <span class="keyword">new</span> PriorityQueue&lt;&gt;(Comparator.comparingInt(a -&gt; a[<span class="number">1</span>]));</span><br><span class="line">        pq.add(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;src, <span class="number">0</span>&#125;);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 每轮循环可决定（到达）一个点的最短距离。</span></span><br><span class="line">        <span class="keyword">while</span> (!pq.isEmpty()) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 1. 利用最小堆找到 dis 最小值的顶点。</span></span><br><span class="line">            <span class="keyword">int</span> v = pq.poll()[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 2. 更新顶点状态，如果该点已经确定最短路径则跳过。</span></span><br><span class="line">            <span class="keyword">if</span> (visited[v]) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            visited[v] = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//            // 找到到达终点的最短路径可提前结束（对于 Bellman Ford 算法，由于存在松弛操作，不能提前终止）。</span></span><br><span class="line"><span class="comment">//            if (v == dest) &#123;</span></span><br><span class="line"><span class="comment">//                break;</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 3. 根据刚才确定的解，更新邻接顶点的 dis 值。</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(v)) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 如果 w 未确定最短路径，且其目前的 dis 值大于经由 v 到达 w 的距离，则更新 dis[w] 并添加到最小堆。</span></span><br><span class="line">                <span class="comment">// 比如：</span></span><br><span class="line">                <span class="comment">//           3</span></span><br><span class="line">                <span class="comment">//       +------[w]</span></span><br><span class="line">                <span class="comment">//       |       | 1</span></span><br><span class="line">                <span class="comment">//      [0]-----[v]</span></span><br><span class="line">                <span class="comment">//           1</span></span><br><span class="line">                <span class="comment">// 此时 w 仍未确定，需要重新放入最小堆，用作下次继续更新。</span></span><br><span class="line">                <span class="keyword">if</span> (!visited[w] &amp;&amp; dis[w] &gt; dis[v] + getWeight(v, w)) &#123;</span><br><span class="line">                    dis[w] = dis[v] + getWeight(v, w);</span><br><span class="line">                    pq.add(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;w, dis[w]&#125;);</span><br><span class="line">                    prev[w] = v;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 根据 prev 数组求整个路径。</span></span><br><span class="line">        LinkedList&lt;Integer&gt; ret = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span> (!visited[dest]) &#123;</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> cur = dest;</span><br><span class="line">        <span class="keyword">while</span> (cur != src) &#123;</span><br><span class="line">            ret.addFirst(cur);</span><br><span class="line">            cur = prev[cur];</span><br><span class="line">        &#125;</span><br><span class="line">        ret.addFirst(src);</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>实现细节：</p>
 <ul>
@@ -447,10 +503,12 @@ height:100vh;
 </li>
 <li><p>每轮循环可以决定到达一个点的最短距离：</p>
 <ul>
-<li><p>利用最小堆找到 <code>dis</code> 最小值的顶点。如果该点已经确定最短路径则跳过，否则更新顶点状态为已访问。</p>
+<li>利用最小堆找到 <code>dis</code> 最小值的顶点。如果该点已经确定最短路径则跳过，否则更新顶点状态为已访问。</li>
+</ul>
 </li>
 <li><p>根据刚才确定的解，循环更新所有邻接顶点的 <code>dis</code> 值：如果 <code>w</code> 未确定最短路径，且其目前的 <code>dis</code> 值大于经由 <code>v</code> 到达 <code>w</code> 的距离，则更新 <code>dis[w]</code> 并添加到最小堆；否则需要重新放入最小堆，用作下次继续更新。</p>
-</li>
+<ul>
+<li>遍历过程中用 <code>prev</code> 数组不断记录当前节点的上一个节点。</li>
 </ul>
 </li>
 <li><p>最终用 <code>prev</code> 数组反向求出整个路径。</p>
@@ -465,12 +523,15 @@ height:100vh;
 <li><p>使用索引堆（Index Heap），可进一步优化到 Time: O(V*log(E))。</p>
 </li>
 </ul>
+<blockquote>
+<p>  点击链接可查看动图：<a href="https://www.cs.usfca.edu/~galles/visualization/Dijkstra.html" target="_blank" rel="noopener">Dijkstra Visualzation (usfca.edu)</a></p>
+</blockquote>
 <h2 id="Bellman-Ford-算法"><a href="#Bellman-Ford-算法" class="headerlink" title="Bellman-Ford 算法"></a>Bellman-Ford 算法</h2><p>相比起 Dijkstra Bellman-Ford 算法的优势是不受负权边的影响，是在无向图中也成立的有向图算法（因为无向图可以理解为对于每条边都有反向边的有向图）。</p>
 <p>假设 <code>dis[v]</code> 是从 <code>s</code> 到 <code>v</code> 的经过边数不超过 <code>k</code> 的最短距离。</p>
 <ul>
 <li><p>初始 <code>dis[s] = 0</code>，其余点为 MAX。</p>
 </li>
-<li><p>定义 <strong>松弛操作（Repaxation）</strong>：寻找每多经过一条边，可得到的最短距离（迂回计算最短路径）。每进行一次松弛操作，即找到从 <code>s</code> 到 <code>b</code> 的经过边数不超过 <code>k + 1</code> 的最短距离。比如下图中 <strong>O-B-A</strong> 比 <strong>O-A</strong> 多经过一条边，但权值之和比 <strong>O-A</strong> 小：</p>
+<li><p>定义 <strong>松弛操作（Repaxation）</strong>：寻找每多经过一条边，可得到的最短距离（迂回计算最短路径）。进行第 <code>k</code> 次松弛操作，即找到从 <code>s</code> 到 <code>b</code> 的经过边数不超过 <code>k+1</code> 的最短距离。比如下图中 <strong>O-B-A</strong> 比 <strong>O-A</strong> 多经过一条边，但权值之和比 <strong>O-A</strong> 小，因此可更新最短路径：</p>
 </li>
 </ul>
 <figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">     <span class="number">8</span></span><br><span class="line"> +<span class="comment">------[B]</span></span><br><span class="line"> |   <span class="number">6</span>   | -<span class="number">3</span></span><br><span class="line">[O]<span class="comment">-----[A]</span></span><br></pre></td></tr></table></figure>
@@ -491,12 +552,14 @@ height:100vh;
 
 <p>实现细节：</p>
 <ul>
-<li><p>对于 <code>V</code> 个节点的图，进行 <code>V - 1</code> 次松弛操作：</p>
+<li><p>对于 <code>V</code> 个节点的图，进行 <code>V-1</code> 次松弛操作：</p>
 <ul>
-<li><p>在每轮松弛操作中，遍历每个顶点 <code>v</code>，对于每个顶点再遍历其邻接顶点 <code>w</code>，取出每条边（v-w）。</p>
+<li>在每轮松弛操作中，遍历每个顶点 <code>v</code>，对于每个顶点再遍历其邻接顶点 <code>w</code>，取出每条边（v-w）。</li>
+</ul>
 </li>
 <li><p>如果 <code>dis[v]</code> 已被更新过，且 <code>dis[w]</code> 目前的 <code>dis</code> 值大于经由 <code>v</code> 到达 <code>w</code> 的距离，则更新 <code>dis[w]</code>。</p>
-</li>
+<ul>
+<li>遍历过程中用 <code>prev</code> 数组不断记录当前节点的上一个节点。</li>
 </ul>
 </li>
 <li><p>进行第 V 轮松弛操作来判断是否有负权环，如果存在负权环，则直接返回空。</p>
@@ -510,7 +573,7 @@ height:100vh;
 <blockquote>
 <h3 id="SPFA-算法"><a href="#SPFA-算法" class="headerlink" title="SPFA 算法"></a>SPFA 算法</h3><p>  实际上很多情况下不需要 <code>v-1</code> 轮松弛操作就可以找到最短路径，因此后续的松弛操作是浪费的。SPFA 算法在 Bellman-Ford 算法的基础上优化，使用一个队列记录只关注的顶点，每次只对这些顶点的邻边进行松弛操作。</p>
 </blockquote>
-<h2 id="Floyd-算法"><a href="#Floyd-算法" class="headerlink" title="Floyd 算法"></a>Floyd 算法</h2><p>前面两种算法只能求出单源最短路径，而 Floyd 算法的特点是可以一次过求出所有点对最短路径，以及图的直径（所有点对最短路径的最大值）。</p>
+<h2 id="Floyd-Warshall-算法"><a href="#Floyd-Warshall-算法" class="headerlink" title="Floyd-Warshall 算法"></a>Floyd-Warshall 算法</h2><p>前面两种算法只能求出单源最短路径，而 Floyd-Warshall 算法的特点是可以一次过求出所有点对最短路径，以及图的直径（所有点对最短路径的最大值）。</p>
 <blockquote>
 <p>  注意，所有点对的最短路径不是单源最短路径算法的叠加。</p>
 </blockquote>
@@ -527,39 +590,44 @@ height:100vh;
 </ul>
 </li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> t = <span class="number">0</span>; t &lt; V; t++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> w = <span class="number">0</span>; w &lt; V; w++)</span><br><span class="line">            <span class="keyword">if</span> (dis[v][t] + dis[t][w] &lt; dis[v][w])</span><br><span class="line">                dis[v][w] = dis[v][t] + dis[t][w];</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> t = <span class="number">0</span>; t &lt; V; t++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> w = <span class="number">0</span>; w &lt; V; w++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (dis[v][t] + dis[t][w] &lt; dis[v][w]) &#123;</span><br><span class="line">                dis[v][w] = dis[v][t] + dis[t][w];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Floyd 算法同样要判断是否存在负权环：最终判断 <code>dis[v][v]</code> 是否有小于 0 的值，有则表示存在负权环，最短路径无意义。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">     <span class="number">8</span></span><br><span class="line"> +------[t]</span><br><span class="line"> |   <span class="number">6</span>   | <span class="number">-3</span></span><br><span class="line">[v]-----[w]</span><br></pre></td></tr></table></figure>
 
 <p>基本实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title">shortestPathFloyd</span><span class="params">(<span class="keyword">int</span> src, <span class="keyword">int</span> dest)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// dis[v][w] 表示 从 v 到 w 的最短路径长度。</span></span><br><span class="line">        <span class="keyword">int</span>[][] dis = <span class="keyword">new</span> <span class="keyword">int</span>[V][V];</span><br><span class="line">        <span class="keyword">int</span>[] prev = <span class="keyword">new</span> <span class="keyword">int</span>[V];</span><br><span class="line">        Arrays.fill(prev, -<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">            Arrays.fill(dis[v], Integer.MAX_VALUE);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">            dis[v][v] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(v)) &#123;</span><br><span class="line">                dis[v][w] = getWeight(v, w);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 相当于松弛操作，每轮循环求解出中间绕过 [0, t] 这些点的最短路径。</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> t = <span class="number">0</span>; t &lt; V; t++) &#123;</span><br><span class="line">            <span class="comment">// 寻找最短路径的起始点和终止点。</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> w = <span class="number">0</span>; w &lt; V; w++) &#123;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//      8</span></span><br><span class="line">                    <span class="comment">//  +------[t]</span></span><br><span class="line">                    <span class="comment">//  |   6   | -3</span></span><br><span class="line">                    <span class="comment">// [v]-----[w]</span></span><br><span class="line">                    <span class="keyword">if</span> (dis[v][t] != Integer.MAX_VALUE &amp;&amp; dis[t][w] != Integer.MAX_VALUE &amp;&amp; dis[v][t] + dis[t][w] &lt; dis[v][w]) &#123;</span><br><span class="line">                        dis[v][w] = dis[v][t] + dis[t][w];</span><br><span class="line">                        prev[w] = v;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (dis[v][v] &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// 存在负权环，返回空。</span></span><br><span class="line">                <span class="keyword">return</span> Collections.emptyList();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        LinkedList&lt;Integer&gt; ret = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> cur = dest;</span><br><span class="line">        <span class="keyword">while</span> (cur != src) &#123;</span><br><span class="line">            ret.addFirst(cur);</span><br><span class="line">            cur = prev[cur];</span><br><span class="line">        &#125;</span><br><span class="line">        ret.addFirst(src);</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title">shortestPathFloydWarshall</span><span class="params">(<span class="keyword">int</span> src, <span class="keyword">int</span> dest)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// dis[v][w] 表示 从 v 到 w 的最短路径长度。</span></span><br><span class="line">        <span class="keyword">int</span>[][] dis = <span class="keyword">new</span> <span class="keyword">int</span>[V][V];</span><br><span class="line">        <span class="keyword">int</span>[] prev = <span class="keyword">new</span> <span class="keyword">int</span>[V];</span><br><span class="line">        Arrays.fill(prev, -<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">            Arrays.fill(dis[v], Integer.MAX_VALUE);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">            dis[v][v] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(v)) &#123;</span><br><span class="line">                dis[v][w] = getWeight(v, w);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 相当于松弛操作，每轮循环求解出中间绕过 [0, t] 这些点的最短路径。</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> t = <span class="number">0</span>; t &lt; V; t++) &#123;</span><br><span class="line">            <span class="comment">// 寻找最短路径的起始点和终止点。</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> w = <span class="number">0</span>; w &lt; V; w++) &#123;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//      8</span></span><br><span class="line">                    <span class="comment">//  +------[t]</span></span><br><span class="line">                    <span class="comment">//  |   6   | -3</span></span><br><span class="line">                    <span class="comment">// [v]-----[w]</span></span><br><span class="line">                    <span class="keyword">if</span> (dis[v][t] != Integer.MAX_VALUE &amp;&amp; dis[t][w] != Integer.MAX_VALUE &amp;&amp; dis[v][t] + dis[t][w] &lt; dis[v][w]) &#123;</span><br><span class="line">                        dis[v][w] = dis[v][t] + dis[t][w];</span><br><span class="line">                        prev[w] = v;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (dis[v][v] &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// 存在负权环，返回空。</span></span><br><span class="line">                <span class="keyword">return</span> Collections.emptyList();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        LinkedList&lt;Integer&gt; ret = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> cur = dest;</span><br><span class="line">        <span class="keyword">while</span> (cur != src) &#123;</span><br><span class="line">            ret.addFirst(cur);</span><br><span class="line">            cur = prev[cur];</span><br><span class="line">        &#125;</span><br><span class="line">        ret.addFirst(src);</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>实现细节：</p>
 <ul>
-<li><p>Floyd 算法的比较对象是经由某点到达某点的最短路径，因此需要使用二维的 <code>dis</code> 数组。</p>
+<li><p>Floyd-Warshall 算法的比较对象是经由某点到达某点的最短路径，因此需要使用二维的 <code>dis</code> 数组，且遍历过程中也是需要用 <code>prev</code> 数组记录当前节点的上一个节点。</p>
 </li>
-<li><p>与 Bellman-Ford 算法类似，Floyd 算法也有 <strong>松弛操作</strong>，区别在于其每轮循环求解出中间绕过 [0, t] 这些点的最短路径。</p>
+<li><p>与 Bellman-Ford 算法类似，Floyd-Warshall 算法也有 <strong>松弛操作</strong>，区别在于其每轮循环求解出中间绕过 [0, t] 这些点的最短路径。</p>
 </li>
 <li><p>最终也需要判断是否遍历 <code>dis</code> 数组的所有点对，判断是否有负值（表示负权环），返回空。</p>
 </li>
 </ul>
 <p>时间复杂度：O(V^3)</p>
+<blockquote>
+<p>  点击链接可查看动图：<a href="https://www.cs.usfca.edu/~galles/visualization/Floyd.html" target="_blank" rel="noopener">Floyd-Warshall All-Pairs Shortest Path (usfca.edu)</a></p>
+</blockquote>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>三种算法对比（对于稀疏图，V 远远小于 E）：</p>
 <ul>
 <li><p>Dijkstra：不能包含负权边，Time: O(V*log(E))。</p>
 </li>
 <li><p>Bellman-Ford：可包含负权边，可检测负权环，Time: O(V*E)。</p>
 </li>
-<li><p>Floyd：可包含负权边，可检测负权环，Time: O(V^3)。</p>
+<li><p>Floyd-Warshall：可包含负权边，可检测负权环，Time: O(V^3)。</p>
 </li>
 </ul>
-<p>在上述的 Floyd 算法的实现中，利用 <code>prev</code> 数组反向求解具体路径的写法存在一定问题，您可以找出并解决这个问题吗？</p>
+<p>在上述的 Floyd-Warshall 算法的实现中，利用 <code>prev</code> 数组反向求解具体路径的写法存在一定问题，您可以找出并解决这个问题吗？</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><p><a href="https://en.wikipedia.org/wiki/Dijkstra' target="_blank" rel="noopener"s_algorithm">Dijkstra’s algorithm - Wikipedia</a></p>
 </li>
 <li><p><a href="https://en.wikipedia.org/wiki/Bellman–Ford_algorithm" target="_blank" rel="noopener">Bellman–Ford algorithm - Wikipedia</a></p>
 </li>
 <li><p><a href="https://en.wikipedia.org/wiki/Floyd–Warshall_algorithm" target="_blank" rel="noopener">Floyd–Warshall algorithm - Wikipedia</a></p>
+</li>
+<li><p><a href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html" target="_blank" rel="noopener">Data Structure Visualization (usfca.edu)</a></p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -571,8 +639,8 @@ height:100vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" title= "最小生成树问题相关算法">
-                    <div class="nextTitle">最小生成树问题相关算法</div>
+                <a href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" title= "最小生成树问题">
+                    <div class="nextTitle">最小生成树问题</div>
                 </a>
             
         </li>
@@ -606,6 +674,9 @@ height:100vh;
 <!-- City版安装代码已完成 -->
     
     
+     
+    <!-- utteranc评论 -->
+
     <!-- partial('_partial/comment/changyan') -->
     <!--PC版-->
 
@@ -614,7 +685,11 @@ height:100vh;
     
 
     <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
 </main>
+
             <!-- profile -->
             
         </div>
@@ -639,8 +714,8 @@ height:100vh;
         
             
                 <span class="iconfont-archer wechat" title=wechat>
-                  
-                  <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
                 </span>
             
         
@@ -668,6 +743,10 @@ height:100vh;
         
     
         
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
     
         
     
@@ -690,6 +769,8 @@ height:100vh;
     <div class="copyright">
         <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
     </div>
+    <!-- website approve for Chinese user -->
+    
     <!-- 不蒜子  -->
     
     <div class="busuanzi-container">
@@ -718,10 +799,9 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#最短路径问题相关算法"><span class="toc-number">1.</span> <span class="toc-text">最短路径问题相关算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Dijkstra-算法"><span class="toc-number">1.1.</span> <span class="toc-text">Dijkstra 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bellman-Ford-算法"><span class="toc-number">1.2.</span> <span class="toc-text">Bellman-Ford 算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SPFA-算法"><span class="toc-number">1.2.1.</span> <span class="toc-text">SPFA 算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Floyd-算法"><span class="toc-number">1.3.</span> <span class="toc-text">Floyd 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.5.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#最短路径问题"><span class="toc-number">1.</span> <span class="toc-text">最短路径问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Dijkstra-算法"><span class="toc-number">1.1.</span> <span class="toc-text">Dijkstra 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bellman-Ford-算法"><span class="toc-number">1.2.</span> <span class="toc-text">Bellman-Ford 算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SPFA-算法"><span class="toc-number">1.2.1.</span> <span class="toc-text">SPFA 算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Floyd-Warshall-算法"><span class="toc-number">1.3.</span> <span class="toc-text">Floyd-Warshall 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.5.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
     
-    <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
         <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
@@ -1155,9 +1235,30 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 60
+        Total : 63
         </div>
         <!-- search  -->
         
@@ -1173,12 +1274,47 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题相关算法</a>
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/Go_error_handling/" >Go 异常处理</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题相关算法</a>
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-io-monitoring/" >Linux 系统 I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-memory-monitoring/" >Linux 系统内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/OS_linux-cpu-monitoring/" >Linux 系统 CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/OS_system_initialization/" >操作系统 - 架构与系统初始化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservice/" >微服务概览与治理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/Algorithm_max-flow-problem/" >最大流问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题</a>
         </li>
     
     
@@ -1332,7 +1468,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_prod-env-assess/" >Kafka 生产环境资源评估</a>
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_cheat-sheet/" >Kafka Cheat Sheet</a>
         </li>
     
     
@@ -1401,6 +1537,11 @@ top:100vh;
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2020/01/01/JVM_mindmap/" >Java 虚拟机与并发编程</a>
+        </li>
+    
+    
     
     
     
@@ -1411,91 +1552,57 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/01</span><a class="archive-post-title" href= "/2019/11/01/Design_design-patterns/" >设计模式与设计原则</a>
+            <span class="archive-post-date">12/05</span><a class="archive-post-title" href= "/2019/12/05/Design_design-patterns/" >设计模式与设计原则</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2019/10/30/JVM_mindmap/" >Java 虚拟机与并发编程</a>
+            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2019/10/04/Python_async-programming/" >Python 异步编程总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/21</span><a class="archive-post-title" href= "/2019/05/21/Kafka_offset-reset/" >Kafka 位移重置</a>
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2019/09/19/Python_data-structure/" >Python 数据结构应用</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/21</span><a class="archive-post-title" href= "/2019/05/21/Kafka_dynamic-config/" >Kafka 动态配置</a>
+            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Kafka_common-scripts/" >Kafka 常用脚本</a>
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2019/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/06</span><a class="archive-post-title" href= "/2019/05/06/Kafka_basic-conceptions/" >Kafka 基本概念</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
-    <div class="archive-year"> 2018 </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2018/10/04/Python_async-programming/" >Python 异步编程总结</a>
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2019/06/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2018/09/19/Python_data-structure/" >Python 数据结构应用</a>
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2019/06/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2018/09/13/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2019/05/30/Vue_user-guide-4/" >Vue 学习笔记：前端路由、请求发送和状态管理</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2018/09/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href= "/2019/05/24/Vue_user-guide-3/" >Vue 学习笔记：组件</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/30</span><a class="archive-post-title" href= "/2018/08/30/Vue_user-guide-4/" >Vue 学习笔记：前端路由、请求发送和状态管理</a>
+            <span class="archive-post-date">05/23</span><a class="archive-post-title" href= "/2019/05/23/Vue_user-guide-2/" >Vue 学习笔记（2）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2018/08/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Vue_user-guide-3/" >Vue 学习笔记：组件</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2018/08/23/Vue_user-guide-2/" >Vue 学习笔记（2）</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2018/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/Vue_user-guide-1/" >Vue 学习笔记（1）</a>
+            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Vue_user-guide-1/" >Vue 学习笔记（1）</a>
         </li>
     
     </div>
@@ -1519,29 +1626,35 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
-    
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -1628,7 +1741,7 @@ jsonContent:
     });
 </script>
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+</body>
 </html>
 
 

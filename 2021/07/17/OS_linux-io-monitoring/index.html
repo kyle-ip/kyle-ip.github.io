@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Kylo Yip">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Kylo Yip">
+	
+	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="/live2d-widget/autoload.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
+	
+    
+    <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
+    
+    <meta name="description" content="">
+    <meta name="description" content="学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（I&#x2F;O）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 系统 I&#x2F;O 原理与分析">
+<meta property="og:url" content="https://yipwinghong.github.io/2021/07/17/OS_linux-io-monitoring/index.html">
+<meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:description" content="学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（I&#x2F;O）。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/328d942a38230a973f11bae67307be47.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/728b7b39252a1e23a7a223cdf4aa1612.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/Linux-storage-stack-diagram_v4.10.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/cff31e715af51c9cb8085ce1bb48318d.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/6f26fa18a73458764fcda00212006698.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/ee11664d015f034e4042b9fa4fyycff3.jpg">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/1802a35475ee2755fb45aec55ed2d98a.png">
+<meta property="article:published_time" content="2021-07-17T07:50:33.000Z">
+<meta property="article:modified_time" content="2021-07-19T07:50:50.021Z">
+<meta property="article:author" content="Kylo Yip">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/328d942a38230a973f11bae67307be47.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <link rel="alternate" href="/atom.xml" title="Kylo&#39;s Notebook" type="application/atom+xml">
+    
+    <title>Linux 系统 I/O 原理与分析 · Kylo&#39;s Notebook</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu header-sidebar-menu-rounded">
+        
+            
+            <i class="fas fa-bars"></i>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>Kylo's Notebook</a>
+    <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >Kylo&#39;s Notebook</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">Linux 系统 I/O 原理与分析</a>
+        </div>
+    </div>
+    
+</header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top back-top-rounded">
+        
+            
+            <i class="fas fa-chevron-up"></i>
+            
+        </div>
+    </div>
+</footer>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:100vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(https://api.ixiaowai.cn/mcapi/mcapi.php)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Linux 系统 I/O 原理与分析
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "OS">OS</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">4,582</span>Reading time: <span class="post-count reading-time">18 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/07/17</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Linux-系统-I-O-原理与分析"><a href="#Linux-系统-I-O-原理与分析" class="headerlink" title="Linux 系统 I/O 原理与分析"></a>Linux 系统 I/O 原理与分析</h1><blockquote class="pullquote mindmap mindmap-md"><ul>
+<li>I/O 性能指标<ul>
+<li>文件系统<ul>
+<li>存储空间容量、使用量和剩余空间</li>
+<li>索引节点容量、使用量和剩余量</li>
+<li>缓存<ul>
+<li>页缓存</li>
+<li>目录项缓存</li>
+<li>索引节点缓存</li>
+<li>物理文件系统缓存</li>
+</ul>
+</li>
+<li>IOPS（文件 I/O）</li>
+<li>响应时间（延迟）</li>
+<li>吞吐量（B/s）</li>
+</ul>
+</li>
+<li>磁盘<ul>
+<li>使用率</li>
+<li>IOPS</li>
+<li>吞吐量（B/s）</li>
+<li>响应时间（延迟）</li>
+<li>缓冲区</li>
+<li>相关因素<ul>
+<li>读写类型（顺序或随机）</li>
+<li>读写比例</li>
+<li>读写大小</li>
+<li>存储类型（RAID 级别、本地或网络等·）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+
+<h2 id="文件系统与磁盘"><a href="#文件系统与磁盘" class="headerlink" title="文件系统与磁盘"></a>文件系统与磁盘</h2><p>由于磁盘是 <strong>块设备</strong>，可被划分为不同的 <strong>分区</strong>，在磁盘或者分区上可再创建 <strong>文件系统</strong>，并挂载到系统的某个目录中，系统通过挂载目录来读写文件。</p>
+<p>Linux 中一切皆文件，因此可通过相同的文件接口来访问磁盘和文件。磁盘读写的原理：磁盘读写的最小单位是扇区（512B），为了提高读写效率，文件系统把连续的扇区组成逻辑块，每次都以逻辑块（常见 4KB，即连续的 8 个扇区）为最小单元来管理数据。其有两种 I/O 方式：</p>
+<ul>
+<li><p><strong>普通文件</strong> ：I/O 请求首先经过文件系统，由文件系统与磁盘交互。</p>
+</li>
+<li><p><strong>块设备文件</strong>：跳过文件系统、直接与磁盘交互，即 <strong>裸 I/O</strong>。</p>
+</li>
+</ul>
+<p>两种 I/O 方式使用的缓存不同，文件系统管理的缓存是 Cache 的一部分，裸磁盘的缓存则是使用 Buffer。</p>
+<h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><p>Linux 文件系统的四大基本要素：目录项、索引节点、逻辑块、超级块，接下来是具体的解析。</p>
+<h3 id="索引节点和目录项"><a href="#索引节点和目录项" class="headerlink" title="索引节点和目录项"></a>索引节点和目录项</h3><p><strong>文件系统</strong> 是对存储设备上的文件进行组织管理的机制。由于 Linux 中一切皆文件，除了普通的文件和目录，块设备、套接字、管道等也都通过统一的文件系统来管理，并使用两个数据结构记录文件元信息和目录结构：</p>
+<ul>
+<li><p><strong>索引节点（index node，即 inode）</strong>：用来记录文件的元数据，比如 <strong>inode 编号</strong>、<strong>文件大小</strong>、<strong>访问权限</strong>、<strong>修改日期</strong>、<strong>数据位置</strong> 等，与文件一一对应，并会被持久化存储到磁盘中（因此也占用磁盘空间）。</p>
+</li>
+<li><p><strong>目录项（directory entry，即 entry）</strong>：用来记录 <strong>文件名称</strong>、<strong>索引节点指针</strong> 以及 <strong>与其他目录项的关联关系</strong>（树状结构）。多个关联的目录项构成文件系统的目录结构。目录项是由内核维护的一个内存数据结构，通常也称为 <strong>目录项缓存</strong>。</p>
+</li>
+</ul>
+<blockquote>
+<p>  索引节点的容量是在格式化磁盘时设定好的，由格式化工具自动生成。当发现索引节点空间不足、但磁盘空间充足时，很可能就是由过多小文件导致，此时应删除小文件或移动到索引节点充足的其它位置。</p>
+</blockquote>
+<p>目录项和索引节点的关系是多对一，一个文件可以有多个别名（比如建立硬链接为文件创建别名）。由于前者是内存缓存数据，后者是磁盘数据，为了协调磁盘与 CPU 的性能差异，文件内容会缓存到页缓存 Cache 中。</p>
+<p>磁盘在执行文件系统格式化时，会被分成三个存储区域：</p>
+<ul>
+<li><p><strong>超级块</strong>：存储整个文件系统的状态。</p>
+</li>
+<li><p><strong>索引节点区</strong>：存储索引节点。</p>
+</li>
+<li><p><strong>数据块区</strong>：存储文件数据。</p>
+</li>
+</ul>
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/328d942a38230a973f11bae67307be47.png" alt="img"  />
+
+<h3 id="虚拟文件系统（VFS）"><a href="#虚拟文件系统（VFS）" class="headerlink" title="虚拟文件系统（VFS）"></a>虚拟文件系统（VFS）</h3><p>即为了支持不同的文件系统，Linux 内核在用户进程和文件系统之间引入的抽象层。</p>
+<p>VFS 定义了一组所有文件系统都支持的数据结构和标准接口。用户进程和内核中的其他子系统与 VFS 提供的统一接口进行交互，而不需要再关心底层文件系统的实现细节。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/728b7b39252a1e23a7a223cdf4aa1612.png" alt="img"></p>
+<p>VFS 支持的各种文件系统可分为三类：</p>
+<ul>
+<li><p>磁盘文件系统：把数据直接存储在计算机本地挂载的磁盘中，如 Ext4、XFS、OverlayFS 等。</p>
+</li>
+<li><p>内存文件系统：即虚拟文件系统，不需要磁盘分配存储空间、但会占用内存。比如 <code>/proc</code>、<code>/sys</code>（向用户空间导出层次化的内核对象）。</p>
+</li>
+<li><p>网络文件系统：用于访问其他计算机数据的文件系统，如 NFS、SMB、iSCSI 等。</p>
+</li>
+</ul>
+<p>文件系统要先挂载到 VFS 目录树中的某个子目录（<strong>挂载点</strong>）才能访问其中的文件。比如在安装系统时，要先挂载一个根目录（/），在根目录下再把其他文件系统（其他的磁盘分区、/proc、/sys、NFS 等）挂载进来。</p>
+<h3 id="文件系统-I-O"><a href="#文件系统-I-O" class="headerlink" title="文件系统 I/O"></a>文件系统 I/O</h3><p>文件系统被挂载后，就可以通过挂载点访问其管理的文件。VFS 有标准的文件访问接口，以系统调用的方式提供给应用程序使用。比如 <code>cat</code> 命令，就是依次调用 <code>open()</code>、<code>read()</code>、<code>write()</code> 函数来执行：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">open</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">int</span> flags, <span class="keyword">mode_t</span> mode)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">read</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="缓冲与非缓冲-I-O"><a href="#缓冲与非缓冲-I-O" class="headerlink" title="缓冲与非缓冲 I/O"></a>缓冲与非缓冲 I/O</h4><p>缓冲指标准库内部实现的缓存，由于不论是否被标准库缓存，最终还是经过系统调用来访问文件，系统调用后再通过页缓存来减少磁盘的 I/O 操作。</p>
+<ul>
+<li><p>缓冲 I/O：利用标准库缓存加速文件访问，标准库内部再通过系统调度访问文件。</p>
+</li>
+<li><p>非缓冲 I/O：直接通过系统调用来访问文件，不经过标准库缓存。</p>
+</li>
+</ul>
+<blockquote>
+<p>  比如很多程序遇到换行时才真正输出，而换行前的内容，其实就是被标准库暂时缓存。</p>
+</blockquote>
+<h4 id="直接-I-O-与非直接-I-O"><a href="#直接-I-O-与非直接-I-O" class="headerlink" title="直接 I/O 与非直接 I/O"></a>直接 I/O 与非直接 I/O</h4><ul>
+<li><p>直接 I/O：跳过操作系统页缓存，直接与文件系统交互访问文件。</p>
+</li>
+<li><p>非直接 I/O：文件读写时经过系统页缓存，再由内核或额外的系统调用真正写入磁盘。</p>
+</li>
+</ul>
+<p>在系统调用中指定 O_DIRECT 标志即实现直接 I/O（默认非直接 I/O）。直接 I/O、非直接 I/O，本质上还是和文件系统交互；在数据库等场景中也有裸 I/O，即跳过文件系统读写磁盘的情况。</p>
+<h4 id="阻塞-I-O-与非阻塞-I-O"><a href="#阻塞-I-O-与非阻塞-I-O" class="headerlink" title="阻塞 I/O 与非阻塞 I/O"></a>阻塞 I/O 与非阻塞 I/O</h4><ul>
+<li><p>阻塞 I/O：应用程序执行 I/O 操作后如果没有获得响应就会阻塞当前线程，不能执行其他任务。</p>
+</li>
+<li><p>非阻塞 I/O：应用程序执行 I/O 操作后不会阻塞当前的线程，可以继续执行其他的任务，随后再通过轮询或者事件通知的形式获取调用的结果。</p>
+</li>
+</ul>
+<p>比如访问管道或者网络套接字时，设置 O_NONBLOCK 标志就表示用非阻塞方式访问（默认阻塞）。</p>
+<h4 id="同步和异步-I-O"><a href="#同步和异步-I-O" class="headerlink" title="同步和异步 I/O"></a>同步和异步 I/O</h4><ul>
+<li><p>同步 I/O：应用程序执行 I/O 操作后要一直等到整个 I/O 完成后，才能获得 I/O 响应。</p>
+</li>
+<li><p>异步 I/O：应用程序执行 I/O 操作后不用等待完成和完成后的响应，而是继续执行。I/O 完成后响应会用事件通知的方式告诉应用程序。</p>
+</li>
+</ul>
+<p>比如在操作文件时如果设置了 O_SYNC 或 O_DSYNC 标志就代表同步 I/O。设置 O_DSYNC 后就要等文件数据写入磁盘后才能返回。O_SYNC 是在 O_DSYNC 基础上要求文件元数据也要写入磁盘后才能返回。</p>
+<p>比如访问管道或者网络套接字时设置了 O_ASYNC 选项，相应的 I/O 就是异步 I/O，内核会再通过 SIGIO 或者 SIGPOLL，来通知进程文件是否可读写。</p>
+<h3 id="如何监控？"><a href="#如何监控？" class="headerlink" title="如何监控？"></a>如何监控？</h3><p>使用 <code>df</code> 查看文件系统磁盘空间、索引节点使用情况：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">df -h /dev/sda1 </span><br><span class="line"><span class="meta">#</span><span class="bash"> Filesystem      Size  Used Avail Use% Mounted on </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> /dev/sda1        29G  3.1G   26G  11% / </span></span><br><span class="line"></span><br><span class="line">df -i /dev/sda1 </span><br><span class="line"><span class="meta">#</span><span class="bash"> Filesystem      Inodes  IUsed   IFree IUse% Mounted on </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> /dev/sda1      3870720 157460 3713260    5% /</span></span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>/proc/meminfo</code> 查看缓存大小：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/meminfo | grep -E "SReclaimable|Cached" </span><br><span class="line"><span class="meta">#</span><span class="bash"> Cached:           748316 kB </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> SwapCached:            0 kB </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> SReclaimable:     179508 kB</span></span><br></pre></td></tr></table></figure>
+
+<p>内核使用 Slab 机制管理目录项和索引节点的缓存。<code>/proc/meminfo</code> 只给出了 Slab 的整体大小，查看 <code>/proc/slabinfo</code> 可查看 Slab 缓存具体情况（所有目录项和各种文件系统索引节点的缓存）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/slabinfo | grep -E '^#|dentry|inode' </span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="comment"># name            &lt;active_objs&gt; &lt;num_objs&gt; &lt;objsize&gt; &lt;objperslab&gt; &lt;pagesperslab&gt; : tunables &lt;limit&gt; &lt;batchcount&gt; &lt;sharedfactor&gt; : slabdata &lt;active_slabs&gt; &lt;num_slabs&gt; &lt;sharedavail&gt; </span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> xfs_inode              0      0    960   17    4 : tunables    0    0    0 : slabdata      0      0      0 </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ... </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ext4_inode_cache   32104  34590   1088   15    4 : tunables    0    0    0 : slabdata   2306   2306      0hugetlbfs_inode_cache     13     13    624   13    2 : tunables    0    0    0 : slabdata      1      1      0 </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sock_inode_cache    1190   1242    704   23    4 : tunables    0    0    0 : slabdata     54     54      0 </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> shmem_inode_cache   1622   2139    712   23    4 : tunables    0    0    0 : slabdata     93     93      0 </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> proc_inode_cache    3560   4080    680   12    2 : tunables    0    0    0 : slabdata    340    340      0 </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> inode_cache        25172  25818    608   13    2 : tunables    0    0    0 : slabdata   1986   1986      0 </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> dentry             76050 121296    192   21    1 : tunables    0    0    0 : slabdata   5776   5776      0 </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> dentry 行表示目录项缓存，inode_cache 行表示 VFS 索引节点缓存，其余的则是各种文件系统的索引节点缓存。</span></span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>slabtop</code> 查看目录项和索引节点占用的 Slab 缓存。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">slabtop </span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Objects (% used)    : 277970 / 358914 (77.4%) </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Slabs (% used)      : 12414 / 12414 (100.0%) </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Caches (% used)     : 83 / 135 (61.5%) </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Size (% used)       : 57816.88K / 73307.70K (78.9%) </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Minimum / Average / Maximum Object : 0.01K / 0.20K / 22.88K </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash">   OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 69804  23094   0%    0.19K   3324       21     13296K dentry </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 16380  15854   0%    0.59K   1260       13     10080K inode_cache </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 58260  55397   0%    0.13K   1942       30      7768K kernfs_node_cache </span></span><br><span class="line"><span class="meta">#</span><span class="bash">    485    413   0%    5.69K     97        5      3104K task_struct </span></span><br><span class="line"><span class="meta">#</span><span class="bash">   1472   1397   0%    2.00K     92       16      2944K kmalloc-2048 </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 按下 c 按照缓存大小排序，按下 a 按照活跃对象数排序</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="磁盘-I-O"><a href="#磁盘-I-O" class="headerlink" title="磁盘 I/O"></a>磁盘 I/O</h2><p>磁盘是可以持久化存储的设备，根据存储介质分类：</p>
+<ul>
+<li><p><strong>机械磁盘</strong>（Hard Disk Driver，HDD）：最小读写单位为扇区（一般 512Bytes）。主要由盘片和读写磁头组成，数据就存储在盘片的环状磁道中。在读写数据前需要移动读写磁头，定位到数据所在的磁道才能访问数据。如果 I/O 请求刚好连续则不需要磁道寻址，且可以通过预读的方式减少 I/O 次数获得最佳性能。与之相对随机 I/O 需要更多的磁头寻道和盘片旋转，读写速度较慢。</p>
+</li>
+<li><p><strong>固态磁盘</strong> （Solid State Disk，SSD）：最小读写单位为页（一般 4KB、8KB）。由固态电子元器件组成，不需要磁道寻址，连续 I/O 和随机 I/O 的性能都比机械磁盘好。但同样存在“先擦除再写入”的限制，随机读写导致大量的垃圾回收，所以随机 I/O 的性能比起连续 I/O 来差很多。</p>
+</li>
+</ul>
+<p>根据接口来分类： 不同的接口往往分配不同的设备名称。IDE（Integrated Drive Electronics，前缀 hd）、SCSI（Small Computer System Interface，前缀 sd） 、SAS（Serial Attached SCSI，前缀 sd） 、SATA（Serial ATA，前缀 sd） 、FC（Fibre Channel） 等。多块同类型的磁盘会按照 a、b、c 等的字母顺序来编号。</p>
+<p>根据架构分类：把磁盘接入服务器后，按照不同的使用方式可以把它们划分为多种不同的架构。</p>
+<ul>
+<li><p>直接作为独立磁盘设备来使用，在磁盘上划分不同的逻辑分区（/dev/sda1）。</p>
+</li>
+<li><p>把多块磁盘组合成一个逻辑磁盘，构成冗余独立磁盘阵列（Redundant Array of Independent Disks，RAID），以提高读写性能或提供冗余。</p>
+</li>
+<li><p>把磁盘组合成网络存储集群，再通过 NFS、SMB、iSCSI 等网络存储协议暴露给服务器使用。</p>
+</li>
+</ul>
+<p>在 Linux 中磁盘以块为单位读写数据（块设备），并支持随机读写。每个块设备在驱动程序中被赋予主设备号（用来区分设备类型）和次设备号（给多个同类设备编号）。</p>
+<h3 id="通用块层"><a href="#通用块层" class="headerlink" title="通用块层"></a>通用块层</h3><p>即在文件系统和磁盘驱动中间的一个块设备抽象层。</p>
+<ul>
+<li><p>与虚拟文件系统的功能类似。向上为文件系统和应用程序提供访问块设备的标准接口；向下把各种异构的磁盘设备抽象为统一的块设备，并提供统一框架来管理这些设备的驱动程序。</p>
+</li>
+<li><p>I/O 调度：给文件系统和应用程序发来的 I/O 请求排队，并通过重新排序、请求合并等方式提高磁盘读写的效率。</p>
+</li>
+</ul>
+<p>I/O 调度算法：</p>
+<ul>
+<li><p>NONE：对文件系统和应用程序的 I/O 其实不做任何处理，常用在虚拟机中（此时磁盘 I/O 调度完全由物理机负责）。</p>
+</li>
+<li><p>NOOP：一个先入先出的队列，只做一些最基本的请求合并，常用于 SSD 磁盘。</p>
+</li>
+<li><p>CFQ：完全公平调度器（Completely Fair Scheduler），通常是默认的 I/O 调度器。为每个进程维护了一个 I/O 调度队列，按照时间片均匀分布每个进程的 I/O 请求；另外还支持进程 I/O 的优先级调度，适用于运行大量进程的系统。</p>
+</li>
+<li><p>DeadLine：分别为读、写请求创建 I/O 队列，提高机械磁盘的吞吐量，并确保达到最终期限的请求被优先处理。多用在 I/O 压力比较重的场景，比如数据库等。</p>
+</li>
+</ul>
+<h3 id="I-O-栈"><a href="#I-O-栈" class="headerlink" title="I/O 栈"></a>I/O 栈</h3><p>存储系统 I/O 的工作原理：</p>
+<ul>
+<li><p><strong>文件系统层</strong>：虚拟文件系统和物理文件系统。为上层应用程序提供标准的文件访问接口；对下通过通用块层来存储和管理磁盘数据。</p>
+</li>
+<li><p><strong>通用块层</strong>：包括块设备 I/O 队列和 I/O 调度器。会对文件系统的 I/O 请求进行排队，再通过重新排序和请求合并，然后才要发送给下一级的设备层。</p>
+</li>
+<li><p><strong>设备层</strong>：包括存储设备和相应的驱动程序，负责最终物理设备的 I/O 操作。</p>
+</li>
+</ul>
+<p>存储系统的 I/O 是整个系统中最慢的部分，Linux 通过多种缓存机制来优化 I/O 效率：</p>
+<ul>
+<li><p>优化文件访问：使用页缓存、索引节点缓存、目录项缓存等多种缓存机制减少对下层块设备的直接调用。</p>
+</li>
+<li><p>优化块设备访问：使用缓冲区来缓存块设备的数据。</p>
+</li>
+</ul>
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/Linux-storage-stack-diagram_v4.10.png" alt="img" style="zoom:67%;" />
+
+<h2 id="磁盘性能指标"><a href="#磁盘性能指标" class="headerlink" title="磁盘性能指标"></a>磁盘性能指标</h2><p>衡量磁盘性能需要考虑：</p>
+<ul>
+<li><p><strong>使用率</strong>：磁盘处理 I/O 的时间百分比。过高的使用率（80%+）通常意味着磁盘 I/O 存在性能瓶颈。只考虑是否有 I/O，不考虑 I/O 大小。</p>
+</li>
+<li><p><strong>饱和度</strong>：磁盘处理 I/O 的繁忙程度。过高的饱和度意味着磁盘存在严重的性能瓶颈（100% 时磁盘无法接受新的 I/O 请求），大量顺序读写场景下更能反映系统性能（比如多媒体）。</p>
+</li>
+<li><p><strong>IOPS（Input/Output Per Second）</strong>：每秒的 I/O 请求数，大量随机读写场景下更能反映系统性能（比如数据库、大量小文件）。</p>
+</li>
+<li><p><strong>吞吐量</strong>：每秒的 I/O 请求大小。</p>
+</li>
+<li><p><strong>响应时间</strong>：I/O 请求从发出到收到响应的间隔时间。</p>
+</li>
+</ul>
+<p>以上指标可使用工具 <code>fio</code> 结合具体应用场景（顺序读/写，随机读/写）进行基准测试来评估。</p>
+<blockquote>
+<p>  饱和度通常没有简单的观测方法，但可以把观测到的，平均请求队列长度或者读写请求完成的等待时间，与基准测试的结果（比如通过 fio）进行对比，综合评估磁盘的饱和情况。</p>
+</blockquote>
+<h3 id="如何监控？-1"><a href="#如何监控？-1" class="headerlink" title="如何监控？"></a>如何监控？</h3><p>使用 <code>iostat</code> 命令查看每个磁盘的使用率、IOPS、吞吐量等（数据源于 <code>/proc/diskstats</code>）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -d -x 表示显示所有磁盘 I/O 的指标</span></span><br><span class="line">iostat -d -x 1 </span><br><span class="line"><span class="meta">#</span><span class="bash"> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> loop0            0.00    0.00      0.00      0.00     0.00     0.00   0.00   0.00    0.00    0.00   0.00     0.00     0.00   0.00   0.00 </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> loop1            0.00    0.00      0.00      0.00     0.00     0.00   0.00   0.00    0.00    0.00   0.00     0.00     0.00   0.00   0.00 </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sda              0.00    0.00      0.00      0.00     0.00     0.00   0.00   0.00    0.00    0.00   0.00     0.00     0.00   0.00   0.00 </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sdb              0.00    0.00      0.00      0.00     0.00     0.00   0.00   0.00    0.00    0.00   0.00     0.00     0.00   0.00   0.00</span></span><br></pre></td></tr></table></figure>
+
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/cff31e715af51c9cb8085ce1bb48318d.png" alt="img" style="zoom:67%;" />
+
+<p>使用 <code>pidstat</code> 观察进程 I/O 情况：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pidstat -d 1 </span><br><span class="line"><span class="meta">#</span><span class="bash"> 13:39:51      UID       PID   kB_rd/s   kB_wr/s kB_ccwr/s iodelay  Command </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 13:39:52      102       916      0.00      4.00      0.00       0  rsyslogd</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>  其每列的含义：</p>
+<ul>
+<li><p>用户 ID（UID）和进程 ID（PID） 。</p>
+</li>
+<li><p>每秒读取的数据大小（kB_rd/s） ，单位 KB。</p>
+</li>
+<li><p>每秒发出的写请求数据大小（kB_wr/s） ，单位 KB。</p>
+</li>
+<li><p>每秒取消的写请求数据大小（kB_ccwr/s） ，单位 KB。</p>
+</li>
+<li><p>块 I/O 延迟（iodelay），包括等待同步块 I/O 和换入块 I/O 结束的时间，单位时钟周期。</p>
+</li>
+</ul>
+</blockquote>
+<p>使用 <code>iotop</code> 根据 I/O 大小对进程进行排序：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">iotop</span><br><span class="line"><span class="meta">#</span><span class="bash"> 进程的磁盘读写大小总数和磁盘真实的读写大小总数。因为缓存、缓冲区、I/O 合并等因素的影响，可能并不相等。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Total DISK READ :       0.00 B/s | Total DISK WRITE :       7.85 K/s </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Actual DISK READ:       0.00 B/s | Actual DISK WRITE:       0.00 B/s </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 线程 ID、I/O 优先级、每秒读磁盘的大小、每秒写磁盘的大小、换入和等待 I/O 的时钟百分比等。</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 15055 be/3 root        0.00 B/s    7.85 K/s  0.00 %  0.00 % systemd-journald</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="工具总结"><a href="#工具总结" class="headerlink" title="工具总结"></a>工具总结</h2><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/6f26fa18a73458764fcda00212006698.png" alt="img" style="zoom:67%;" />
+
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/ee11664d015f034e4042b9fa4fyycff3.jpg" alt="img" style="zoom: 90%;" />
+
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/1802a35475ee2755fb45aec55ed2d98a.png" alt="img"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>分析案例可参考：</p>
+<ul>
+<li><p><a href="hhttps://time.geekbang.org/column/article/77885">26 | 案例篇：如何找出狂打日志的“内鬼”？</a></p>
+</li>
+<li><p><a href="hhttps://time.geekbang.org/column/article/78409">27 | 案例篇：为什么我的磁盘I/O延迟很高？</a></p>
+</li>
+<li><p><a href="hhttps://time.geekbang.org/column/article/78633">28 | 案例篇：一个SQL查询要15秒，这是怎么回事？</a></p>
+</li>
+<li><p><a href="hhttps://time.geekbang.org/column/article/78984">29 | 案例篇：Redis响应严重延迟，如何解决？</a></p>
+</li>
+</ul>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2021/07/18/Go_error_handling/" title= "Go 异常处理">
+                    <div class="nextTitle">Go 异常处理</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/07/17/OS_linux-memory-monitoring/" title= "Linux 系统内存原理与分析">
+                    <div class="prevTitle">Linux 系统内存原理与分析</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+     
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+</main>
+
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:100vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux-系统-I-O-原理与分析"><span class="toc-number">1.</span> <span class="toc-text">Linux 系统 I&#x2F;O 原理与分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件系统与磁盘"><span class="toc-number">1.1.</span> <span class="toc-text">文件系统与磁盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件系统"><span class="toc-number">1.2.</span> <span class="toc-text">文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#索引节点和目录项"><span class="toc-number">1.2.1.</span> <span class="toc-text">索引节点和目录项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#虚拟文件系统（VFS）"><span class="toc-number">1.2.2.</span> <span class="toc-text">虚拟文件系统（VFS）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件系统-I-O"><span class="toc-number">1.2.3.</span> <span class="toc-text">文件系统 I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#缓冲与非缓冲-I-O"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">缓冲与非缓冲 I&#x2F;O</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#直接-I-O-与非直接-I-O"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">直接 I&#x2F;O 与非直接 I&#x2F;O</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#阻塞-I-O-与非阻塞-I-O"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">阻塞 I&#x2F;O 与非阻塞 I&#x2F;O</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#同步和异步-I-O"><span class="toc-number">1.2.3.4.</span> <span class="toc-text">同步和异步 I&#x2F;O</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何监控？"><span class="toc-number">1.2.4.</span> <span class="toc-text">如何监控？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#磁盘-I-O"><span class="toc-number">1.3.</span> <span class="toc-text">磁盘 I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#通用块层"><span class="toc-number">1.3.1.</span> <span class="toc-text">通用块层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O-栈"><span class="toc-number">1.3.2.</span> <span class="toc-text">I&#x2F;O 栈</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#磁盘性能指标"><span class="toc-number">1.4.</span> <span class="toc-text">磁盘性能指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#如何监控？-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">如何监控？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工具总结"><span class="toc-number">1.5.</span> <span class="toc-text">工具总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.6.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 63
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/Go_error_handling/" >Go 异常处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-io-monitoring/" >Linux 系统 I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-memory-monitoring/" >Linux 系统内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/OS_linux-cpu-monitoring/" >Linux 系统 CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/OS_system_initialization/" >操作系统 - 架构与系统初始化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservice/" >微服务概览与治理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/Algorithm_max-flow-problem/" >最大流问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >分布式系统模式：Gossip 传播</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >分布式系统模式：版本化值</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >一致性哈希</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/13</span><a class="archive-post-title" href= "/2021/06/13/Go_cheat-sheet/" >Go Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/06</span><a class="archive-post-title" href= "/2021/06/06/2021-06-06_diary/" >Weekly Summary (2021-05-31_2021-06-06)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/05</span><a class="archive-post-title" href= "/2021/06/05/2021-06-05_diary/" >基于记忆规律的学习方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2021/05/31/2021-05-31_diary/" >2021 下半年工作学习安排</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >如何用图论解决 Secret Santa 问题？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >Java 程序员的 C++</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2021/02/24/DDIA_note-13/" >《DDIA》阅读笔记（九）：一致性与共识（共识问题）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2021/02/21/2021-02-21_diary/" >近期工作学习规划</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2021/02/19/DDIA_note-12/" >《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2021/02/13/DDIA_note-11/" >《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span><a class="archive-post-title" href= "/2021/02/06/DDIA_note-10/" >《DDIA》阅读笔记（八）：分布式系统的挑战</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2021/01/27/DDIA_note-9/" >《DDIA》阅读笔记（七）：事务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2021/01/22/DDIA_note-8/" >《DDIA》阅读笔记（六）：数据分区</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-7/" >《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2021/01/20/DDIA_note-6/" >《DDIA》阅读笔记（五）：数据复制（多主节点）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >选择合适的数据库</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2021/01/09/DDIA_note-5/" >《DDIA》阅读笔记（五）：数据复制（单主节点）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2021/01/01/DB_tree-table-design-summary/" >树形表结构设计总结</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2020/12/19/DDIA_note-4/" >《DDIA》阅读笔记（四）：数据编码与演化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2020/12/13/DDIA_note-3/" >《DDIA》阅读笔记（三）：数据存储与检索</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span><a class="archive-post-title" href= "/2020/12/04/DDIA_note-2/" >《DDIA》阅读笔记（二）：数据模型与查询语言</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2020/12/02/DDIA_note-1/" >《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2020/10/08/Maven_external_dependencies_management/" >Maven 打包依赖外置</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2020/10/04/JVM_prod-analysis-cmd/" >Java 应用常用调试分析方法总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_cheat-sheet/" >Kafka Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2020/08/09/Arthas_Cheat-Sheet/" >Arthas Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2020/07/12/Java_override-and-bridge-method/" >Java 多态、重写与桥接方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/JVM_java-memory-area/" >Java 内存区域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/28</span><a class="archive-post-title" href= "/2020/05/28/DB_data-warehouse-design-basic/" >数据仓库设计基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span><a class="archive-post-title" href= "/2020/04/08/2020-04-08_diary/" >关于使用思维导图做笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href= "/2020/03/28/Algorithm_leetcode-high-frequency-problems/" >LeetCode 高频面试题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href= "/2020/03/06/InfoSecty_personal-infomation-security-guide/" >個人信息安全保護指南</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2020/02/22/2020-02-22_diary/" >免费 JetBrains 全家桶</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/16</span><a class="archive-post-title" href= "/2020/02/16/Nginx_cheat-sheet/" >Nginx Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_Cheat-Sheet/" >Git Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_Cheat-Sheet/" >Docker & K8S Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2020/02/03/JVM_jstat-monitor-analysis/" >JVM jstat 监控分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/JVM_GC-log-analysis/" >JVM GC 日志分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2020/01/01/JVM_mindmap/" >Java 虚拟机与并发编程</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span><a class="archive-post-title" href= "/2019/12/05/Design_design-patterns/" >设计模式与设计原则</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2019/10/04/Python_async-programming/" >Python 异步编程总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2019/09/19/Python_data-structure/" >Python 数据结构应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2019/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2019/06/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2019/06/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2019/05/30/Vue_user-guide-4/" >Vue 学习笔记：前端路由、请求发送和状态管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href= "/2019/05/24/Vue_user-guide-3/" >Vue 学习笔记：组件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span><a class="archive-post-title" href= "/2019/05/23/Vue_user-guide-2/" >Vue 学习笔记（2）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Vue_user-guide-1/" >Vue 学习笔记（1）</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
+    
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
+    
+        <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《数据密集型应用系统设计》阅读笔记</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Kylo Yip"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
+
+

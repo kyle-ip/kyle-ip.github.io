@@ -16,12 +16,35 @@
     <meta name="author" content="Kylo Yip">
     <meta name="renderer" content="webkit">
     <meta name="copyright" content="Kylo Yip">
+	
+	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="/live2d-widget/autoload.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
+	
     
     <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
+    <meta name="description" content="《DDIA》阅读笔记（七）：事务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《DDIA》阅读笔记（七）：事务">
+<meta property="og:url" content="https://yipwinghong.github.io/2021/01/27/DDIA_note-9/index.html">
+<meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:description" content="《DDIA》阅读笔记（七）：事务">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E4%BA%A4%E4%BA%92%E5%BC%8F%E4%BA%8B%E5%8A%A1%E4%B8%8E%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B.jpg">
+<meta property="article:published_time" content="2021-01-27T13:06:01.000Z">
+<meta property="article:modified_time" content="2021-07-18T13:29:36.491Z">
+<meta property="article:author" content="Kylo Yip">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="设计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E4%BA%A4%E4%BA%92%E5%BC%8F%E4%BA%8B%E5%8A%A1%E4%B8%8E%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B.jpg">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <link rel="alternate" href="/atom.xml" title="Kylo&#39;s Notebook" type="application/atom+xml">
+    
     <title>《DDIA》阅读笔记（七）：事务 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
@@ -75,8 +98,8 @@
 
 </style>
 
-    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
     
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     
@@ -190,9 +213,10 @@
     <link rel="icon" href= "/assets/favicon.ico" />
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
-    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
     <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
     <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
     
     <!-- fancybox -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
@@ -200,8 +224,7 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.1"></head>
 
     
         <body class="post-body">
@@ -209,21 +232,52 @@
     
 <header class="header">
 
-    <div class="read-progress"></div>
-    <div class="header-sidebar-menu">&#xe775;</div>
-    <!-- post页的toggle banner  -->
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu header-sidebar-menu-rounded">
+        
+            
+            <i class="fas fa-bars"></i>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>Kylo's Notebook</a>
+    <!-- toggle banner for post layout -->
+    
     
     <div class="banner">
-            <div class="blog-title">
-                <a href="/" >Kylo&#39;s Notebook</a>
-            </div>
-            <div class="post-title">
-                <a href="#" class="post-name">《DDIA》阅读笔记（七）：事务</a>
-            </div>
+    
+        <div class="blog-title header-element">
+            <a href="/" >Kylo&#39;s Notebook</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">《DDIA》阅读笔记（七）：事务</a>
+        </div>
     </div>
     
-    <a class="home-link" href=/>Kylo's Notebook</a>
 </header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top back-top-rounded">
+        
+            
+            <i class="fas fa-chevron-up"></i>
+            
+        </div>
+    </div>
+</footer>
     <div class="wrapper">
         <div class="site-intro" style="
 
@@ -275,7 +329,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">8,199</span>Reading time: <span class="post-count reading-time">28 min</span></span>
+                        <span>Word count: <span class="post-count word-count">8,209</span>Reading time: <span class="post-count reading-time">28 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -404,7 +458,7 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>本章结构如下：</p>
+        <h1 id="《DDIA》阅读笔记（七）：事务"><a href="#《DDIA》阅读笔记（七）：事务" class="headerlink" title="《DDIA》阅读笔记（七）：事务"></a>《DDIA》阅读笔记（七）：事务</h1><p>本章结构如下：</p>
 <blockquote class="pullquote mindmap mindmap-md"><ul>
 <li>事务<ul>
 <li>事务原理<ul>
@@ -817,6 +871,7 @@ height:100vh;
 <li><p><strong>与两阶段加锁相比</strong>：由于不需要等待其他事务所持有的锁，和快照隔离一样，读写通常不会互相阻塞。，这样使得查询延迟更加稳定、 可预测。 在一致性快照上执行只读查询不需要任何锁，有利于提高读密集的负载。</p>
 </li>
 </ul>
+<p>以上。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -861,6 +916,9 @@ height:100vh;
 <!-- City版安装代码已完成 -->
     
     
+     
+    <!-- utteranc评论 -->
+
     <!-- partial('_partial/comment/changyan') -->
     <!--PC版-->
 
@@ -869,7 +927,11 @@ height:100vh;
     
 
     <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
 </main>
+
             <!-- profile -->
             
         </div>
@@ -894,8 +956,8 @@ height:100vh;
         
             
                 <span class="iconfont-archer wechat" title=wechat>
-                  
-                  <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
                 </span>
             
         
@@ -923,6 +985,10 @@ height:100vh;
         
     
         
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
     
         
     
@@ -945,6 +1011,8 @@ height:100vh;
     <div class="copyright">
         <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
     </div>
+    <!-- website approve for Chinese user -->
+    
     <!-- 不蒜子  -->
     
     <div class="busuanzi-container">
@@ -973,10 +1041,9 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#事务原理"><span class="toc-number">1.</span> <span class="toc-text">事务原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ACID-的含义"><span class="toc-number">1.1.</span> <span class="toc-text">ACID 的含义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原子性（Atomicity）"><span class="toc-number">1.1.1.</span> <span class="toc-text">原子性（Atomicity）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一致性（Consistency）"><span class="toc-number">1.1.2.</span> <span class="toc-text">一致性（Consistency）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#隔离性（Isolation）"><span class="toc-number">1.1.3.</span> <span class="toc-text">隔离性（Isolation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#持久性（Durability）"><span class="toc-number">1.1.4.</span> <span class="toc-text">持久性（Durability）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单对象与多对象事务操作"><span class="toc-number">1.2.</span> <span class="toc-text">单对象与多对象事务操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单对象写入"><span class="toc-number">1.2.1.</span> <span class="toc-text">单对象写入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多对象事务"><span class="toc-number">1.2.2.</span> <span class="toc-text">多对象事务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#处理错误与中止"><span class="toc-number">1.2.3.</span> <span class="toc-text">处理错误与中止</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#弱隔离级别"><span class="toc-number">2.</span> <span class="toc-text">弱隔离级别</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#读写竞争"><span class="toc-number">2.1.</span> <span class="toc-text">读写竞争</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#脏写-gt-读-未提交"><span class="toc-number">2.1.1.</span> <span class="toc-text">脏写 -&gt; 读-未提交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#脏读-gt-读-提交"><span class="toc-number">2.1.2.</span> <span class="toc-text">脏读 -&gt; 读-提交</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#防止脏读"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">防止脏读</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#防止脏写"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">防止脏写</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存在问题"><span class="toc-number">2.1.2.3.</span> <span class="toc-text">存在问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不可重复读-gt-可重复读"><span class="toc-number">2.1.3.</span> <span class="toc-text">不可重复读 -&gt; 可重复读</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#实现快照级别隔离"><span class="toc-number">2.1.3.1.</span> <span class="toc-text">实现快照级别隔离</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一致性快照的可见性规则"><span class="toc-number">2.1.3.2.</span> <span class="toc-text">一致性快照的可见性规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#索引与快照级别隔离"><span class="toc-number">2.1.3.3.</span> <span class="toc-text">索引与快照级别隔离</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写写竞争（更新丢失）"><span class="toc-number">2.2.</span> <span class="toc-text">写写竞争（更新丢失）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原子写操作"><span class="toc-number">2.2.1.</span> <span class="toc-text">原子写操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#显式加锁"><span class="toc-number">2.2.2.</span> <span class="toc-text">显式加锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动检测更新丢失"><span class="toc-number">2.2.3.</span> <span class="toc-text">自动检测更新丢失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原子比较和设置"><span class="toc-number">2.2.4.</span> <span class="toc-text">原子比较和设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#冲突解决与复制"><span class="toc-number">2.2.5.</span> <span class="toc-text">冲突解决与复制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多对象冲突"><span class="toc-number">2.3.</span> <span class="toc-text">多对象冲突</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#写倾斜"><span class="toc-number">2.3.1.</span> <span class="toc-text">写倾斜</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#幻读"><span class="toc-number">2.3.2.</span> <span class="toc-text">幻读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实体化冲突"><span class="toc-number">2.3.3.</span> <span class="toc-text">实体化冲突</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#强隔离级别"><span class="toc-number">3.</span> <span class="toc-text">强隔离级别</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#悲观并发控制"><span class="toc-number">3.1.</span> <span class="toc-text">悲观并发控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实际串行执行"><span class="toc-number">3.1.1.</span> <span class="toc-text">实际串行执行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#存储过程封装"><span class="toc-number">3.1.1.1.</span> <span class="toc-text">存储过程封装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分区"><span class="toc-number">3.1.1.2.</span> <span class="toc-text">分区</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观并发控制"><span class="toc-number">3.2.</span> <span class="toc-text">乐观并发控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可串行化快照隔离（SSI）"><span class="toc-number">3.2.1.</span> <span class="toc-text">可串行化快照隔离（SSI）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基于过期条件决定"><span class="toc-number">3.2.1.1.</span> <span class="toc-text">基于过期条件决定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#检测过期"><span class="toc-number">3.2.1.2.</span> <span class="toc-text">检测过期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#检测写影响"><span class="toc-number">3.2.1.3.</span> <span class="toc-text">检测写影响</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#性能问题"><span class="toc-number">3.2.1.4.</span> <span class="toc-text">性能问题</span></a></li></ol></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#《DDIA》阅读笔记（七）：事务"><span class="toc-number">1.</span> <span class="toc-text">《DDIA》阅读笔记（七）：事务</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#事务原理"><span class="toc-number">2.</span> <span class="toc-text">事务原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ACID-的含义"><span class="toc-number">2.1.</span> <span class="toc-text">ACID 的含义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原子性（Atomicity）"><span class="toc-number">2.1.1.</span> <span class="toc-text">原子性（Atomicity）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一致性（Consistency）"><span class="toc-number">2.1.2.</span> <span class="toc-text">一致性（Consistency）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#隔离性（Isolation）"><span class="toc-number">2.1.3.</span> <span class="toc-text">隔离性（Isolation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#持久性（Durability）"><span class="toc-number">2.1.4.</span> <span class="toc-text">持久性（Durability）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单对象与多对象事务操作"><span class="toc-number">2.2.</span> <span class="toc-text">单对象与多对象事务操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单对象写入"><span class="toc-number">2.2.1.</span> <span class="toc-text">单对象写入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多对象事务"><span class="toc-number">2.2.2.</span> <span class="toc-text">多对象事务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#处理错误与中止"><span class="toc-number">2.2.3.</span> <span class="toc-text">处理错误与中止</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#弱隔离级别"><span class="toc-number">3.</span> <span class="toc-text">弱隔离级别</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#读写竞争"><span class="toc-number">3.1.</span> <span class="toc-text">读写竞争</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#脏写-gt-读-未提交"><span class="toc-number">3.1.1.</span> <span class="toc-text">脏写 -&gt; 读-未提交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#脏读-gt-读-提交"><span class="toc-number">3.1.2.</span> <span class="toc-text">脏读 -&gt; 读-提交</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#防止脏读"><span class="toc-number">3.1.2.1.</span> <span class="toc-text">防止脏读</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#防止脏写"><span class="toc-number">3.1.2.2.</span> <span class="toc-text">防止脏写</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存在问题"><span class="toc-number">3.1.2.3.</span> <span class="toc-text">存在问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不可重复读-gt-可重复读"><span class="toc-number">3.1.3.</span> <span class="toc-text">不可重复读 -&gt; 可重复读</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#实现快照级别隔离"><span class="toc-number">3.1.3.1.</span> <span class="toc-text">实现快照级别隔离</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一致性快照的可见性规则"><span class="toc-number">3.1.3.2.</span> <span class="toc-text">一致性快照的可见性规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#索引与快照级别隔离"><span class="toc-number">3.1.3.3.</span> <span class="toc-text">索引与快照级别隔离</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写写竞争（更新丢失）"><span class="toc-number">3.2.</span> <span class="toc-text">写写竞争（更新丢失）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原子写操作"><span class="toc-number">3.2.1.</span> <span class="toc-text">原子写操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#显式加锁"><span class="toc-number">3.2.2.</span> <span class="toc-text">显式加锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动检测更新丢失"><span class="toc-number">3.2.3.</span> <span class="toc-text">自动检测更新丢失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原子比较和设置"><span class="toc-number">3.2.4.</span> <span class="toc-text">原子比较和设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#冲突解决与复制"><span class="toc-number">3.2.5.</span> <span class="toc-text">冲突解决与复制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多对象冲突"><span class="toc-number">3.3.</span> <span class="toc-text">多对象冲突</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#写倾斜"><span class="toc-number">3.3.1.</span> <span class="toc-text">写倾斜</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#幻读"><span class="toc-number">3.3.2.</span> <span class="toc-text">幻读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实体化冲突"><span class="toc-number">3.3.3.</span> <span class="toc-text">实体化冲突</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#强隔离级别"><span class="toc-number">4.</span> <span class="toc-text">强隔离级别</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#悲观并发控制"><span class="toc-number">4.1.</span> <span class="toc-text">悲观并发控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实际串行执行"><span class="toc-number">4.1.1.</span> <span class="toc-text">实际串行执行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#存储过程封装"><span class="toc-number">4.1.1.1.</span> <span class="toc-text">存储过程封装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分区"><span class="toc-number">4.1.1.2.</span> <span class="toc-text">分区</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观并发控制"><span class="toc-number">4.2.</span> <span class="toc-text">乐观并发控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可串行化快照隔离（SSI）"><span class="toc-number">4.2.1.</span> <span class="toc-text">可串行化快照隔离（SSI）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基于过期条件决定"><span class="toc-number">4.2.1.1.</span> <span class="toc-text">基于过期条件决定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#检测过期"><span class="toc-number">4.2.1.2.</span> <span class="toc-text">检测过期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#检测写影响"><span class="toc-number">4.2.1.3.</span> <span class="toc-text">检测写影响</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#性能问题"><span class="toc-number">4.2.1.4.</span> <span class="toc-text">性能问题</span></a></li></ol></li></ol></li></ol></li></ol>
     </div>
     
-    <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
         <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
@@ -1410,9 +1477,30 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 60
+        Total : 63
         </div>
         <!-- search  -->
         
@@ -1428,12 +1516,47 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题相关算法</a>
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/Go_error_handling/" >Go 异常处理</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题相关算法</a>
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-io-monitoring/" >Linux 系统 I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-memory-monitoring/" >Linux 系统内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/OS_linux-cpu-monitoring/" >Linux 系统 CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/OS_system_initialization/" >操作系统 - 架构与系统初始化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservice/" >微服务概览与治理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/Algorithm_max-flow-problem/" >最大流问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题</a>
         </li>
     
     
@@ -1587,7 +1710,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_prod-env-assess/" >Kafka 生产环境资源评估</a>
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_cheat-sheet/" >Kafka Cheat Sheet</a>
         </li>
     
     
@@ -1656,6 +1779,11 @@ top:100vh;
         </li>
     
     
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2020/01/01/JVM_mindmap/" >Java 虚拟机与并发编程</a>
+        </li>
+    
+    
     
     
     
@@ -1666,91 +1794,57 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/01</span><a class="archive-post-title" href= "/2019/11/01/Design_design-patterns/" >设计模式与设计原则</a>
+            <span class="archive-post-date">12/05</span><a class="archive-post-title" href= "/2019/12/05/Design_design-patterns/" >设计模式与设计原则</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2019/10/30/JVM_mindmap/" >Java 虚拟机与并发编程</a>
+            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2019/10/04/Python_async-programming/" >Python 异步编程总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/21</span><a class="archive-post-title" href= "/2019/05/21/Kafka_offset-reset/" >Kafka 位移重置</a>
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2019/09/19/Python_data-structure/" >Python 数据结构应用</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/21</span><a class="archive-post-title" href= "/2019/05/21/Kafka_dynamic-config/" >Kafka 动态配置</a>
+            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Kafka_common-scripts/" >Kafka 常用脚本</a>
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2019/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/06</span><a class="archive-post-title" href= "/2019/05/06/Kafka_basic-conceptions/" >Kafka 基本概念</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
-    <div class="archive-year"> 2018 </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2018/10/04/Python_async-programming/" >Python 异步编程总结</a>
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2019/06/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2018/09/19/Python_data-structure/" >Python 数据结构应用</a>
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2019/06/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2018/09/13/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2019/05/30/Vue_user-guide-4/" >Vue 学习笔记：前端路由、请求发送和状态管理</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2018/09/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href= "/2019/05/24/Vue_user-guide-3/" >Vue 学习笔记：组件</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/30</span><a class="archive-post-title" href= "/2018/08/30/Vue_user-guide-4/" >Vue 学习笔记：前端路由、请求发送和状态管理</a>
+            <span class="archive-post-date">05/23</span><a class="archive-post-title" href= "/2019/05/23/Vue_user-guide-2/" >Vue 学习笔记（2）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2018/08/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Vue_user-guide-3/" >Vue 学习笔记：组件</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2018/08/23/Vue_user-guide-2/" >Vue 学习笔记（2）</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2018/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/Vue_user-guide-1/" >Vue 学习笔记（1）</a>
+            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Vue_user-guide-1/" >Vue 学习笔记（1）</a>
         </li>
     
     </div>
@@ -1774,29 +1868,35 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
     
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
-    
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -1883,7 +1983,7 @@ jsonContent:
     });
 </script>
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-nietzsche"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+</body>
 </html>
 
 
