@@ -283,7 +283,7 @@
     <link href="https://yipwinghong.github.io/2021/04/28/OS_linux-memory-monitoring/"/>
     <id>https://yipwinghong.github.io/2021/04/28/OS_linux-memory-monitoring/</id>
     <published>2021-04-28T07:50:33.000Z</published>
-    <updated>2021-07-19T08:17:47.420Z</updated>
+    <updated>2021-07-19T15:41:53.438Z</updated>
     
     
     <summary type="html">学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（内存）。</summary>
@@ -304,7 +304,7 @@
     <link href="https://yipwinghong.github.io/2021/04/20/OS_linux-io-monitoring/"/>
     <id>https://yipwinghong.github.io/2021/04/20/OS_linux-io-monitoring/</id>
     <published>2021-04-20T07:50:33.000Z</published>
-    <updated>2021-07-19T08:35:23.241Z</updated>
+    <updated>2021-07-19T15:42:10.629Z</updated>
     
     
     <summary type="html">学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（I/O）。</summary>
@@ -322,13 +322,34 @@
   
   <entry>
     <title>Linux CPU 原理与分析</title>
-    <link href="https://yipwinghong.github.io/2021/04/16/OS_linux-cpu-monitoring/"/>
-    <id>https://yipwinghong.github.io/2021/04/16/OS_linux-cpu-monitoring/</id>
-    <published>2021-04-16T11:50:33.000Z</published>
-    <updated>2021-07-19T08:37:55.205Z</updated>
+    <link href="https://yipwinghong.github.io/2021/04/10/OS_linux-cpu-monitoring/"/>
+    <id>https://yipwinghong.github.io/2021/04/10/OS_linux-cpu-monitoring/</id>
+    <published>2021-04-10T11:50:33.000Z</published>
+    <updated>2021-07-19T15:45:52.902Z</updated>
     
     
     <summary type="html">学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（CPU）。</summary>
+    
+    
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
+    
+    <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux 网络原理与分析</title>
+    <link href="https://yipwinghong.github.io/2021/04/05/OS_linux-network-monitoring/"/>
+    <id>https://yipwinghong.github.io/2021/04/05/OS_linux-network-monitoring/</id>
+    <published>2021-04-05T07:50:33.000Z</published>
+    <updated>2021-07-19T15:59:28.766Z</updated>
+    
+    
+    <summary type="html">学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（网络）。</summary>
     
     
     
@@ -378,27 +399,6 @@
     <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
     <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《DDIA》阅读笔记（九）：一致性与共识（共识问题）</title>
-    <link href="https://yipwinghong.github.io/2021/02/24/DDIA_note-13/"/>
-    <id>https://yipwinghong.github.io/2021/02/24/DDIA_note-13/</id>
-    <published>2021-02-24T13:21:22.000Z</published>
-    <updated>2021-07-18T13:29:36.475Z</updated>
-    
-    
-    <summary type="html">《DDIA》阅读笔记（九）：一致性与共识（共识问题）</summary>
-    
-    
-    
-    <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
-    
-    
-    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-    <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
