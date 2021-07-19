@@ -47,8 +47,6 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <link rel="alternate" href="/atom.xml" title="Kylo&#39;s Notebook" type="application/atom+xml">
-    
     <title>《DDIA》阅读笔记（三）：数据存储与检索 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
@@ -228,7 +226,8 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+</head>
 
     
         <body class="post-body">
@@ -333,7 +332,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">7,624</span>Reading time: <span class="post-count reading-time">26 min</span></span>
+                        <span>Word count: <span class="post-count word-count">7.6k</span>Reading time: <span class="post-count reading-time">26 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -745,7 +744,7 @@ height:100vh;
 <h3 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h3><p>以上索引只将一个键映射到一个值，如果需要同时查询表的多个列，则需要多列索引。</p>
 <p>常用于的一次查询多列（比如地理空间数据的经度和纬度），要求同时满足在某个经度和纬度范围内的数据。</p>
 <h4 id="级联索引"><a href="#级联索引" class="headerlink" title="级联索引"></a>级联索引</h4><p>通过将一列追加到另一列，将几个字段简单地组合成一个键（索引的定义指定字段连接的顺序）。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * </span><br><span class="line"><span class="keyword">FROM</span> restaurants</span><br><span class="line"><span class="keyword">WHERE</span> latitude &gt; <span class="number">51.4946</span> <span class="keyword">AND</span> latitude &lt; <span class="number">51.5079</span></span><br><span class="line"><span class="keyword">AND</span> longitude &gt; <span class="number">-0.1162</span> <span class="keyword">AND</span> longitude &lt; <span class="number">-0.1004</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> restaurants</span><br><span class="line"><span class="keyword">WHERE</span> latitude <span class="operator">&gt;</span> <span class="number">51.4946</span> <span class="keyword">AND</span> latitude <span class="operator">&lt;</span> <span class="number">51.5079</span></span><br><span class="line"><span class="keyword">AND</span> longitude <span class="operator">&gt;</span> <span class="number">-0.1162</span> <span class="keyword">AND</span> longitude <span class="operator">&lt;</span> <span class="number">-0.1004</span>;</span><br></pre></td></tr></table></figure>
 
 <p>多维索引：是使用空格填充曲线将二维位置转换为单个数字，然后使用常规的 B-tree 索引。</p>
 <h3 id="全文搜索和模糊索引"><a href="#全文搜索和模糊索引" class="headerlink" title="全文搜索和模糊索引"></a>全文搜索和模糊索引</h3><p>为了处理文档或查询中的拼写错误，搜索引擎（比如 Lucene）能够在某个编辑距离内搜索文本。</p>
@@ -1041,7 +1040,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#《DDIA》阅读笔记（三）：数据存储与检索"><span class="toc-number">1.</span> <span class="toc-text">《DDIA》阅读笔记（三）：数据存储与检索</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据结构"><span class="toc-number">2.</span> <span class="toc-text">数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#哈希索引"><span class="toc-number">2.1.</span> <span class="toc-text">哈希索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#追加写入"><span class="toc-number">2.1.1.</span> <span class="toc-text">追加写入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#偏移量"><span class="toc-number">2.1.2.</span> <span class="toc-text">偏移量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分段压缩"><span class="toc-number">2.1.3.</span> <span class="toc-text">分段压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件格式"><span class="toc-number">2.1.4.</span> <span class="toc-text">文件格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除记录"><span class="toc-number">2.1.5.</span> <span class="toc-text">删除记录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#崩溃恢复"><span class="toc-number">2.1.6.</span> <span class="toc-text">崩溃恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部分写入"><span class="toc-number">2.1.7.</span> <span class="toc-text">部分写入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#并发控制"><span class="toc-number">2.1.8.</span> <span class="toc-text">并发控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#局限性"><span class="toc-number">2.1.9.</span> <span class="toc-text">局限性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LSM-Tree"><span class="toc-number">2.2.</span> <span class="toc-text">LSM-Tree</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#构建和维护-SSTables"><span class="toc-number">2.2.1.</span> <span class="toc-text">构建和维护 SSTables</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#处理写请求"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">处理写请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#处理读请求"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">处理读请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#合并和压缩"><span class="toc-number">2.2.1.3.</span> <span class="toc-text">合并和压缩</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#崩溃恢复-1"><span class="toc-number">2.2.1.4.</span> <span class="toc-text">崩溃恢复</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LSM-存储引擎"><span class="toc-number">2.2.2.</span> <span class="toc-text">LSM 存储引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#性能优化"><span class="toc-number">2.2.3.</span> <span class="toc-text">性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#布隆过滤器"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">布隆过滤器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#压缩合并策略"><span class="toc-number">2.2.3.2.</span> <span class="toc-text">压缩合并策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优势和劣势"><span class="toc-number">2.2.4.</span> <span class="toc-text">优势和劣势</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#写放大"><span class="toc-number">2.2.4.1.</span> <span class="toc-text">写放大</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#写入较快"><span class="toc-number">2.2.4.2.</span> <span class="toc-text">写入较快</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#读取较慢"><span class="toc-number">2.2.4.3.</span> <span class="toc-text">读取较慢</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#更好的压缩"><span class="toc-number">2.2.4.4.</span> <span class="toc-text">更好的压缩</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#写入带宽开销"><span class="toc-number">2.2.4.5.</span> <span class="toc-text">写入带宽开销</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B-Tree"><span class="toc-number">2.3.</span> <span class="toc-text">B-Tree</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分页设计"><span class="toc-number">2.3.1.</span> <span class="toc-text">分页设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#查找操作"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">查找操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#更新操作"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">更新操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#插入操作"><span class="toc-number">2.3.1.3.</span> <span class="toc-text">插入操作</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他索引结构"><span class="toc-number">2.4.</span> <span class="toc-text">其他索引结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在索引中存储值"><span class="toc-number">2.4.1.</span> <span class="toc-text">在索引中存储值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#堆文件"><span class="toc-number">2.4.1.1.</span> <span class="toc-text">堆文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#聚簇索引"><span class="toc-number">2.4.1.2.</span> <span class="toc-text">聚簇索引</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多列索引"><span class="toc-number">2.4.2.</span> <span class="toc-text">多列索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#级联索引"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">级联索引</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全文搜索和模糊索引"><span class="toc-number">2.4.3.</span> <span class="toc-text">全文搜索和模糊索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存保存所有内容"><span class="toc-number">2.5.</span> <span class="toc-text">内存保存所有内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#应用实例"><span class="toc-number">2.5.1.</span> <span class="toc-text">应用实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#反缓存架构"><span class="toc-number">2.5.2.</span> <span class="toc-text">反缓存架构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#事务处理与分析处理"><span class="toc-number">3.</span> <span class="toc-text">事务处理与分析处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#事务处理系统（OLTP）"><span class="toc-number">3.1.</span> <span class="toc-text">事务处理系统（OLTP）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#日志结构"><span class="toc-number">3.1.1.</span> <span class="toc-text">日志结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原地更新"><span class="toc-number">3.1.2.</span> <span class="toc-text">原地更新</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析系统（OLAP）"><span class="toc-number">3.2.</span> <span class="toc-text">分析系统（OLAP）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据仓库"><span class="toc-number">3.2.1.</span> <span class="toc-text">数据仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#星型与雪花型模式"><span class="toc-number">3.2.2.</span> <span class="toc-text">星型与雪花型模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#列式存储"><span class="toc-number">4.</span> <span class="toc-text">列式存储</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#列压缩"><span class="toc-number">4.1.</span> <span class="toc-text">列压缩</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#列与列簇"><span class="toc-number">4.1.1.</span> <span class="toc-text">列与列簇</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#矢量化处理"><span class="toc-number">4.1.2.</span> <span class="toc-text">矢量化处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#排序操作"><span class="toc-number">4.2.</span> <span class="toc-text">排序操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写操作"><span class="toc-number">4.3.</span> <span class="toc-text">写操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚合：数据立方体与物化视图"><span class="toc-number">4.4.</span> <span class="toc-text">聚合：数据立方体与物化视图</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8ADDIA%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E4%B8%8E%E6%A3%80%E7%B4%A2"><span class="toc-number">1.</span> <span class="toc-text">《DDIA》阅读笔记（三）：数据存储与检索</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95"><span class="toc-number">2.1.</span> <span class="toc-text">哈希索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%BD%E5%8A%A0%E5%86%99%E5%85%A5"><span class="toc-number">2.1.1.</span> <span class="toc-text">追加写入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%8F%E7%A7%BB%E9%87%8F"><span class="toc-number">2.1.2.</span> <span class="toc-text">偏移量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%AE%B5%E5%8E%8B%E7%BC%A9"><span class="toc-number">2.1.3.</span> <span class="toc-text">分段压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.1.4.</span> <span class="toc-text">文件格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E8%AE%B0%E5%BD%95"><span class="toc-number">2.1.5.</span> <span class="toc-text">删除记录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B4%A9%E6%BA%83%E6%81%A2%E5%A4%8D"><span class="toc-number">2.1.6.</span> <span class="toc-text">崩溃恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E5%88%86%E5%86%99%E5%85%A5"><span class="toc-number">2.1.7.</span> <span class="toc-text">部分写入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6"><span class="toc-number">2.1.8.</span> <span class="toc-text">并发控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">2.1.9.</span> <span class="toc-text">局限性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LSM-Tree"><span class="toc-number">2.2.</span> <span class="toc-text">LSM-Tree</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E5%92%8C%E7%BB%B4%E6%8A%A4-SSTables"><span class="toc-number">2.2.1.</span> <span class="toc-text">构建和维护 SSTables</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%86%99%E8%AF%B7%E6%B1%82"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">处理写请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E8%AF%BB%E8%AF%B7%E6%B1%82"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">处理读请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%88%E5%B9%B6%E5%92%8C%E5%8E%8B%E7%BC%A9"><span class="toc-number">2.2.1.3.</span> <span class="toc-text">合并和压缩</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B4%A9%E6%BA%83%E6%81%A2%E5%A4%8D-1"><span class="toc-number">2.2.1.4.</span> <span class="toc-text">崩溃恢复</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LSM-%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E"><span class="toc-number">2.2.2.</span> <span class="toc-text">LSM 存储引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">2.2.3.</span> <span class="toc-text">性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">布隆过滤器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E5%90%88%E5%B9%B6%E7%AD%96%E7%95%A5"><span class="toc-number">2.2.3.2.</span> <span class="toc-text">压缩合并策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%E5%92%8C%E5%8A%A3%E5%8A%BF"><span class="toc-number">2.2.4.</span> <span class="toc-text">优势和劣势</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E6%94%BE%E5%A4%A7"><span class="toc-number">2.2.4.1.</span> <span class="toc-text">写放大</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E8%BE%83%E5%BF%AB"><span class="toc-number">2.2.4.2.</span> <span class="toc-text">写入较快</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E8%BE%83%E6%85%A2"><span class="toc-number">2.2.4.3.</span> <span class="toc-text">读取较慢</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E5%A5%BD%E7%9A%84%E5%8E%8B%E7%BC%A9"><span class="toc-number">2.2.4.4.</span> <span class="toc-text">更好的压缩</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E5%B8%A6%E5%AE%BD%E5%BC%80%E9%94%80"><span class="toc-number">2.2.4.5.</span> <span class="toc-text">写入带宽开销</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B-Tree"><span class="toc-number">2.3.</span> <span class="toc-text">B-Tree</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.3.1.</span> <span class="toc-text">分页设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%93%8D%E4%BD%9C"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">查找操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E6%93%8D%E4%BD%9C"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">更新操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C"><span class="toc-number">2.3.1.3.</span> <span class="toc-text">插入操作</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E7%B4%A2%E5%BC%95%E7%BB%93%E6%9E%84"><span class="toc-number">2.4.</span> <span class="toc-text">其他索引结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E7%B4%A2%E5%BC%95%E4%B8%AD%E5%AD%98%E5%82%A8%E5%80%BC"><span class="toc-number">2.4.1.</span> <span class="toc-text">在索引中存储值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A0%86%E6%96%87%E4%BB%B6"><span class="toc-number">2.4.1.1.</span> <span class="toc-text">堆文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95"><span class="toc-number">2.4.1.2.</span> <span class="toc-text">聚簇索引</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E5%88%97%E7%B4%A2%E5%BC%95"><span class="toc-number">2.4.2.</span> <span class="toc-text">多列索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%A7%E8%81%94%E7%B4%A2%E5%BC%95"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">级联索引</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E6%96%87%E6%90%9C%E7%B4%A2%E5%92%8C%E6%A8%A1%E7%B3%8A%E7%B4%A2%E5%BC%95"><span class="toc-number">2.4.3.</span> <span class="toc-text">全文搜索和模糊索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E4%BF%9D%E5%AD%98%E6%89%80%E6%9C%89%E5%86%85%E5%AE%B9"><span class="toc-number">2.5.</span> <span class="toc-text">内存保存所有内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.5.1.</span> <span class="toc-text">应用实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84"><span class="toc-number">2.5.2.</span> <span class="toc-text">反缓存架构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86%E4%B8%8E%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">事务处理与分析处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%88OLTP%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">事务处理系统（OLTP）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.1.</span> <span class="toc-text">日志结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9C%B0%E6%9B%B4%E6%96%B0"><span class="toc-number">3.1.2.</span> <span class="toc-text">原地更新</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F%EF%BC%88OLAP%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">分析系统（OLAP）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">3.2.1.</span> <span class="toc-text">数据仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%9F%E5%9E%8B%E4%B8%8E%E9%9B%AA%E8%8A%B1%E5%9E%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.2.2.</span> <span class="toc-text">星型与雪花型模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%97%E5%BC%8F%E5%AD%98%E5%82%A8"><span class="toc-number">4.</span> <span class="toc-text">列式存储</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E5%8E%8B%E7%BC%A9"><span class="toc-number">4.1.</span> <span class="toc-text">列压缩</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%97%E4%B8%8E%E5%88%97%E7%B0%87"><span class="toc-number">4.1.1.</span> <span class="toc-text">列与列簇</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A2%E9%87%8F%E5%8C%96%E5%A4%84%E7%90%86"><span class="toc-number">4.1.2.</span> <span class="toc-text">矢量化处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E6%93%8D%E4%BD%9C"><span class="toc-number">4.2.</span> <span class="toc-text">排序操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E6%93%8D%E4%BD%9C"><span class="toc-number">4.3.</span> <span class="toc-text">写操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%9A%E5%90%88%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93%E4%B8%8E%E7%89%A9%E5%8C%96%E8%A7%86%E5%9B%BE"><span class="toc-number">4.4.</span> <span class="toc-text">聚合：数据立方体与物化视图</span></a></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1521,26 +1520,6 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-io-monitoring/" >Linux 系统 I/O 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-memory-monitoring/" >Linux 系统内存原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/OS_linux-cpu-monitoring/" >Linux 系统 CPU 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/OS_system_initialization/" >操作系统 - 架构与系统初始化</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservice/" >微服务概览与治理</a>
         </li>
     
@@ -1602,6 +1581,26 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span><a class="archive-post-title" href= "/2021/04/28/OS_linux-memory-monitoring/" >Linux 内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2021/04/20/OS_linux-io-monitoring/" >Linux I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2021/04/16/OS_linux-cpu-monitoring/" >Linux CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_system_initialization/" >Linux - 架构与系统初始化</a>
         </li>
     
     
@@ -1852,9 +1851,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1868,25 +1867,15 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
-        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1897,6 +1886,16 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

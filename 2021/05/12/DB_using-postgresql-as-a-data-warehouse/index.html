@@ -41,8 +41,6 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <link rel="alternate" href="/atom.xml" title="Kylo&#39;s Notebook" type="application/atom+xml">
-    
     <title>把 PostgreSQL 用作数据仓库 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
@@ -222,7 +220,8 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+</head>
 
     
         <body class="post-body">
@@ -327,7 +326,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2,860</span>Reading time: <span class="post-count reading-time">10 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2.8k</span>Reading time: <span class="post-count reading-time">10 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -457,44 +456,44 @@ height:100vh;
             <main class="main post-page">
     <article class="article-entry">
         <blockquote>
-<p>原文链接：<a href="https://www.narrator.ai/blog/using-postgresql-as-a-data-warehouse" target="_blank" rel="noopener">Using PostgreSQL as a Data Warehouse</a></p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://www.narrator.ai/blog/using-postgresql-as-a-data-warehouse">Using PostgreSQL as a Data Warehouse</a></p>
 </blockquote>
 <h1 id="把-PostgreSQL-用作数据仓库"><a href="#把-PostgreSQL-用作数据仓库" class="headerlink" title="把 PostgreSQL 用作数据仓库"></a>把 PostgreSQL 用作数据仓库</h1><p>Narrator 为多种数据仓库提供技术支持，其中就包括 PostgreSQL。</p>
 <p>尽管 PostgreSQL 是为生产系统而设计的，但只需要稍作调整就可以很好地作为数据仓库来使用：</p>
 <ul>
-<li><p>不要把该服务器同时用作生产系统。</p>
+<li><p>  不要把该服务器同时用作生产系统。</p>
 </li>
-<li><p>升级到 pg 12+（或者在查询中避免使用 CTE）。</p>
+<li><p>  升级到 pg 12+（或者在查询中避免使用 CTE）。</p>
 </li>
-<li><p>有节制地使用索引（舍，得）。</p>
+<li><p>  有节制地使用索引（舍，得）。</p>
 </li>
-<li><p>考虑对长表进行分区。</p>
+<li><p>  考虑对长表进行分区。</p>
 </li>
-<li><p>确保 I/O 不受限制。</p>
+<li><p>  确保 I/O 不受限制。</p>
 </li>
-<li><p>在批量插入后执行 vacuum 分析（更新统计信息，使优化器能选择更好的方案执行 SQL）。</p>
+<li><p>  在批量插入后执行 vacuum 分析（更新统计信息，使优化器能选择更好的方案执行 SQL）。</p>
 </li>
-<li><p>探索并行查询。</p>
+<li><p>  探索并行查询。</p>
 </li>
-<li><p>增加统计抽样。</p>
+<li><p>  增加统计抽样。</p>
 </li>
-<li><p>对于频繁查询的表，设置更少的列。</p>
+<li><p>  对于频繁查询的表，设置更少的列。</p>
 </li>
-<li><p>对于大规模操作，考虑使用专门的仓库。</p>
+<li><p>  对于大规模操作，考虑使用专门的仓库。</p>
 </li>
 </ul>
 <h2 id="数据仓库与关系型数据库的区别"><a href="#数据仓库与关系型数据库的区别" class="headerlink" title="数据仓库与关系型数据库的区别"></a>数据仓库与关系型数据库的区别</h2><h3 id="生产型查询"><a href="#生产型查询" class="headerlink" title="生产型查询"></a>生产型查询</h3><p>在生产数据库中，为了满足快速响应，典型的查询需求是在大型数据集中选取几行。</p>
 <p>可以想象在一个 Web 应用中，在同一时刻有成千上万的用户执行查询：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1234</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1234</span></span><br></pre></td></tr></table></figure>
 
 <p>这种数据库可以快速（毫秒内）响应大量的类似请求。而为了支撑这种查询，包括 PostgreSQL 在内的多数的数据库是按行存储数据的 —— 可有效地从磁盘中加载整行的数据。而经常使用索引来快速找到相对较少的行。 </p>
 <h3 id="分析型查询"><a href="#分析型查询" class="headerlink" title="分析型查询"></a>分析型查询</h3><p>分析型查询通常与之相反：</p>
 <ul>
-<li><p>查询大量的行（通常占整表的大部分）。</p>
+<li><p>  查询大量的行（通常占整表的大部分）。</p>
 </li>
-<li><p>查询可能需要数秒甚至数分钟才能完成。</p>
+<li><p>  查询可能需要数秒甚至数分钟才能完成。</p>
 </li>
-<li><p>查询将选取宽（多列）表的少数列。</p>
+<li><p>  查询将选取宽（多列）表的少数列。</p>
 </li>
 </ul>
 <p>因此专用的数据仓库（像 Redshift，BigQuery 和 Snowflake）使用列式存储实现，而且没有索引。</p>
@@ -509,30 +508,30 @@ height:100vh;
 <p>  温馨提示：请不要将 Postgres 生产库用作数据报表或指标采集。可以进行一些查询，但分析请求的工作负载和生产请求的工作负载差距甚远，以至于它们会对生产系统产生巨大的性能影响。</p>
 </blockquote>
 <h3 id="避免使用通用表表达式"><a href="#避免使用通用表表达式" class="headerlink" title="避免使用通用表表达式"></a>避免使用通用表表达式</h3><p>通用表表达式（common table expressions, CTEs）又称为 “WITH” 查询，可避免嵌套子查询。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WITH</span> my_expression <span class="keyword">AS</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> customer <span class="keyword">as</span> <span class="keyword">name</span> <span class="keyword">FROM</span> my_table</span><br><span class="line">)</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">name</span> <span class="keyword">FROM</span> my_expression</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WITH</span> my_expression <span class="keyword">AS</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> customer <span class="keyword">as</span> name <span class="keyword">FROM</span> my_table</span><br><span class="line">)</span><br><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> my_expression</span><br></pre></td></tr></table></figure>
 
 <p>然而 Postgres（12-）的查询执行计划会将 CTEs 视为一个黑盒。Postgres 将自行有效地计算 CTEs 执行结果并进行具体化，然后再扫描时用上这些结果，在很多时候这会大大影响查询速度。</p>
 <p>在 Narrator，从一些常用的查询中移除三个 CTEs 可提高四倍速度。</p>
 <p>一个简单的解决方法是将 CTEs 改写为子查询（或升级为 12+）。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">name</span> <span class="keyword">FROM</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> customer <span class="keyword">as</span> <span class="keyword">name</span> <span class="keyword">FROM</span> my_table</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> customer <span class="keyword">as</span> name <span class="keyword">FROM</span> my_table</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <p>对于较长的 CTEs 来说这种做法可读性较差，但考虑到在分析型查询中可以提高性能，这是值得的。</p>
 <h3 id="有节制地使用索引"><a href="#有节制地使用索引" class="headerlink" title="有节制地使用索引"></a>有节制地使用索引</h3><p>相比起传统生产型查询，索引对于分析型查询没那么重要，像 Redshift 和 Snowflake 这样的专用数据仓库根本没有索引。</p>
 <p>虽然索引对于快速返回少量记录的场景很有用，但在查询表中的大多数行时就不起作用了。</p>
 <p>比如在 Narrator ，常见的查询像是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">获取每个客户打开的所有电子邮件，并计算转换率以查看按月分组的主页。</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">获取每个客户打开的所有电子邮件，并计算转换率以查看按月分组的主页。 </span><br></pre></td></tr></table></figure>
 
-<p>不需要写出 SQL 也能知道这种查询会覆盖大量的行，它要考虑所有的用户、打开的电子邮件以及所有页面视图（即 <code>page = &#39;/&#39;</code>）。即使为了这种查询建立了索引，Postgres 却不会利用上 —— 加载大量的行时执行全表扫描会更快（更简单的磁盘布局）。</p>
+<p>不需要写出 SQL 也能知道这种查询会覆盖大量的行，它要考虑所有的用户、打开的电子邮件以及所有页面视图（即 <code>page = &#39;/&#39;</code>）。即使为了这种查询建立了索引，Postgres 却不会利用上 —— 加载大量的行时执行全表扫描会更快（更简单的磁盘布局）。</p>
 <h4 id="不使用索引的原因"><a href="#不使用索引的原因" class="headerlink" title="不使用索引的原因"></a>不使用索引的原因</h4><ul>
-<li><p>对于分析型查询，全表扫描比通过索引来扫描更快。</p>
+<li><p>  对于分析型查询，全表扫描比通过索引来扫描更快。</p>
 </li>
-<li><p>索引会增加表的大小，越小的表，对内存访问而言越友好。</p>
+<li><p>  索引会增加表的大小，越小的表，对内存访问而言越友好。</p>
 </li>
-<li><p>索引会为每个插入或更新操作引入额外的开销。</p>
+<li><p>  索引会为每个插入或更新操作引入额外的开销。</p>
 </li>
 </ul>
 <h4 id="什么时候使用索引？"><a href="#什么时候使用索引？" class="headerlink" title="什么时候使用索引？"></a>什么时候使用索引？</h4><p>在一些查询中使用索引可提高效率，也值得为此付出空间上的开销。比如经常需要查询一名客户首次执行的操作：用一个列 <code>activity_occurrence</code> 来记录，并因此建立部分索引。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> first_occurrence_idx <span class="keyword">ON</span> activity_stream(activity) <span class="keyword">WHERE</span> activity_occurrence = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX first_occurrence_idx <span class="keyword">ON</span> activity_stream(activity) <span class="keyword">WHERE</span> activity_occurrence <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
 
 <h3 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h3><p>分区表可提高表扫描性能，而无需付出索引的额外成本。</p>
 <p>从概念上来说这是将一个更大的表分成多个块，理想情况下大多数查询只需要读取一个（或少数几个）即可，这样可以大大加快查询速度。 </p>
@@ -540,24 +539,24 @@ height:100vh;
 <p>使用重点注意的是管理分区的工作量比较多，而且也不总是能提高性能 —— 分区数太多，或分区规模不等时将起不了什么作用。</p>
 <h3 id="最小化磁盘与-I-O"><a href="#最小化磁盘与-I-O" class="headerlink" title="最小化磁盘与 I/O"></a>最小化磁盘与 I/O</h3><p>由于表扫描操作很常见（参考上面的“索引”），因此磁盘 I/O 变得很重要，为了确保性能：</p>
 <ul>
-<li><p>Postgres 要有足够的可用内存以缓存最常访问的表（或把表缩小）。</p>
+<li><p>  Postgres 要有足够的可用内存以缓存最常访问的表（或把表缩小）。</p>
 </li>
-<li><p>在磁盘驱动上选择使用 SSD（取决于成本/数据规模）。</p>
+<li><p>  在磁盘驱动上选择使用 SSD（取决于成本/数据规模）。</p>
 </li>
-<li><p>检查有多少 I/O 资源可用 —— 如果过多读取磁盘，一些云服务商将会限制 I/O。</p>
+<li><p>  检查有多少 I/O 资源可用 —— 如果过多读取磁盘，一些云服务商将会限制 I/O。</p>
 </li>
 </ul>
 <p>利用 <code>pg_stat_activity</code> 表可以检查某长时间执行的查询是否正在访问磁盘。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  pid,</span><br><span class="line">  <span class="keyword">now</span>() - pg_stat_activity.query_start <span class="keyword">AS</span> <span class="keyword">duration</span>,</span><br><span class="line">  usename,</span><br><span class="line">  <span class="keyword">query</span>,</span><br><span class="line">  state,</span><br><span class="line">  wait_event_type,</span><br><span class="line">  wait_event</span><br><span class="line"><span class="keyword">FROM</span> pg_stat_activity</span><br><span class="line"><span class="keyword">WHERE</span> state = <span class="string">'active'</span> <span class="keyword">and</span> (<span class="keyword">now</span>() - pg_stat_activity.query_start) &gt; <span class="built_in">interval</span> <span class="string">'1 minute'</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  pid,</span><br><span class="line">  now() <span class="operator">-</span> pg_stat_activity.query_start <span class="keyword">AS</span> duration,</span><br><span class="line">  usename,</span><br><span class="line">  query,</span><br><span class="line">  state,</span><br><span class="line">  wait_event_type,</span><br><span class="line">  wait_event</span><br><span class="line"><span class="keyword">FROM</span> pg_stat_activity</span><br><span class="line"><span class="keyword">WHERE</span> state <span class="operator">=</span> <span class="string">&#x27;active&#x27;</span> <span class="keyword">and</span> (now() <span class="operator">-</span> pg_stat_activity.query_start) <span class="operator">&gt;</span> <span class="type">interval</span> <span class="string">&#x27;1 minute&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
-<p>如果一个查询正在访问磁盘，其中 <code>wait_event_type</code> 和 <code>wait_event</code> 列会显示 IO 和 DataFileRead。</p>
+<p>如果一个查询正在访问磁盘，其中 <code>wait_event_type </code> 和 <code>wait_event</code> 列会显示 IO 和 DataFileRead。</p>
 <p>这个查询语句对于查看其他可能阻塞的内容（例如锁）也非常有用。 </p>
 <h3 id="在每个批量插入后执行-Vacuum"><a href="#在每个批量插入后执行-Vacuum" class="headerlink" title="在每个批量插入后执行 Vacuum"></a>在每个批量插入后执行 Vacuum</h3><p>Vacuuming 表对于保持 Postgres 平稳运行很重要 —— 可节省空间。在进行 vacuum 分析时将计算统计信息以确保查询计划可以正确估算。</p>
 <p>在默认情况下 Postgres 运行自动 vacuum 进程来解决以上问题，所以通常最好不要管它。 </p>
 <p>这意味着最好在插入或删除数据后再运行 vacuum 分析。 如果要定期插入数据，则在完成所有插入后立即运行 vacuum 分析就很有意义了：可确保新数据将立即具有统计信息以便进行有效的查询。 而且一旦执行完毕，自动 vacuum 进程将不会再次对该表进行 vacuum 操作。 </p>
 <h3 id="并行查询"><a href="#并行查询" class="headerlink" title="并行查询"></a>并行查询</h3><p>Postgres 可并行执行部分查询，这对于数据仓库应用而言是很理想的执行方式。并行查询会增加一些延迟（派生 workers 线程，然后其执行结果进行聚合），但通常来说对于分析型查询而言这并不重要，因为查询就需要花上几秒。</p>
 <p>并行查询在很大程度上加快了表或索引扫描（花费大量时间的地方）的速度。查看程序是否按预期运行的最好方法是使用 explain。可见看到一个 Gather，以及随后进行的并行操作（连接，排序，索引扫描，seq 扫描等） 。</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-&gt;  Gather Merge  (cost=<span class="number">2512346.78</span>.<span class="number">.2518277</span><span class="number">.16</span> rows=<span class="number">40206</span> width=<span class="number">60</span>)</span><br><span class="line">    Workers Planned: <span class="number">2</span></span><br><span class="line">    Workers Launched: <span class="number">2</span></span><br><span class="line">        ...</span><br><span class="line">      -&gt;  Parallel Seq Scan on activity_stream s_1</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-&gt;  Gather Merge  (<span class="attribute">cost</span>=2512346.78..2518277.16 <span class="attribute">rows</span>=40206 <span class="attribute">width</span>=60)</span><br><span class="line">    Workers Planned: 2</span><br><span class="line">    Workers Launched: 2</span><br><span class="line">        <span class="built_in">..</span>.</span><br><span class="line">      -&gt;  Parallel Seq Scan on activity_stream s_1 </span><br></pre></td></tr></table></figure>
 
 <p>其中 Workers 是并行执行工作的进程数，由两个配置项控制：<code>max_parallel_workers</code>和<code>max_parallel_workers_per_gather</code>。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> max_parallel_workers;            <span class="comment">-- total number of workers allowed</span></span><br><span class="line"><span class="keyword">SHOW</span> max_parallel_workers_per_gather; <span class="comment">-- num workers at a time on the query</span></span><br></pre></td></tr></table></figure>
@@ -567,10 +566,10 @@ height:100vh;
 <h3 id="增加统计抽样"><a href="#增加统计抽样" class="headerlink" title="增加统计抽样"></a>增加统计抽样</h3><p>Postgres 通过收集表上的统计信息来通知查询计划。</p>
 <p>它通过对表进行采样并存储最常见的值来实现，抽取的样本越多查询计划将越准确。分析型查询的查询次数少，运行时间长，有助于增加 Postgres 收集的数量。 </p>
 <p>这可以在每个列上完成。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> column_name <span class="keyword">set</span> <span class="keyword">statistics</span> <span class="number">500</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> column_name <span class="keyword">set</span> statistics <span class="number">500</span>;</span><br></pre></td></tr></table></figure>
 
 <p>或者对于整个数据库进行操作：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> mydb <span class="keyword">SET</span> default_statistics_target = <span class="number">500</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> DATABASE mydb <span class="keyword">SET</span> default_statistics_target <span class="operator">=</span> <span class="number">500</span>;</span><br></pre></td></tr></table></figure>
 
 <p>其中默认值是 100，可设置的范围是 [100, 1000]。需要注意这是应该估量的设置之一。对一些常见查询使用 EXPLAIN ANALYZE 即可查看查询计划的估量值。</p>
 <h3 id="使用更少的列"><a href="#使用更少的列" class="headerlink" title="使用更少的列"></a>使用更少的列</h3><p>Postgres 是行式存储，行在磁盘上是顺序排列的：存储第一行及其所有列，然后存储第二行及其所有列，依此类推。</p>
@@ -600,8 +599,8 @@ height:100vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/03/17/Java_cpp-for-java-programmers/" title= "Java 程序员的 C++">
-                    <div class="prevTitle">Java 程序员的 C++</div>
+                <a href= "/2021/04/28/OS_linux-memory-monitoring/" title= "Linux 内存原理与分析">
+                    <div class="prevTitle">Linux 内存原理与分析</div>
                 </a>
             
         </li>
@@ -752,7 +751,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#把-PostgreSQL-用作数据仓库"><span class="toc-number">1.</span> <span class="toc-text">把 PostgreSQL 用作数据仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据仓库与关系型数据库的区别"><span class="toc-number">1.1.</span> <span class="toc-text">数据仓库与关系型数据库的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#生产型查询"><span class="toc-number">1.1.1.</span> <span class="toc-text">生产型查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分析型查询"><span class="toc-number">1.1.2.</span> <span class="toc-text">分析型查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#这对于-Postgres-来说意味着什么？"><span class="toc-number">1.1.3.</span> <span class="toc-text">这对于 Postgres 来说意味着什么？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#把-Postgres-配置为数据仓库"><span class="toc-number">1.2.</span> <span class="toc-text">把 Postgres 配置为数据仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#避免使用通用表表达式"><span class="toc-number">1.2.1.</span> <span class="toc-text">避免使用通用表表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#有节制地使用索引"><span class="toc-number">1.2.2.</span> <span class="toc-text">有节制地使用索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#不使用索引的原因"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">不使用索引的原因</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#什么时候使用索引？"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">什么时候使用索引？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分区"><span class="toc-number">1.2.3.</span> <span class="toc-text">分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最小化磁盘与-I-O"><span class="toc-number">1.2.4.</span> <span class="toc-text">最小化磁盘与 I&#x2F;O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在每个批量插入后执行-Vacuum"><span class="toc-number">1.2.5.</span> <span class="toc-text">在每个批量插入后执行 Vacuum</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#并行查询"><span class="toc-number">1.2.6.</span> <span class="toc-text">并行查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#增加统计抽样"><span class="toc-number">1.2.7.</span> <span class="toc-text">增加统计抽样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用更少的列"><span class="toc-number">1.2.8.</span> <span class="toc-text">使用更少的列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#考虑数据数据仓库的规模"><span class="toc-number">1.3.</span> <span class="toc-text">考虑数据数据仓库的规模</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8A%8A-PostgreSQL-%E7%94%A8%E4%BD%9C%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">1.</span> <span class="toc-text">把 PostgreSQL 用作数据仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E4%B8%8E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.</span> <span class="toc-text">数据仓库与关系型数据库的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E4%BA%A7%E5%9E%8B%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.1.1.</span> <span class="toc-text">生产型查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E5%9E%8B%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.1.2.</span> <span class="toc-text">分析型查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%99%E5%AF%B9%E4%BA%8E-Postgres-%E6%9D%A5%E8%AF%B4%E6%84%8F%E5%91%B3%E7%9D%80%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.1.3.</span> <span class="toc-text">这对于 Postgres 来说意味着什么？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%8A-Postgres-%E9%85%8D%E7%BD%AE%E4%B8%BA%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">1.2.</span> <span class="toc-text">把 Postgres 配置为数据仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E4%BD%BF%E7%94%A8%E9%80%9A%E7%94%A8%E8%A1%A8%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">避免使用通用表表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E8%8A%82%E5%88%B6%E5%9C%B0%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">有节制地使用索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">不使用索引的原因</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95%EF%BC%9F"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">什么时候使用索引？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%8C%BA"><span class="toc-number">1.2.3.</span> <span class="toc-text">分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E5%8C%96%E7%A3%81%E7%9B%98%E4%B8%8E-I-O"><span class="toc-number">1.2.4.</span> <span class="toc-text">最小化磁盘与 I&#x2F;O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E6%AF%8F%E4%B8%AA%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E5%90%8E%E6%89%A7%E8%A1%8C-Vacuum"><span class="toc-number">1.2.5.</span> <span class="toc-text">在每个批量插入后执行 Vacuum</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.2.6.</span> <span class="toc-text">并行查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E7%BB%9F%E8%AE%A1%E6%8A%BD%E6%A0%B7"><span class="toc-number">1.2.7.</span> <span class="toc-text">增加统计抽样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%9B%B4%E5%B0%91%E7%9A%84%E5%88%97"><span class="toc-number">1.2.8.</span> <span class="toc-text">使用更少的列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%80%83%E8%99%91%E6%95%B0%E6%8D%AE%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%9A%84%E8%A7%84%E6%A8%A1"><span class="toc-number">1.3.</span> <span class="toc-text">考虑数据数据仓库的规模</span></a></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1232,26 +1231,6 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-io-monitoring/" >Linux 系统 I/O 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-memory-monitoring/" >Linux 系统内存原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/OS_linux-cpu-monitoring/" >Linux 系统 CPU 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/OS_system_initialization/" >操作系统 - 架构与系统初始化</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservice/" >微服务概览与治理</a>
         </li>
     
@@ -1313,6 +1292,26 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span><a class="archive-post-title" href= "/2021/04/28/OS_linux-memory-monitoring/" >Linux 内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2021/04/20/OS_linux-io-monitoring/" >Linux I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2021/04/16/OS_linux-cpu-monitoring/" >Linux CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_system_initialization/" >Linux - 架构与系统初始化</a>
         </li>
     
     
@@ -1563,9 +1562,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1579,25 +1578,15 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
-        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1608,6 +1597,16 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -43,8 +43,6 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <link rel="alternate" href="/atom.xml" title="Kylo&#39;s Notebook" type="application/atom+xml">
-    
     <title>《DDIA》阅读笔记（九）：一致性与共识（共识问题） · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
@@ -224,7 +222,8 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+</head>
 
     
         <body class="post-body">
@@ -329,7 +328,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">7,940</span>Reading time: <span class="post-count reading-time">27 min</span></span>
+                        <span>Word count: <span class="post-count word-count">7.9k</span>Reading time: <span class="post-count reading-time">26 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -916,7 +915,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#《DDIA》阅读笔记（九）：一致性与共识（共识问题）"><span class="toc-number">1.</span> <span class="toc-text">《DDIA》阅读笔记（九）：一致性与共识（共识问题）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#共识问题"><span class="toc-number">2.</span> <span class="toc-text">共识问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原子提交与两阶段提交：停止服务-人工介入"><span class="toc-number">2.1.</span> <span class="toc-text">原子提交与两阶段提交：停止服务&#x2F;人工介入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#事务原子提交"><span class="toc-number">2.1.1.</span> <span class="toc-text">事务原子提交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#两阶段提交（2PC）"><span class="toc-number">2.1.2.</span> <span class="toc-text">两阶段提交（2PC）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统的承诺"><span class="toc-number">2.1.3.</span> <span class="toc-text">系统的承诺</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协调者发生故障"><span class="toc-number">2.1.4.</span> <span class="toc-text">协调者发生故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三阶段提交（3PC）"><span class="toc-number">2.1.5.</span> <span class="toc-text">三阶段提交（3PC）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实践中的分布式事务"><span class="toc-number">2.2.</span> <span class="toc-text">实践中的分布式事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Exactly-Once-消息处理"><span class="toc-number">2.2.1.</span> <span class="toc-text">Exactly-Once 消息处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XA-交易"><span class="toc-number">2.2.2.</span> <span class="toc-text">XA 交易</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#停顿时仍持有锁"><span class="toc-number">2.2.3.</span> <span class="toc-text">停顿时仍持有锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从协调者故障中恢复"><span class="toc-number">2.2.4.</span> <span class="toc-text">从协调者故障中恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#局限性"><span class="toc-number">2.2.5.</span> <span class="toc-text">局限性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#单点故障"><span class="toc-number">2.2.5.1.</span> <span class="toc-text">单点故障</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#有状态"><span class="toc-number">2.2.5.2.</span> <span class="toc-text">有状态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#高复杂度"><span class="toc-number">2.2.5.3.</span> <span class="toc-text">高复杂度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#低容错"><span class="toc-number">2.2.5.4.</span> <span class="toc-text">低容错</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#支持容错的共识：自动切换"><span class="toc-number">2.3.</span> <span class="toc-text">支持容错的共识：自动切换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#共识算法与全序广播"><span class="toc-number">2.3.1.</span> <span class="toc-text">共识算法与全序广播</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主从复制与共识"><span class="toc-number">2.3.2.</span> <span class="toc-text">主从复制与共识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Epoch-和-Quorum"><span class="toc-number">2.3.3.</span> <span class="toc-text">Epoch 和 Quorum</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#局限性-1"><span class="toc-number">2.3.4.</span> <span class="toc-text">局限性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#同步复制"><span class="toc-number">2.3.4.1.</span> <span class="toc-text">同步复制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#故障误判"><span class="toc-number">2.3.4.2.</span> <span class="toc-text">故障误判</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多数节点"><span class="toc-number">2.3.4.3.</span> <span class="toc-text">多数节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#静态成员组成"><span class="toc-number">2.3.4.4.</span> <span class="toc-text">静态成员组成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络问题敏感"><span class="toc-number">2.3.4.5.</span> <span class="toc-text">网络问题敏感</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#成员与协调服务"><span class="toc-number">2.4.</span> <span class="toc-text">成员与协调服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#节点任务分配"><span class="toc-number">2.4.1.</span> <span class="toc-text">节点任务分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务发现"><span class="toc-number">2.4.2.</span> <span class="toc-text">服务发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#成员服务"><span class="toc-number">2.4.3.</span> <span class="toc-text">成员服务</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8ADDIA%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B9%9D%EF%BC%89%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7%E4%B8%8E%E5%85%B1%E8%AF%86%EF%BC%88%E5%85%B1%E8%AF%86%E9%97%AE%E9%A2%98%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">《DDIA》阅读笔记（九）：一致性与共识（共识问题）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B1%E8%AF%86%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">共识问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%AD%90%E6%8F%90%E4%BA%A4%E4%B8%8E%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%9A%E5%81%9C%E6%AD%A2%E6%9C%8D%E5%8A%A1-%E4%BA%BA%E5%B7%A5%E4%BB%8B%E5%85%A5"><span class="toc-number">2.1.</span> <span class="toc-text">原子提交与两阶段提交：停止服务&#x2F;人工介入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%8E%9F%E5%AD%90%E6%8F%90%E4%BA%A4"><span class="toc-number">2.1.1.</span> <span class="toc-text">事务原子提交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%882PC%EF%BC%89"><span class="toc-number">2.1.2.</span> <span class="toc-text">两阶段提交（2PC）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%89%BF%E8%AF%BA"><span class="toc-number">2.1.3.</span> <span class="toc-text">系统的承诺</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8F%E8%B0%83%E8%80%85%E5%8F%91%E7%94%9F%E6%95%85%E9%9A%9C"><span class="toc-number">2.1.4.</span> <span class="toc-text">协调者发生故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%883PC%EF%BC%89"><span class="toc-number">2.1.5.</span> <span class="toc-text">三阶段提交（3PC）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5%E4%B8%AD%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1"><span class="toc-number">2.2.</span> <span class="toc-text">实践中的分布式事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Exactly-Once-%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86"><span class="toc-number">2.2.1.</span> <span class="toc-text">Exactly-Once 消息处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XA-%E4%BA%A4%E6%98%93"><span class="toc-number">2.2.2.</span> <span class="toc-text">XA 交易</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9C%E9%A1%BF%E6%97%B6%E4%BB%8D%E6%8C%81%E6%9C%89%E9%94%81"><span class="toc-number">2.2.3.</span> <span class="toc-text">停顿时仍持有锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%8D%8F%E8%B0%83%E8%80%85%E6%95%85%E9%9A%9C%E4%B8%AD%E6%81%A2%E5%A4%8D"><span class="toc-number">2.2.4.</span> <span class="toc-text">从协调者故障中恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">2.2.5.</span> <span class="toc-text">局限性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E7%82%B9%E6%95%85%E9%9A%9C"><span class="toc-number">2.2.5.1.</span> <span class="toc-text">单点故障</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%89%E7%8A%B6%E6%80%81"><span class="toc-number">2.2.5.2.</span> <span class="toc-text">有状态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="toc-number">2.2.5.3.</span> <span class="toc-text">高复杂度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%8E%E5%AE%B9%E9%94%99"><span class="toc-number">2.2.5.4.</span> <span class="toc-text">低容错</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E5%AE%B9%E9%94%99%E7%9A%84%E5%85%B1%E8%AF%86%EF%BC%9A%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2"><span class="toc-number">2.3.</span> <span class="toc-text">支持容错的共识：自动切换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B1%E8%AF%86%E7%AE%97%E6%B3%95%E4%B8%8E%E5%85%A8%E5%BA%8F%E5%B9%BF%E6%92%AD"><span class="toc-number">2.3.1.</span> <span class="toc-text">共识算法与全序广播</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E4%B8%8E%E5%85%B1%E8%AF%86"><span class="toc-number">2.3.2.</span> <span class="toc-text">主从复制与共识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Epoch-%E5%92%8C-Quorum"><span class="toc-number">2.3.3.</span> <span class="toc-text">Epoch 和 Quorum</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7-1"><span class="toc-number">2.3.4.</span> <span class="toc-text">局限性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E5%A4%8D%E5%88%B6"><span class="toc-number">2.3.4.1.</span> <span class="toc-text">同步复制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%85%E9%9A%9C%E8%AF%AF%E5%88%A4"><span class="toc-number">2.3.4.2.</span> <span class="toc-text">故障误判</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E6%95%B0%E8%8A%82%E7%82%B9"><span class="toc-number">2.3.4.3.</span> <span class="toc-text">多数节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E7%BB%84%E6%88%90"><span class="toc-number">2.3.4.4.</span> <span class="toc-text">静态成员组成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E6%95%8F%E6%84%9F"><span class="toc-number">2.3.4.5.</span> <span class="toc-text">网络问题敏感</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E4%B8%8E%E5%8D%8F%E8%B0%83%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.4.</span> <span class="toc-text">成员与协调服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E4%BB%BB%E5%8A%A1%E5%88%86%E9%85%8D"><span class="toc-number">2.4.1.</span> <span class="toc-text">节点任务分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="toc-number">2.4.2.</span> <span class="toc-text">服务发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%91%98%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.4.3.</span> <span class="toc-text">成员服务</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1396,26 +1395,6 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-io-monitoring/" >Linux 系统 I/O 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-memory-monitoring/" >Linux 系统内存原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/OS_linux-cpu-monitoring/" >Linux 系统 CPU 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/OS_system_initialization/" >操作系统 - 架构与系统初始化</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservice/" >微服务概览与治理</a>
         </li>
     
@@ -1477,6 +1456,26 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span><a class="archive-post-title" href= "/2021/04/28/OS_linux-memory-monitoring/" >Linux 内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2021/04/20/OS_linux-io-monitoring/" >Linux I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2021/04/16/OS_linux-cpu-monitoring/" >Linux CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_system_initialization/" >Linux - 架构与系统初始化</a>
         </li>
     
     
@@ -1727,9 +1726,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1743,25 +1742,15 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
-        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1772,6 +1761,16 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

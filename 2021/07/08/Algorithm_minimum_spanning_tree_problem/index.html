@@ -43,8 +43,6 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <link rel="alternate" href="/atom.xml" title="Kylo&#39;s Notebook" type="application/atom+xml">
-    
     <title>最小生成树问题 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
@@ -224,7 +222,8 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+</head>
 
     
         <body class="post-body">
@@ -329,7 +328,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,010</span>Reading time: <span class="post-count reading-time">13 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2.9k</span>Reading time: <span class="post-count reading-time">11 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -471,17 +470,17 @@ height:100vh;
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedEdge</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">WeightedEdge</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 起点，终点，权值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> v, w, weight;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeightedEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w, <span class="keyword">int</span> weight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.v = v;</span><br><span class="line">        <span class="keyword">this</span>.w = w;</span><br><span class="line">        <span class="keyword">this</span>.weight = weight;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>有权图 <code>WeightedGraph</code>：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 顶点数，边数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> V, E;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 邻接表：使用红黑树描述</span></span><br><span class="line"><span class="comment">     * [</span></span><br><span class="line"><span class="comment">     *      0: &#123;1: 3, 2: 2, 3: -2&#125;,</span></span><br><span class="line"><span class="comment">     *      1: (2: 2, 3: 2, 4: 1)</span></span><br><span class="line"><span class="comment">     * ]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;Integer, Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取权值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v, w)) &#123;</span><br><span class="line">            <span class="keyword">return</span> adj[v].get(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">"No edge %d-%d"</span>, v, w));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     <span class="comment">// 边是否存在</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> adj[v].containsKey(w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 顶点数，边数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> V, E;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 邻接表：使用红黑树描述</span></span><br><span class="line"><span class="comment">     * [</span></span><br><span class="line"><span class="comment">     *      0: &#123;1: 3, 2: 2, 3: -2&#125;,</span></span><br><span class="line"><span class="comment">     *      1: (2: 2, 3: 2, 4: 1)</span></span><br><span class="line"><span class="comment">     * ]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;Integer, Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取权值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v, w)) &#123;</span><br><span class="line">            <span class="keyword">return</span> adj[v].get(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">&quot;No edge %d-%d&quot;</span>, v, w));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     <span class="comment">// 边是否存在</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> adj[v].containsKey(w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="连通性判断"><a href="#连通性判断" class="headerlink" title="连通性判断"></a>连通性判断</h2><p>对于一个图，可求解出最小生成树的前提是该图为 <strong>连通图</strong>，即图中任意两个节点之间都能找到至少一条路径相连。</p>
 <p>对于非连通图，每个连通子图都称为一个 <strong>连通分量</strong>。</p>
 <p>因此判断图是否连通可使用以下深度优先遍历（DFS）算法：</p>
 <ul>
-<li><p>使用变量 <code>int left</code> 记录待访问节点数（初始化为图节点总数 <code>V</code>），数组 <code>boolean[] visited</code> 记录节点访问状态（避免重复访问）。</p>
+<li><p>  使用变量 <code>int left</code> 记录待访问节点数（初始化为图节点总数 <code>V</code>），数组 <code>boolean[] visited</code> 记录节点访问状态（避免重复访问）。</p>
 </li>
-<li><p>从任意一个节点 <code>v</code> 出发深度优先遍历图，每经过一个未被访问的邻接节点 <code>w</code> 即标记为已访问 <code>visited[w] = true;</code>，并把待访问节点数 -1 <code>left--</code>，否则跳过。</p>
+<li><p>  从任意一个节点 <code>v</code> 出发深度优先遍历图，每经过一个未被访问的邻接节点 <code>w</code> 即标记为已访问 <code>visited[w] = true;</code>，并把待访问节点数 -1 <code>left--</code>，否则跳过。</p>
 </li>
-<li><p>当从 <code>v</code> 出发的深度优先遍历结束，表示已找到一个连通分量。此时判断待访问节点数 <code>left</code> 是否为 0，是则表示刚才已完成整图遍历，该图为连通图，否则为非连通图。</p>
+<li><p>  当从 <code>v</code> 出发的深度优先遍历结束，表示已找到一个连通分量。此时判断待访问节点数 <code>left</code> 是否为 0，是则表示刚才已完成整图遍历，该图为连通图，否则为非连通图。</p>
 </li>
 </ul>
 <p>基本实现如下：</p>
@@ -496,11 +495,11 @@ height:100vh;
 <p>介绍切分的概念，是为了引入在遍历图的过程中，把节点划归到不同子集的技巧，这种做法在介绍 Prim 算法时再做具体说明。</p>
 <h2 id="并查集（Union-Find）"><a href="#并查集（Union-Find）" class="headerlink" title="并查集（Union Find）"></a>并查集（Union Find）</h2><p>并查集是一种多叉树，其包含两种基本操作：合并和查询。假设待加入并查集的节点共 n 个。</p>
 <ul>
-<li><p>初始化：对于所有的 n 个点 [0, n-1]，代表每个点的集合都初始化为自身，比如 0 =&gt; {0}, 1 =&gt; {1}, …, n-1 =&gt; {n-1}。</p>
+<li><p>  初始化：对于所有的 n 个点 [0, n-1]，代表每个点的集合都初始化为自身，比如 0 =&gt; {0}, 1 =&gt; {1}, …, n-1 =&gt; {n-1}。</p>
 </li>
-<li><p>合并：将两个节点所表示的集合（表示为树）合并为一个集合，即将代表其中一个节点的树的根，嫁接到另一个节点表示的树的孩子上。</p>
+<li><p>  合并：将两个节点所表示的集合（表示为树）合并为一个集合，即将代表其中一个节点的树的根，嫁接到另一个节点表示的树的孩子上。</p>
 </li>
-<li><p>查找：查找节点所在的集合，即根节点。</p>
+<li><p>  查找：查找节点所在的集合，即根节点。</p>
 </li>
 </ul>
 <p>由于本文旨在总结最小生成树相关算法，并查集不是重点，只做简要说明并直接给出实现代码。</p>
@@ -517,7 +516,7 @@ height:100vh;
 </ul>
 <p>并查集用于存放图的节点，并判断节点是否直接或间接相连。</p>
 <p>比如 <strong>1-2</strong>、<strong>2-3</strong> 被添加到 <code>uf</code>，当 <strong>1-3</strong> 被尝试添加到 <code>uf</code> 时，会被判断为 1 和 3 已通过 2 相连，因此不再处理。</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">   [<span class="number">3</span>]</span><br><span class="line"> X    \ ✔</span><br><span class="line">[<span class="number">1</span>]---[<span class="number">2</span>]</span><br><span class="line">    ✔</span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">   <span class="selector-attr">[3]</span></span><br><span class="line"> X    \ ✔</span><br><span class="line"><span class="selector-attr">[1]</span>---<span class="selector-attr">[2]</span></span><br><span class="line">    ✔</span><br></pre></td></tr></table></figure>
 
 <p>在这里直接给出使用并查集可在判断路径是成环时，优化节点查找效率的结论（接近 O(E)），感兴趣的话可以自己探究一下。</p>
 <p>基本实现：</p>
@@ -525,16 +524,16 @@ height:100vh;
 
 <p>实现细节：</p>
 <ul>
-<li><p>使用一个数组 <code>edges</code> 记录所有的边，并按权值从小到大排列。</p>
+<li><p>  使用一个数组 <code>edges</code> 记录所有的边，并按权值从小到大排列。</p>
 </li>
-<li><p>初始化一个大小为 <code>V</code> 的并查集 <code>uf</code>，默认所有的边都不成环（表示为并查集中的点都不相连）。</p>
+<li><p>  初始化一个大小为 <code>V</code> 的并查集 <code>uf</code>，默认所有的边都不成环（表示为并查集中的点都不相连）。</p>
 </li>
-<li><p>遍历集合 <code>edges</code>，如果该边的两个顶点（<code>v</code> 和 <code>w</code>）在 <code>uf</code> 中没有相连，则添加到 <code>mst</code> 集合中，并在 <code>uf</code> 中连接 <code>v</code> 和 <code>w</code>。</p>
+<li><p>  遍历集合 <code>edges</code>，如果该边的两个顶点（<code>v</code> 和 <code>w</code>）在 <code>uf</code> 中没有相连，则添加到 <code>mst</code> 集合中，并在 <code>uf</code> 中连接 <code>v</code> 和 <code>w</code>。</p>
 </li>
 </ul>
 <p>时间复杂度：O(E*log(E))</p>
 <blockquote>
-<p>  点击链接可查看动图：<a href="https://www.cs.usfca.edu/~galles/visualization/Kruskal.html" target="_blank" rel="noopener">Kruskal MST Visualzation (usfca.edu)</a></p>
+<p>  点击链接可查看动图：<a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/Kruskal.html">Kruskal MST Visualzation (usfca.edu)</a></p>
 </blockquote>
 <h2 id="Prim-算法"><a href="#Prim-算法" class="headerlink" title="Prim 算法"></a>Prim 算法</h2><p>Prim 算法将图中的顶点分为两部分，其核心是不断操作更新切分：</p>
 <ul>
@@ -552,24 +551,24 @@ height:100vh;
 <p>使用最小堆存放节点 0 的所有邻边，判断条件为权值的大小，使得随时可以 O(log(E)) 的代价取出最短边。</p>
 <p>循环执行以下步骤直到最小堆为空，其间使用 <code>mst</code> 集合收集最小生成树的边，最终返回即可：</p>
 <ul>
-<li><p>遍历最小堆，每轮循环取出堆顶的最短边，如果该边的两点已归属于 <code>true</code> 切分，表示该边非横切边，因此跳过。</p>
+<li><p>  遍历最小堆，每轮循环取出堆顶的最短边，如果该边的两点已归属于 <code>true</code> 切分，表示该边非横切边，因此跳过。</p>
 </li>
-<li><p>否则收集最短边到 <code>mst</code> 集，并把改横切边上，当前归属于 <code>false</code> 切分的端点 v 划归到 <code>true</code> 切分。</p>
+<li><p>  否则收集最短边到 <code>mst</code> 集，并把改横切边上，当前归属于 <code>false</code> 切分的端点 v 划归到 <code>true</code> 切分。</p>
 </li>
-<li><p>遍历新加入 <code>true</code> 的节点 <code>v</code> 的所有邻接节点 <code>w</code>，把其中未访问（即还属于 <code>false</code> 切分）的节点添加到最小堆。</p>
+<li><p>  遍历新加入 <code>true</code> 的节点 <code>v</code> 的所有邻接节点 <code>w</code>，把其中未访问（即还属于 <code>false</code> 切分）的节点添加到最小堆。</p>
 </li>
 </ul>
 <p>时间复杂度：由于使用了最小堆，可快速找到最短横切边，时间复杂度从 O(V*E) 优化到 O(E*log(E))，如改用索引堆（Index Heap）则可以进一步优化到 O(E*log(V))。</p>
 <blockquote>
-<p>  点击链接可查看动图：<a href="https://www.cs.usfca.edu/~galles/visualization/Prim.html" target="_blank" rel="noopener">Prim MST Visualzation (usfca.edu)</a></p>
+<p>  点击链接可查看动图：<a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/Prim.html">Prim MST Visualzation (usfca.edu)</a></p>
 </blockquote>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了最小生成树问题两种最经典的算法，实际上除此之外还有 Fredman-Tarjan 算法（Time: O(E+V*log(V))）、Chazelle 算法（Time: O(E*)），限于篇幅就不再一一介绍了，感兴趣的话可以自行查阅相关资料。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><p><a href="https://en.wikipedia.org/wiki/Kruskal' target="_blank" rel="noopener"s_algorithm">Kruskal’s algorithm - Wikipedia</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Kruskal's_algorithm">Kruskal’s algorithm - Wikipedia</a></p>
 </li>
-<li><p><a href="https://en.wikipedia.org/wiki/Prim' target="_blank" rel="noopener"s_algorithm">Prim’s algorithm - Wikipedia</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Prim's_algorithm">Prim’s algorithm - Wikipedia</a></p>
 </li>
-<li><p><a href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html" target="_blank" rel="noopener">Data Structure Visualization (usfca.edu)</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html">Data Structure Visualization (usfca.edu)</a></p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -741,7 +740,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#最小生成树问题"><span class="toc-number">1.</span> <span class="toc-text">最小生成树问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#连通性判断"><span class="toc-number">1.1.</span> <span class="toc-text">连通性判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#切分定理（Bipartite）"><span class="toc-number">1.2.</span> <span class="toc-text">切分定理（Bipartite）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#二分图"><span class="toc-number">1.2.1.</span> <span class="toc-text">二分图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并查集（Union-Find）"><span class="toc-number">1.3.</span> <span class="toc-text">并查集（Union Find）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kruskal-算法"><span class="toc-number">1.4.</span> <span class="toc-text">Kruskal 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prim-算法"><span class="toc-number">1.5.</span> <span class="toc-text">Prim 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">最小生成树问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E9%80%9A%E6%80%A7%E5%88%A4%E6%96%AD"><span class="toc-number">1.1.</span> <span class="toc-text">连通性判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E5%88%86%E5%AE%9A%E7%90%86%EF%BC%88Bipartite%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">切分定理（Bipartite）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E5%88%86%E5%9B%BE"><span class="toc-number">1.2.1.</span> <span class="toc-text">二分图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%EF%BC%88Union-Find%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">并查集（Union Find）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kruskal-%E7%AE%97%E6%B3%95"><span class="toc-number">1.4.</span> <span class="toc-text">Kruskal 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prim-%E7%AE%97%E6%B3%95"><span class="toc-number">1.5.</span> <span class="toc-text">Prim 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1221,26 +1220,6 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-io-monitoring/" >Linux 系统 I/O 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-memory-monitoring/" >Linux 系统内存原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/OS_linux-cpu-monitoring/" >Linux 系统 CPU 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/OS_system_initialization/" >操作系统 - 架构与系统初始化</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservice/" >微服务概览与治理</a>
         </li>
     
@@ -1302,6 +1281,26 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span><a class="archive-post-title" href= "/2021/04/28/OS_linux-memory-monitoring/" >Linux 内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2021/04/20/OS_linux-io-monitoring/" >Linux I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2021/04/16/OS_linux-cpu-monitoring/" >Linux CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_system_initialization/" >Linux - 架构与系统初始化</a>
         </li>
     
     
@@ -1552,9 +1551,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1568,25 +1567,15 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
-        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1597,6 +1586,16 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

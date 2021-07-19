@@ -47,8 +47,6 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <link rel="alternate" href="/atom.xml" title="Kylo&#39;s Notebook" type="application/atom+xml">
-    
     <title>《DDIA》阅读笔记（八）：分布式系统的挑战 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
@@ -228,7 +226,8 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+</head>
 
     
         <body class="post-body">
@@ -333,7 +332,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,896</span>Reading time: <span class="post-count reading-time">13 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3.9k</span>Reading time: <span class="post-count reading-time">13 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -532,17 +531,17 @@ height:100vh;
 <p>正是由于这种不确定性和部分失效大大提高了分布式系统的复杂性。</p>
 <h2 id="不可靠的网络"><a href="#不可靠的网络" class="headerlink" title="不可靠的网络"></a>不可靠的网络</h2><p>分布式系统中的多个节点以网络进行通信，但是网络并不保证什么时候到达以及是否一定到达。等待响应的过程中，很多事情可能出错：</p>
 <ul>
-<li><p>请求可能丢失。</p>
+<li><p>  请求可能丢失。</p>
 </li>
-<li><p>请求在某个队列里等待，无法马上发送。</p>
+<li><p>  请求在某个队列里等待，无法马上发送。</p>
 </li>
-<li><p>远程节点因为崩溃、宕机等原因已经失效。</p>
+<li><p>  远程节点因为崩溃、宕机等原因已经失效。</p>
 </li>
-<li><p>远程节点因为某些原因暂时无法响应。</p>
+<li><p>  远程节点因为某些原因暂时无法响应。</p>
 </li>
-<li><p>远程节点接收并且处理了请求，但是回复却丢失了。</p>
+<li><p>  远程节点接收并且处理了请求，但是回复却丢失了。</p>
 </li>
-<li><p>远程节点已经完成了请求，但是回复被延迟了。</p>
+<li><p>  远程节点已经完成了请求，但是回复被延迟了。</p>
 </li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/lichuang/lichuang.github.io/media/imgs/20190405-ddia-chapter08-the-trouble-with-distributed-system/8-1.jpg" alt="8-1"></p>
@@ -574,9 +573,9 @@ height:100vh;
 <p><img src="https://cdn.jsdelivr.net/gh/lichuang/lichuang.github.io/media/imgs/20190405-ddia-chapter08-the-trouble-with-distributed-system/8-renew-lease.jpg" alt="8-renew-lease"></p>
 <p>这段代码有几个问题：</p>
 <ul>
-<li><p>依赖于同步的时钟，租约到期时间由另一台机器锁设置，并和本地时间进行比较。如果两者有比较大的误差则可能出现问题。</p>
+<li><p>  依赖于同步的时钟，租约到期时间由另一台机器锁设置，并和本地时间进行比较。如果两者有比较大的误差则可能出现问题。</p>
 </li>
-<li><p>代码中假定了检查点的 <code>system.currentTimeMillis()</code> 和请求处理 <code>process(request)</code> 间隔很短。但是，如果进程由于 GC 等原因被暂停，也有可能发生问题。</p>
+<li><p>  代码中假定了检查点的 <code>system.currentTimeMillis()</code> 和请求处理 <code>process(request)</code> 间隔很短。但是，如果进程由于 GC 等原因被暂停，也有可能发生问题。</p>
 </li>
 </ul>
 <h2 id="知识、真相与谎言"><a href="#知识、真相与谎言" class="headerlink" title="知识、真相与谎言"></a>知识、真相与谎言</h2><p>以上阐述了分布式系统中的网络、时钟都不是很靠谱，那么分布式系统中什么信息才具有较大的可信度呢？</p>
@@ -585,9 +584,9 @@ height:100vh;
 <p>这其中也包括宣告某个节点失效。如果有法定数量的节点声明另一个节点失效，即使该节点仍然感觉自己存活，也必须接受失效的裁定进行下线操作。</p>
 <h4 id="主节点与锁"><a href="#主节点与锁" class="headerlink" title="主节点与锁"></a>主节点与锁</h4><p>有很多情况下，需要在系统范围内确保只有一个实例，比如：</p>
 <ul>
-<li><p>只允许一个节点做为数据库分区的主节点，以防止出现脑裂现象。</p>
+<li><p>  只允许一个节点做为数据库分区的主节点，以防止出现脑裂现象。</p>
 </li>
-<li><p>只允许一个事务或客户端持有特定资源的锁，以防止同时写入。</p>
+<li><p>  只允许一个事务或客户端持有特定资源的锁，以防止同时写入。</p>
 </li>
 </ul>
 <p>在分布式系统中，即使某个节点自认为自己是“唯一的那个”，但并不一定系统中的多数节点都这么认为。当系统中的多数节点认为某节点已经失效，但是该节点还继续充当“唯一的那个”节点工作时，就可能出现问题。</p>
@@ -596,44 +595,44 @@ height:100vh;
 <h4 id="Fencing与锁"><a href="#Fencing与锁" class="headerlink" title="Fencing与锁"></a>Fencing与锁</h4><p>当使用锁和租约机制来保护资源的并发访问时，必须确保过期的“唯一的那个”节点不影响其他正常部分。要实现这一点，可以使用 fencing（栅栏，隔离之意）技术。</p>
 <p>假设每次锁服务在授予锁或租约时，还会返回一个 fencing 令牌，该令牌每次授予都会递增。然后，客户端每次向存储系统发起写请求时，都必须包含所持有的fencing令牌。</p>
 <p>如下图所示，客户端1获得锁租约的时候得到了令牌 33，随后陷入长时间暂停直到租约到期。此时客户端 2 获得了新的锁租约和令牌 34。客户端 1 恢复之后尝试进行写请求，但是此时带上的令牌33小于 34，所以被拒绝写操作。</p>
-<p><a href="https://cdn.jsdelivr.net/gh/lichuang/lichuang.github.io/media/imgs/20190405-ddia-chapter08-the-trouble-with-distributed-system/8-5.jpg" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/lichuang/lichuang.github.io/media/imgs/20190405-ddia-chapter08-the-trouble-with-distributed-system/8-5.jpg" alt="8-5"></a></p>
+<p><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/lichuang/lichuang.github.io/media/imgs/20190405-ddia-chapter08-the-trouble-with-distributed-system/8-5.jpg"><img src="https://cdn.jsdelivr.net/gh/lichuang/lichuang.github.io/media/imgs/20190405-ddia-chapter08-the-trouble-with-distributed-system/8-5.jpg" alt="8-5"></a></p>
 <h3 id="拜占庭故障"><a href="#拜占庭故障" class="headerlink" title="拜占庭故障"></a>拜占庭故障</h3><p>fencing 令牌可以用于检测并阻止无意的误操作，但是当节点有意故意破坏系统时，在发送消息时就可以故意伪造令牌了。</p>
 <p>在不信任的环境中需要达成共识的问题被称为拜占庭将军问题。</p>
 <h3 id="理论系统模型与现实"><a href="#理论系统模型与现实" class="headerlink" title="理论系统模型与现实"></a>理论系统模型与现实</h3><p>算法的实现不能过分依赖特定的硬件和软件配置。这就要求我们对预期的系统错误进行形式化描述，通过定义一些系统模型来形式化描述算法的前提条件。</p>
 <p>在计时方面，有三种常见的模型：</p>
 <ul>
-<li><p>同步模型：同步模型假定有上界的网络延迟，有上界的进程暂停和有上界的时钟误差。注意，这并不意味着完全同步的时钟或网络延迟为0.只是意味着清楚的了解网络延迟、暂停和时钟漂移不会超过某个固定的上界。</p>
+<li><p>  同步模型：同步模型假定有上界的网络延迟，有上界的进程暂停和有上界的时钟误差。注意，这并不意味着完全同步的时钟或网络延迟为0.只是意味着清楚的了解网络延迟、暂停和时钟漂移不会超过某个固定的上界。</p>
 </li>
-<li><p>部分同步模型：部分同步意味着系统在大多数情况下像一个同步系统一样运行，但有时候会超出网络延时，进程暂停和时钟漂移的预期上界。这是一个比较现实的模型：大多数情况下，网络和进程比较稳定，但是必须考虑到任何关于时机的假设都有偶尔违背的情况，而一旦发生，网络延迟、暂停和时钟偏差都可能会变得非常大。</p>
+<li><p>  部分同步模型：部分同步意味着系统在大多数情况下像一个同步系统一样运行，但有时候会超出网络延时，进程暂停和时钟漂移的预期上界。这是一个比较现实的模型：大多数情况下，网络和进程比较稳定，但是必须考虑到任何关于时机的假设都有偶尔违背的情况，而一旦发生，网络延迟、暂停和时钟偏差都可能会变得非常大。</p>
 </li>
-<li><p>异步模型：在这个模型中，一个算法不会对时机做任何假设，甚至里面根本没有时钟（也没有超时机制）。</p>
+<li><p>  异步模型：在这个模型中，一个算法不会对时机做任何假设，甚至里面根本没有时钟（也没有超时机制）。</p>
 </li>
 </ul>
 <p>除了计时模型，还需要考虑到节点失效，有以下三种常见的节点失效系统模型：</p>
 <ul>
-<li><p>崩溃中止模型：在这个模型中，算法假设一个节点以一种方式发生故障，即遭遇系统崩溃。这意味着节点可能在任何时候突然停止响应，且该节点以后永远消失，无法恢复。</p>
+<li><p>  崩溃中止模型：在这个模型中，算法假设一个节点以一种方式发生故障，即遭遇系统崩溃。这意味着节点可能在任何时候突然停止响应，且该节点以后永远消失，无法恢复。</p>
 </li>
-<li><p>崩溃恢复模型：节点可能在任何时候发生崩溃，且可能在一段（未知的）时间之后得到恢复并再次响应。在崩溃恢复模型中，节点上持久化存储的数据会在崩溃之后保存，而内存中的状态会丢失。</p>
+<li><p>  崩溃恢复模型：节点可能在任何时候发生崩溃，且可能在一段（未知的）时间之后得到恢复并再次响应。在崩溃恢复模型中，节点上持久化存储的数据会在崩溃之后保存，而内存中的状态会丢失。</p>
 </li>
-<li><p>拜占庭失效模型：节点可能发生任何问题，包括试图作弊和欺骗其它节点。</p>
+<li><p>  拜占庭失效模型：节点可能发生任何问题，包括试图作弊和欺骗其它节点。</p>
 </li>
 </ul>
 <h4 id="算法的正确性"><a href="#算法的正确性" class="headerlink" title="算法的正确性"></a>算法的正确性</h4><p>为了定义算法的正确性，需要描述它的属性信息，例如对于 fencing 令牌生成算法，有如下属性：</p>
 <ul>
-<li><p>唯一性：两个令牌请求不能获得相同的值。</p>
+<li><p>  唯一性：两个令牌请求不能获得相同的值。</p>
 </li>
-<li><p>单调递增：如果请求 x 返回了令牌 t1，请求y返回了令牌 t2，且 x 在 y 开始之前先完成，那么 t1&lt;t2。</p>
+<li><p>  单调递增：如果请求 x 返回了令牌 t1，请求y返回了令牌 t2，且 x 在 y 开始之前先完成，那么 t1&lt;t2。</p>
 </li>
-<li><p>可用性：请求令牌的节点如果不发生崩溃那么一定能收到响应。</p>
+<li><p>  可用性：请求令牌的节点如果不发生崩溃那么一定能收到响应。</p>
 </li>
 </ul>
 <h4 id="安全性（safety）和活性（liveness）"><a href="#安全性（safety）和活性（liveness）" class="headerlink" title="安全性（safety）和活性（liveness）"></a>安全性（safety）和活性（liveness）</h4><p>有必要区分两种不同的属性：安全性和活性。在上面的例子中，唯一性和单调递增属于安全性，可用性属于活性。</p>
 <p>两种性质有何区别？活性的定义中通常包含暗示“最终”一词（最终一致性就是一种活性）。</p>
 <p>安全性可以理解为“没有发生意外”，活性类似“预期的事情最终一定会发生”。</p>
 <ul>
-<li><p>如果违反了安全性，可以明确指向发生的特定的时间点（例如，唯一性如果被违反，可以定位到具体哪个操作产生了重复令牌）。且一旦违反了安全性，违规行为无法撤销，破坏已实际发生。</p>
+<li><p>  如果违反了安全性，可以明确指向发生的特定的时间点（例如，唯一性如果被违反，可以定位到具体哪个操作产生了重复令牌）。且一旦违反了安全性，违规行为无法撤销，破坏已实际发生。</p>
 </li>
-<li><p>活性则反过来，可能无法明确某个具体的时间点（例如一个节点发送了一个请求，但还没有收到回应），但总是希望在未来某个时间点可以满足要求（即收到回复）。</p>
+<li><p>  活性则反过来，可能无法明确某个具体的时间点（例如一个节点发送了一个请求，但还没有收到回应），但总是希望在未来某个时间点可以满足要求（即收到回复）。</p>
 </li>
 </ul>
 <p>区分安全性和活性的一个好处是可以帮助简化处理一些具有挑战性的系统模型。通常对于分布式算法，要求在所有可能的系统模型中，都必须满足安全性。也就是说，即使所有节点发生崩溃，或者整个网络中断，算法确保不能返回错误的结果。</p>
@@ -807,7 +806,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#《DDIA》阅读笔记（八）：分布式系统的挑战"><span class="toc-number">1.</span> <span class="toc-text">《DDIA》阅读笔记（八）：分布式系统的挑战</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分布式系统的挑战"><span class="toc-number">2.</span> <span class="toc-text">分布式系统的挑战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#故障与部分失效"><span class="toc-number">2.1.</span> <span class="toc-text">故障与部分失效</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不可靠的网络"><span class="toc-number">2.2.</span> <span class="toc-text">不可靠的网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#检测网络故障"><span class="toc-number">2.2.1.</span> <span class="toc-text">检测网络故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#同步网络和异步网络"><span class="toc-number">2.2.2.</span> <span class="toc-text">同步网络和异步网络</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不可靠的时钟"><span class="toc-number">2.3.</span> <span class="toc-text">不可靠的时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#依赖时钟的同步"><span class="toc-number">2.3.1.</span> <span class="toc-text">依赖时钟的同步</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#时间戳与事件顺序"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">时间戳与事件顺序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#时钟的置信区间"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">时钟的置信区间</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程暂停"><span class="toc-number">2.3.2.</span> <span class="toc-text">进程暂停</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#知识、真相与谎言"><span class="toc-number">2.4.</span> <span class="toc-text">知识、真相与谎言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#真相由多数决定"><span class="toc-number">2.4.1.</span> <span class="toc-text">真相由多数决定</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#主节点与锁"><span class="toc-number">2.4.1.1.</span> <span class="toc-text">主节点与锁</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Fencing与锁"><span class="toc-number">2.4.1.2.</span> <span class="toc-text">Fencing与锁</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拜占庭故障"><span class="toc-number">2.4.2.</span> <span class="toc-text">拜占庭故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#理论系统模型与现实"><span class="toc-number">2.4.3.</span> <span class="toc-text">理论系统模型与现实</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#算法的正确性"><span class="toc-number">2.4.3.1.</span> <span class="toc-text">算法的正确性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安全性（safety）和活性（liveness）"><span class="toc-number">2.4.3.2.</span> <span class="toc-text">安全性（safety）和活性（liveness）</span></a></li></ol></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8ADDIA%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">1.</span> <span class="toc-text">《DDIA》阅读笔记（八）：分布式系统的挑战</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">2.</span> <span class="toc-text">分布式系统的挑战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%85%E9%9A%9C%E4%B8%8E%E9%83%A8%E5%88%86%E5%A4%B1%E6%95%88"><span class="toc-number">2.1.</span> <span class="toc-text">故障与部分失效</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E9%9D%A0%E7%9A%84%E7%BD%91%E7%BB%9C"><span class="toc-number">2.2.</span> <span class="toc-text">不可靠的网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%B5%8B%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C"><span class="toc-number">2.2.1.</span> <span class="toc-text">检测网络故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E7%BD%91%E7%BB%9C%E5%92%8C%E5%BC%82%E6%AD%A5%E7%BD%91%E7%BB%9C"><span class="toc-number">2.2.2.</span> <span class="toc-text">同步网络和异步网络</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E9%9D%A0%E7%9A%84%E6%97%B6%E9%92%9F"><span class="toc-number">2.3.</span> <span class="toc-text">不可靠的时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E6%97%B6%E9%92%9F%E7%9A%84%E5%90%8C%E6%AD%A5"><span class="toc-number">2.3.1.</span> <span class="toc-text">依赖时钟的同步</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E6%88%B3%E4%B8%8E%E4%BA%8B%E4%BB%B6%E9%A1%BA%E5%BA%8F"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">时间戳与事件顺序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%B6%E9%92%9F%E7%9A%84%E7%BD%AE%E4%BF%A1%E5%8C%BA%E9%97%B4"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">时钟的置信区间</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%9A%82%E5%81%9C"><span class="toc-number">2.3.2.</span> <span class="toc-text">进程暂停</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E3%80%81%E7%9C%9F%E7%9B%B8%E4%B8%8E%E8%B0%8E%E8%A8%80"><span class="toc-number">2.4.</span> <span class="toc-text">知识、真相与谎言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%9F%E7%9B%B8%E7%94%B1%E5%A4%9A%E6%95%B0%E5%86%B3%E5%AE%9A"><span class="toc-number">2.4.1.</span> <span class="toc-text">真相由多数决定</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E8%8A%82%E7%82%B9%E4%B8%8E%E9%94%81"><span class="toc-number">2.4.1.1.</span> <span class="toc-text">主节点与锁</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Fencing%E4%B8%8E%E9%94%81"><span class="toc-number">2.4.1.2.</span> <span class="toc-text">Fencing与锁</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%9C%E5%8D%A0%E5%BA%AD%E6%95%85%E9%9A%9C"><span class="toc-number">2.4.2.</span> <span class="toc-text">拜占庭故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%AE%BA%E7%B3%BB%E7%BB%9F%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%8E%B0%E5%AE%9E"><span class="toc-number">2.4.3.</span> <span class="toc-text">理论系统模型与现实</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%80%A7"><span class="toc-number">2.4.3.1.</span> <span class="toc-text">算法的正确性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7%EF%BC%88safety%EF%BC%89%E5%92%8C%E6%B4%BB%E6%80%A7%EF%BC%88liveness%EF%BC%89"><span class="toc-number">2.4.3.2.</span> <span class="toc-text">安全性（safety）和活性（liveness）</span></a></li></ol></li></ol></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1287,26 +1286,6 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-io-monitoring/" >Linux 系统 I/O 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-memory-monitoring/" >Linux 系统内存原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/OS_linux-cpu-monitoring/" >Linux 系统 CPU 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/OS_system_initialization/" >操作系统 - 架构与系统初始化</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservice/" >微服务概览与治理</a>
         </li>
     
@@ -1368,6 +1347,26 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span><a class="archive-post-title" href= "/2021/04/28/OS_linux-memory-monitoring/" >Linux 内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2021/04/20/OS_linux-io-monitoring/" >Linux I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2021/04/16/OS_linux-cpu-monitoring/" >Linux CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_system_initialization/" >Linux - 架构与系统初始化</a>
         </li>
     
     
@@ -1618,9 +1617,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1634,25 +1633,15 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
-        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1663,6 +1652,16 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

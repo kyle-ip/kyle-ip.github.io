@@ -41,8 +41,6 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <link rel="alternate" href="/atom.xml" title="Kylo&#39;s Notebook" type="application/atom+xml">
-    
     <title>数据仓库设计基础 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
@@ -222,7 +220,8 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+</head>
 
     
         <body class="post-body">
@@ -327,7 +326,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3,195</span>Reading time: <span class="post-count reading-time">11 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3.3k</span>Reading time: <span class="post-count reading-time">11 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -1092,7 +1091,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据仓库与业务系统库"><span class="toc-number">1.</span> <span class="toc-text">数据仓库与业务系统库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#传统数据仓库"><span class="toc-number">1.1.</span> <span class="toc-text">传统数据仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop-的优势"><span class="toc-number">1.2.</span> <span class="toc-text">Hadoop 的优势</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据仓库相关术语"><span class="toc-number">2.</span> <span class="toc-text">数据仓库相关术语</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关系数据模型"><span class="toc-number">3.</span> <span class="toc-text">关系数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据结构"><span class="toc-number">3.1.</span> <span class="toc-text">数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完整性约束"><span class="toc-number">3.2.</span> <span class="toc-text">完整性约束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关系数据库语言（SQL）："><span class="toc-number">3.3.</span> <span class="toc-text">关系数据库语言（SQL）：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规范化"><span class="toc-number">3.4.</span> <span class="toc-text">规范化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1NF"><span class="toc-number">3.4.1.</span> <span class="toc-text">1NF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2NF"><span class="toc-number">3.4.2.</span> <span class="toc-text">2NF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3NF"><span class="toc-number">3.4.3.</span> <span class="toc-text">3NF</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#维度数据模型"><span class="toc-number">4.</span> <span class="toc-text">维度数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#构建流程"><span class="toc-number">4.1.</span> <span class="toc-text">构建流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#维度规范化"><span class="toc-number">4.2.</span> <span class="toc-text">维度规范化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#星型模型"><span class="toc-number">4.3.</span> <span class="toc-text">星型模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#雪花模型"><span class="toc-number">4.4.</span> <span class="toc-text">雪花模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Data-Vault-模型"><span class="toc-number">5.</span> <span class="toc-text">Data Vault 模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#中心表、链接表与附属表"><span class="toc-number">5.1.</span> <span class="toc-text">中心表、链接表与附属表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建流程-1"><span class="toc-number">5.2.</span> <span class="toc-text">构建流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据仓库架构"><span class="toc-number">6.</span> <span class="toc-text">数据仓库架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据建模与存储"><span class="toc-number">6.1.</span> <span class="toc-text">数据建模与存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据采集"><span class="toc-number">6.2.</span> <span class="toc-text">数据采集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据处理与访问"><span class="toc-number">6.3.</span> <span class="toc-text">数据处理与访问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据聚合"><span class="toc-number">6.4.</span> <span class="toc-text">数据聚合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据导出"><span class="toc-number">6.5.</span> <span class="toc-text">数据导出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流程调度"><span class="toc-number">6.6.</span> <span class="toc-text">流程调度</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E4%B8%8E%E4%B8%9A%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%BA%93"><span class="toc-number">1.</span> <span class="toc-text">数据仓库与业务系统库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">1.1.</span> <span class="toc-text">传统数据仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop-%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">1.2.</span> <span class="toc-text">Hadoop 的优势</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD"><span class="toc-number">2.</span> <span class="toc-text">数据仓库相关术语</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">关系数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E6%80%A7%E7%BA%A6%E6%9D%9F"><span class="toc-number">3.2.</span> <span class="toc-text">完整性约束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%AD%E8%A8%80%EF%BC%88SQL%EF%BC%89%EF%BC%9A"><span class="toc-number">3.3.</span> <span class="toc-text">关系数据库语言（SQL）：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%84%E8%8C%83%E5%8C%96"><span class="toc-number">3.4.</span> <span class="toc-text">规范化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1NF"><span class="toc-number">3.4.1.</span> <span class="toc-text">1NF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2NF"><span class="toc-number">3.4.2.</span> <span class="toc-text">2NF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3NF"><span class="toc-number">3.4.3.</span> <span class="toc-text">3NF</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%B4%E5%BA%A6%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">4.</span> <span class="toc-text">维度数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B"><span class="toc-number">4.1.</span> <span class="toc-text">构建流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%B4%E5%BA%A6%E8%A7%84%E8%8C%83%E5%8C%96"><span class="toc-number">4.2.</span> <span class="toc-text">维度规范化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B"><span class="toc-number">4.3.</span> <span class="toc-text">星型模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%AA%E8%8A%B1%E6%A8%A1%E5%9E%8B"><span class="toc-number">4.4.</span> <span class="toc-text">雪花模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Data-Vault-%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.</span> <span class="toc-text">Data Vault 模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E5%BF%83%E8%A1%A8%E3%80%81%E9%93%BE%E6%8E%A5%E8%A1%A8%E4%B8%8E%E9%99%84%E5%B1%9E%E8%A1%A8"><span class="toc-number">5.1.</span> <span class="toc-text">中心表、链接表与附属表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B-1"><span class="toc-number">5.2.</span> <span class="toc-text">构建流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%9E%B6%E6%9E%84"><span class="toc-number">6.</span> <span class="toc-text">数据仓库架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1%E4%B8%8E%E5%AD%98%E5%82%A8"><span class="toc-number">6.1.</span> <span class="toc-text">数据建模与存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86"><span class="toc-number">6.2.</span> <span class="toc-text">数据采集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%B8%8E%E8%AE%BF%E9%97%AE"><span class="toc-number">6.3.</span> <span class="toc-text">数据处理与访问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%81%9A%E5%90%88"><span class="toc-number">6.4.</span> <span class="toc-text">数据聚合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA"><span class="toc-number">6.5.</span> <span class="toc-text">数据导出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="toc-number">6.6.</span> <span class="toc-text">流程调度</span></a></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1572,26 +1571,6 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-io-monitoring/" >Linux 系统 I/O 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2021/07/17/OS_linux-memory-monitoring/" >Linux 系统内存原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/OS_linux-cpu-monitoring/" >Linux 系统 CPU 原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/OS_system_initialization/" >操作系统 - 架构与系统初始化</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservice/" >微服务概览与治理</a>
         </li>
     
@@ -1653,6 +1632,26 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span><a class="archive-post-title" href= "/2021/04/28/OS_linux-memory-monitoring/" >Linux 内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2021/04/20/OS_linux-io-monitoring/" >Linux I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2021/04/16/OS_linux-cpu-monitoring/" >Linux CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_system_initialization/" >Linux - 架构与系统初始化</a>
         </li>
     
     
@@ -1903,9 +1902,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1919,25 +1918,15 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
-        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1948,6 +1937,16 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

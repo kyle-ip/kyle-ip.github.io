@@ -3,7 +3,7 @@
   <title>Kylo&#39;s Notebook</title>
   
   <subtitle>do {eat(); sleep(); code();} while (isAlive);</subtitle>
-  <link href="/atom.xml" rel="self"/>
+  <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
   <updated>2021-07-18T13:29:36.507Z</updated>
@@ -23,107 +23,15 @@
     <published>2021-07-18T08:42:39.000Z</published>
     <updated>2021-07-18T13:29:36.507Z</updated>
     
-    <summary type="html">
     
-      Go 语言的一大特点是其异常处理机制与其它语言很不一样，本文将探讨 Go 语言异常处理的最佳实践。
-    
-    </summary>
+    <summary type="html">Go 语言的一大特点是其异常处理机制与其它语言很不一样，本文将探讨 Go 语言异常处理的最佳实践。</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Go" scheme="https://yipwinghong.github.io/tags/Go/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-  </entry>
-  
-  <entry>
-    <title>Linux 系统 I/O 原理与分析</title>
-    <link href="https://yipwinghong.github.io/2021/07/17/OS_linux-io-monitoring/"/>
-    <id>https://yipwinghong.github.io/2021/07/17/OS_linux-io-monitoring/</id>
-    <published>2021-07-17T07:50:33.000Z</published>
-    <updated>2021-07-19T07:50:50.021Z</updated>
-    
-    <summary type="html">
-    
-      学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（I/O）。
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
-    
-      <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux 系统内存原理与分析</title>
-    <link href="https://yipwinghong.github.io/2021/07/17/OS_linux-memory-monitoring/"/>
-    <id>https://yipwinghong.github.io/2021/07/17/OS_linux-memory-monitoring/</id>
-    <published>2021-07-17T07:50:33.000Z</published>
-    <updated>2021-07-19T00:17:34.113Z</updated>
-    
-    <summary type="html">
-    
-      学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（内存）。
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
-    
-      <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux 系统 CPU 原理与分析</title>
-    <link href="https://yipwinghong.github.io/2021/07/16/OS_linux-cpu-monitoring/"/>
-    <id>https://yipwinghong.github.io/2021/07/16/OS_linux-cpu-monitoring/</id>
-    <published>2021-07-16T11:50:33.000Z</published>
-    <updated>2021-07-19T06:01:58.050Z</updated>
-    
-    <summary type="html">
-    
-      学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（CPU）。
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
-    
-      <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统 - 架构与系统初始化</title>
-    <link href="https://yipwinghong.github.io/2021/07/15/OS_system_initialization/"/>
-    <id>https://yipwinghong.github.io/2021/07/15/OS_system_initialization/</id>
-    <published>2021-07-15T13:42:18.000Z</published>
-    <updated>2021-07-18T13:29:36.538Z</updated>
-    
-    <summary type="html">
-    
-      第 n 次重学操作系统，这次是从开机开始...= =
-    
-    </summary>
-    
-    
-    
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-      <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
+    <category term="Go" scheme="https://yipwinghong.github.io/tags/Go/"/>
     
   </entry>
   
@@ -134,19 +42,17 @@
     <published>2021-07-12T12:42:39.000Z</published>
     <updated>2021-07-18T13:29:36.507Z</updated>
     
-    <summary type="html">
     
-      关于后端架构演进过程的细节。
-    
-    </summary>
+    <summary type="html">关于后端架构演进过程的细节。</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Go" scheme="https://yipwinghong.github.io/tags/Go/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="微服务" scheme="https://yipwinghong.github.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    <category term="Go" scheme="https://yipwinghong.github.io/tags/Go/"/>
+    
+    <category term="微服务" scheme="https://yipwinghong.github.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
     
   </entry>
   
@@ -157,17 +63,15 @@
     <published>2021-07-09T15:10:14.000Z</published>
     <updated>2021-07-18T13:29:36.444Z</updated>
     
-    <summary type="html">
     
-      这次还是有权图哈~
-    
-    </summary>
+    <summary type="html">这次还是有权图哈~</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
@@ -178,17 +82,15 @@
     <published>2021-07-08T12:10:14.000Z</published>
     <updated>2021-07-18T13:29:36.460Z</updated>
     
-    <summary type="html">
     
-      有权图的另一类经典问题。
-    
-    </summary>
+    <summary type="html">有权图的另一类经典问题。</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
@@ -199,17 +101,15 @@
     <published>2021-07-07T16:26:00.000Z</published>
     <updated>2021-07-18T13:29:36.460Z</updated>
     
-    <summary type="html">
     
-      第一次写算法相关的总结类文章...
-    
-    </summary>
+    <summary type="html">第一次写算法相关的总结类文章...</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
@@ -220,17 +120,15 @@
     <published>2021-07-01T15:05:19.000Z</published>
     <updated>2021-07-18T13:29:36.491Z</updated>
     
-    <summary type="html">
     
-      原文链接：https://martinfowler.com/articles/patterns-of-distributed-systems/gossip-dissemination.html
-    
-    </summary>
+    <summary type="html">原文链接：https://martinfowler.com/articles/patterns-of-distributed-systems/gossip-dissemination.html</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="分布式系统" scheme="https://yipwinghong.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="分布式系统" scheme="https://yipwinghong.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
@@ -241,17 +139,15 @@
     <published>2021-06-23T15:05:19.000Z</published>
     <updated>2021-07-18T13:29:36.507Z</updated>
     
-    <summary type="html">
     
-      原文链接：https://martinfowler.com/articles/patterns-of-distributed-systems/versioned-value.html
-    
-    </summary>
+    <summary type="html">原文链接：https://martinfowler.com/articles/patterns-of-distributed-systems/versioned-value.html</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="分布式系统" scheme="https://yipwinghong.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="分布式系统" scheme="https://yipwinghong.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
@@ -262,17 +158,15 @@
     <published>2021-06-19T15:37:00.000Z</published>
     <updated>2021-07-09T09:06:33.797Z</updated>
     
-    <summary type="html">
     
-      原文链接：http://tom-e-white.com/2007/11/consistent-hashing.html
-    
-    </summary>
+    <summary type="html">原文链接：http://tom-e-white.com/2007/11/consistent-hashing.html</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
@@ -283,17 +177,15 @@
     <published>2021-06-13T06:42:39.000Z</published>
     <updated>2021-07-18T13:29:36.507Z</updated>
     
-    <summary type="html">
     
-      参考：https://github.com/a8m/golang-cheat-sheet
-    
-    </summary>
+    <summary type="html">参考：https://github.com/a8m/golang-cheat-sheet</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Go" scheme="https://yipwinghong.github.io/tags/Go/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="Go" scheme="https://yipwinghong.github.io/tags/Go/"/>
     
   </entry>
   
@@ -304,15 +196,13 @@
     <published>2021-06-06T14:27:51.000Z</published>
     <updated>2021-06-21T23:57:57.481Z</updated>
     
-    <summary type="html">
     
-      It hasn&#39;t been an easy time during the first week...= =
-    
-    </summary>
+    <summary type="html">It hasn&#39;t been an easy time during the first week...= =</summary>
     
     
     
-      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
+    
+    <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
     
   </entry>
   
@@ -323,15 +213,13 @@
     <published>2021-06-05T13:46:57.000Z</published>
     <updated>2021-07-09T06:51:27.840Z</updated>
     
-    <summary type="html">
     
-      《考试脑科学》阅读笔记
-    
-    </summary>
+    <summary type="html">《考试脑科学》阅读笔记</summary>
     
     
     
-      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
+    
+    <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
     
   </entry>
   
@@ -342,15 +230,13 @@
     <published>2021-05-31T15:48:57.000Z</published>
     <updated>2021-06-21T23:57:57.481Z</updated>
     
-    <summary type="html">
     
-      不给你看！
-    
-    </summary>
+    <summary type="html">不给你看！</summary>
     
     
     
-      <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
+    
+    <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
     
   </entry>
   
@@ -361,17 +247,15 @@
     <published>2021-05-16T03:29:21.000Z</published>
     <updated>2021-06-21T23:57:57.481Z</updated>
     
-    <summary type="html">
     
-      原文链接：https://medium.com/pragmatic-computer-science/how-to-solve-the-secret-santa-problem-using-graph-theory-a6b216ccc622
-    
-    </summary>
+    <summary type="html">原文链接：https://medium.com/pragmatic-computer-science/how-to-solve-the-secret-santa-problem-using-graph-theory-a6b216ccc622</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
@@ -382,17 +266,99 @@
     <published>2021-05-12T10:59:41.000Z</published>
     <updated>2021-07-09T06:48:09.442Z</updated>
     
-    <summary type="html">
     
-      原文链接：https://www.narrator.ai/blog/using-postgresql-as-a-data-warehouse
-    
-    </summary>
+    <summary type="html">原文链接：https://www.narrator.ai/blog/using-postgresql-as-a-data-warehouse</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux 内存原理与分析</title>
+    <link href="https://yipwinghong.github.io/2021/04/28/OS_linux-memory-monitoring/"/>
+    <id>https://yipwinghong.github.io/2021/04/28/OS_linux-memory-monitoring/</id>
+    <published>2021-04-28T07:50:33.000Z</published>
+    <updated>2021-07-19T08:17:47.420Z</updated>
+    
+    
+    <summary type="html">学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（内存）。</summary>
+    
+    
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
+    
+    <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux I/O 原理与分析</title>
+    <link href="https://yipwinghong.github.io/2021/04/20/OS_linux-io-monitoring/"/>
+    <id>https://yipwinghong.github.io/2021/04/20/OS_linux-io-monitoring/</id>
+    <published>2021-04-20T07:50:33.000Z</published>
+    <updated>2021-07-19T08:35:23.241Z</updated>
+    
+    
+    <summary type="html">学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（I/O）。</summary>
+    
+    
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
+    
+    <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux CPU 原理与分析</title>
+    <link href="https://yipwinghong.github.io/2021/04/16/OS_linux-cpu-monitoring/"/>
+    <id>https://yipwinghong.github.io/2021/04/16/OS_linux-cpu-monitoring/</id>
+    <published>2021-04-16T11:50:33.000Z</published>
+    <updated>2021-07-19T08:37:55.205Z</updated>
+    
+    
+    <summary type="html">学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（CPU）。</summary>
+    
+    
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
+    
+    <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux - 架构与系统初始化</title>
+    <link href="https://yipwinghong.github.io/2021/04/01/OS_system_initialization/"/>
+    <id>https://yipwinghong.github.io/2021/04/01/OS_system_initialization/</id>
+    <published>2021-04-01T13:42:18.000Z</published>
+    <updated>2021-07-19T08:09:02.182Z</updated>
+    
+    
+    <summary type="html">第 n 次重学操作系统，这次是从开机开始...= =</summary>
+    
+    
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
+    
+    <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
     
   </entry>
   
@@ -403,17 +369,15 @@
     <published>2021-03-17T08:41:00.000Z</published>
     <updated>2021-07-09T06:51:56.227Z</updated>
     
-    <summary type="html">
     
-      原文链接：https://blog.scottlogic.com/2021/04/22/losing-the-fear.html
-    
-    </summary>
+    <summary type="html">原文链接：https://blog.scottlogic.com/2021/04/22/losing-the-fear.html</summary>
     
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="Java" scheme="https://yipwinghong.github.io/tags/Java/"/>
     
   </entry>
   
@@ -424,19 +388,17 @@
     <published>2021-02-24T13:21:22.000Z</published>
     <updated>2021-07-18T13:29:36.475Z</updated>
     
-    <summary type="html">
     
-      《DDIA》阅读笔记（九）：一致性与共识（共识问题）
-    
-    </summary>
+    <summary type="html">《DDIA》阅读笔记（九）：一致性与共识（共识问题）</summary>
     
     
-      <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="《数据密集型应用系统设计》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
-      <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
+    <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
