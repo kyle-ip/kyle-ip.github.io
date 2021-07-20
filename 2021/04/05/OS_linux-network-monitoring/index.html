@@ -41,7 +41,7 @@
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/5f2d4957663dd8bf3410da8180ab18f0.png">
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/b07ea76a8737ed93395736795ede44e0.png">
 <meta property="article:published_time" content="2021-04-05T07:50:33.000Z">
-<meta property="article:modified_time" content="2021-07-19T15:59:28.766Z">
+<meta property="article:modified_time" content="2021-07-20T02:20:24.637Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="Linux">
@@ -467,7 +467,11 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="Linux-网络原理与分析"><a href="#Linux-网络原理与分析" class="headerlink" title="Linux 网络原理与分析"></a>Linux 网络原理与分析</h1><blockquote class="pullquote mindmap mindmap-md"><ul>
+        <h1 id="Linux-网络原理与分析"><a href="#Linux-网络原理与分析" class="headerlink" title="Linux 网络原理与分析"></a>Linux 网络原理与分析</h1><blockquote>
+<p>  本文侧重点在于讲解 Linux 内核协议栈网络相关的内容，而 TCP/IP 网络模型的内容不会过多提及。</p>
+<p>  了解更多网络相关的原理知识请参考《计算机网络》。</p>
+</blockquote>
+<blockquote class="pullquote mindmap mindmap-md"><ul>
 <li>网络性能指标<ul>
 <li>应用层<ul>
 <li>QPS（每秒请求数）</li>
@@ -556,7 +560,7 @@ height:100vh;
 </li>
 </ul>
 <blockquote>
-<p>  DMA：待补充</p>
+<p>  DMA（Direct Memory Access）：在内存和 I/O 设备进行数据传输时，经过独立的协处理器（Co-Processor）DMAC（DMA Controller）辅助处理，而无需经过 CPU 控制。</p>
 </blockquote>
 <p>网络协议栈解析：</p>
 <ul>
@@ -573,11 +577,12 @@ height:100vh;
 <p>网络协议栈从 Socket 发送缓冲区中取出数据包，再按照 TCP/IP 栈从上到下逐层处理：比如增加 TCP 头、IP 头，执行路由查找下一跳 IP、按照 MTU（Maximum Transmission Unit）分片等。</p>
 <p>分片后的网络包再送到网络接口层进行物理地址寻址，以找到下一跳的 MAC 地址；再添加帧头和帧尾放到发包队列中。</p>
 <p>随后发起软中断通知驱动程序，由驱动程序通过 DMA 从发包队列中读出网络帧，通过物理网卡把它发送出去。</p>
-<h3 id="套接字"><a href="#套接字" class="headerlink" title="套接字"></a>套接字</h3><p>套接字可屏蔽 Linux 内核中不同协议的差异，为应用程序提供统一的访问接口。每个套接字都有读写缓冲区：</p>
+<h3 id="套接字"><a href="#套接字" class="headerlink" title="套接字"></a>套接字</h3><p>套接字可屏蔽 Linux 内核中不同协议的差异，为应用程序提供统一访问接口。</p>
+<p>每个套接字都有读写缓冲区：</p>
 <ul>
 <li><p>  读缓冲区缓存远端发来的数据，读缓冲区满就不能再接收新的数据。</p>
 </li>
-<li><p>  写缓冲区缓存要发出去的数据，写缓冲区满，应用程序的写操作就会被阻塞。</p>
+<li><p>  写缓冲区缓存要发出去的数据，写缓冲区满，应用程序写操作就会被阻塞。</p>
 </li>
 </ul>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/3af644b6d463869ece19786a4634f765.png" alt="img"></p>
@@ -599,9 +604,9 @@ height:100vh;
 
 <p>网络 I/O 异常状态：</p>
 <ul>
-<li><p>  errors：发生错误的数据包数，校验错误、帧同步错误等。</p>
+<li><p>  errors：错误数据包数，校验错误、帧同步错误等。</p>
 </li>
-<li><p>  dropped：丢弃的数据包数。数据包已经收到了 Ring Buffer，但因为内存不足等原因丢包。</p>
+<li><p>  dropped：丢弃数据包数。数据包已经收到了 Ring Buffer，但因为内存不足等原因丢包。</p>
 </li>
 <li><p>  overruns：超限数据包数。网络 I/O 速度过快，导致 Ring Buffer 中的数据包来不及处理（队列满）而导致的丢包；</p>
 </li>
@@ -613,7 +618,7 @@ height:100vh;
 <h3 id="套接字信息"><a href="#套接字信息" class="headerlink" title="套接字信息"></a>套接字信息</h3><p>使用 <code>netstat</code>、<code>ss</code> 查看套接字信息：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -l 只显示监听套接字，-n 显示数字地址和端口，-p 显示进程信息</span></span><br><span class="line">netstat -nlp | head -n 3</span><br><span class="line"><span class="meta">#</span><span class="bash"> Active Internet connections (only servers)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      840/systemd-resolve</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -l 只显示监听套接字，-t 只显示 TCP 套接字，-n 显示数字地址和端口，-p 表示显示进程信息</span></span><br><span class="line">ss -ltnp | head -n 3</span><br><span class="line"><span class="meta">#</span><span class="bash"> State    Recv-Q    Send-Q        Local Address:Port        Peer Address:Port</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> LISTEN   0         128           127.0.0.53%lo:53               0.0.0.0:*        users:((<span class="string">&quot;systemd-resolve&quot;</span>,pid=840,fd=13))</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> LISTEN   0         128                 0.0.0.0:22               0.0.0.0:*        users:((<span class="string">&quot;sshd&quot;</span>,pid=1459,fd=3))</span></span><br></pre></td></tr></table></figure>
 
-<p>其中如果接收队列（Recv-Q）和发送队列（Send-Q）的值不为 0，说明有网络包的堆积发生。当 Socket 的状态为： </p>
+<p>如果接收队列（Recv-Q）和发送队列（Send-Q）的值不为 0，说明有网络包的堆积发生。当 Socket 的状态为： </p>
 <ul>
 <li><p>  Established：Recv-Q 表示套接字缓冲未被应用程序取走的字节数（即接收队列长度），Send-Q 表示还没有被远端主机确认的字节数（即发送队列长度）。</p>
 </li>
@@ -659,34 +664,38 @@ height:100vh;
 <ul>
 <li><p><strong>非阻塞 I/O + 水平触发通知</strong>：select 和 poll 从文件描述符列表中找出可以执行 I/O ，再进行真正的读写。由于 I/O 是非阻塞的，一个线程中就可以同时监控一批套接字文件描述符，达到单线程处理多请求的目的。但也存在以下问题：</p>
 <ul>
-<li><p>  由于需要对文件描述符列表进行轮询，请求数多时会比较耗时。</p>
+<li><p>  需要对文件描述符列表进行轮询，请求数多时会比较耗时。</p>
 </li>
-<li><p>  select 使用固定长度的位相量表示文件描述符的集合，会有最大描述符数量的限制（32 位系统 1024）。在 select 内部是轮询检查套接字状态，处理耗时跟描述符数量是 O(N) 的关系。</p>
+<li><p>  select 使用固定长度的位相量表示文件描述符集合，有最大描述符数量的限制（32 位系统 1024）；轮询检查套接字状态，处理耗时 O(N)。</p>
 </li>
-<li><p>  poll 使用不定长数组存放文件描述符没有最大描述符数量的限制（只受系统文件描述符限制），但同样需要对文件描述符列表进行轮询。</p>
+<li><p>  poll 使用不定长数组存放文件描述符，没有最大描述符数量的限制（只受系统文件描述符限制），但也需要轮询文件描述符列表。</p>
 </li>
-<li><p>  调用 select 和 poll 时，需要把文件描述符的集合从用户空间传入内核空间，由内核修改后再传出到用户空间中，存在切换的成本。</p>
+<li><p>  调用 select 和 poll 时需要把文件描述符集合从用户空间传入内核空间，由内核修改后再传出到用户空间中，存在切换成本。</p>
 </li>
 </ul>
 </li>
-<li><p>  <strong>非阻塞 I/O + 边缘触发通知</strong>：在 Linux 2.6 中新增的 epoll 使用 <strong>红黑树</strong> <strong>在内核中管理</strong> 文件描述符，不需要应用程序在每次操作时都传入传出；使用事件驱动的机制，只关注有 I/O 事件发生的文件描述符，而不是轮询扫描整个集合。</p>
+<li><p>  <strong>非阻塞 I/O + 边缘触发通知</strong>：Linux 2.6 新增的 epoll 使用 <strong>红黑树</strong> <strong>在内核中管理</strong> 文件描述符，不需要应用程序在每次操作时都传入传出；使用事件驱动机制，只关注有 I/O 事件发生的文件描述符，而不是轮询扫描整个集合。</p>
 </li>
-<li><p>  <strong>异步 I/O（Asynchronous I/O）</strong>：在 Linux 2.6 中新增的异步 I/O 允许应用程序同时发起很多 I/O 操作，而在 I/O 完成后，系统以事件通知（比如信号或者回调函数）告诉应用程序前来查询结果。然而在较长时间内都不完善（比如 glibc 提供的异步 I/O 库），且使用难度较高。</p>
+<li><p>  <strong>异步 I/O（Asynchronous I/O）</strong>：Linux 2.6 新增的异步 I/O 允许应用程序同时发起多个 I/O 操作，在 I/O 完成后系统以事件通知（比如信号或者回调函数）告知应用程序前来查询结果。然而在较长时间内都不完善（比如 glibc 提供的异步 I/O 库），且使用难度较高。</p>
 </li>
 </ul>
 <h3 id="工作模型优化"><a href="#工作模型优化" class="headerlink" title="工作模型优化"></a>工作模型优化</h3><p>I/O 多路复用还可以结合不同工作模型使用：</p>
 <h4 id="主进程-多个-worker-子进程"><a href="#主进程-多个-worker-子进程" class="headerlink" title="主进程 + 多个 worker 子进程"></a>主进程 + 多个 worker 子进程</h4><p>Nginx 反向代理的原理就是基于此：主进程用于初始化套接字，执行 <code>bind()</code> + <code>listen()</code> 后创建多个子进程、管理其生命周期，每个子进程都通过 <code>accept()</code> 或 <code>epoll_wait()</code> 来处理相同套接字。</p>
 <blockquote>
 <p>  惊群效应：当网络 I/O 事件发生时，多个进程被同时唤醒，但实际上只有一个进程来响应这个事件，其他被唤醒的进程都会重新休眠。<code>accept()</code>（Linux 2.6 中解决）和 <code>epoll_wait()</code>（Linux 4.5 中通过 EPOLLEXCLUSIVE 解决）。</p>
-<p>  而 Nginx 在每个 worker 进程中增加一个全局锁（<code>accept_mutex</code>），worker 进程需要先竞争到锁才会加入到 epoll 中，确保只有一个 worker 子进程被唤醒。</p>
+<p>  Nginx 在每个 worker 进程中增加全局锁（<code>accept_mutex</code>），worker 进程需要先竞争到锁才会加入到 epoll 中，确保只有一个 worker 子进程被唤醒。</p>
 </blockquote>
-<p>也可以用线程代替进程：主线程负责套接字初始化和子线程状态的管理，而子线程则负责实际的请求处理。线程的调度和切换成本比较低，再进一步把 <code>epoll_wait()</code> 都放到主线程中，保证每次事件都只唤醒主线程，而子线程只需要负责后续的请求处理。</p>
-<h4 id="监听到相同端口的多进程"><a href="#监听到相同端口的多进程" class="headerlink" title="监听到相同端口的多进程"></a>监听到相同端口的多进程</h4><p>所有的进程监听相同接口，并且开启 <code>SO_REUSEPORT</code> 选项（Linux 3.9+），由内核将请求负载均衡到这些监听进程中去。由于内核确保了只有一个进程被唤醒，因此不会出现惊群问题。</p>
-<h3 id="DPDK-和-XDP"><a href="#DPDK-和-XDP" class="headerlink" title="DPDK 和 XDP"></a>DPDK 和 XDP</h3><p>在 C10M 问题中，单靠常规的软硬件优化已经难以满足需求。其根本原因是 Linux 内核协议栈工作太繁重：</p>
-<p>网卡硬中断 -&gt; 中断处理程序 -&gt; 网卡软中断 -&gt; 内核协议栈 -&gt; 网络协议栈 -&gt; 应用程序的路径太长，导致网络包处理难以优化。</p>
-<p>DPDK（Data Plane Development Kit，数据平面开发套件）是用户态网络的标准，其跳过内核协议栈、直接由用户态进程轮询处理网络接收：</p>
+<p>可以用线程代替进程：主线程负责套接字初始化和子线程状态的管理，而子线程则负责实际的请求处理。线程的调度和切换成本比较低，再进一步把 <code>epoll_wait()</code> 都放到主线程中，保证每次事件都只唤醒主线程，子线程只需负责后续的请求处理。</p>
+<h4 id="监听到相同端口的多进程"><a href="#监听到相同端口的多进程" class="headerlink" title="监听到相同端口的多进程"></a>监听到相同端口的多进程</h4><p>所有的进程监听相同端口，并开启 <code>SO_REUSEPORT</code> 选项（Linux 3.9+），由内核将请求负载均衡到监听进程中。</p>
+<p>内核确保只有一个进程被唤醒，不会出现惊群问题。</p>
+<h3 id="DPDK-和-XDP"><a href="#DPDK-和-XDP" class="headerlink" title="DPDK 和 XDP"></a>DPDK 和 XDP</h3><p>在 C10M 问题中，单靠常规软硬件优化已经难以满足需求。</p>
+<blockquote>
+<p>  其根本原因是 Linux 内核协议栈工作太繁重：</p>
+<p>  网卡硬中断 -&gt; 中断处理程序 -&gt; 网卡软中断 -&gt; 内核协议栈 -&gt; 网络协议栈 -&gt; 应用程序的路径太长，导致网络包处理难以优化。</p>
+</blockquote>
+<p>DPDK（Data Plane Development Kit，数据平面开发套件）是用户态网络标准，其跳过内核协议栈、由用户态进程轮询处理网络接收：</p>
 <ul>
-<li><p>  PPS 非常高的场景中，查询时间比实际工作时间少很多，绝大部分时间都在处理网络包，因此轮询也可以很高效。</p>
+<li><p>  PPS 非常高的场景中，查询时间比实际工作时间少很多，绝大部分时间都能处理网络包。</p>
 </li>
 <li><p>  跳过内核协议栈后省去了繁杂的处理路径，应用程序可针对具体场景优化网络包处理逻辑，不需要关注所有细节。</p>
 </li>
@@ -1779,7 +1788,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2020/08/09/Arthas_Cheat-Sheet/" >Arthas Cheat Sheet</a>
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2020/08/09/Arthas_cheat-sheet/" >Arthas Cheat Sheet</a>
         </li>
     
     
@@ -1824,12 +1833,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_Cheat-Sheet/" >Git Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_cheat-sheet/" >Git Cheat Sheet</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_Cheat-Sheet/" >Docker & K8S Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_cheat-sheet/" >Docker & K8S Cheat Sheet</a>
         </li>
     
     
