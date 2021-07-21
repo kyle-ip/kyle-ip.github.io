@@ -6,7 +6,7 @@
   <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-07-21T00:00:56.658Z</updated>
+  <updated>2021-07-21T09:27:45.327Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>《凤凰架构》阅读笔记（二）：访问远程服务</title>
+    <link href="https://yipwinghong.github.io/2021/07/21/Fenix_access-remote-service/"/>
+    <id>https://yipwinghong.github.io/2021/07/21/Fenix_access-remote-service/</id>
+    <published>2021-07-21T09:44:27.000Z</published>
+    <updated>2021-07-21T09:27:45.327Z</updated>
+    
+    
+    <summary type="html">《凤凰架构》阅读笔记（二）：访问远程服务</summary>
+    
+    
+    
+    <category term="《凤凰架构》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E5%87%A4%E5%87%B0%E6%9E%B6%E6%9E%84%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
   
   <entry>
     <title>《凤凰架构》阅读笔记（一）：软件架构演进</title>
@@ -371,27 +392,6 @@
     
     
     <summary type="html">学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（网络）。</summary>
-    
-    
-    
-    
-    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-    <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
-    
-    <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux - 架构与系统初始化</title>
-    <link href="https://yipwinghong.github.io/2021/04/01/OS_system_initialization/"/>
-    <id>https://yipwinghong.github.io/2021/04/01/OS_system_initialization/</id>
-    <published>2021-04-01T13:42:18.000Z</published>
-    <updated>2021-07-19T08:09:02.182Z</updated>
-    
-    
-    <summary type="html">第 n 次重学操作系统，这次是从开机开始...= =</summary>
     
     
     

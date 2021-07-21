@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://yipwinghong.github.io/2021/07/21/Fenix_access-remote-service/</loc>
+    
+    <lastmod>2021-07-21</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/2021/07/21/Fenix_the-evolution-of-software-architecture/</loc>
     
     <lastmod>2021-07-21</lastmod>
@@ -499,14 +506,14 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2020-01-19_diary.html</loc>
+    <loc>https://yipwinghong.github.io/2020-02-15_diary.html</loc>
     
     <lastmod>2021-06-21</lastmod>
     
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2020-02-15_diary.html</loc>
+    <loc>https://yipwinghong.github.io/2020-01-19_diary.html</loc>
     
     <lastmod>2021-06-21</lastmod>
     
@@ -564,14 +571,14 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
+    <loc>https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    <loc>https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -627,6 +634,13 @@
   </url>
   
   <url>
+    <loc>https://yipwinghong.github.io/tags/Python/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/tags/Linux/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
@@ -635,13 +649,6 @@
   
   <url>
     <loc>https://yipwinghong.github.io/tags/OS/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/tags/Python/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
