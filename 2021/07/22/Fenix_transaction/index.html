@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626883659.jpg">
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626883556.jpg">
 <meta property="article:published_time" content="2021-07-22T00:44:27.000Z">
-<meta property="article:modified_time" content="2021-07-22T01:20:23.058Z">
+<meta property="article:modified_time" content="2021-07-22T01:27:50.186Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="设计">
@@ -477,7 +477,7 @@ height:100vh;
 <li><p><strong>持久性</strong>（Durability）：所有被成功提交的数据修改都能够正确地被持久化。</p>
 </li>
 </ul>
-<p>其中前三者是手段，一致性是目的，应着眼于前三者。</p>
+<p>前三者是手段，一致性是目的，应着眼于前三者。</p>
 <h3 id="原子性和持久性"><a href="#原子性和持久性" class="headerlink" title="原子性和持久性"></a>原子性和持久性</h3><p>前者保证多个操作生效情况统一，后者保证事务生效后不会丢失修改（即成功写入磁盘）。</p>
 <p>数据入库过程中可能发生以下情形：</p>
 <ul>
@@ -626,7 +626,7 @@ height:100vh;
 <li><p>AP 系统：放弃一致性，一旦发生分区，节点之间所提供的数据可能不一致。这是分布式系统的主流选择，因为如果可用性随节点数量增加而下降，则失去分布式的价值。比如大多数的 NoSQL 或分布式缓存框架。</p>
 </li>
 </ul>
-<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Eventual_consistency">最终一致性</a>（Eventual Consistency）：如果数据在一段时间内没有被另外操作更改，则最终将会达到与强一致性过程相同的结果，面向最终一致性的算法被称为“乐观复制算法”。这是探讨分布式事务所追求的目标（也是 AC 系统尽可能得到正确结果的途径）。</p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Eventual_consistency">最终一致性</a>（Eventual Consistency）：如果数据在一段时间内没有被其它操作更改，则最终将会达到与强一致性过程相同的结果，面向最终一致性的算法被称为“乐观复制算法”。这是探讨分布式事务所追求的目标（也是 AC 系统尽可能得到正确结果的途径）。</p>
 <p>相较于 ACID，在分布式场景达到一致性还有另一种途径：BASE，即：</p>
 <ul>
 <li><p>基本可用性（Basically Available）</p>
@@ -636,7 +636,7 @@ height:100vh;
 <li><p>最终一致性（Eventually Consistent）</p>
 </li>
 </ul>
-<h3 id="可靠事件队列"><a href="#可靠事件队列" class="headerlink" title="可靠事件队列"></a>可靠事件队列</h3><p>节点 A 写数据操作需要关联到其它节点（B、C），可在本地数据库中建立一个本地消息表，在系统中建立一个用于跟踪事务状态消息服务：</p>
+<h3 id="可靠事件队列"><a href="#可靠事件队列" class="headerlink" title="可靠事件队列"></a>可靠事件队列</h3><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Best-effort_delivery">最大努力交付</a>（Best-Effort Delivery，参考 TCP 中未收到 ACK 应答自动重新发包）：节点 A 写数据操作需要关联到其它节点（B、C），可在本地数据库中建立一个本地消息表，在系统中建立一个用于跟踪事务状态消息服务：</p>
 <ul>
 <li><p>A 写数据时，利用本地事务在消息表记录事务 ID 与变更操作，标记为“进行中”。</p>
 </li>
@@ -655,7 +655,7 @@ height:100vh;
 <blockquote>
 <p>  一些支持分布式事务的消息框架原生支持分布式事务操作（如 RocketMQ），轮询重试可交由消息框架来保障。</p>
 </blockquote>
-<p>这就是 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Best-effort_delivery">最大努力交付</a>（Best-Effort Delivery，比如 TCP 中未收到 ACK 应答自动重新发包）。而可靠事件队列还有 <strong>最大努力一次提交</strong>（Best-Effort 1PC）的形式，指将最有可能出错的业务以本地事务的方式完成后，不断重试（不限于消息系统）来促使该事务中的其他关联业务全部完成。</p>
+<p>可靠事件队列还有 <strong>最大努力一次提交</strong>（Best-Effort 1PC）的形式，指将最有可能出错的业务以本地事务的方式完成后，不断重试（不限于消息系统）来促使该事务中的其他关联业务全部完成。</p>
 <p>这种方法足够简单且可保证最终一致性，但不能保证隔离性。</p>
 <h3 id="TCC-事务（回滚）"><a href="#TCC-事务（回滚）" class="headerlink" title="TCC 事务（回滚）"></a>TCC 事务（回滚）</h3><p>一些业务必须考虑隔离性，比如电商场景下的 <strong>超售问题</strong>：两个客户在短时间内都成功购买了同一件商品（数量允许），但他们购买的数量之超过了库存。在刚性事务的 <strong>可重复读</strong> 级别下必然可避免（保证后提交的事务无法获得锁而失败），但在分布式事务下，可考虑 TCC 方案，其优势是可提供强隔离性。</p>
 <p>TCC 分为三个阶段：</p>
@@ -668,8 +668,8 @@ height:100vh;
 </li>
 </ul>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626883556.jpg" alt="1626883556" style="zoom:80%;" /></p>
-<p>TCC 具备高性能、隔离性的优点（在业务执行时只操作预留资源，几乎不会涉及锁和资源的争用，因此性能很高），其类似 2PC 的准备和提交阶段，但前者在用户代码层面实现，后者在基础设施层面实现，因此 TCC 更灵活、可设计资源锁定的粒度。</p>
-<p>缺点是更高的开发成本和业务侵入性，意味着有更高的开发成本和更换事务实现方案的替换成本；且所要求的技术可控性上约束较大：比如与第三方对接，操作权限和数据结构不能随心所欲自行定义，不能要求对接方配合操作，Try 阶段就无法施行。</p>
+<p>TCC 具备高性能、强隔离的优点（在业务执行时只操作预留资源，几乎不会涉及锁和资源的争用，因此性能很高），其类似 2PC 的准备和提交阶段，但前者在用户代码层面实现，后者在基础设施层面实现，因此 TCC 更灵活、可设计资源锁定的粒度。</p>
+<p>缺点是业务侵入性强，意味着更高的开发成本和替换成本；且所要求的技术可控性上约束较大：比如与第三方对接，操作权限和数据结构不能随心所欲自行定义，不能要求对接方配合操作，Try 阶段就无法施行。</p>
 <blockquote>
 <p>  通常会基于某些分布式事务中间件（譬如阿里开源的 <a target="_blank" rel="noopener" href="https://seata.io/zh-cn/">Seata</a>）完成，尽量减轻编码工作量。</p>
 </blockquote>
@@ -691,14 +691,13 @@ height:100vh;
 </ul>
 <p>如果所有的 Ti 都成功提交则事务完成，否则以下取其一：</p>
 <ul>
-<li><p><strong>正向恢复</strong>（Forward Recovery）：一直对 Ti 进行重试直到成功（不补偿）。适用于所有事务最终都必须成功的场景。</p>
+<li><p><strong>正向恢复</strong>（Forward Recovery）：重试 Ti 直到成功（不补偿）。适用于所有事务最终都必须成功的场景。</p>
 </li>
-<li><p><strong>反向恢复</strong>（Backward Recovery）：一直执行 Ci 补偿直到成功。执行模式是 T1, T2, … Ti（失败）, Ci（补偿）, …, C2, C1。</p>
+<li><p><strong>反向恢复</strong>（Backward Recovery）：执行 Ci 补偿直到成功。执行模式是 T1, T2, … Ti（失败）, Ci（补偿）, …, C2, C1。</p>
 </li>
 </ul>
-<p>不需为资源设计冻结和撤销冻结的操作，而补偿操作更容易实现（尤其与第三方对接时，自行补偿比要求对方配合撤销容易）。</p>
-<p>需保证所有子事务都能提交或补偿，但 SAGA 系统本身也有可能崩溃，所以必须设计成类似数据库的日志机制（被称为 SAGA Log）以保证系统恢复后可以追踪到子事务的执行情况（执行或补偿）。</p>
-<p>保证正向、反向恢复能严谨进行也不容易，需要通过服务编排、可靠事件队列等方式完成。</p>
+<p>不需为资源设计冻结和撤销冻结的操作，补偿操作更容易实现（尤其与第三方对接时，自行补偿比要求对方配合撤销容易）。</p>
+<p>SAGA 系统本身也有可能崩溃，必须设计成类似数据库的日志机制（SAGA Log），保证系统恢复后可追踪到子事务的执行情况（执行或补偿）；保证正向、反向恢复需要通过服务编排、可靠事件队列等方式完成。</p>
 <blockquote>
 <p>  通常不会直接靠裸编码实现，一般是在事务中间件的基础上完成，比如 Seata 也支持 SAGA 事务模式。</p>
 </blockquote>
@@ -710,9 +709,9 @@ height:100vh;
 <li><p>如果分布式事务提交，则清理每个数据源中对应的日志；如果回滚，就根据日志数据自动产生补偿的“逆向 SQL”。</p>
 </li>
 </ul>
-<p>基于这种补偿，分布式事务中每个数据源都可以单独提交然后立刻释放锁和资源。相比起 2PC 极大地提升了系统的吞吐量。但也牺牲了隔离性、影响到原子性：缺乏隔离性后的补偿不一定总能成功，比如在本地事务提交后、分布式事务完成前，数据被补偿前又被其他操作修改、出现了脏写。一旦出现事务需要回滚，只能由人工介入处理。</p>
+<p>基于这种补偿，分布式事务中每个数据源都可以单独提交即释放锁和资源，相比起 2PC 极大提升了系统吞吐量。但也牺牲了隔离性、影响到原子性：缺乏隔离性后的补偿不一定总能成功，比如在本地事务提交后、分布式事务完成前，数据被补偿前又被其他操作修改、出现了脏写。一旦出现事务需要回滚，只能由人工介入处理。</p>
 <p>GTS 增加 <strong>全局锁（Global Lock）</strong> 机制实现写隔离：本地事务提交前，要先拿到针对修改记录的全局锁后才能提交，否则等待。即以性能为代价避免两个分布式事务包含的本地事务造成的脏写。</p>
-<p>AT 事务默认的隔离级别是 <strong>读未提交（Read Uncommitted）</strong>，因此可能产生脏读。虽然也可以采用全局锁解决读隔离问题，但阻塞读代价将会非常大。</p>
+<p>AT 事务默认的隔离级别是 <strong>读未提交（Read Uncommitted）</strong>，可能产生脏读。虽然也可以采用全局锁解决读隔离问题，但阻塞读代价将会非常大。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -1744,9 +1743,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
