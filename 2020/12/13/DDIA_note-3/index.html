@@ -579,6 +579,7 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
 <h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><p>索引：通过保留一些额外的元数据以帮助查找数据，但同时由于每次写入数据都需要更新索引，因此任何类型的索引都会降低写速度。</p>
 <p>因此存储系统需要在 <strong>加入索引以加速查询</strong> 与 <strong>限制索引避免降低写入速度</strong> 之间权衡。</p>
 <p>对于 OLTP 系统，有两种主流的存储引擎：</p>
@@ -744,6 +745,7 @@ height:100vh;
 <p>常用于的一次查询多列（比如地理空间数据的经度和纬度），要求同时满足在某个经度和纬度范围内的数据。</p>
 <h4 id="级联索引"><a href="#级联索引" class="headerlink" title="级联索引"></a>级联索引</h4><p>通过将一列追加到另一列，将几个字段简单地组合成一个键（索引的定义指定字段连接的顺序）。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> restaurants</span><br><span class="line"><span class="keyword">WHERE</span> latitude <span class="operator">&gt;</span> <span class="number">51.4946</span> <span class="keyword">AND</span> latitude <span class="operator">&lt;</span> <span class="number">51.5079</span></span><br><span class="line"><span class="keyword">AND</span> longitude <span class="operator">&gt;</span> <span class="number">-0.1162</span> <span class="keyword">AND</span> longitude <span class="operator">&lt;</span> <span class="number">-0.1004</span>;</span><br></pre></td></tr></table></figure>
+
 <p>多维索引：是使用空格填充曲线将二维位置转换为单个数字，然后使用常规的 B-tree 索引。</p>
 <h3 id="全文搜索和模糊索引"><a href="#全文搜索和模糊索引" class="headerlink" title="全文搜索和模糊索引"></a>全文搜索和模糊索引</h3><p>为了处理文档或查询中的拼写错误，搜索引擎（比如 Lucene）能够在某个编辑距离内搜索文本。</p>
 <p>Lucene 对其词典使用类似 SSTable 的结构：需要一个内存索引来告诉查询为了找到键需要排序文件中的哪个偏移量。</p>
@@ -768,7 +770,6 @@ height:100vh;
 </li>
 </ul>
 <h1 id="事务处理与分析处理"><a href="#事务处理与分析处理" class="headerlink" title="事务处理与分析处理"></a>事务处理与分析处理</h1><p>数据系统分为两大类：针对事务处理 OLTP 优化的架构和针对分析型 OLAP 优化的架构。</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -777,8 +778,7 @@ height:100vh;
 <th>分析系统（OLAP）</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>主要读特征</td>
 <td>基于键，每次查询返回少量的记录</td>
 <td>对大量记录进行汇总</td>
@@ -803,9 +803,7 @@ height:100vh;
 <td>GB 到 TB</td>
 <td>TB 到 PB</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <h2 id="事务处理系统（OLTP）"><a href="#事务处理系统（OLTP）" class="headerlink" title="事务处理系统（OLTP）"></a>事务处理系统（OLTP）</h2><p>应用程序基于某种键来请求记录，而存储引擎使用索引来查找所请求键的数据。磁盘寻道时间往往是瓶颈。</p>
 <p>不建议在 OLTP 数据库上直接运行临时分析查询，这些查询要扫描大量数据集，这可能会损害并发执行事务的性能。</p>
 <h3 id="日志结构"><a href="#日志结构" class="headerlink" title="日志结构"></a>日志结构</h3><p>只允许追加式更新文件和删除过时的文件，但不会修改己写入的文件，其关键思想是系统地将磁盘上随机访问写入转为顺序写入，由千硬盘驱动器和SSD的性能特性，可以实现更高的写入吞吐量。</p>
@@ -1913,9 +1911,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1939,19 +1937,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
-        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
-    
-        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
-    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
     
