@@ -38,6 +38,27 @@
   </entry>
   
   <entry>
+    <title>《凤凰架构》阅读笔记（五）：分布式共识算法</title>
+    <link href="https://yipwinghong.github.io/2021/07/22/Fenix_distributed-consensus-algorithm/"/>
+    <id>https://yipwinghong.github.io/2021/07/22/Fenix_distributed-consensus-algorithm/</id>
+    <published>2021-07-22T00:44:27.000Z</published>
+    <updated>2021-07-23T09:14:00.862Z</updated>
+    
+    
+    <summary type="html">《凤凰架构》阅读笔记（五）：分布式共识算法</summary>
+    
+    
+    
+    <category term="《凤凰架构》阅读笔记" scheme="https://yipwinghong.github.io/categories/%E3%80%8A%E5%87%A4%E5%87%B0%E6%9E%B6%E6%9E%84%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="设计" scheme="https://yipwinghong.github.io/tags/%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
     <title>《凤凰架构》阅读笔记（三）：事务处理</title>
     <link href="https://yipwinghong.github.io/2021/07/22/Fenix_transaction/"/>
     <id>https://yipwinghong.github.io/2021/07/22/Fenix_transaction/</id>
@@ -121,10 +142,10 @@
   
   <entry>
     <title>微服务概览与治理</title>
-    <link href="https://yipwinghong.github.io/2021/07/12/Go_microservice/"/>
-    <id>https://yipwinghong.github.io/2021/07/12/Go_microservice/</id>
+    <link href="https://yipwinghong.github.io/2021/07/12/Go_microservices/"/>
+    <id>https://yipwinghong.github.io/2021/07/12/Go_microservices/</id>
     <published>2021-07-12T12:42:39.000Z</published>
-    <updated>2021-07-18T13:29:36.507Z</updated>
+    <updated>2021-07-26T01:24:26.863Z</updated>
     
     
     <summary type="html">关于后端架构演进过程的细节。</summary>
@@ -255,6 +276,25 @@
   </entry>
   
   <entry>
+    <title>Go 并发原语</title>
+    <link href="https://yipwinghong.github.io/2021/06/17/Go_concurrency_primitives/"/>
+    <id>https://yipwinghong.github.io/2021/06/17/Go_concurrency_primitives/</id>
+    <published>2021-06-17T11:42:39.000Z</published>
+    <updated>2021-07-28T08:43:36.153Z</updated>
+    
+    
+    <summary type="html">Go 标准库（sync）中提供了很多原生支持的并发原语，本文将简单讲解其基本用法。</summary>
+    
+    
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="Go" scheme="https://yipwinghong.github.io/tags/Go/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Go Cheat Sheet</title>
     <link href="https://yipwinghong.github.io/2021/06/13/Go_cheat-sheet/"/>
     <id>https://yipwinghong.github.io/2021/06/13/Go_cheat-sheet/</id>
@@ -359,48 +399,6 @@
     <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
     
     <category term="数据库" scheme="https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux 内存原理与分析</title>
-    <link href="https://yipwinghong.github.io/2021/04/28/OS_linux-memory-monitoring/"/>
-    <id>https://yipwinghong.github.io/2021/04/28/OS_linux-memory-monitoring/</id>
-    <published>2021-04-28T07:50:33.000Z</published>
-    <updated>2021-07-19T15:41:53.438Z</updated>
-    
-    
-    <summary type="html">学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（内存）。</summary>
-    
-    
-    
-    
-    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-    <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
-    
-    <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux I/O 原理与分析</title>
-    <link href="https://yipwinghong.github.io/2021/04/20/OS_linux-io-monitoring/"/>
-    <id>https://yipwinghong.github.io/2021/04/20/OS_linux-io-monitoring/</id>
-    <published>2021-04-20T07:50:33.000Z</published>
-    <updated>2021-07-19T15:42:10.629Z</updated>
-    
-    
-    <summary type="html">学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（I/O）。</summary>
-    
-    
-    
-    
-    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-    <category term="Linux" scheme="https://yipwinghong.github.io/tags/Linux/"/>
-    
-    <category term="OS" scheme="https://yipwinghong.github.io/tags/OS/"/>
     
   </entry>
   
