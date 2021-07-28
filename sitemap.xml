@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://yipwinghong.github.io/2021/07/28/Go_channel-best-practices/</loc>
+    
+    <lastmod>2021-07-28</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/2021/06/17/Go_concurrency_primitives/</loc>
     
     <lastmod>2021-07-28</lastmod>
@@ -128,13 +135,6 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2019/10/04/Python_async-programming/</loc>
-    
-    <lastmod>2021-07-18</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://yipwinghong.github.io/2019/09/19/Python_data-structure/</loc>
     
     <lastmod>2021-07-18</lastmod>
@@ -149,7 +149,7 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2019/08/22/Python_OOP-summary/</loc>
+    <loc>https://yipwinghong.github.io/2019/05/20/Vue_user-guide-1/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
@@ -163,28 +163,14 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2019/05/20/Vue_user-guide-1/</loc>
+    <loc>https://yipwinghong.github.io/2019/10/04/Python_async-programming/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2020/10/08/Maven_external_dependencies_management/</loc>
-    
-    <lastmod>2021-07-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/2020/09/24/Kafka_cheat-sheet/</loc>
-    
-    <lastmod>2021-07-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/</loc>
+    <loc>https://yipwinghong.github.io/2019/08/22/Python_OOP-summary/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
@@ -198,7 +184,28 @@
   </url>
   
   <url>
+    <loc>https://yipwinghong.github.io/2020/10/08/Maven_external_dependencies_management/</loc>
+    
+    <lastmod>2021-07-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2020/02/03/JVM_jstat-monitor-analysis/</loc>
+    
+    <lastmod>2021-07-18</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/2019/06/28/JavaScript_cheat-sheet/</loc>
+    
+    <lastmod>2021-07-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2020/09/24/Kafka_cheat-sheet/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
@@ -219,13 +226,6 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2021/06/13/Go_cheat-sheet/</loc>
-    
-    <lastmod>2021-07-18</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://yipwinghong.github.io/2020/06/30/JVM_java-memory-area/</loc>
     
     <lastmod>2021-07-18</lastmod>
@@ -240,14 +240,14 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2021/07/01/DistributedSystem_gossip-dissemination/</loc>
+    <loc>https://yipwinghong.github.io/2021/06/13/Go_cheat-sheet/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2021/01/27/DDIA_note-9/</loc>
+    <loc>https://yipwinghong.github.io/2021/01/20/DDIA_note-6/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
@@ -268,7 +268,7 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2021/01/20/DDIA_note-6/</loc>
+    <loc>https://yipwinghong.github.io/2019/12/05/Design_design-patterns/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
@@ -282,14 +282,21 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2019/12/05/Design_design-patterns/</loc>
+    <loc>https://yipwinghong.github.io/2021/07/01/DistributedSystem_gossip-dissemination/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2021/02/24/DDIA_note-13/</loc>
+    <loc>https://yipwinghong.github.io/2021/01/27/DDIA_note-9/</loc>
+    
+    <lastmod>2021-07-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2020/12/04/DDIA_note-2/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
@@ -310,14 +317,14 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2020/12/13/DDIA_note-3/</loc>
+    <loc>https://yipwinghong.github.io/2021/02/24/DDIA_note-13/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2020/12/04/DDIA_note-2/</loc>
+    <loc>https://yipwinghong.github.io/2020/12/13/DDIA_note-3/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
@@ -331,14 +338,7 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2021/07/08/Algorithm_shortest-path-problem/</loc>
-    
-    <lastmod>2021-07-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/2021/02/13/DDIA_note-11/</loc>
+    <loc>https://yipwinghong.github.io/2020/05/28/DB_data-warehouse-design-basic/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
@@ -359,7 +359,14 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2020/05/28/DB_data-warehouse-design-basic/</loc>
+    <loc>https://yipwinghong.github.io/2021/02/13/DDIA_note-11/</loc>
+    
+    <lastmod>2021-07-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2021/07/08/Algorithm_shortest-path-problem/</loc>
     
     <lastmod>2021-07-18</lastmod>
     
@@ -450,13 +457,6 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2020/10/04/JVM_prod-analysis-cmd/</loc>
-    
-    <lastmod>2021-06-21</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://yipwinghong.github.io/2020/03/06/InfoSecty_personal-infomation-security-guide/</loc>
     
     <lastmod>2021-06-21</lastmod>
@@ -478,35 +478,7 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2021/06/06/2021-06-06_diary/</loc>
-    
-    <lastmod>2021-06-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/2021/05/31/2021-05-31_diary/</loc>
-    
-    <lastmod>2021-06-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/</loc>
-    
-    <lastmod>2021-06-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/2021/02/21/2021-02-21_diary/</loc>
-    
-    <lastmod>2021-06-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/2021/01/01/DB_tree-table-design-summary/</loc>
+    <loc>https://yipwinghong.github.io/2020/10/04/JVM_prod-analysis-cmd/</loc>
     
     <lastmod>2021-06-21</lastmod>
     
@@ -520,14 +492,49 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2020/03/28/Algorithm_leetcode-high-frequency-problems/</loc>
+    <loc>https://yipwinghong.github.io/2020/02/22/2020-02-22_diary/</loc>
     
     <lastmod>2021-06-21</lastmod>
     
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2020/02/22/2020-02-22_diary/</loc>
+    <loc>https://yipwinghong.github.io/2021/05/31/2021-05-31_diary/</loc>
+    
+    <lastmod>2021-06-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2021/02/21/2021-02-21_diary/</loc>
+    
+    <lastmod>2021-06-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2021/06/06/2021-06-06_diary/</loc>
+    
+    <lastmod>2021-06-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/</loc>
+    
+    <lastmod>2021-06-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2021/01/01/DB_tree-table-design-summary/</loc>
+    
+    <lastmod>2021-06-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2020/03/28/Algorithm_leetcode-high-frequency-problems/</loc>
     
     <lastmod>2021-06-21</lastmod>
     
@@ -592,7 +599,7 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/Java/</loc>
+    <loc>https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -606,7 +613,7 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
+    <loc>https://yipwinghong.github.io/tags/Java/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -648,14 +655,14 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/Nginx/</loc>
+    <loc>https://yipwinghong.github.io/tags/Maven/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/Maven/</loc>
+    <loc>https://yipwinghong.github.io/tags/Nginx/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -697,6 +704,13 @@
   </url>
   
   <url>
+    <loc>https://yipwinghong.github.io/tags/Git/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/tags/Go/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
@@ -705,13 +719,6 @@
   
   <url>
     <loc>https://yipwinghong.github.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/tags/Git/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
