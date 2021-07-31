@@ -27,13 +27,13 @@
     <meta name="description" content="">
     <meta name="description" content="原文链接：https:&#x2F;&#x2F;blog.andyet.com&#x2F;2014&#x2F;10&#x2F;01&#x2F;right-database">
 <meta property="og:type" content="article">
-<meta property="og:title" content="选择合适的数据库">
+<meta property="og:title" content="（译）选择合适的数据库">
 <meta property="og:url" content="https://yipwinghong.github.io/2021/01/10/DB_right-database/index.html">
 <meta property="og:site_name" content="Kylo&#39;s Notebook">
 <meta property="og:description" content="原文链接：https:&#x2F;&#x2F;blog.andyet.com&#x2F;2014&#x2F;10&#x2F;01&#x2F;right-database">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-01-10T08:41:00.000Z">
-<meta property="article:modified_time" content="2021-07-09T06:50:05.421Z">
+<meta property="article:modified_time" content="2021-07-31T07:50:07.542Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="数据库">
@@ -41,7 +41,7 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>选择合适的数据库 · Kylo&#39;s Notebook</title>
+    <title>（译）选择合适的数据库 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -256,7 +256,7 @@
             <a href="/" >Kylo&#39;s Notebook</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">选择合适的数据库</a>
+            <a href="#" class="post-name">（译）选择合适的数据库</a>
         </div>
     </div>
     
@@ -299,7 +299,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            选择合适的数据库
+            （译）选择合适的数据库
             <!-- 404 -->
             
         </h1>
@@ -481,11 +481,11 @@ height:100vh;
 <p>不一致问题的最佳解决方案是在应用本身解决。比如在 API 服务中，应该提供处理读取数据返回多个版本结果这种一致性问题的功能。合并数据，选择其一覆盖其他，或创建一个新的数据对象都是可行的方案，并且对于每种类型的数据，采取何种方式解决都是可以手动选择的。</p>
 <h2 id="混合式解决方案"><a href="#混合式解决方案" class="headerlink" title="混合式解决方案"></a>混合式解决方案</h2><p>可能希望将单状态节点、CP 集群和 AP 集群合并在一起来支持不同类型的数据存储。如果因为 CAP 理论的限制需求变得复杂，那么混合式解决方案可以帮助开发者权衡取舍。这是可供参考的解决方案：</p>
 <ul>
-<li><p>  单节点，非集群存储，快照备份，从节点：Redis</p>
+<li><p>单节点，非集群存储，快照备份，从节点：Redis</p>
 </li>
-<li><p>  数据一致，分区容忍，读多写少：PostgreSQL</p>
+<li><p>数据一致，分区容忍，读多写少：PostgreSQL</p>
 </li>
-<li><p>  高可用，分区容忍，水平扩展：Riak</p>
+<li><p>高可用，分区容忍，水平扩展：Riak</p>
 </li>
 </ul>
 <p>不要局限于某种特定的技术，而选择最佳的工具来完成需求。</p>
@@ -1164,9 +1164,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 70
+        Total : 71
         </div>
         <!-- search  -->
         
@@ -1179,6 +1186,11 @@ top:100vh;
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/Go_memory-model/" >（译）Go 内存模型</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1232,17 +1244,17 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >分布式系统模式：Gossip 传播</a>
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >（译）分布式系统模式：Gossip 传播</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >分布式系统模式：版本化值</a>
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >（译）分布式系统模式：版本化值</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >一致性哈希</a>
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >（译）一致性哈希</a>
         </li>
     
     
@@ -1272,12 +1284,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >如何用图论解决 Secret Santa 问题？</a>
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >（译）如何用图论解决 Secret Santa 问题？</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库</a>
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >（译）把 PostgreSQL 用作数据仓库</a>
         </li>
     
     
@@ -1307,7 +1319,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >Java 程序员的 C++</a>
+            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >（译）Java 程序员的 C++</a>
         </li>
     
     
@@ -1357,7 +1369,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >选择合适的数据库</a>
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >（译）选择合适的数据库</a>
         </li>
     
     
@@ -1561,17 +1573,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
@@ -1583,13 +1597,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
-    
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     

@@ -509,7 +509,6 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
-
 <h1 id="共识问题"><a href="#共识问题" class="headerlink" title="共识问题"></a>共识问题</h1><p>有很多重要的场景都需要集群节点达成某种一致：</p>
 <ul>
 <li><p><strong>主节点选举</strong>：对于主从复制的数据库，所有节点需要就何者充当主节点达成一致。如果由于网络故障原因出现节点之间无法通信，就很容易出现争议。此时共识对于避免错误的故障切换非常重要，后者会导致脑裂：如果集群中存在两个主节点都在接受写请求，最终导致数据不一致甚至丢失。</p>
@@ -755,8 +754,8 @@ height:100vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/03/17/Java_cpp-for-java-programmers/" title= "Java 程序员的 C++">
-                    <div class="nextTitle">Java 程序员的 C++</div>
+                <a href= "/2021/03/17/Java_cpp-for-java-programmers/" title= "（译）Java 程序员的 C++">
+                    <div class="nextTitle">（译）Java 程序员的 C++</div>
                 </a>
             
         </li>
@@ -1421,9 +1420,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 70
+        Total : 71
         </div>
         <!-- search  -->
         
@@ -1436,6 +1442,11 @@ top:100vh;
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/Go_memory-model/" >（译）Go 内存模型</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1489,17 +1500,17 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >分布式系统模式：Gossip 传播</a>
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >（译）分布式系统模式：Gossip 传播</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >分布式系统模式：版本化值</a>
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >（译）分布式系统模式：版本化值</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >一致性哈希</a>
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >（译）一致性哈希</a>
         </li>
     
     
@@ -1529,12 +1540,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >如何用图论解决 Secret Santa 问题？</a>
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >（译）如何用图论解决 Secret Santa 问题？</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库</a>
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >（译）把 PostgreSQL 用作数据仓库</a>
         </li>
     
     
@@ -1564,7 +1575,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >Java 程序员的 C++</a>
+            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >（译）Java 程序员的 C++</a>
         </li>
     
     
@@ -1614,7 +1625,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >选择合适的数据库</a>
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >（译）选择合适的数据库</a>
         </li>
     
     
@@ -1818,17 +1829,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
@@ -1840,13 +1853,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
-    
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
