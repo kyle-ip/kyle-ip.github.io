@@ -507,76 +507,70 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
-
 <p>通常使用命令 <code>free</code> 可以查看系统内存的总体情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">free</span><br><span class="line"><span class="meta">#</span><span class="bash">                     （包括共享内存）                                  （包括可回收缓存）</span></span><br><span class="line"><span class="meta">#</span><span class="bash">               总内存    已使用内存   未使用内存      共享内存  缓存和缓冲区     可用内存</span></span><br><span class="line"><span class="meta">#</span><span class="bash">               total        used        free      shared  buff/cache   available</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Mem:        8169348      263524     6875352         668     1030472     7611064</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Swap:             0           0           0</span></span><br></pre></td></tr></table></figure>
-
 <p>使用命令 <code>top</code> 或 <code>ps</code> 查看进程的内存使用情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">top</span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> KiB Mem :  8169348 total,  6871440 free,   267096 used,  1030812 buff/cache</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> KiB Swap:        0 total,        0 free,        0 used.  7607492 avail Mem</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash">                         虚拟内存 常驻内存</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   430 root      19  -1  122360  35588  23748 S   0.0  0.4   0:32.17 systemd-journal</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  1075 root      20   0  771860  22744  11368 S   0.0  0.3   0:38.89 snapd</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  1048 root      20   0  170904  17292   9488 S   0.0  0.2   0:00.24 networkd-dispat</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     1 root      20   0   78020   9156   6644 S   0.0  0.1   0:22.92 systemd</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 12376 azure     20   0   76632   7456   6420 S   0.0  0.1   0:00.01 systemd</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 12374 root      20   0  107984   7312   6304 S   0.0  0.1   0:00.00 sshd</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 按下 M 切换到内存排序</span></span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>  其每列的含义：</p>
 <ul>
-<li><p>  VIRT：虚拟内存，只要是进程申请过的内存，即便还没有真正分配物理内存也会计算在内。</p>
+<li><p>VIRT：虚拟内存，只要是进程申请过的内存，即便还没有真正分配物理内存也会计算在内。</p>
 </li>
-<li><p>  RES：常驻内存，进程实际使用的物理内存大小，不包括 Swap 和共享内存。</p>
+<li><p>RES：常驻内存，进程实际使用的物理内存大小，不包括 Swap 和共享内存。</p>
 </li>
-<li><p>  SHR：共享内存，比如与其他进程共同使用的共享内存、加载的动态链接库以及程序的代码段等。</p>
+<li><p>SHR：共享内存，比如与其他进程共同使用的共享内存、加载的动态链接库以及程序的代码段等。</p>
 </li>
-<li><p>  %MEM：使用物理内存占系统总内存的百分比。</p>
+<li><p>%MEM：使用物理内存占系统总内存的百分比。</p>
 </li>
 </ul>
 </blockquote>
 <p>需要注意：</p>
 <ul>
-<li><p>  虚拟内存通常不会全部分配物理内存（从上面的输出可见每个进程的虚拟内存都比常驻内存大得多）。</p>
+<li><p>虚拟内存通常不会全部分配物理内存（从上面的输出可见每个进程的虚拟内存都比常驻内存大得多）。</p>
 </li>
-<li><p>  在计算多个进程的内存使用时，不应把所有进程的 SHR 直接相加得出结果。共享内存 SHR 并不一定是共享的，比如程序的代码段、非共享的动态链接库都算在 SHR。</p>
+<li><p>在计算多个进程的内存使用时，不应把所有进程的 SHR 直接相加得出结果。共享内存 SHR 并不一定是共享的，比如程序的代码段、非共享的动态链接库都算在 SHR。</p>
 </li>
 </ul>
 <h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><h3 id="内存映射"><a href="#内存映射" class="headerlink" title="内存映射"></a>内存映射</h3><p>Linux 内核为每个进程提供独立的、连续的虚拟地址空间，以便应用程序访问内存。</p>
 <p>其中虚拟地址空间又分为内核空间和用户空间，分别对应进程的内核态和用户态，进程在用户态时只能访问用户空间内存，只有进入内核态后才可以访问内核空间内存。其地址范围因 CPU 字长而异：</p>
 <figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">+-------------+ 0xFFFFFFFF</span><br><span class="line">|<span class="string"> 内核空间 1G </span>|</span><br><span class="line">+-------------+ 0xC0000000</span><br><span class="line">|<span class="string"> 用户空间 3G </span>|</span><br><span class="line">+-------------+ 0x0</span><br><span class="line">（32 位地址空间）</span><br><span class="line"></span><br><span class="line">+---------------+ 0xFFFFFFFFFFFFFFFF</span><br><span class="line">|<span class="string"> 内核空间 128T </span>|</span><br><span class="line">+---------------+ 0xFFFF800000000000</span><br><span class="line">|<span class="string">    未定义     </span>|</span><br><span class="line">+---------------+ 0x00007FFFFFFFF000</span><br><span class="line">|<span class="string"> 用户空间 128T </span>|</span><br><span class="line">+---------------+ 0x0</span><br><span class="line">（64 位地址空间）</span><br></pre></td></tr></table></figure>
-
 <p>用户空间和内核空间都对应同一块物理内存，但很显然物理内存的总大小是远小于进程的虚拟内存大小的，因此只有被实际使用的虚拟内存才会被分配物理内存，两者的关系被称为 <strong>内存映射</strong>，由 CPU 的 <strong>MMU（内存管理单元）</strong>管理：</p>
 <ul>
-<li><p>  MMU 以 <strong>页（Page）</strong> 为单位管理内存映射，一般为 4KB。但为了提高管理大内存块的效率，也提供 2MB、1GB 的大页 Huge Page）。</p>
+<li><p>MMU 以 <strong>页（Page）</strong> 为单位管理内存映射，一般为 4KB。但为了提高管理大内存块的效率，也提供 2MB、1GB 的大页 Huge Page）。</p>
 </li>
-<li><p>  内存页存放在多级页表中（可节省页表空间），每级的表项用于在下一级表中选择页，最后一个索引表示页内偏移，最终 <strong>以起始地址和偏移量构成物理地址</strong>。</p>
+<li><p>内存页存放在多级页表中（可节省页表空间），每级的表项用于在下一级表中选择页，最后一个索引表示页内偏移，最终 <strong>以起始地址和偏移量构成物理地址</strong>。</p>
 </li>
-<li><p>  每当应用程序访问的虚拟地址在页表中没有找到，就会触发 <strong>缺页异常</strong>。在内核空间分配物理内存、更新页表后再返回用户空间，才能继续执行。</p>
+<li><p>每当应用程序访问的虚拟地址在页表中没有找到，就会触发 <strong>缺页异常</strong>。在内核空间分配物理内存、更新页表后再返回用户空间，才能继续执行。</p>
 </li>
 </ul>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-memory-monitoring.assets/fcfbe2f8eb7c6090d82bf93ecdc1f0b6.png" alt="img" style="zoom:100%;" />
-
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-memory-monitoring.assets/fcfbe2f8eb7c6090d82bf93ecdc1f0b6.png" alt="img" style="zoom:100%;" /></p>
 <p>其中缺页异常又分为两种场景：</p>
 <ul>
-<li><p>  <strong>次缺页异常</strong>：可以直接从物理内存中分配。</p>
+<li><p><strong>次缺页异常</strong>：可以直接从物理内存中分配。</p>
 </li>
-<li><p>  <strong>主缺页异常</strong>：需要磁盘 I/O 介入（比如 Swap）。</p>
+<li><p><strong>主缺页异常</strong>：需要磁盘 I/O 介入（比如 Swap）。</p>
 </li>
 </ul>
 <p>CPU 使用 <strong>TLB（转移后备缓冲区）</strong>提高地址翻译效率，内存映射翻译的结果存放在 TLB 中。因此减少进程的上下文切换，减少 TLB 刷新次数，就可以提高 TLB 缓存的利用率，从而提高 CPU 的内存访问性能。</p>
 <h3 id="虚拟内存布局"><a href="#虚拟内存布局" class="headerlink" title="虚拟内存布局"></a>虚拟内存布局</h3><p>虚拟内存布局基本如下，其中用户空间内存被分为多个段，从低位到高位：</p>
 <ul>
-<li><p>  <strong>只读段</strong>：包括代码和常量等。</p>
+<li><p><strong>只读段</strong>：包括代码和常量等。</p>
 </li>
-<li><p>  <strong>数据段</strong>：包括全局变量等。</p>
+<li><p><strong>数据段</strong>：包括全局变量等。</p>
 </li>
-<li><p>  <strong>堆</strong>：包括动态分配的内存，从低地址开始向上增长。</p>
+<li><p><strong>堆</strong>：包括动态分配的内存，从低地址开始向上增长。</p>
 </li>
-<li><p>  <strong>文件映射段</strong>：动态分配，包括动态库、共享内存等，从高地址开始向下增长。</p>
+<li><p><strong>文件映射段</strong>：动态分配，包括动态库、共享内存等，从高地址开始向下增长。</p>
 </li>
-<li><p>  <strong>栈</strong>：包括局部变量，函数调用上下文等（大小固定，一般是 8MB）。</p>
+<li><p><strong>栈</strong>：包括局部变量，函数调用上下文等（大小固定，一般是 8MB）。</p>
 </li>
 </ul>
 <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+----------+</span> 0xFFFFFFFF</span><br><span class="line">| 内核空间 |</span><br><span class="line"><span class="code">+----------+</span> 0xC0000000</span><br><span class="line">|   栈     |</span><br><span class="line"><span class="code">+----------+</span>↓</span><br><span class="line"><span class="section">| 文件映射 |</span></span><br><span class="line"><span class="section">+----------+</span></span><br><span class="line">|   堆     |</span><br><span class="line"><span class="code">+----------+</span>↑</span><br><span class="line"><span class="section">|  数据段  |</span></span><br><span class="line"><span class="section">+----------+</span></span><br><span class="line">|  只读段  |</span><br><span class="line"><span class="code">+----------+</span> 0x0</span><br></pre></td></tr></table></figure>
-
 <h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h3><p><strong>内存分配</strong>：<code>malloc()</code> 是 C 标准库提供的内存分配函数，对应到系统调用上有两种方式：</p>
 <ul>
-<li><p>  <code>brk()</code>：小块内存（&lt; 128K）通过移动堆顶的位置来分配，释放后会被缓存起来（用户空间），可重复使用。可以减少缺页异常的发生，提高内存访问效率。但由于内存没有归还系统，在内存工作繁忙时频繁的内存分配和释放会造成内存碎片。</p>
+<li><p><code>brk()</code>：小块内存（&lt; 128K）通过移动堆顶的位置来分配，释放后会被缓存起来（用户空间），可重复使用。可以减少缺页异常的发生，提高内存访问效率。但由于内存没有归还系统，在内存工作繁忙时频繁的内存分配和释放会造成内存碎片。</p>
 </li>
-<li><p>  <code>mmap()</code>：大块内存（&gt; 128K）使用内存映射分配，即在文件映射段找一块空闲内存分配出去。由于在释放时直接归还系统，每次 mmap 都会发生缺页异常。在内存工作繁忙时大量的缺页中断会使内核的管理负担增大。</p>
+<li><p><code>mmap()</code>：大块内存（&gt; 128K）使用内存映射分配，即在文件映射段找一块空闲内存分配出去。由于在释放时直接归还系统，每次 mmap 都会发生缺页异常。在内存工作繁忙时大量的缺页中断会使内核的管理负担增大。</p>
 </li>
 </ul>
 <blockquote>
@@ -584,20 +578,20 @@ height:100vh;
 </blockquote>
 <p><strong>内存碎片</strong> 是内存分配时会出现的现象，其分为：</p>
 <ul>
-<li><p>  <strong>外部碎片</strong>：零散的内存块不足以满足一次内存分配请求，但其总和却大于请求分配的内存大小，则这些内存块为外部碎片。该情况可通过 <strong>伙伴系统（合并相邻的页）</strong>来解决。</p>
+<li><p><strong>外部碎片</strong>：零散的内存块不足以满足一次内存分配请求，但其总和却大于请求分配的内存大小，则这些内存块为外部碎片。该情况可通过 <strong>伙伴系统（合并相邻的页）</strong>来解决。</p>
 </li>
-<li><p>  <strong>内部碎片</strong>：请求的内存比一个页更小，则分配的内存没有被充分利用，其中分配出去、但未被利用的部分称为内部碎片。对于小内存，则使用 <strong>slab 分配器</strong> 来分配和释放（可理解为伙伴系统的缓存）。</p>
+<li><p><strong>内部碎片</strong>：请求的内存比一个页更小，则分配的内存没有被充分利用，其中分配出去、但未被利用的部分称为内部碎片。对于小内存，则使用 <strong>slab 分配器</strong> 来分配和释放（可理解为伙伴系统的缓存）。</p>
 </li>
 </ul>
 <p><strong>内存回收</strong>：在分配给应用程序的内存使用完毕后，应当调用 <code>free()</code> 或 <code>unmap()</code> 函数来释放。同时操作系统也会限制进程使用内存，在内存紧张时：</p>
 <ul>
-<li><p>  基于一定规则回收，比如 LRU（Least Recently Used），Second Chance 等。</p>
+<li><p>基于一定规则回收，比如 LRU（Least Recently Used），Second Chance 等。</p>
 </li>
-<li><p>  回收不常访问的内存，把不常用的内存通过 <strong>交换分区（Swap）</strong> 直接写到磁盘中（<strong>换出</strong>，需要访问时再从磁盘读取）。</p>
+<li><p>回收不常访问的内存，把不常用的内存通过 <strong>交换分区（Swap）</strong> 直接写到磁盘中（<strong>换出</strong>，需要访问时再从磁盘读取）。</p>
 </li>
-<li><p>  基于 zproject（zcache、zswap、zram 等）的 <strong>内存压缩</strong>（当需要访问时再解压，效果比落盘好）。</p>
+<li><p>基于 zproject（zcache、zswap、zram 等）的 <strong>内存压缩</strong>（当需要访问时再解压，效果比落盘好）。</p>
 </li>
-<li><p>  基于 oom_score 为进程评分，分数越高则通过 OOM（Out of Memory）异常 <strong>直接杀死</strong>（消耗内存越大 oom_score 越大，占用 CPU 越多 oom_score 越小）。</p>
+<li><p>基于 oom_score 为进程评分，分数越高则通过 OOM（Out of Memory）异常 <strong>直接杀死</strong>（消耗内存越大 oom_score 越大，占用 CPU 越多 oom_score 越小）。</p>
 </li>
 </ul>
 <blockquote>
@@ -607,136 +601,116 @@ height:100vh;
 </blockquote>
 <h3 id="Buffer-与-Cache"><a href="#Buffer-与-Cache" class="headerlink" title="Buffer 与 Cache"></a>Buffer 与 Cache</h3><p>在 <code>free</code> 命令的输出中，有一列名为  buff/cache。其中 buffer 和 cache 的含义是（参考  <code>man proc</code> ）：</p>
 <ul>
-<li><p>  <strong>Buffers</strong>：磁盘数据的缓存。内核缓冲区用到的内存，对应的是  <code>/proc/meminfo</code> 中的 Buffers 值。通常不会特别大（20MB 左右），内核把分散的写集中以统一优化磁盘的写入，比如把多次小写合并成单次大写等。</p>
+<li><p><strong>Buffers</strong>：磁盘数据的缓存。内核缓冲区用到的内存，对应的是  <code>/proc/meminfo</code> 中的 Buffers 值。通常不会特别大（20MB 左右），内核把分散的写集中以统一优化磁盘的写入，比如把多次小写合并成单次大写等。</p>
 </li>
-<li><p>  <strong>Cache</strong>：文件数据的缓存。包括内核 <strong>页缓存</strong> 和 <strong>Slab 用到的内存（可回收缓存</strong>），对应的是  <code>/proc/meminfo</code> 中的 Cached 与 SReclaimable 之和。缓存从文件读取的数据，下次访问时直接从内存中获取，而不需要再次访问磁盘。</p>
+<li><p><strong>Cache</strong>：文件数据的缓存。包括内核 <strong>页缓存</strong> 和 <strong>Slab 用到的内存（可回收缓存</strong>），对应的是  <code>/proc/meminfo</code> 中的 Cached 与 SReclaimable 之和。缓存从文件读取的数据，下次访问时直接从内存中获取，而不需要再次访问磁盘。</p>
 </li>
-<li><p>  <strong>SReclaimable</strong>：Slab 分为两部分，其中的可回收部分，用 SReclaimable 记录；不可回收部分，用 SUnreclaim 记录。</p>
+<li><p><strong>SReclaimable</strong>：Slab 分为两部分，其中的可回收部分，用 SReclaimable 记录；不可回收部分，用 SUnreclaim 记录。</p>
 </li>
 </ul>
 <p><strong>太长不看版</strong>：总的来说，Buffer 和 Cache 分别缓存磁盘和文件系统的读写数据。</p>
 <ul>
-<li><p>  写：不仅优化磁盘和文件的写入，对于应用程序而言在数据真正落盘前，就可以返回去做其他工作。</p>
+<li><p>写：不仅优化磁盘和文件的写入，对于应用程序而言在数据真正落盘前，就可以返回去做其他工作。</p>
 </li>
-<li><p>  读：既可以加速读取那些需要频繁访问的数据，也降低了频繁 I/O 对磁盘的压力。</p>
+<li><p>读：既可以加速读取那些需要频繁访问的数据，也降低了频繁 I/O 对磁盘的压力。</p>
 </li>
 </ul>
 <p>实际上其包括的内容因环境而异，要理解实际的含义需要进一步分析。</p>
 <h4 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h4><p>使用 <code>dd</code> 生成读取随机设备生成大文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/urandom of=/tmp/file bs=1M count=500</span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>vmstat</code> 监控内存和 I/O：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vmstat 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> r  b   swpd   free   buff  cache   si   so    bi    bo   <span class="keyword">in</span>   cs us sy id wa st</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 0  0      0 7499460   1344 230484    0    0     0     0   29  145  0  0 100  0  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  1  0      0 7338088   1752 390512    0    0   488     0   39  558  0 47 53  0  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  0      0 6977448   1752 752072    0    0     0     0   29  138  0  0 100  0  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  0      0 6977440   1760 752080    0    0     0   152   42  212  0  1 99  1  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  1      0 6977216   1768 752104    0    0     4 122880   33  234  0  1 51 49  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  1      0 6977440   1768 752108    0    0     0 10240   38  196  0  0 50 50  0</span></span><br></pre></td></tr></table></figure>
-
 <p>重点关注内存部分的 buff 和 cache（即 Buffers 和 Cache，单位 KB）、io 部分的 bi 和 bo（表示块设备读取和写入的大小，单位 1KB/s，因为 Linux 中块的大小是 1KB）：</p>
 <ul>
-<li><p>  在 Cache 刚开始增长时块设备 I/O 很少（bi 只出现了一次 488 KB/s，bo 则只有一次 4KB）。过一段时间后，才会出现大量的块设备写（比如 bo 变成了 122880）。</p>
+<li><p>在 Cache 刚开始增长时块设备 I/O 很少（bi 只出现了一次 488 KB/s，bo 则只有一次 4KB）。过一段时间后，才会出现大量的块设备写（比如 bo 变成了 122880）。</p>
 </li>
-<li><p>  dd 命令结束后 Cache 不再增长，但块设备写还会持续一段时间，并且多次 I/O 写的结果加起来才是 dd 要写的 500M 的数据。</p>
+<li><p>dd 命令结束后 Cache 不再增长，但块设备写还会持续一段时间，并且多次 I/O 写的结果加起来才是 dd 要写的 500M 的数据。</p>
 </li>
 </ul>
 <h4 id="写磁盘"><a href="#写磁盘" class="headerlink" title="写磁盘"></a>写磁盘</h4><p>清理缓存，向磁盘分区写入随机数据（请确保 /dev/sdb1 未使用）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 清理缓存</span></span><br><span class="line">echo 3 &gt; /proc/sys/vm/drop_caches ; sync</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 向磁盘分区 /dev/sdb1 写入 2G 数据</span></span><br><span class="line">dd if=/dev/urandom of=/dev/sdb1 bs=1M count=2048</span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>vmstat</code> 监控内存和 I/O：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vmstat 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  r  b   swpd   free   buff  cache   si   so    bi    bo   <span class="keyword">in</span>   cs us sy id wa st</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  1  0      0 7093352 631800 110520    0    0     0     0   23  223  0 50 50  0  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  1  1      0 6930056 790520 114980    0    0     0 12804   23  168  0 50 42  9  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  1  0      0 6757204 949240 119396    0    0     0 183804   24  191  0 53 26 21  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  1  1      0 6591516 1107960 123840    0    0     0 77316   22  232  0 52 16 33  0</span> </span><br></pre></td></tr></table></figure>
-
 <p>可见写磁盘时 bo 大于  0，Buffer 和 Cache 都在增长，但 Buffer 的增长快得多。</p>
 <p>因此写文件时用到 Cache 缓存数据，而写磁盘则会用到 Buffer 缓存数据。虽然文档上只提到 Cache 是文件读的缓存，但实际上 Cache 也会缓存写文件时的数据。</p>
 <h4 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h4><p>清理缓存，从文件中读取数据写入空设备：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 清理缓存</span></span><br><span class="line">echo 3 &gt; /proc/sys/vm/drop_caches ; sync</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 读取文件数据</span></span><br><span class="line">dd if=/tmp/file of=/dev/null</span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>vmstat</code> 监控内存和 I/O：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vmstat 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  r  b   swpd   free   buff  cache   si   so    bi    bo   <span class="keyword">in</span>   cs us sy id wa st</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  1      0 7724164   2380 110844    0    0 16576     0   62  360  2  2 76 21  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  1      0 7691544   2380 143472    0    0 32640     0   46  439  1  3 50 46  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  1      0 7658736   2380 176204    0    0 32640     0   54  407  1  4 50 46  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  1      0 7626052   2380 208908    0    0 32640    40   44  422  2  2 50 46  0</span></span><br></pre></td></tr></table></figure>
-
 <p>可见读取文件时（bi 大于 0 时）Buffer 保持不变，Cache 在不停增长。因此可印证 Cache 是对文件读的页缓存。</p>
 <h4 id="读磁盘"><a href="#读磁盘" class="headerlink" title="读磁盘"></a>读磁盘</h4><p>清理缓存，从磁盘分区中读取数据写入空设备：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 清理缓存</span></span><br><span class="line">echo 3 &gt; /proc/sys/vm/drop_caches ; sync</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 读取磁盘</span></span><br><span class="line">dd if=/dev/sda1 of=/dev/null bs=1M count=1024</span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>vmstat</code> 监控内存和 I/O：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vmstat 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  r  b   swpd   free   buff  cache   si   so    bi    bo   <span class="keyword">in</span>   cs us sy id wa st</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  0      0 7225880   2716 608184    0    0     0     0   48  159  0  0 100  0  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  1      0 7199420  28644 608228    0    0 25928     0   60  252  0  1 65 35  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  1      0 7167092  60900 608312    0    0 32256     0   54  269  0  1 50 49  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  1      0 7134416  93572 608376    0    0 32672     0   53  253  0  0 51 49  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  0  1      0 7101484 126320 608480    0    0 32748     0   80  414  0  1 50 49  0</span></span><br></pre></td></tr></table></figure>
-
 <p>可见读磁盘时（bi 大于 0）Buffer 和 Cache 都在增长，其中 Buffer 的增长快很多。说明读磁盘时数据缓存到了 Buffer 中。</p>
 <h2 id="缓存优化"><a href="#缓存优化" class="headerlink" title="缓存优化"></a>缓存优化</h2><p>缓存命中率越高，使用缓存带来收益越高，应用程序的性能越好。</p>
 <p>基于 Linux 内核 eBPF（extended Berkeley Packet Filters）机制的 bcc 工具来跟踪内核中管理的缓存，可以查看缓存的使用和命中情况，安装：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4052245BD4284CDD</span><br><span class="line">echo &quot;deb https://repo.iovisor.org/apt/xenial xenial main&quot; | sudo tee /etc/apt/sources.list.d/iovisor.list</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install -y bcc-tools libbcc-examples linux-headers-$(uname -r)</span><br><span class="line">export PATH=$PATH:/usr/share/bcc/tools</span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>cachestat</code> 查看总体缓存的读写命中情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cachestat 1 3</span><br><span class="line"><span class="meta">#</span><span class="bash">   总 I/O   未命中次数  命中次数 新增到缓存脏页数    Buffers（MB）  Cache（MB）</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    TOTAL     MISSES      HITS     DIRTIES      BUFFERS_MB    CACHED_MB</span></span><br><span class="line"><span class="meta">#</span><span class="bash">        2          0         2           1              17          279</span></span><br><span class="line"><span class="meta">#</span><span class="bash">        2          0         2           1              17          279</span></span><br><span class="line"><span class="meta">#</span><span class="bash">        2          0         2           1              17          279</span> </span><br></pre></td></tr></table></figure>
-
-<p>使用 <code>cachetop </code> 查看每个进程的缓存命中情况：</p>
+<p>使用 <code>cachetop</code> 查看每个进程的缓存命中情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cachetop</span><br><span class="line"><span class="meta">#</span><span class="bash"> 11:58:50 Buffers MB: 258 / Cached MB: 347 / Sort: HITS / Order: ascending</span></span><br><span class="line"><span class="meta">#</span><span class="bash">                                      命中次数  未命中次数  新增到缓存脏页数    读命中率    写命中率</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    PID      UID      CMD              HITS     MISSES       DIRTIES     READ_HIT%  WRITE_HIT%</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   13029     root     python             1         0            0          100.0%       0.0%</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 输出默认按缓存命中次数（HITS）排序</span></span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>pcstat</code> 工具可以查看文件在内存中的缓存大小以及缓存比例，安装：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 其依赖于 Golang</span></span><br><span class="line">go get golang.org/x/sys/unix</span><br><span class="line">go get github.com/tobert/pcstat/pcstat</span><br></pre></td></tr></table></figure>
-
 <p>查看文件缓存：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ls</span><br><span class="line">pcstat /bin/ls</span><br><span class="line"><span class="meta">#</span><span class="bash">                                        文件在缓存中的大小、百分比</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> +---------+----------------+------------+-----------+---------+</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> | Name    | Size (bytes)   | Pages      | Cached    | Percent |</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> |---------+----------------+------------+-----------+---------|</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> | /bin/ls | 133792         | 33         | 33        | 100.000 |</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> +---------+----------------+------------+-----------+---------+</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="命中分析"><a href="#命中分析" class="headerlink" title="命中分析"></a>命中分析</h3><p>测试使用 <code>dd</code> 对同一个文件进行多次读取。</p>
 <p>先生成文件、清理缓存：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/sda1 of=file bs=1M count=512</span><br><span class="line">echo 3 &gt; /proc/sys/vm/drop_caches ; sync</span><br><span class="line"></span><br><span class="line">pcstat file</span><br><span class="line"><span class="meta">#</span><span class="bash"> 可见生成的文件不在缓存中：</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> +-------+----------------+------------+-----------+---------+</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> | Name  | Size (bytes)   | Pages      | Cached    | Percent |</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> |-------+----------------+------------+-----------+---------|</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> | file  | 536870912      | 131072     | 0         | 000.000 |</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> +-------+----------------+------------+-----------+---------+</span></span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>dd</code> 测试文件读取速度：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dd if=file of=/dev/null bs=1M</span><br><span class="line"><span class="meta">#</span><span class="bash"> 512+0 records <span class="keyword">in</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 512+0 records out</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 536870912 bytes (537 MB, 512 MiB) copied, 16.0509 s, 33.4 MB/s</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 可见通过文件系统从磁盘中读取性能是 33.4 MB/s。</span></span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>cachetop</code> 监控缓存命中情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cachetop 5</span><br><span class="line"><span class="meta">#</span><span class="bash"> PID      UID      CMD              HITS     MISSES   DIRTIES  READ_HIT%  WRITE_HIT%</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     3264 root     dd                  37077    37330        0      49.8%      50.2%</span></span><br></pre></td></tr></table></figure>
-
 <p>读请求的缓存命中率只有为 49.8% ，此时在另一个终端执行 <code>dd</code> 读取同一个文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dd if=file of=/dev/null bs=1M</span><br><span class="line"><span class="meta">#</span><span class="bash"> 512+0 records <span class="keyword">in</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 512+0 records out</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 536870912 bytes (537 MB, 512 MiB) copied, 0.118415 s, 4.5 GB/s</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 可见读取性能是 4.5 GB/s。</span></span><br></pre></td></tr></table></figure>
-
 <p>查看监控缓存命中情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cachetop 5</span><br><span class="line"><span class="meta">#</span><span class="bash"> PID      UID      CMD              HITS     MISSES   DIRTIES  READ_HIT%  WRITE_HIT%</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2642     root     dd               131637        0        0     100.0%       0.0%</span></span><br><span class="line"></span><br><span class="line">pcstat file</span><br><span class="line"><span class="meta">#</span><span class="bash"> +-------+----------------+------------+-----------+---------+</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> | Name  | Size (bytes)   | Pages      | Cached    | Percent |</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> |-------+----------------+------------+-----------+---------|</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> | file  | 536870912      | 131072     | 131072    | 100.000 |</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> +-------+----------------+------------+-----------+---------+</span></span><br></pre></td></tr></table></figure>
-
 <p>可见系统缓存对第二次 <code>dd</code> 操作有明显的加速效果，大大提高文件读取的性能。</p>
 <h3 id="如何监控？"><a href="#如何监控？" class="headerlink" title="如何监控？"></a>如何监控？</h3><p>监控读写性能时需要注意：</p>
 <ul>
-<li><p>  使用缓存可以大幅提高读写性能，在用 <code>dd</code> 测试文件系统性能时，要注意由于缓存造成的测试结果失真。</p>
+<li><p>使用缓存可以大幅提高读写性能，在用 <code>dd</code> 测试文件系统性能时，要注意由于缓存造成的测试结果失真。</p>
 </li>
-<li><p>  命中率只反映经过系统缓存的读写请求比例，不能反映实际的读写数据大小。比如使用直接 I/O 会绕过系统缓存，由于没有使用缓存，就谈不上缓存命中率了（<code>cachetop</code> 工具不会把直接 I/O 计算在内）。因此除了缓存命中率，还要结合实际的 I/O 大小（HITS，次数）综合分析缓存的使用情况。</p>
+<li><p>命中率只反映经过系统缓存的读写请求比例，不能反映实际的读写数据大小。比如使用直接 I/O 会绕过系统缓存，由于没有使用缓存，就谈不上缓存命中率了（<code>cachetop</code> 工具不会把直接 I/O 计算在内）。因此除了缓存命中率，还要结合实际的 I/O 大小（HITS，次数）综合分析缓存的使用情况。</p>
 </li>
 </ul>
 <h2 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h2><p>进程的内存空间：</p>
 <ul>
-<li><p>  <strong>栈</strong>：内存由系统自动分配和管理，程序运行超出局部变量的作用域，栈内存就会被系统自动回收，所以不会产生内存泄漏。</p>
+<li><p><strong>栈</strong>：内存由系统自动分配和管理，程序运行超出局部变量的作用域，栈内存就会被系统自动回收，所以不会产生内存泄漏。</p>
 </li>
-<li><p>  <strong>堆</strong>：内存由应用程序动态分配管理，比如使用 <code>malloc()</code>  分配，使用 <code>free()</code> 释放。如果没有正确释放堆内存，就会造成内存泄漏。</p>
+<li><p><strong>堆</strong>：内存由应用程序动态分配管理，比如使用 <code>malloc()</code>  分配，使用 <code>free()</code> 释放。如果没有正确释放堆内存，就会造成内存泄漏。</p>
 </li>
-<li><p>  <strong>只读段</strong>：包括只读的程序的代码和常量，不会产生内存泄漏。</p>
+<li><p><strong>只读段</strong>：包括只读的程序的代码和常量，不会产生内存泄漏。</p>
 </li>
-<li><p>  <strong>数据段</strong>：包括在定义时就已经确定大小的全局变量和静态变量，不会产生内存泄漏。</p>
+<li><p><strong>数据段</strong>：包括在定义时就已经确定大小的全局变量和静态变量，不会产生内存泄漏。</p>
 </li>
-<li><p>  <strong>内存映射段</strong>：包括动态链接库和共享内存，共享内存由程序动态分配和管理，没有正确回收会造成内存泄漏.</p>
+<li><p><strong>内存映射段</strong>：包括动态链接库和共享内存，共享内存由程序动态分配和管理，没有正确回收会造成内存泄漏.</p>
 </li>
 </ul>
 <p>在内存紧张时系统会通过 OOM （Out of Memory）机制杀死进程，但在 OOM 前就可能造成严重的性能问题，比如：其他需要内存的进程，无法分配新的内存；内存不足触发系统的缓存回收以及 SWAP 机制，从而进一步导致 I/O 的性能问题等。</p>
 <h3 id="如何监控？-1"><a href="#如何监控？-1" class="headerlink" title="如何监控？"></a>如何监控？</h3><p>使用 <code>vmstat</code> 查看内存动态变化情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">vmstat 3</span><br><span class="line"><span class="meta">#</span><span class="bash"> procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> r  b   swpd   free   buff  cache   si   so    bi    bo   <span class="keyword">in</span>   cs us sy id wa st</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> r  b   swpd   free   buff  cache   si   so    bi    bo   <span class="keyword">in</span>   cs us sy id wa st</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 0  0      0 6601824  97620 1098784    0    0     0     0   62  322  0  0 100  0  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 0  0      0 6601700  97620 1098788    0    0     0     0   57  251  0  0 100  0  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 0  0      0 6601320  97620 1098788    0    0     0     3   52  306  0  0 100  0  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 0  0      0 6601452  97628 1098788    0    0     0    27   63  326  0  0 100  0  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2  0      0 6601328  97628 1098788    0    0     0    44   52  299  0  0 100  0  0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 0  0      0 6601080  97628 1098792    0    0     0     0   56  285  0  0 100  0  0</span> </span><br></pre></td></tr></table></figure>
-
 <p>可见 memory 的 free 一列不断下降，而 buff 和 cache 基本不变。说明系统使用内存在不断升高，要确定是否发生内存泄漏，还需要找到让内存增长的进程，并找到其内存增长的原因。</p>
 <p>使用 bcc 的 <code>memleak</code> 工具可以跟踪系统或指定进程的内存分配、释放请求，然后定期输出未释放内存和相应调用栈的汇总情况（默认 5s）。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -a 显示每个内存分配请求的大小以及地址</span></span><br><span class="line">docker cp app:/app /app</span><br><span class="line">memleak -a -p $(pidof app)</span><br><span class="line"><span class="meta">#</span><span class="bash"> Attaching to pid 12512, Ctrl+C to quit.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> [03:00:41] Top 10 stacks with outstanding allocations:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     addr = 7f8f70863220 size = 8192</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     addr = 7f8f70861210 size = 8192</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     addr = 7f8f7085b1e0 size = 8192</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     addr = 7f8f7085f200 size = 8192</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     addr = 7f8f7085d1f0 size = 8192</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     40960 bytes <span class="keyword">in</span> 5 allocations from stack</span></span><br><span class="line"><span class="meta">#</span><span class="bash">         fibonacci+0x1f [app]</span></span><br><span class="line"><span class="meta">#</span><span class="bash">         child+0x4f [app]</span></span><br><span class="line"><span class="meta">#</span><span class="bash">         start_thread+0xdb [libpthread-2.27.so]</span> </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 内存分配的调用栈中可见应用在不断分配内存，且没有回收。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 假设修复代码中的 bug、继续监控可以看见以下正常输出：</span></span><br><span class="line">memleak -a -p $(pidof app)</span><br><span class="line"><span class="meta">#</span><span class="bash"> Attaching to pid 18808, Ctrl+C to quit.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> [10:23:18] Top 10 stacks with outstanding allocations:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> [10:23:23] Top 10 stacks with outstanding allocations:</span></span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>  bcc-tools 需要内核版本为 4.1 或者更高，对于较久的版本，建议使用 valgrind。</p>
 </blockquote>
 <p>内存泄漏的原因有很多，比如：</p>
 <ul>
-<li><p>  <code>malloc()</code> 和 <code>free()</code> 通常并不是成对出现，需要注意在每个异常处理路径和成功路径上都释放内存 。</p>
+<li><p><code>malloc()</code> 和 <code>free()</code> 通常并不是成对出现，需要注意在每个异常处理路径和成功路径上都释放内存 。</p>
 </li>
-<li><p>  在多线程程序中，一个线程中分配的内存，可能会在另一个线程中访问和释放。</p>
+<li><p>在多线程程序中，一个线程中分配的内存，可能会在另一个线程中访问和释放。</p>
 </li>
-<li><p>  在第三方的库函数中，隐式分配的内存可能需要应用程序显式释放。</p>
+<li><p>在第三方的库函数中，隐式分配的内存可能需要应用程序显式释放。</p>
 </li>
-<li><p>  对于 Java 应用，可参考 <a target="_blank" rel="noopener" href="https://www.processon.com/mindmap/5c8f9682e4b09a16b9a6ec93">Java 虚拟机 ProcessOn Mind</a> 的 “内存溢出异常（OOM）”。</p>
+<li><p>对于 Java 应用，可参考 <a target="_blank" rel="noopener" href="https://www.processon.com/mindmap/5c8f9682e4b09a16b9a6ec93">Java 虚拟机 ProcessOn Mind</a> 的 “内存溢出异常（OOM）”。</p>
 </li>
 </ul>
 <h2 id="交换空间"><a href="#交换空间" class="headerlink" title="交换空间"></a>交换空间</h2><p><strong>文件页（File-backed Page）</strong>：经系统释放后可以回收的内存，包括缓存和缓冲区。其在内存管理中通常被称为文件页，大部分文件页都可以直接回收，需要时再从磁盘重新读取。被应用程序修改过且未落盘的数据称为内存 <strong>脏页</strong>，需要先落盘然后才能进行内存释放：</p>
 <ul>
-<li><p>  应用程序通过系统调用 <code>fsync</code> 把脏页同步到磁盘中。</p>
+<li><p>应用程序通过系统调用 <code>fsync</code> 把脏页同步到磁盘中。</p>
 </li>
-<li><p>  交由系统内核线程 <code>pdflush</code> 负责脏页的刷新。</p>
+<li><p>交由系统内核线程 <code>pdflush</code> 负责脏页的刷新。</p>
 </li>
 </ul>
 <p>通过内存映射获取的文件映射页也是常见的文件页，也可以被释放掉、在下次访问时从文件重新读取。</p>
@@ -744,152 +718,137 @@ height:100vh;
 <h3 id="Swap-原理"><a href="#Swap-原理" class="headerlink" title="Swap 原理"></a>Swap 原理</h3><p>Swap 即把磁盘空间或者本地文件当成内存使用，使服务器内存不足也可以运行大内存的应用程序。</p>
 <p>其包括换出和换入两个过程：</p>
 <ul>
-<li><p>  换出：把进程暂时不用的内存数据存储到磁盘中，并释放数据占用的内存。</p>
+<li><p>换出：把进程暂时不用的内存数据存储到磁盘中，并释放数据占用的内存。</p>
 </li>
-<li><p>  换入：在进程再次访问这些内存时，从磁盘读到内存。</p>
+<li><p>换入：在进程再次访问这些内存时，从磁盘读到内存。</p>
 </li>
 </ul>
 <blockquote>
 <p>  应用场景：</p>
 <ul>
-<li><p>  应用程序不希望被 OOM 杀死（即使内存不足时），而是缓一段时间、等待人工介入或系统自动释放其他进程内存，再分配给它。</p>
+<li><p>应用程序不希望被 OOM 杀死（即使内存不足时），而是缓一段时间、等待人工介入或系统自动释放其他进程内存，再分配给它。</p>
 </li>
-<li><p>  常见的电脑休眠和快速开机功能也是基于 Swap，省去应用程序的初始化过程，加快开机速度。</p>
+<li><p>常见的电脑休眠和快速开机功能也是基于 Swap，省去应用程序的初始化过程，加快开机速度。</p>
 </li>
-<li><p>  …</p>
+<li><p>…</p>
 </li>
 </ul>
 </blockquote>
 <p>内存回收的时机：</p>
 <ul>
-<li><p>  <strong>直接回收</strong>：有新的大块内存分配请求、但是剩余内存不足，系统回收一部分内存（比如缓存），尽可能满足新内存请求。</p>
+<li><p><strong>直接回收</strong>：有新的大块内存分配请求、但是剩余内存不足，系统回收一部分内存（比如缓存），尽可能满足新内存请求。</p>
 </li>
 <li><p><strong>定期回收</strong>：即 kswapd0。kswapd0 定义了三个内存阈值（watermark，也称为水位）用于衡量内存的使用情况，剩余内存使用 pages_free 表示：</p>
 <ul>
-<li><p>  页最小阈值（pages_min）</p>
+<li><p>页最小阈值（pages_min）</p>
 </li>
-<li><p>  页低阈值（pages_\low）</p>
+<li><p>页低阈值（pages_\low）</p>
 </li>
-<li><p>  页高阈值（pages_high）</p>
+<li><p>页高阈值（pages_high）</p>
 </li>
 </ul>
 </li>
 </ul>
 <figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">           ↑</span><br><span class="line">pages_free <span class="string">|</span></span><br><span class="line">           <span class="string">| 内存充足</span></span><br><span class="line">           +---------------- pages_high</span><br><span class="line">           <span class="string">| 内存分配正常</span></span><br><span class="line">           +---------------- pages_low</span><br><span class="line">           <span class="string">| 内存压力巨大</span></span><br><span class="line">           +---------------- pages_min</span><br><span class="line">           <span class="string">| 内存基本耗尽，</span></span><br><span class="line">           <span class="string">| 仅内核可分配内存</span></span><br></pre></td></tr></table></figure>
-
 <p>一旦剩余内存小于页低阈值就会触发内存的回收。页低阈值可通过内核选项 <code>/proc/sys/vm/min_free_kbytes</code> 间接设置页最小阈值，其他两个阈值根据页最小阈值计算生成的 ：</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">pages_low</span> = pages_min*<span class="number">5</span>/<span class="number">4</span></span><br><span class="line"><span class="attribute">pages_high</span> = pages_min*<span class="number">3</span>/<span class="number">2</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="NUMA-架构"><a href="#NUMA-架构" class="headerlink" title="NUMA 架构"></a>NUMA 架构</h3><p>有时系统有剩余内存，但 Swap 仍在升高。就是处理器 <strong>NUMA （Non-Uniform Memory Access）架构</strong> 导致。</p>
 <p>在 NUMA 架构下多个处理器被划分到不同 Node 上，每个 Node 都拥有自己的本地内存空间。同一个 Node 内部的内存空间可进一步分为不同的内存域（Zone）：</p>
 <ul>
-<li><p>  直接内存访问区（DMA）</p>
+<li><p>直接内存访问区（DMA）</p>
 </li>
-<li><p>  普通内存区（NORMAL）</p>
+<li><p>普通内存区（NORMAL）</p>
 </li>
-<li><p>  伪内存区（MOVABLE）</p>
+<li><p>伪内存区（MOVABLE）</p>
 </li>
-<li><p>  …</p>
+<li><p>…</p>
 </li>
 </ul>
 <figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">     Node Memory                 Node Memory</span><br><span class="line">   +---------------+          +---------------+ </span><br><span class="line">   |<span class="string"> ZONE_DMA      </span>|<span class="string">          </span>|<span class="string"> ZONE_DMA      </span>|<span class="string"> </span></span><br><span class="line"><span class="string">   +---------------+          +---------------+</span></span><br><span class="line"><span class="string">   </span>|<span class="string"> ZONE_DMA32    </span>|<span class="string">          </span>|<span class="string"> ZONE_DMA32    </span>|<span class="string">   </span></span><br><span class="line"><span class="string">   +---------------+          +---------------+</span></span><br><span class="line"><span class="string">   </span>|<span class="string"> ZONE_NORMAL   </span>|<span class="string">          </span>|<span class="string"> ZONE_NORMAL   </span>|<span class="string">   </span></span><br><span class="line"><span class="string">   +---------------+          +---------------+</span></span><br><span class="line"><span class="string">   </span>|<span class="string"> ZONE_MOVABLE  </span>|<span class="string">          </span>|<span class="string"> ZONE_MOVABLE  </span>|<span class="string">     </span></span><br><span class="line"><span class="string">+--+---------------+--+    +--+---------------+--+</span></span><br><span class="line"><span class="string"></span>|<span class="string">  </span>|<span class="string"> ZONE_DEVICE   </span>|<span class="string">  </span>|<span class="string">    </span>|<span class="string">  </span>|<span class="string"> ZONE_DEVICE   </span>|<span class="string">  </span>|</span><br><span class="line">|<span class="string">  +---------------+  </span>|<span class="string">    </span>|<span class="string">  +---------------+  </span>|</span><br><span class="line">|<span class="string"> +---+---+           </span>|<span class="string">    </span>|<span class="string"> +---+---+           </span>|</span><br><span class="line">|<span class="string"> </span>|<span class="string"> 0 </span>|<span class="string"> 1 </span>|<span class="string">   Node 0  </span>|<span class="string">    </span>|<span class="string"> </span>|<span class="string"> 0 </span>|<span class="string"> 1 </span>|<span class="string">   Node 1  </span>|</span><br><span class="line">|<span class="string"> +---+---+           </span>|<span class="string">    </span>|<span class="string"> +---+---+           </span>|</span><br><span class="line">|<span class="string"> </span>|<span class="string"> 2 </span>|<span class="string"> 3 </span>|<span class="string">           </span>|<span class="string">    </span>|<span class="string"> </span>|<span class="string"> 2 </span>|<span class="string"> 3 </span>|<span class="string">           </span>|</span><br><span class="line">|<span class="string"> +---+---+           </span>|<span class="string">    </span>|<span class="string"> +---+---+           </span>|</span><br><span class="line">+---------------------+    +---------------------+</span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>numactl</code> 命令可查看处理器在 Node 的分布情况、每个 Node 的内存使用情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">numactl --hardware</span><br><span class="line"><span class="meta">#</span><span class="bash"> available: 1 nodes (0)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> node 0 cpus: 0 1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> node 0 size: 7977 MB</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> node 0 free: 4416 MB</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> cpu0 和 cpu1 都在 Node0 上，Node0 内存为 7977MB，剩余内存 4416MB。</span></span><br></pre></td></tr></table></figure>
-
 <p>通过 <code>/proc/zoneinfo</code> 查看内存阈值：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/zoneinfo</span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Node 0, zone   Normal</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  pages free     227894</span></span><br><span class="line"><span class="meta">#</span><span class="bash">        min      14896</span></span><br><span class="line"><span class="meta">#</span><span class="bash">        low      18620</span></span><br><span class="line"><span class="meta">#</span><span class="bash">        high     22344</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash">      nr_free_pages 227894</span></span><br><span class="line"><span class="meta">#</span><span class="bash">      nr_zone_inactive_anon 11082         非活跃匿名页数</span></span><br><span class="line"><span class="meta">#</span><span class="bash">      nr_zone_active_anon 14024           活跃匿名页数</span></span><br><span class="line"><span class="meta">#</span><span class="bash">      nr_zone_inactive_file 539024        非活跃文件页数</span></span><br><span class="line"><span class="meta">#</span><span class="bash">      nr_zone_active_file 923986          活跃文件页数</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 可见剩余内存（free）远远大于页高阈值（22344），此时 kswapd0 不会回收内存。</span></span><br></pre></td></tr></table></figure>
-
 <p>某个 Node 内存不足时，系统可以从其他 Node 寻找空闲内存，也可以从本地内存中回收内存。</p>
 <p>通过 <code>/proc/sys/vm/zone_reclaim_mode</code> 来调整模式：</p>
 <ul>
-<li><p>  默认 0 即既可以从其他 Node 寻找空闲内存，也可以从本地回收内存。</p>
+<li><p>默认 0 即既可以从其他 Node 寻找空闲内存，也可以从本地回收内存。</p>
 </li>
-<li><p>  1、2、4 表示只回收本地内存，2 表示可以回写脏数据回收内存，4 表示可以用 Swap 方式回收内存。</p>
+<li><p>1、2、4 表示只回收本地内存，2 表示可以回写脏数据回收内存，4 表示可以用 Swap 方式回收内存。</p>
 </li>
 </ul>
 <p>因此内存的回收既包含文件页，也包含匿名页：</p>
 <ul>
-<li><p>  对文件页的回收是直接回收缓存，或把脏页写回磁盘后再回收。</p>
+<li><p>对文件页的回收是直接回收缓存，或把脏页写回磁盘后再回收。</p>
 </li>
-<li><p>  对匿名页的回收，是通过 Swap 机制把它们写入磁盘后再释放内存。</p>
+<li><p>对匿名页的回收，是通过 Swap 机制把它们写入磁盘后再释放内存。</p>
 </li>
 </ul>
 <p>通过 <code>/proc/sys/vm/swappiness</code> 选项可调整使用 Swap 的积极程度：范围 [0, 100]，数值越大越积极使用 Swap（更倾向于回收匿名页）；数值越小越消极使用 Swap（更倾向于回收文件页）。</p>
 <h3 id="如何监控？-2"><a href="#如何监控？-2" class="headerlink" title="如何监控？"></a>如何监控？</h3><p>配置 Swap（以 Swap 文件为例）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建 Swap 文件</span></span><br><span class="line">fallocate -l 8G /mnt/swapfile</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改权限只有 root 用户可以访问</span></span><br><span class="line">chmod 600 /mnt/swapfile</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置 Swap 文件</span></span><br><span class="line">mkswap /mnt/swapfile</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开启 Swap</span></span><br><span class="line">swapon /mnt/swapfile</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭 Swap（先关闭再打开就能清理 Swap）</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> swapoff -a</span></span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>free</code> 命令查看 Swap 使用情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">free</span><br><span class="line"><span class="meta">#</span><span class="bash">              total        used        free      shared  buff/cache   available</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Mem:        8169348      331668     6715972         696     1121708     7522896</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Swap:       8388604           0     8388604</span></span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>dd</code> 命令模拟大文件读取：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/sda1 of=/dev/null bs=1G count=2048</span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>sar</code> 命令观察各项指标变化（内存、Swap）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">sar -r -S 1</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">                                                                    当前系统负载需要的内存         活跃内存  非活跃内存</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:39:56    kbmemfree   kbavail kbmemused  %memused kbbuffers  kbcached  kbcommit   %commit  kbactive   kbinact   kbdirty</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:39:57      6249676   6839824   1919632     23.50    740512     67316   1691736     10.22    815156    841868         4</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:39:56    kbswpfree kbswpused  %swpused  kbswpcad   %swpcad</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:39:57      8388604         0      0.00         0      0.00</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:39:57    kbmemfree   kbavail kbmemused  %memused kbbuffers  kbcached  kbcommit   %commit  kbactive   kbinact   kbdirty</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:39:58      6184472   6807064   1984836     24.30    772768     67380   1691736     10.22    847932    874224        20</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:39:57    kbswpfree kbswpused  %swpused  kbswpcad   %swpcad</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:39:58      8388604         0      0.00         0      0.00</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> …</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:44:06    kbmemfree   kbavail kbmemused  %memused kbbuffers  kbcached  kbcommit   %commit  kbactive   kbinact   kbdirty</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:44:07       152780   6525716   8016528     98.13   6530440     51316   1691736     10.22    867124   6869332         0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:44:06    kbswpfree kbswpused  %swpused  kbswpcad   %swpcad</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 04:44:07      8384508      4096      0.05        52      1.27</span></span><br></pre></td></tr></table></figure>
-
 <p>可见总内存使用率（%memused）在不断增长（23% -&gt; 98%），且主要内存都被缓冲区（kbbuffers）占用：</p>
 <ul>
-<li>  剩余内存（kbmemfree）不断减少，缓冲区（kbbuffers）不断增大，可知剩余内存不断分配给缓冲区。</li>
-<li>  一段时间后剩余内存很小，而缓冲区占用大部分内存。此时 Swap 逐渐增大，缓冲区和剩余内存则只在小范围内波动。</li>
+<li>剩余内存（kbmemfree）不断减少，缓冲区（kbbuffers）不断增大，可知剩余内存不断分配给缓冲区。</li>
+<li>一段时间后剩余内存很小，而缓冲区占用大部分内存。此时 Swap 逐渐增大，缓冲区和剩余内存则只在小范围内波动。</li>
 </ul>
 <p>使用 <code>cachetop</code> 命令观察缓存使用情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cachetop 5</span><br><span class="line"><span class="meta">#</span><span class="bash"> 12:28:28 Buffers MB: 6349 / Cached MB: 87 / Sort: HITS / Order: ascending</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> PID      UID      CMD              HITS     MISSES   DIRTIES  READ_HIT%  WRITE_HIT%</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    18280 root     python                 22        0        0     100.0%       0.0%</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    18279 root     dd                  41088    41022        0      50.0%      50.0%</span></span><br></pre></td></tr></table></figure>
-
 <p>可见 <code>dd</code> 进程只有 50% 的缓存命中率，未命中的缓存页数（MISSES）为 41022（单位是页），之前运行的 <code>dd</code> 使得缓冲区使用升高。动态观察剩余内存、内存阈值以及匿名页和文件页的活跃情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -d 表示高亮变化的字段</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -A 表示仅显示Normal行以及之后的15行输出</span></span><br><span class="line">watch -d grep -A 15 &#x27;Normal&#x27; /proc/zoneinfo</span><br><span class="line"><span class="meta">#</span><span class="bash"> Node 0, zone   Normal</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   pages free     21328</span></span><br><span class="line"><span class="meta">#</span><span class="bash">         min      14896</span></span><br><span class="line"><span class="meta">#</span><span class="bash">         low      18620</span></span><br><span class="line"><span class="meta">#</span><span class="bash">         high     22344</span></span><br><span class="line"><span class="meta">#</span><span class="bash">         spanned  1835008</span></span><br><span class="line"><span class="meta">#</span><span class="bash">         present  1835008</span></span><br><span class="line"><span class="meta">#</span><span class="bash">         managed  1796710</span></span><br><span class="line"><span class="meta">#</span><span class="bash">         protection: (0, 0, 0, 0, 0)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       nr_free_pages 21328</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       nr_zone_inactive_anon 79776</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       nr_zone_active_anon 206854</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       nr_zone_inactive_file 918561</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       nr_zone_active_file 496695</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       nr_zone_unevictable 2251</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       nr_zone_write_pending 0</span></span><br></pre></td></tr></table></figure>
-
 <p>剩余内存（pages_free）在小范围内不停地波动。当小于页低阈值（pages_low）时，又突然增大到大于页高阈值（pages_high）。结合用 sar 看到剩余内存和缓冲区的变化情况可以推导出，剩余内存和缓冲区的波动变化是由于内存回收和缓存再次分配的循环往复：</p>
 <ul>
-<li><p>  当剩余内存小于页低阈值时，系统会回收一些缓存和匿名内存，使剩余内存增大。缓存的回收导致 <code>sar</code> 中的缓冲区减小，而匿名内存的回收导致了 Swap 的使用增大。</p>
+<li><p>当剩余内存小于页低阈值时，系统会回收一些缓存和匿名内存，使剩余内存增大。缓存的回收导致 <code>sar</code> 中的缓冲区减小，而匿名内存的回收导致了 Swap 的使用增大。</p>
 </li>
-<li><p>  由于 <code>dd</code> 还在继续，剩余内存重新分配给缓存，导致剩余内存减少、缓冲区增大。</p>
+<li><p>由于 <code>dd</code> 还在继续，剩余内存重新分配给缓存，导致剩余内存减少、缓冲区增大。</p>
 </li>
 </ul>
 <p>如果多次运行 <code>dd</code> 和 <code>sar</code>，可能会见到在多次的循环重复中，有时 Swap 时多时少，缓冲区的波动则更大。系统回收内存时有时候会回收更多的文件页，有时候回收更多的匿名页。系统回收不同类型内存的倾向不明显，可以查看 swappiness 配置：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/sys/vm/swappiness</span><br><span class="line"><span class="meta">#</span><span class="bash"> 60</span></span><br></pre></td></tr></table></figure>
-
 <p>查看使用 Swap 最多的进程：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 按 VmSwap 使用量对进程排序，输出进程名称、进程 ID 以及 SWAP 用量</span></span><br><span class="line">for file in /proc/*/status ; do awk &#x27;/VmSwap|Name|^Pid/&#123;printf $2 &quot; &quot; $3&#125;END&#123; print &quot;&quot;&#125;&#x27; $file; done | sort -k 3 -n -r | head</span><br><span class="line"><span class="meta">#</span><span class="bash"> dockerd 2226 10728 kB</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> docker-containe 2251 8516 kB</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> snapd 936 4020 kB</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> networkd-dispat 911 836 kB</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> polkitd 1004 44 kB</span></span><br></pre></td></tr></table></figure>
-
 <p>虽然缓存属于可回收内存，但在类似大文件拷贝的场景下，系统还是会用 Swap 机制回收匿名内存，而不仅回收占用绝大部分内存的文件页。</p>
 <p>Swap 用来解决内存资源紧张的问题，但本质上还是磁盘操作，因此降低降低 Swap 的使用，可以提高系统的整体性能，因此建议：</p>
 <ul>
-<li><p>  服务器内存足够大则直接禁止 Swap。</p>
+<li><p>服务器内存足够大则直接禁止 Swap。</p>
 </li>
-<li><p>  大部分云平台中的虚拟机都默认禁止 Swap。如果实需要用 Swap，可尝试降低 swappiness，减少内存回收时 Swap 的使用倾向。</p>
+<li><p>大部分云平台中的虚拟机都默认禁止 Swap。如果实需要用 Swap，可尝试降低 swappiness，减少内存回收时 Swap 的使用倾向。</p>
 </li>
-<li><p>  对于响应延迟敏感的应用，如果在开启 Swap 的服务器中运行，可以用库函数 <code>mlock()</code> 或者 <code>mlockall()</code> 锁定内存、阻止其内存换出。</p>
+<li><p>对于响应延迟敏感的应用，如果在开启 Swap 的服务器中运行，可以用库函数 <code>mlock()</code> 或者 <code>mlockall()</code> 锁定内存、阻止其内存换出。</p>
 </li>
 </ul>
 <h2 id="优化总结"><a href="#优化总结" class="headerlink" title="优化总结"></a>优化总结</h2><p>基本优化思路：</p>
 <ul>
-<li><p>  禁止 Swap，如果必须开启 Swap 则降低 swappiness 的值，减少内存回收时 Swap 的使用倾向。</p>
+<li><p>禁止 Swap，如果必须开启 Swap 则降低 swappiness 的值，减少内存回收时 Swap 的使用倾向。</p>
 </li>
-<li><p>  减少内存的动态分配。比如使用内存池、大页（HugePage）等。</p>
+<li><p>减少内存的动态分配。比如使用内存池、大页（HugePage）等。</p>
 </li>
-<li><p>  尽量使用缓存和缓冲区来访问数据。比如使用堆栈明确声明内存空间来存储需要缓存的数据；或者用 Redis 等外部缓存组件，优化数据的访问。</p>
+<li><p>尽量使用缓存和缓冲区来访问数据。比如使用堆栈明确声明内存空间来存储需要缓存的数据；或者用 Redis 等外部缓存组件，优化数据的访问。</p>
 </li>
-<li><p>  使用 cgroups 等方式限制进程内存使用情况。可以确保系统内存不会被异常进程耗尽。</p>
+<li><p>使用 cgroups 等方式限制进程内存使用情况。可以确保系统内存不会被异常进程耗尽。</p>
 </li>
-<li><p>  通过 <code>/proc/pid/oom_adj</code>，调整核心应用的 oom_score。可保证即使内存紧张，核心应用也不会被 OOM 杀死。</p>
+<li><p>通过 <code>/proc/pid/oom_adj</code>，调整核心应用的 oom_score。可保证即使内存紧张，核心应用也不会被 OOM 杀死。</p>
 </li>
 </ul>
 <p>了解内存相关概念与指标后，可通过下表找到合适的工具、分析问题。</p>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-memory-monitoring.assets/8f477035fc4348a1f80bde3117a7dfed.png" alt="img" style="zoom:67%;" />
-
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-memory-monitoring.assets/52bb55fba133401889206d02c224769b.png" alt="img" style="zoom:67%;" />
-
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-memory-monitoring.assets/8f477035fc4348a1f80bde3117a7dfed.png" alt="img" style="zoom:67%;" /></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-memory-monitoring.assets/52bb55fba133401889206d02c224769b.png" alt="img" style="zoom:67%;" /></p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-memory-monitoring.assets/d79cd017f0c90b84a36e70a3c5dccffe.png" alt="img"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>分析案例可参考：</p>
 <ul>
-<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/75242">17 | 案例篇：如何利用系统缓存优化程序的运行效率？</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/75242">17 | 案例篇：如何利用系统缓存优化程序的运行效率？</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/75670">18 | 案例篇：内存泄漏了，我该如何定位和处理？</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/75670">18 | 案例篇：内存泄漏了，我该如何定位和处理？</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/75797">19 | 案例篇：为什么系统的Swap变高了（上）</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/75797">19 | 案例篇：为什么系统的Swap变高了（上）</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/75973">20 | 案例篇：为什么系统的Swap变高了？（下）</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/75973">20 | 案例篇：为什么系统的Swap变高了？（下）</a></p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -1968,17 +1927,17 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
@@ -1988,9 +1947,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     

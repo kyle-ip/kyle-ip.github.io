@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://yipwinghong.github.io/2021/07/28/Go_channel-applications/</loc>
+    
+    <lastmod>2021-07-31</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/2021/07/31/Go_memory-model/</loc>
     
     <lastmod>2021-07-31</lastmod>
@@ -54,13 +61,6 @@
     <loc>https://yipwinghong.github.io/2021/07/01/DistributedSystem_gossip-dissemination/</loc>
     
     <lastmod>2021-07-31</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/2021/07/28/Go_channel-applications/</loc>
-    
-    <lastmod>2021-07-30</lastmod>
     
   </url>
   
@@ -585,14 +585,14 @@
 
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/</loc>
+    <loc>https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/</loc>
     <lastmod>2021-07-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/</loc>
+    <loc>https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/</loc>
     <lastmod>2021-07-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -613,14 +613,14 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    <loc>https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
     <lastmod>2021-07-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
+    <loc>https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
     <lastmod>2021-07-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -655,14 +655,14 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/Go/</loc>
+    <loc>https://yipwinghong.github.io/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/</loc>
     <lastmod>2021-07-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/</loc>
+    <loc>https://yipwinghong.github.io/tags/Go/</loc>
     <lastmod>2021-07-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
