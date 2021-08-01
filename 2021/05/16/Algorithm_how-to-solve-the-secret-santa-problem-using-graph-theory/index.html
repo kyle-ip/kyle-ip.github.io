@@ -474,12 +474,12 @@ height:100vh;
 <p>原文链接：<a target="_blank" rel="noopener" href="https://medium.com/pragmatic-computer-science/how-to-solve-the-secret-santa-problem-using-graph-theory-a6b216ccc622">How to solve the Secret Santa Problem using graph theory</a></p>
 </blockquote>
 <h1 id="如何用图论解决-Secret-Santa-问题？"><a href="#如何用图论解决-Secret-Santa-问题？" class="headerlink" title="如何用图论解决 Secret Santa 问题？"></a>如何用图论解决 Secret Santa 问题？</h1><p>让我们来讨论图论，哈密尔顿回路，NP 问题，回溯搜索问题。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%201.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%201.png" alt=""></p>
 <p>每年我们家都会举办一次 Secret Santa 活动：随机分配接收者，使得每个人都会从一位匿名的圣诞老人处得到一份礼物。</p>
 <p>因此需要开发一个简单的网站，每位家庭成员都可以在活动开始时注册，填写愿望清单并取得收件人的姓名。虽然许多网站或应用都可以达到这种效果，但我们决定开发自己的服务，以便对排序算法进行一些修改。每位参与者注册后，运行排序算法确定谁向谁赠送礼物。为了解决 Secret Santa 问题需要找到这种排序算法。</p>
 <p>使用一个数组存放所有参与者。首先随机抽取第一名，假设名为 Bob。然后从初始数组中删除 Bob 并从中获得随机参与者。假设参与者名为 Alice，即 Bob 把礼物送给 Alice。然后从数组中删除 Alice，并得到一名随机参与者，该参与者将成为 Alice 礼物的接收者，等等。</p>
 <p>重复以上过程直到数组为空，最后一位参加者将是第一位 Bob 的 Secret Santa，此时圣诞老人链完成。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%202.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%202.png" alt=""></p>
 <p>这种算法被称为朴素算法，其每个步骤都是显而易见的，它模仿了人们从帽子或彩票机中获取代币的过程。在大多数情况下朴素算法不是最佳算法，并且性能不高，但是其工作方式非常简单，以至于朴素算法是最佳算法，具有 O(n) 时间复杂度和 O(1) 空间复杂度。</p>
 <p>下一步是对原问题做出改动，并对算法添加一些附加条件（这就是需要自定义服务的原因）。 有时基于纯粹的随机可以得到一个 Secret Santa，却出于某种原因使它无法保密。 例如当 Santa 是我的妻子，就几乎无法将其保密了。 </p>
 <p>因此对原问题添加约束，例如 Alice 和 Bob 参加活动，但不想互相送礼物。此时需要将此数据添加到算法中并考虑这个约束。可以稍微修改算法：当需要为有约束条件的参与者（Bob）挑选接收者时，从参与者池中删除这些约束条件（Alice），然后像之前一样随机选择一位。 </p>
@@ -503,32 +503,32 @@ height:100vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%205.png" alt="图中 Alice、Bob 及其朋友的哈密顿回路示例"></p>
 <p>这个算法目标是通过暴力计算在图中找到一个哈密尔顿回路。</p>
 <ul>
-<li><p>  首先从一个随机节点开始，该节点有一些与之相连接的节点。</p>
+<li><p>首先从一个随机节点开始，该节点有一些与之相连接的节点。</p>
 </li>
-<li><p>  随机选择一个邻居节点，如果该节点也已连接其它节点，再选择其中尚未被访问的一个等等。</p>
+<li><p>随机选择一个邻居节点，如果该节点也已连接其它节点，再选择其中尚未被访问的一个等等。</p>
 </li>
-<li><p>  在某些步骤中，可以发现没有可选的节点：由于约束限制没有更多的边可选，或所有的邻居节点已经被访问过。</p>
+<li><p>在某些步骤中，可以发现没有可选的节点：由于约束限制没有更多的边可选，或所有的邻居节点已经被访问过。</p>
 </li>
 </ul>
 <p>这看起来像是在使用朴素算法，而使用图，如何后退并选择另一个随机节点则清晰可见。如果退后一步但仍然没有要选择的节点，则再退一步，重复直到访问所有节点并返回第一个节点时循环完成。这种搜索算法被称为回溯搜索或深度优先搜索。可以看一个例子：</p>
 <p>步骤 1：从 Alice 开始，随机选择下一个节点。得到节点 C。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%206.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%206.png" alt=""></p>
 <p>步骤 2：节点 C 连接到 E，D，Bob 和 Alice。由于 Alice 已被使用因此排除，随机选择 E。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%207.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%207.png" alt=""></p>
 <p>步骤 3：然后选择节点 D。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%208.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%208.png" alt=""></p>
 <p>步骤 4：从 D 剩下的唯一节点是 Bob，所有其他节点已经被访问过。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%209.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%209.png" alt=""></p>
 <p>步骤 5：路径包含所有节点，需要转到节点 Alice 并完成循环，但是 Bob 和 Alice 之间没有边，需要退后一步，所以回到 D。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%2010.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%2010.png" alt=""></p>
 <p>步骤 6：只能在第 3 步从 D 转到 Bob，而且已经知道这条路并不能解决问题。因此需要再退一步并返回E。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%2011.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%2011.png" alt=""></p>
 <p>步骤 7：这次从 E 转到 Bob。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%2012.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%2012.png" alt=""></p>
 <p>步骤 8：现在唯一的可能是从 Bob 移到 D。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%2013.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%2013.png" alt=""></p>
 <p>步骤 9：现在可以从 D 转到 Alice，循环完成，找到了解决方案。</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%2014.png"></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Secret%20Santa%2014.png" alt=""></p>
 <p>如果发现一条死路，并且在多次回溯之后没有找到哈密尔顿回路成功地返回到第一个节点，则该图没有解决方案。由于需要暴力破解所有路径以验证没有合适的回路，这是这是最坏的情况（阶乘函数）。</p>
 <p>但是正在为服务解决 Secret Santa 问题，这实际上是一项工程任务，而不是数学任务。如果约束太多，并且图中没有足够的边来找到合适的回路，算法可能会失败。</p>
 <p>如果举办 Secret Santa 活动，那可能会很诡异，一些参与者认为他们不希望将几乎所有其他人都视为圣诞老人。可以在界面上添加一些限制，并定义每个参与者最多可以有 3 个约束。这对于每个人就已经足够，并且可防止该算法暴力计算数百万条路径。</p>
@@ -1610,9 +1610,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1642,11 +1642,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
