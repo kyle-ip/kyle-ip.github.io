@@ -6,7 +6,7 @@
   <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-07-31T08:39:58.588Z</updated>
+  <updated>2021-07-31T12:59:17.725Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://yipwinghong.github.io/2021/07/31/Go_memory-model/"/>
     <id>https://yipwinghong.github.io/2021/07/31/Go_memory-model/</id>
     <published>2021-07-31T08:42:39.000Z</published>
-    <updated>2021-07-31T08:39:58.588Z</updated>
+    <updated>2021-07-31T12:59:17.725Z</updated>
     
     
     <summary type="html">原文链接：https://golang.org/ref/mem</summary>
@@ -297,7 +297,7 @@
     <link href="https://yipwinghong.github.io/2021/06/17/Go_concurrency_primitives/"/>
     <id>https://yipwinghong.github.io/2021/06/17/Go_concurrency_primitives/</id>
     <published>2021-06-17T11:42:39.000Z</published>
-    <updated>2021-07-28T08:43:36.153Z</updated>
+    <updated>2021-08-01T03:58:27.156Z</updated>
     
     
     <summary type="html">Go 标准库（sync）中提供了很多原生支持的并发原语，本文将简单讲解其基本用法。</summary>
