@@ -506,6 +506,8 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
+
 <h1 id="无主节点复制"><a href="#无主节点复制" class="headerlink" title="无主节点复制"></a>无主节点复制</h1><p>无主节点复制方案与多主节点复制方案都比单主节点复制方案更可靠，但代价也是系统的复杂性和弱一致性保证。</p>
 <p>客户端将写请求发送到多个节点上，读取时从多个节点上并行读取，并检测和纠正某些过期数据。</p>
 <ul>
@@ -574,7 +576,7 @@ height:100vh;
 <li><p><strong>数据回传</strong>：是否应该接收该写请求，将它们暂时写入一些可访问的节点中（当网络问题恢复，临时节点需要把这期间的写入发送到原始主节点上）？</p>
 </li>
 </ul>
-<p>Sloppy 对于提高写入可用性特别有用：只要有 w 个节点可用，数据库就可以接收新的写入。但即使满足 w + r > n，除非回传结束，否则无法保证客户端一定能从 r 个节点读到新值。</p>
+<p>Sloppy 对于提高写入可用性特别有用：只要有 w 个节点可用，数据库就可以接收新的写入。但即使满足 w + r &gt; n，除非回传结束，否则无法保证客户端一定能从 r 个节点读到新值。</p>
 <h3 id="多数据中心"><a href="#多数据中心" class="headerlink" title="多数据中心"></a>多数据中心</h3><p>无主节点复制旨在更容忍并发写入冲突、网络中断和延迟尖峰等，因此也可适用于多数据中心操作。</p>
 <ul>
 <li><p>Cassandra 和 Voldemort 默认配置为无主节点模型，其跨数据中心操作：副本数量 n 是 <strong>包含所有数据中心的节点总数</strong>，可以指定各数据中心副本数。客户端的写入会发送到所有副本，但通常只等待来自本地数据中心内的 Quorum 节点数确认，以避免高延迟和跨数据中心可能导致的网络异常。</p>
@@ -1309,9 +1311,23 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 71
+        Total : 73
         </div>
         <!-- search  -->
         
@@ -1327,7 +1343,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/Go_memory-model/" >（译）Go 内存模型</a>
+            <span class="archive-post-date">08/04</span><a class="archive-post-title" href= "/2021/08/04/Go_engineering-standard/" >Go 工程化标准实践</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/Go_memory-model/" >Go 内存模型（译）</a>
         </li>
     
     
@@ -1357,6 +1378,11 @@ top:100vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span><a class="archive-post-title" href= "/2021/07/21/Fenix_build-services/" >《凤凰架构》阅读笔记（五）：服务构建与流量治理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/Go_error_handling/" >Go 异常处理</a>
         </li>
     
@@ -1382,17 +1408,17 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >（译）分布式系统模式：Gossip 传播</a>
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >分布式系统模式：Gossip 传播（译）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >（译）分布式系统模式：版本化值</a>
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >分布式系统模式：版本化值（译）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >（译）一致性哈希</a>
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >一致性哈希（译）</a>
         </li>
     
     
@@ -1422,12 +1448,12 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >（译）如何用图论解决 Secret Santa 问题？</a>
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >如何用图论解决 Secret Santa 问题？（译）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >（译）把 PostgreSQL 用作数据仓库</a>
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库（译）</a>
         </li>
     
     
@@ -1457,7 +1483,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >（译）Java 程序员的 C++</a>
+            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >Java 程序员的 C++（译）</a>
         </li>
     
     
@@ -1507,7 +1533,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >（译）选择合适的数据库</a>
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >选择合适的数据库（译）</a>
         </li>
     
     
@@ -1735,11 +1761,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
-    
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     

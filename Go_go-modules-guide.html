@@ -396,52 +396,71 @@
 <h1 id="Go-Modules-使用指南"><a href="#Go-Modules-使用指南" class="headerlink" title="Go Modules 使用指南"></a>Go Modules 使用指南</h1><p>Go 的依赖管理问题一直为人所诟病，其提供的包管理工具在 1.13 版本后已趋向成熟，很多开源项目都已（或将）支持 Go Modules。</p>
 <p>传统依赖管理依赖于环境变量 <code>GOPATH</code>（为多个项目共享）：</p>
 <ul>
-<li><p>不区分依赖版本，多个项目无法使用相同依赖库的不同版本，解决方法是修改包名或单独为不同的项目设置不同的的 <code>GOPATH</code>，将不同版本的依赖库源码放在不同的 <code>GOPATH</code> 并在编译时切换。</p>
+<li><p>  不区分依赖版本，多个项目无法使用相同依赖库的不同版本，解决方法是修改包名或单独为不同的项目设置不同的的 <code>GOPATH</code>，将不同版本的依赖库源码放在不同的 <code>GOPATH</code> 并在编译时切换。</p>
 </li>
-<li><p>没有统一的依赖版本管理列表，只能在项目源码中手工确认。</p>
+<li><p>  没有统一的依赖版本管理列表，只能在项目源码中手工确认。</p>
 </li>
 </ul>
 <p>Go Modules 解决了利用 <code>GOPATH</code> 管理依赖的以上问题，并且由于是官方指定工具，更推荐使用。</p>
 <h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><h3 id="创建并发布-Module"><a href="#创建并发布-Module" class="headerlink" title="创建并发布 Module"></a>创建并发布 Module</h3><p>Module 目录：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hello/</span><br><span class="line">    hello.<span class="keyword">go</span></span><br><span class="line">    hello_test.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
+
 <p><code>hello.go</code></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Hello</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;Hello, world.&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p><code>hello_test.go</code></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;testing&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestHello</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">    want := <span class="string">&quot;Hello, world.&quot;</span></span><br><span class="line">    <span class="keyword">if</span> got := Hello(); got != want &#123;</span><br><span class="line">        t.Errorf(<span class="string">&quot;Hello() = %q, want %q&quot;</span>, got, want)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>测试：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go test -v</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">=== RUN   TestHello</span></span><br><span class="line"><span class="bullet">--- </span>PASS: TestHello (0.00s)</span><br><span class="line">PASS</span><br><span class="line">ok      <span class="emphasis">_/C_</span>/Users/yipwi/Desktop/hello  0.071s</span><br></pre></td></tr></table></figure>
+
 <p>在 Module 目录下执行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go mod init github.com/yipwinghong/hello</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span>: creating <span class="keyword">new</span> <span class="keyword">go</span>.<span class="keyword">mod</span>: module github.<span class="keyword">com</span>/yipwinghong/hello</span><br><span class="line"><span class="keyword">go</span>: <span class="keyword">to</span> <span class="built_in">add</span> module requirements <span class="built_in">and</span> sum<span class="variable">s:</span></span><br><span class="line">        <span class="keyword">go</span> <span class="keyword">mod</span> tidy</span><br></pre></td></tr></table></figure>
+
 <p>在 Module 目录下生成了包含 module 声明和 go 版本信息的 <code>go.mod</code> 文件：</p>
 <figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hello/</span><br><span class="line">    hello.<span class="built_in">go</span></span><br><span class="line">    hello_test.<span class="built_in">go</span></span><br><span class="line">    <span class="built_in">go</span>.<span class="built_in">mod</span></span><br></pre></td></tr></table></figure>
+
 <p>如果将 Module 推送到 GitHub 上对应的 repository，则可以使用如下命令下载 <code>hello_world</code>。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">go get github.com/yipwinghong/hello_world</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定版本</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> go get github.com/yipwinghong/hello_world@vX.X.X</span></span><br></pre></td></tr></table></figure>
-<h3 id="发布-Module"><a href="#发布-Module" class="headerlink" title="发布 Module"></a>发布 Module</h3><p>Module 支持 <a href="[Semantic Versioning 2.0.0 | Semantic Versioning (semver.org">语义化版本</a>](<a target="_blank" rel="noopener" href="https://semver.org/))：x.x.x，其中三位数字分别表示：">https://semver.org/))：x.x.x，其中三位数字分别表示：</a></p>
+
+<h3 id="发布-Module"><a href="#发布-Module" class="headerlink" title="发布 Module"></a>发布 Module</h3><p>Module 支持 [语义化版本](<a target="_blank" rel="noopener" href="https://semver.org/">Semantic Versioning 2.0.0 | Semantic Versioning (semver.org)</a>)：x.x.x，其中三位数字分别表示：</p>
 <ul>
-<li><p>主版本号：不兼容的 API 修改。</p>
+<li><p>  主版本号：不兼容的 API 修改。</p>
 </li>
-<li><p>次版本号：向下兼容的功能性新增。</p>
+<li><p>  次版本号：向下兼容的功能性新增。</p>
 </li>
-<li><p>修订号：向下兼容的问题修正。</p>
+<li><p>  修订号：向下兼容的问题修正。</p>
 </li>
 </ul>
 <p>把上面创建的 Module 推送到 GitHub：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line"><span class="meta">#</span><span class="bash"> git remote add v1.0.0 https://github.com/yipwinghong/hello.git</span></span><br><span class="line">git checkout -b v1.0.0</span><br><span class="line"></span><br><span class="line">git add -A</span><br><span class="line">git tag -a v1.0.0 -m &#x27;:tada: new release&#x27;</span><br><span class="line">git commit -m &quot;:tada: first commit&quot;</span><br><span class="line">git remote add v1.0.0 git@github.com:yipwinghong/hello.git</span><br><span class="line">git push -u v1.0.0 v1.0.0</span><br></pre></td></tr></table></figure>
+
 <h3 id="为-Module-添加依赖"><a href="#为-Module-添加依赖" class="headerlink" title="为 Module 添加依赖"></a>为 Module 添加依赖</h3><p>修改 <code>hello.go</code>：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;rsc.io/quote&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Hello</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> quote.Hello()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>添加依赖：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> mod tidy</span><br></pre></td></tr></table></figure>
+
 <p>此时可见新增了一个 <code>go.sum</code> 文件，且 <code>go.mod</code> 被更新：</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">module</span> github.com/yipwinghong/hello</span><br><span class="line"></span><br><span class="line"><span class="attribute">go</span> <span class="number">1</span>.<span class="number">16</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">require</span> rsc.io/quote v<span class="number">1</span>.<span class="number">5</span>.<span class="number">2</span></span><br></pre></td></tr></table></figure>
+
 <p>更新到 GitHub repository：</p>
 <figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">add</span> -A</span><br><span class="line">git tag -<span class="keyword">a</span> v1<span class="number">.0</span><span class="number">.1</span> -m <span class="string">&#x27;add dependency&#x27;</span></span><br><span class="line">git commit -m <span class="string">&#x27;:arrow_up: add dependency&#x27;</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+
 <h3 id="使用-Module"><a href="#使用-Module" class="headerlink" title="使用 Module"></a>使用 Module</h3><p>创建一个测试项目，使用刚才的 Module：</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">main</span>/</span><br><span class="line">    <span class="selector-tag">main</span><span class="selector-class">.go</span></span><br></pre></td></tr></table></figure>
+
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;github.com/yipwinghong/hello&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    Hello()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>把测试项目初始化为 Module，更新依赖：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go mod init test</span><br><span class="line">go mod tidy</span><br></pre></td></tr></table></figure>
+
+
+
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -1096,9 +1115,23 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 71
+        Total : 73
         </div>
         <!-- search  -->
         
@@ -1114,7 +1147,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/Go_memory-model/" >（译）Go 内存模型</a>
+            <span class="archive-post-date">08/04</span><a class="archive-post-title" href= "/2021/08/04/Go_engineering-standard/" >Go 工程化标准实践</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/Go_memory-model/" >Go 内存模型（译）</a>
         </li>
     
     
@@ -1144,6 +1182,11 @@
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span><a class="archive-post-title" href= "/2021/07/21/Fenix_build-services/" >《凤凰架构》阅读笔记（五）：服务构建与流量治理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/Go_error_handling/" >Go 异常处理</a>
         </li>
     
@@ -1169,17 +1212,17 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >（译）分布式系统模式：Gossip 传播</a>
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >分布式系统模式：Gossip 传播（译）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >（译）分布式系统模式：版本化值</a>
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >分布式系统模式：版本化值（译）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >（译）一致性哈希</a>
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >一致性哈希（译）</a>
         </li>
     
     
@@ -1209,12 +1252,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >（译）如何用图论解决 Secret Santa 问题？</a>
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >如何用图论解决 Secret Santa 问题？（译）</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >（译）把 PostgreSQL 用作数据仓库</a>
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库（译）</a>
         </li>
     
     
@@ -1244,7 +1287,7 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >（译）Java 程序员的 C++</a>
+            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >Java 程序员的 C++（译）</a>
         </li>
     
     
@@ -1294,7 +1337,7 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >（译）选择合适的数据库</a>
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >选择合适的数据库（译）</a>
         </li>
     
     
@@ -1522,11 +1565,11 @@
     
         <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
-    
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
