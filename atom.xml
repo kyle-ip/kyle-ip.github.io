@@ -6,7 +6,7 @@
   <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-08-07T01:46:00.792Z</updated>
+  <updated>2021-08-07T10:11:44.290Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Go 扩展并发原语</title>
+    <link href="https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitive_extentions/"/>
+    <id>https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitive_extentions/</id>
+    <published>2021-08-08T11:42:39.000Z</published>
+    <updated>2021-08-07T10:11:44.290Z</updated>
+    
+    
+    <summary type="html">本文讲述从 Go 标准库或第三方库扩展，实现更多复杂功能的并发原语。</summary>
+    
+    
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="Go" scheme="https://yipwinghong.github.io/tags/Go/"/>
+    
+  </entry>
   
   <entry>
     <title>Go 工程化标准实践</title>
@@ -379,23 +398,6 @@
     
     
     <summary type="html">It hasn&#39;t been an easy time during the first week...= =</summary>
-    
-    
-    
-    
-    <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>基于记忆规律的学习方法</title>
-    <link href="https://yipwinghong.github.io/2021/06/05/2021-06-05_diary/"/>
-    <id>https://yipwinghong.github.io/2021/06/05/2021-06-05_diary/</id>
-    <published>2021-06-05T13:46:57.000Z</published>
-    <updated>2021-07-09T06:51:27.840Z</updated>
-    
-    
-    <summary type="html">《考试脑科学》阅读笔记</summary>
     
     
     

@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Kylo Yip">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Kylo Yip">
+	
+	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="/live2d-widget/autoload.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
+	
+    
+    <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
+    
+    <meta name="description" content="">
+    <meta name="description" content="本文讲述从 Go 标准库或第三方库扩展，实现更多复杂功能的并发原语。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 扩展并发原语">
+<meta property="og:url" content="https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitive_extentions/index.html">
+<meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:description" content="本文讲述从 Go 标准库或第三方库扩展，实现更多复杂功能的并发原语。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-08-08T11:42:39.000Z">
+<meta property="article:modified_time" content="2021-08-07T10:11:44.290Z">
+<meta property="article:author" content="Kylo Yip">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>Go 扩展并发原语 · Kylo&#39;s Notebook</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu header-sidebar-menu-rounded">
+        
+            
+            <i class="fas fa-bars"></i>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>Kylo's Notebook</a>
+    <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >Kylo&#39;s Notebook</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">Go 扩展并发原语</a>
+        </div>
+    </div>
+    
+</header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top back-top-rounded">
+        
+            
+            <i class="fas fa-chevron-up"></i>
+            
+        </div>
+    </div>
+</footer>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:100vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(https://api.ixiaowai.cn/mcapi/mcapi.php)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Go 扩展并发原语
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">5.1k</span>Reading time: <span class="post-count reading-time">21 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/08</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Go-扩展并发原语"><a href="#Go-扩展并发原语" class="headerlink" title="Go 扩展并发原语"></a>Go 扩展并发原语</h1><h2 id="Semaphore-信号量"><a href="#Semaphore-信号量" class="headerlink" title="Semaphore 信号量"></a>Semaphore 信号量</h2><p>信号量表示为使用一个（范围 [0, n] 的）变量实现并发控制的能力。当 goroutine 完成对此信号量等待（wait）时该计数值就减 1，对此信号量释放（release）时，该计数值就加 1。只有当计数器大于 0，等待的 goroutine 才有可能成功返回。</p>
+<blockquote>
+<p>  更复杂的信号量可以使用抽象数据类型代替变量，用来代表复杂的资源类型。</p>
+</blockquote>
+<h3 id="P-V-操作"><a href="#P-V-操作" class="headerlink" title="P/V 操作"></a>P/V 操作</h3><p>信号量支持以下操作：</p>
+<ul>
+<li><p>  初始化：设定初始的资源数量。</p>
+</li>
+<li><p>  P：信号量计数值 -1，如果新值为负，则调用者被阻塞并加入到等待队列中。否则调用者继续执行，并获得一个资源。</p>
+</li>
+<li><p>  V：信号量计数值 +1，如果先前计数值为负，表示当前有等待的 P 操作调用者，则会从等待队列中取出一个等待的调用者唤醒，使之继续执行。</p>
+</li>
+</ul>
+<p>信号量可分为 <strong>计数信号量</strong>（counting semaphre）和 <strong>二进位信号量</strong>（binary semaphore）。计数信号量的计数值可以是任意整数，在特殊的情况下只为 0 或 1，则为二进位信号量，可提供互斥功能。</p>
+<p>因此有时互斥锁也会使用二进位信号量实现（常用于保护一组资源，比如数据库连接池、客户端连接等），此时 P/V 操作相当于互斥锁的 Lock/Unlock。</p>
+<blockquote>
+<p>  在 Windows 中，互斥锁只能由持有锁的线程释放。而二进位信号量则没有这个限制。但对于 Go 而言，互斥锁也可以由非持锁 goroutine 释放，所以在行为上没有严格区别。</p>
+</blockquote>
+<h3 id="标准库实现"><a href="#标准库实现" class="headerlink" title="标准库实现"></a>标准库实现</h3><p>Go 标准库提供的 <code>Mutex</code> 内部使用信号量控制 goroutine 的等待和唤醒，并实现 P/V 操作的函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Mutex <span class="keyword">struct</span> &#123;</span><br><span class="line">    state <span class="keyword">int32</span></span><br><span class="line">    sema  <span class="keyword">uint32</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">runtime_Semacquire</span><span class="params">(s *<span class="keyword">uint32</span>)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">runtime_SemacquireMutex</span><span class="params">(s *<span class="keyword">uint32</span>, lifo <span class="keyword">bool</span>, skipframes <span class="keyword">int</span>)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">runtime_Semrelease</span><span class="params">(s *<span class="keyword">uint32</span>, handoff <span class="keyword">bool</span>, skipframes <span class="keyword">int</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>但只作内部使用，没有封装对外暴露。要使用信号量可以用扩展包 <a target="_blank" rel="noopener" href="https://pkg.go.dev/golang.org/x/sync/semaphore">semaphore</a> 提供的 <code>Weighted</code>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Weighted <span class="keyword">struct</span> &#123;</span><br><span class="line">    size    <span class="keyword">int64</span>         <span class="comment">// 最大资源数</span></span><br><span class="line">    cur     <span class="keyword">int64</span>         <span class="comment">// 当前已被使用的资源</span></span><br><span class="line">    mu      sync.Mutex    <span class="comment">// 互斥锁，对字段的保护</span></span><br><span class="line">    waiters list.List     <span class="comment">// 等待队列</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>提供以下方法：</p>
+<ul>
+<li><p>  <code>Acquire</code>：相当于 P 操作，可一次获取多个资源，如果没有足够多的资源调用者就会被阻塞。第一个参数是 <code>Context</code>，用于增加超时或 cancel 机制。如果正常获取资源就返回 nil；否则返回 <code>ctx.Err()</code> 且信号量不改变。其内部实现需要监控资源是否可用，以及检测 Context 的 Done 是否已关闭。</p>
+</li>
+<li><p>  <code>Release</code>：相当于 V 操作，可将 n 个资源释放、返还给信号量。如果调用该方法时，传递比请求到的数量更大的数值就会 panic。</p>
+</li>
+<li><p>  <code>TryAcquire</code>：尝试不阻塞地获取 n 个资源，要么成功获取 n 个资源返回 true，要么获取失败返回 false。</p>
+</li>
+</ul>
+<p>其中 <code>Acquire</code> 和 <code>Release</code> 的实现：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Weighted)</span> <span class="title">Acquire</span><span class="params">(ctx context.Context, n <span class="keyword">int64</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">    s.mu.Lock()</span><br><span class="line">    <span class="comment">// fast path, 如果有足够的资源，都不考虑 ctx.Done 的状态，将 cur 加上 n 就返回。</span></span><br><span class="line">    <span class="keyword">if</span> s.size-s.cur &gt;= n &amp;&amp; s.waiters.Len() == <span class="number">0</span> &#123;</span><br><span class="line">        s.cur += n</span><br><span class="line">        s.mu.Unlock()</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 如果是不可能完成的任务，请求的资源数大于能提供的最大的资源数</span></span><br><span class="line">    <span class="keyword">if</span> n &gt; s.size &#123;</span><br><span class="line">        s.mu.Unlock()</span><br><span class="line">        <span class="comment">// 依赖 ctx 的状态返回，否则一直等待</span></span><br><span class="line">        &lt;-ctx.Done()</span><br><span class="line">        <span class="keyword">return</span> ctx.Err()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 否则就需要把调用者加入到等待队列中。创建一个 ready chan，以便被通知唤醒。</span></span><br><span class="line">    ready := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">    w := waiter&#123;n: n, ready: ready&#125;</span><br><span class="line">    elem := s.waiters.PushBack(w)</span><br><span class="line">    s.mu.Unlock()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 等待</span></span><br><span class="line">    <span class="keyword">select</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> &lt;-ctx.Done(): <span class="comment">// context的Done被关闭</span></span><br><span class="line">          err := ctx.Err()</span><br><span class="line">          s.mu.Lock()</span><br><span class="line">          <span class="keyword">select</span> &#123;</span><br><span class="line">          <span class="keyword">case</span> &lt;-ready: <span class="comment">// 如果被唤醒了，忽略ctx的状态</span></span><br><span class="line">              err = <span class="literal">nil</span></span><br><span class="line">          <span class="keyword">default</span>:     <span class="comment">// 通知 waiter</span></span><br><span class="line">              isFront := s.waiters.Front() == elem</span><br><span class="line">              s.waiters.Remove(elem)</span><br><span class="line">              <span class="comment">// 通知其它的 waiters，检查是否有足够的资源。</span></span><br><span class="line">              <span class="keyword">if</span> isFront &amp;&amp; s.size &gt; s.cur &#123;</span><br><span class="line">                  s.notifyWaiters()</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          s.mu.Unlock()</span><br><span class="line">          <span class="keyword">return</span> err</span><br><span class="line">      <span class="keyword">case</span> &lt;-ready: <span class="comment">// 被唤醒</span></span><br><span class="line">          <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Weighted)</span> <span class="title">Release</span><span class="params">(n <span class="keyword">int64</span>)</span></span> &#123;</span><br><span class="line">    s.mu.Lock()</span><br><span class="line">    s.cur -= n</span><br><span class="line">    <span class="keyword">if</span> s.cur &lt; <span class="number">0</span> &#123;</span><br><span class="line">      s.mu.Unlock()</span><br><span class="line">      <span class="built_in">panic</span>(<span class="string">&quot;semaphore: released more than held&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    s.notifyWaiters()</span><br><span class="line">    s.mu.Unlock()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Weighted)</span> <span class="title">notifyWaiters</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">      next := s.waiters.Front()</span><br><span class="line">      <span class="keyword">if</span> next == <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">break</span> <span class="comment">// No more waiters blocked.</span></span><br><span class="line">      &#125;</span><br><span class="line">  </span><br><span class="line">      w := next.Value.(waiter)</span><br><span class="line">      <span class="keyword">if</span> s.size-s.cur &lt; w.n &#123;</span><br><span class="line">          <span class="comment">// 避免饥饿，这里还是按照先入先出的方式处理（否则就会优先满足较小的需求，使得大的需求永远不能满足）。</span></span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      &#125;</span><br><span class="line">      s.cur += w.n</span><br><span class="line">      s.waiters.Remove(next)</span><br><span class="line">      <span class="built_in">close</span>(w.ready)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用信号量实现 Worker Pool：</p>
+<ul>
+<li><p>  主 goroutine 是负责任务分发的 dispacher。先请求信号量，获取成功则启动一个 goroutine 处理计算，该 goroutine 会释放信号量（信号量的获取在主 goroutine，释放则在 worker goroutine）；如获取失败就等到有信号量可用时再获取。</p>
+</li>
+<li><p>  在实际应用中如果想等所有 Worker 执行完，可获取最大计数值的信号量（表示所有申请的都已释放）。</p>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">    maxWorkers = runtime.GOMAXPROCS(<span class="number">0</span>)                    <span class="comment">// worker 数量</span></span><br><span class="line">    sema       = semaphore.NewWeighted(<span class="keyword">int64</span>(maxWorkers)) <span class="comment">// 信号量</span></span><br><span class="line">    task       = <span class="built_in">make</span>([]<span class="keyword">int</span>, maxWorkers*<span class="number">4</span>)                <span class="comment">// 任务数</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    ctx := context.Background()</span><br><span class="line">    <span class="keyword">for</span> i := <span class="keyword">range</span> task &#123;</span><br><span class="line">        <span class="comment">// 如果无可用 worker 则会阻塞，直到某个 worker 被释放。</span></span><br><span class="line">        _ := sema.Acquire(ctx, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 启动 worker goroutine。</span></span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> sema.Release(<span class="number">1</span>)</span><br><span class="line">            time.Sleep(<span class="number">100</span> * time.Millisecond) <span class="comment">// 模拟耗时操作</span></span><br><span class="line">            task[i] = i + <span class="number">1</span></span><br><span class="line">        &#125;(i)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 一次请求所有 worker，可确保前面的 worker 都执行完。</span></span><br><span class="line">    <span class="keyword">if</span> err := sema.Acquire(ctx, <span class="keyword">int64</span>(maxWorkers)); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Printf(<span class="string">&quot;获取所有 worker 失败: %v&quot;</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(task)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用信号量需要注意，当公平性和安全性损害会导致程序 panic。常见错误：</p>
+<ul>
+<li><p>  请求资源但没有释放。</p>
+</li>
+<li><p>  释放从未请求的资源。</p>
+</li>
+<li><p>  长时间持有资源（即使不需要）。</p>
+</li>
+<li><p>  不持有资源却直接使用。</p>
+</li>
+<li><p>  使用不同的信号量控制不同的资源时，也可能导致死锁。</p>
+</li>
+</ul>
+<p>因此必须确保按需请求、按量释放。</p>
+<h3 id="使用-Channel-实现"><a href="#使用-Channel-实现" class="headerlink" title="使用 Channel 实现"></a>使用 Channel 实现</h3><p>使用带 buffer 的 Channel 可以实现信号量（其中 P/V 操作以 Lock/Unlock 表示 ，且无法提供一次性申请多个的功能）：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> semaphore <span class="keyword">struct</span> &#123;</span><br><span class="line">    sync.Locker</span><br><span class="line">    ch <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewSemaphore</span><span class="params">(capacity <span class="keyword">int</span>)</span> <span class="title">sync</span>.<span class="title">Locker</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> capacity &lt;= <span class="number">0</span> &#123;</span><br><span class="line">        capacity = <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &amp;semaphore&#123;ch: <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, capacity)&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *semaphore)</span> <span class="title">Lock</span><span class="params">()</span></span> &#123;</span><br><span class="line">    s.ch &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *semaphore)</span> <span class="title">Unlock</span><span class="params">()</span></span> &#123;</span><br><span class="line">    &lt;-s.ch</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于带 buffer 的 Channel 本身就能表示多个资源，更建议直接使用 Channel，除非有必要一次性申请多个。 </p>
+<p>除此之外还有第三方库 <a target="_blank" rel="noopener" href="https://github.com/marusama/semaphore">marusama/semaphore</a>，推荐在资源数量不固定、动态变化的场景使用。</p>
+<h2 id="SingleFlight-请求合并"><a href="#SingleFlight-请求合并" class="headerlink" title="SingleFlight 请求合并"></a>SingleFlight 请求合并</h2><p>多个 goroutine 同时调用同一个函数时，<code>SingleFlight</code> 可限制只有一个 goroutine 调用，当该 goroutine 返回，再把结果返回给其它 goroutine，可减少并发调用数。</p>
+<p>区别于 <code>sync.Once</code> 保证永远只执行一次，<code>SingleFlight</code> 保证多个请求同时调用时只执行一个。前者常用在单次初始化场景，而后者常用于合并并发请求的场景（比如缓存）。尤其当面对类似秒杀等大量并发读时，可有效减缓后端服务压力。</p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p><code>SingleFlight</code> 使用互斥锁 <code>Mutex</code>（提供并发读写保护）和 <code>Map</code>（保存同一个 key 的正在处理请求）实现。其数据结构是 <code>Group</code>，并提供以下方法：</p>
+<ul>
+<li><p>  <code>Do</code>：执行函数并返回其执行结果。需提供用于确保在同时只有一个请求执行的 key，相同 key 的其它请求会等待该执行请求返回结果。指定 <code>fn</code> 无参函数，返回执行结果或 error。<code>Do</code> 方法返回 <code>fn</code> 执行的结果，以另一个返回值 <code>shared</code> 指示是否返回给多个请求。</p>
+</li>
+<li><p>  <code>DoChan</code>：类似 <code>Do</code>，区别是返回一个 chan。等 <code>fn</code> 函数执行完，可从该 chan 接收结果。</p>
+</li>
+<li><p>  <code>Forget</code>：告知 <code>Group</code> 忘记指定 key，之后该 key 请求会执行 <code>fn</code>，而不是等待前一个未完成的 <code>fn</code> 函数返回结果。</p>
+</li>
+</ul>
+<p><code>SingleFlight</code> 内部使用辅助结构 <code>call</code>，代表正在执行、或已完成的 <code>fn</code> 函数请求。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 表示一个正在处理或已经处理完的请求。</span></span><br><span class="line"><span class="keyword">type</span> call <span class="keyword">struct</span> &#123;</span><br><span class="line">    wg sync.WaitGroup</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 表示处理完的值，在 waitgroup 完成前只会写一次，在 waitgroup 完成后读取。</span></span><br><span class="line">    val <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">    err error</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指示当 call 在处理时是否要忘掉这个 key。</span></span><br><span class="line">    forgotten <span class="keyword">bool</span></span><br><span class="line">    dups  <span class="keyword">int</span></span><br><span class="line">    chans []<span class="keyword">chan</span>&lt;- Result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 表示一个 singleflight 对象</span></span><br><span class="line"><span class="keyword">type</span> Group <span class="keyword">struct</span> &#123;</span><br><span class="line">    mu sync.Mutex       <span class="comment">// protects m</span></span><br><span class="line">    m  <span class="keyword">map</span>[<span class="keyword">string</span>]*call <span class="comment">// lazily initialized</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Do</code> 方法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(g *Group)</span> <span class="title">Do</span><span class="params">(key <span class="keyword">string</span>, fn <span class="keyword">func</span>()</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span>) <span class="params">(v <span class="keyword">interface</span>&#123;&#125;, err error, shared <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">    g.mu.Lock()</span><br><span class="line">    <span class="keyword">if</span> g.m == <span class="literal">nil</span> &#123;</span><br><span class="line">        g.m = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]*call)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> c, ok := g.m[key]; ok &#123;     <span class="comment">// 如果已存在相同的 key：等待该 key 的第一个请求完成，使用第一个 key 的请求结果返回。</span></span><br><span class="line">        c.dups++</span><br><span class="line">        g.mu.Unlock()</span><br><span class="line">        c.wg.Wait()              </span><br><span class="line">        <span class="keyword">return</span> c.val, c.err, <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    c := <span class="built_in">new</span>(call)                 <span class="comment">// 第一个请求，创建一个 call</span></span><br><span class="line">    c.wg.Add(<span class="number">1</span>)</span><br><span class="line">    g.m[key] = c                   <span class="comment">// 加入到 key map 中</span></span><br><span class="line">    g.mu.Unlock()</span><br><span class="line">    g.doCall(c, key, fn)           <span class="comment">// 调用方法</span></span><br><span class="line">    <span class="keyword">return</span> c.val, c.err, c.dups &gt; <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(g *Group)</span> <span class="title">doCall</span><span class="params">(c *call, key <span class="keyword">string</span>, fn <span class="keyword">func</span>()</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span>)</span> &#123;</span><br><span class="line">    c.val, c.err = fn()</span><br><span class="line">    c.wg.Done()</span><br><span class="line">    g.mu.Lock()</span><br><span class="line">    <span class="comment">// 默认情况下 forgotten==false，delete 会被调用。即第一个请求完成后，后续同一个 key 的请求又重新开始 fn 的调用。</span></span><br><span class="line">    <span class="keyword">if</span> !c.forgotten &#123; </span><br><span class="line">        <span class="built_in">delete</span>(g.m, key)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> _, ch := <span class="keyword">range</span> c.chans &#123;</span><br><span class="line">        ch &lt;- Result&#123;c.val, c.err, c.dups &gt; <span class="number">0</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    g.mu.Unlock()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>在 Go 标准库中也用到 <code>SingleFlight</code>：</p>
+<ul>
+<li><p>  在 net/lookup.go 中，如果同时有查询同一个 host 的请求，<code>lookupGroup</code> 会把请求合并。</p>
+</li>
+<li><p>  Go 在查询仓库版本信息时，将并发的请求合并成 1 个。</p>
+</li>
+</ul>
+<p><code>SingleFlight</code> 最适合用于解决缓存击穿：并发的请求可以共享同一个结果，避免大量请求不经缓存直接落到数据库上。而且由于是缓存查询，不用考虑幂等性问题。比如缓存框架 groupcache：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(g *Group)</span> <span class="title">Do</span><span class="params">(key <span class="keyword">string</span>, fn <span class="keyword">func</span>()</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span>) <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Group <span class="keyword">struct</span> &#123;    </span><br><span class="line">    <span class="comment">// loadGroup ensures that each key is only fetched once</span></span><br><span class="line">    <span class="comment">// (either locally or remotely), regardless of the number of</span></span><br><span class="line">    <span class="comment">// concurrent callers.</span></span><br><span class="line">    loadGroup flightGroup</span><br><span class="line">        <span class="comment">// ......</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(g *Group)</span> <span class="title">load</span><span class="params">(ctx context.Context, key <span class="keyword">string</span>, dest Sink)</span> <span class="params">(value ByteView, destPopulated <span class="keyword">bool</span>, err error)</span></span> &#123;</span><br><span class="line">    viewi, err := g.loadGroup.Do(key, <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span></span>  &#123;</span><br><span class="line">      <span class="comment">// 从 cache、peer、local 尝试查询 cache</span></span><br><span class="line">        <span class="keyword">return</span> value, <span class="literal">nil</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">if</span> err == <span class="literal">nil</span> &#123;</span><br><span class="line">        value = viewi.(ByteView)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其它项目比如 Cockroachdb、CoreDNS 都有 <code>SingleFlight</code> 的应用。但这一般只用于并发读场景，或是设置单一值的并发写场景。而对于并发的增减写操作则不合适（存在幂等性问题）。</p>
+<h2 id="CyclicBarrier-循环栅栏"><a href="#CyclicBarrier-循环栅栏" class="headerlink" title="CyclicBarrier 循环栅栏"></a>CyclicBarrier 循环栅栏</h2><p><code>CyclicBarrier</code> 由第三方库 <a target="_blank" rel="noopener" href="https://github.com/marusama/cyclicbarrier">marusama/cyclicbarrier</a> 提供，类似 <code>WaitGroup</code>，常用于等待多个 goroutine 并发执行，而前者更适用于 <strong>固定数量的 goroutine 等待同一执行点</strong> 的场景，在放行 goroutine 后还能更方便地重复利用（在重用时后者还要处理重置计数值时的并发问题）；后者更适用于 <strong>一个 goroutine 等待一组 goroutine 到达同一执行点</strong> 的场景。</p>
+<p>两者对应关系：</p>
+<table>
+<thead>
+<tr>
+<th>CyclicBarrier</th>
+<th>WaitGroup</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>New(n)</td>
+<td>var wg WaitGroup(n)<br />wg.Add(n)</td>
+</tr>
+<tr>
+<td>Await</td>
+<td>wg.Done<br />wg.Wait<br />wg.Add(b)</td>
+</tr>
+</tbody></table>
+<h3 id="实现原理-1"><a href="#实现原理-1" class="headerlink" title="实现原理"></a>实现原理</h3><p><code>CyclicBarrier</code> 的初始化方法：</p>
+<ul>
+<li><p>  <code>New</code>：只需要一个参数指定参与者数量。</p>
+</li>
+<li><p>  <code>NewWithAction</code>：额外提供一个函数，用于在每次到达执行点时执行一次。时间点最后一个参与者到达后、其它参与者未被放行前。可利用它实现放行前的共享状态更新等操作。</p>
+</li>
+</ul>
+<p><code>CyclicBarrier</code> 定义如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> CyclicBarrier <span class="keyword">interface</span> &#123;</span><br><span class="line">    <span class="comment">// 等待所有的参与者到达，如果被 ctx.Done() 中断会返回 ErrBrokenBarrier</span></span><br><span class="line">    Await(ctx context.Context) error</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 重置循环栅栏到初始化状态。如果当前有等待者，那么它们会返回ErrBrokenBarrier</span></span><br><span class="line">    Reset()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回当前等待者的数量</span></span><br><span class="line">    GetNumberWaiting() <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 参与者的数量</span></span><br><span class="line">    GetParties() <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 循环栅栏是否处于中断状态</span></span><br><span class="line">    IsBroken() <span class="keyword">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="基本应用"><a href="#基本应用" class="headerlink" title="基本应用"></a>基本应用</h3><p>在使用时循环栅栏的参与者只需调用 <code>Await</code> 等待，当所有参与者到达后再执行下一步。当执行下一步时，循环栅栏的状态又恢复到初始状态，可迎接下一轮同样数量的参与者。</p>
+<p>假设需求如下：</p>
+<ul>
+<li><p>  工厂提供多条生产线，每条负责生产氧原子（N 条）或氢原子（2N 条），各由一个 goroutine 负责。</p>
+</li>
+<li><p>  通过一个栅栏，只有一个氧原子和两个氢原子准备好，才能生成出一个水分子，否则所有生产线都处于等待状态。</p>
+</li>
+<li><p>  水分子是逐个按照顺序产生的（原子种类和数量有要求）。</p>
+</li>
+</ul>
+<p>需要引入：</p>
+<ul>
+<li><p>  信号量 semaH：控制氢原子。空槽数资源数设置为 2。</p>
+</li>
+<li><p>  信号量 semaO：控制氧原子。空槽数资源数设置为 1。</p>
+</li>
+<li><p>  循环栅栏：等待两个氢原子和一个氧原子填补空槽，直到任务完成。</p>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> H2O <span class="keyword">struct</span> &#123;</span><br><span class="line">    semaH *semaphore.Weighted</span><br><span class="line">    semaO *semaphore.Weighted</span><br><span class="line">    b     cyclicbarrier.CyclicBarrier</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">New</span><span class="params">()</span> *<span class="title">H2O</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &amp;H2O&#123;</span><br><span class="line">        semaH: semaphore.NewWeighted(<span class="number">2</span>),</span><br><span class="line">        semaO: semaphore.NewWeighted(<span class="number">1</span>),</span><br><span class="line">        b:     cyclicbarrier.New(<span class="number">3</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>氢原子与氧原子的流水线：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h2o *H2O)</span> <span class="title">hydrogen</span><span class="params">(releaseHydrogen <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">    h2o.semaH.Acquire(context.Background(), <span class="number">1</span>)</span><br><span class="line">    releaseHydrogen()                     <span class="comment">// 输出 H</span></span><br><span class="line">    h2o.b.Await(context.Background())     <span class="comment">// 等待栅栏放行</span></span><br><span class="line">    h2o.semaH.Release(<span class="number">1</span>)                  <span class="comment">// 释放氢原子空槽</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h2o *H2O)</span> <span class="title">oxygen</span><span class="params">(releaseOxygen <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">    h2o.semaO.Acquire(context.Background(), <span class="number">1</span>)</span><br><span class="line">    releaseOxygen()                       <span class="comment">// 输出 O</span></span><br><span class="line">    h2o.b.Await(context.Background())     <span class="comment">// 等待栅栏放行</span></span><br><span class="line">    h2o.semaO.Release(<span class="number">1</span>)                  <span class="comment">// 释放氢原子空槽</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestWaterFactory</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 存放水分子结果。</span></span><br><span class="line">    <span class="keyword">var</span> ch <span class="keyword">chan</span> <span class="keyword">string</span></span><br><span class="line">    releaseHydrogen := <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        ch &lt;- <span class="string">&quot;H&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    releaseOxygen := <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        ch &lt;- <span class="string">&quot;O&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 每个 goroutine 并发产生一个原子。</span></span><br><span class="line">    <span class="keyword">var</span> N = <span class="number">100</span></span><br><span class="line">    ch = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>, N*<span class="number">3</span>)</span><br><span class="line">    h2o := New()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 等待所有 goroutine 完成。</span></span><br><span class="line">    <span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">    wg.Add(N * <span class="number">3</span>)</span><br><span class="line">   </span><br><span class="line">    <span class="comment">// 氢原子 goroutine。</span></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">2</span>*N; i++ &#123;</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">            time.Sleep(time.Duration(rand.Intn(<span class="number">100</span>)) * time.Millisecond)</span><br><span class="line">            h2o.hydrogen(releaseHydrogen)</span><br><span class="line">            wg.Done()</span><br><span class="line">        &#125;()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 氧原子 goroutine。</span></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; N; i++ &#123;</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">            time.Sleep(time.Duration(rand.Intn(<span class="number">100</span>)) * time.Millisecond)</span><br><span class="line">            h2o.oxygen(releaseOxygen)</span><br><span class="line">            wg.Done()</span><br><span class="line">        &#125;()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//等待所有的 goroutine 执行完</span></span><br><span class="line">    wg.Wait()</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(ch) != N*<span class="number">3</span> &#123;</span><br><span class="line">        t.Fatalf(<span class="string">&quot;expect %d atom but got %d&quot;</span>, N*<span class="number">3</span>, <span class="built_in">len</span>(ch))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 分组检查结果。</span></span><br><span class="line">    <span class="keyword">var</span> s = <span class="built_in">make</span>([]<span class="keyword">string</span>, <span class="number">3</span>)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; N; i++ &#123;</span><br><span class="line">        s[<span class="number">0</span>] = &lt;-ch</span><br><span class="line">        s[<span class="number">1</span>] = &lt;-ch</span><br><span class="line">        s[<span class="number">2</span>] = &lt;-ch</span><br><span class="line">        sort.Strings(s)</span><br><span class="line">        water := s[<span class="number">0</span>] + s[<span class="number">1</span>] + s[<span class="number">2</span>]</span><br><span class="line">        <span class="keyword">if</span> water != <span class="string">&quot;HHO&quot;</span> &#123;</span><br><span class="line">            t.Fatalf(<span class="string">&quot;expect a water molecule but got %s&quot;</span>, water)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ErrGroup-子任务编排"><a href="#ErrGroup-子任务编排" class="headerlink" title="ErrGroup 子任务编排"></a>ErrGroup 子任务编排</h2><p><code>ErrGroup</code> 在 Go 的扩展库中提供，常用于将一个通用的父任务拆成几个小任务并发执行的场景。相比起 <code>WaitGroup</code> 其功能更丰富：</p>
+<ul>
+<li><p>  和 <code>Context</code> 集成。</p>
+</li>
+<li><p>  error 向上传播，可把子任务的错误传递给 <code>Wait</code> 的调用者。</p>
+</li>
+</ul>
+<p>提供三个方法：</p>
+<ul>
+<li><p>  <code>WithContext</code>：传入 <code>Context</code> 以创建 <code>Group</code> 对象。其返回一个 <code>Group</code> 实例以及一个使用 <code>context.WithCancel(ctx)</code> 生成的新 <code>Context</code>。一旦有一个子任务返回错误或是 <code>Wait</code> 调用返回，新 <code>Context</code> 就会被 <code>cancel</code>。如果传递参数是可 <code>cancel</code> 的 <code>Context</code>，则其被 <code>cancel</code> 时不会终止正在执行的子任务。</p>
+</li>
+<li><p>  <code>Go</code>：传入一个无参、带 error 返回值的函数，创建 goroutine 执行子任务。</p>
+</li>
+<li><p>  <code>Wait</code>：阻塞直到所有子任务完成后才返回。如多个子任务返回错误，则只会返回第一个出现的错误，所有子任务都执行成功则返回 nil。</p>
+</li>
+</ul>
+<p>默认只返回第一个错误，如要实现收集所有子任务执行结果，可使用全局变量：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> g errgroup.Group</span><br><span class="line"><span class="keyword">var</span> result = <span class="built_in">make</span>([]error, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第一个子任务执行成功。</span></span><br><span class="line">g.Go(<span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">    time.Sleep(<span class="number">5</span> * time.Second)</span><br><span class="line">    fmt.Println(<span class="string">&quot;exec #1&quot;</span>)</span><br><span class="line">    result[<span class="number">0</span>] = <span class="literal">nil</span> <span class="comment">// 保存成功或者失败的结果</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第二个子任务执行失败。</span></span><br><span class="line">g.Go(<span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">    time.Sleep(<span class="number">10</span> * time.Second)</span><br><span class="line">    fmt.Println(<span class="string">&quot;exec #2&quot;</span>)</span><br><span class="line">    result[<span class="number">1</span>] = errors.New(<span class="string">&quot;failed to exec #2&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> result[<span class="number">1</span>]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第三个子任务执行成功。</span></span><br><span class="line">g.Go(<span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">    time.Sleep(<span class="number">15</span> * time.Second)</span><br><span class="line">    fmt.Println(<span class="string">&quot;exec #3&quot;</span>)</span><br><span class="line">    result[<span class="number">2</span>] = <span class="literal">nil</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// err 为第一个错误。</span></span><br><span class="line"><span class="keyword">if</span> err := g.Wait(); err == <span class="literal">nil</span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">&quot;Successfully exec all. result: %v\n&quot;</span>, result)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">&quot;failed: %v\n&quot;</span>, result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现-Pipeline"><a href="#实现-Pipeline" class="headerlink" title="实现 Pipeline"></a>实现 Pipeline</h3><p>官方文档提供的 <a target="_blank" rel="noopener" href="https://godoc.org/golang.org/x/sync/errgroup#example-Group--Pipeline">例子</a>：一个子任务遍历目录下的文件，把遍历出的文件交给 20 个 goroutine、并行计算文件的 md5。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    m, err := MD5All(context.Background(), <span class="string">&quot;.&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> k, sum := <span class="keyword">range</span> m &#123;</span><br><span class="line">        fmt.Printf(<span class="string">&quot;%s:\t%x\n&quot;</span>, k, sum)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> result <span class="keyword">struct</span> &#123;</span><br><span class="line">    path <span class="keyword">string</span></span><br><span class="line">    sum  [md5.Size]<span class="keyword">byte</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 遍历根目录下所有的文件和子目录，计算它们的 md5 值。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MD5All</span><span class="params">(ctx context.Context, root <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">map</span>[<span class="keyword">string</span>][md5.Size]<span class="keyword">byte</span>, error)</span></span> &#123;</span><br><span class="line">    g, ctx := errgroup.WithContext(ctx)</span><br><span class="line">    paths := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 遍历文件路径：写入 paths。</span></span><br><span class="line">    g.Go(<span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">        <span class="keyword">defer</span> <span class="built_in">close</span>(paths)</span><br><span class="line">        <span class="keyword">return</span> filepath.Walk(root, <span class="function"><span class="keyword">func</span><span class="params">(path <span class="keyword">string</span>, info os.FileInfo, err error)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">            <span class="comment">// ... 将文件路径放入 paths</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 并行从 paths 取出文件、计算 md5，将结果写入 c。</span></span><br><span class="line">    c := <span class="built_in">make</span>(<span class="keyword">chan</span> result)</span><br><span class="line">    <span class="keyword">const</span> numDigesters = <span class="number">20</span></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; numDigesters; i++ &#123;</span><br><span class="line">        g.Go(<span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">            <span class="keyword">for</span> path := <span class="keyword">range</span> paths &#123; <span class="comment">// 遍历直到 paths chan 被关闭</span></span><br><span class="line">                <span class="comment">// ... 计算 path 的 md5 值，放入 c 中。</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 等待遍历目录和计算 md5 的 goroutine 执行完成，关闭 c。</span></span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        g.Wait()</span><br><span class="line">        <span class="built_in">close</span>(c)</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 md5 结果从 chan 中读取到 map，直到 c 被关闭。</span></span><br><span class="line">    m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>][md5.Size]<span class="keyword">byte</span>)</span><br><span class="line">    <span class="keyword">for</span> r := <span class="keyword">range</span> c &#123; </span><br><span class="line">        m[r.path] = r.sum</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 再次调用 Wait，依然可以得到 group 的 error 信息</span></span><br><span class="line">    <span class="keyword">if</span> err := g.Wait(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> m, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>ErrGroup</code> 也存在一些问题：如果无限制地直接调用 <code>Go</code> 方法，就会创建出非常多 goroutine，会带来调度和 GC 的压力、占用更多内存。当前 Go 运行时创建的 g 对象只会增长和重用，不会回收。在高并发场景下要尽可能减少 goroutine 的使用（比如使用 Work Pool 或类似 <a target="_blank" rel="noopener" href="https://github.com/containerd/stargz-snapshotter/pull/157">containerd/stargz-snapshotter</a> 的方案，信号量的资源数就是可并行的 goroutine 的数量）。</p>
+<h3 id="扩展库"><a href="#扩展库" class="headerlink" title="扩展库"></a>扩展库</h3><p>很多在 Go 官方 <code>ErrGroup</code> 基础上进行扩展、或自行实现分组功能的第三方库，提供了更多更丰富的功能：</p>
+<ul>
+<li><p>  <a target="_blank" rel="noopener" href="https://pkg.go.dev/github.com/bilibili/kratos/pkg/sync/errgroup">bilibili/errgroup</a>：可以使用固定数量的 goroutine 处理子任务。并提供了 cancel（失败的子任务可以 cancel 所有正在执行任务）和 recover（把 panic 的堆栈信息放到 error 中，避免子任务 panic 导致的程序崩溃）功能。但一旦设置了并发数，超过并发数的子任务需要等到调用者调用 <code>Wait</code> 之后才执行（而不是 goroutine 空闲下来就自动执行）。而且在高并发下如果任务数大于 goroutine 数，且任务被集中加入到 Group 中，该库会把子任务加入到一个非线程安全的数组。</p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://github.com/neilotoole/errgroup">neilotoole/errgroup</a>：对标准库 <code>WaitGroup</code> 的扩展。其 <code>Wait</code> 方法可返回一或多个 error。子任务在调用 <code>Done</code> 之前可把自己的 error 信息设置给 <code>ErrGroup</code>。在 <code>Wait</code> 返回时，把这些 error 信息返回给调用者。</p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://github.com/go-pkgz/syncs">go-pkgz/syncs</a>：提供了 <code>SizedGroup</code> 和 <code>ErrSizedGroup</code>，支持直接控制子任务的并发数（而不是 goroutine 数），并提供相应的 failfast 的错误处理能力。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/vardius/gollback">vardius/gollback</a>：用于处理一组子任务的执行，且解决了 <code>ErrGroup</code> 收集子任务返回结果的痛点。其提供三个方法：</p>
+<ul>
+<li><p>  <code>All</code>：等待所有的异步函数都执行完才返回执行结果和错误信息，且返回结果的顺序与传入函数的顺序保持一致。</p>
+</li>
+<li><p>  <code>Race</code>：与 <code>All</code> 方法类似，但在使用时只要一个异步函数执行成功就马上返回，不会返回所有的子任务信息。只有全部失败才返回最后一个 error 信息。</p>
+</li>
+<li><p>  <code>Retry</code>：执行一个子任务，执行失败就会尝试一定次数（为 0 则一致尝试直到成功），如一直不成功就会返回错误信息 ，否则它会立即返回。</p>
+</li>
+</ul>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://github.com/AaronJan/Hunch">AaronJan/Hunch</a>：和 gollback 类似，但提供的方法更多（<code>All</code>、<code>Take</code>、<code>Last</code>、<code>Retry</code>、<code>Waterfall</code> 等）。</p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://github.com/mdlayher/schedgroup">mdlayher/schedgroup</a>：提供与时间相关、处理一组 goroutine 的并发原语 schedgroup，可指定任务在某时间后执行（提供 <code>Delay</code>、<code>Schedule</code>、<code>Wait</code> 等方法）。</p>
+</li>
+</ul>
+<h2 id="分布式并发原语：Leader-选举、互斥锁和读写锁"><a href="#分布式并发原语：Leader-选举、互斥锁和读写锁" class="headerlink" title="分布式并发原语：Leader 选举、互斥锁和读写锁"></a>分布式并发原语：Leader 选举、互斥锁和读写锁</h2><p>…</p>
+<h2 id="分布式并发原语：队列、栅栏、STM"><a href="#分布式并发原语：队列、栅栏、STM" class="headerlink" title="分布式并发原语：队列、栅栏、STM"></a>分布式并发原语：队列、栅栏、STM</h2><p>…</p>
+<p>待续。</p>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/08/04/Go_engineering-standard/" title= "Go 工程化标准实践">
+                    <div class="prevTitle">Go 工程化标准实践</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+     
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+</main>
+
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:100vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Go-%E6%89%A9%E5%B1%95%E5%B9%B6%E5%8F%91%E5%8E%9F%E8%AF%AD"><span class="toc-number">1.</span> <span class="toc-text">Go 扩展并发原语</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="toc-number">1.1.</span> <span class="toc-text">Semaphore 信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#P-V-%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.1.</span> <span class="toc-text">P&#x2F;V 操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%BA%93%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.1.2.</span> <span class="toc-text">标准库实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Channel-%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.1.3.</span> <span class="toc-text">使用 Channel 实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SingleFlight-%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6"><span class="toc-number">1.2.</span> <span class="toc-text">SingleFlight 请求合并</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.2.2.</span> <span class="toc-text">应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CyclicBarrier-%E5%BE%AA%E7%8E%AF%E6%A0%85%E6%A0%8F"><span class="toc-number">1.3.</span> <span class="toc-text">CyclicBarrier 循环栅栏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%BA%94%E7%94%A8"><span class="toc-number">1.3.2.</span> <span class="toc-text">基本应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ErrGroup-%E5%AD%90%E4%BB%BB%E5%8A%A1%E7%BC%96%E6%8E%92"><span class="toc-number">1.4.</span> <span class="toc-text">ErrGroup 子任务编排</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-Pipeline"><span class="toc-number">1.4.1.</span> <span class="toc-text">实现 Pipeline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%BA%93"><span class="toc-number">1.4.2.</span> <span class="toc-text">扩展库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%B9%B6%E5%8F%91%E5%8E%9F%E8%AF%AD%EF%BC%9ALeader-%E9%80%89%E4%B8%BE%E3%80%81%E4%BA%92%E6%96%A5%E9%94%81%E5%92%8C%E8%AF%BB%E5%86%99%E9%94%81"><span class="toc-number">1.5.</span> <span class="toc-text">分布式并发原语：Leader 选举、互斥锁和读写锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%B9%B6%E5%8F%91%E5%8E%9F%E8%AF%AD%EF%BC%9A%E9%98%9F%E5%88%97%E3%80%81%E6%A0%85%E6%A0%8F%E3%80%81STM"><span class="toc-number">1.6.</span> <span class="toc-text">分布式并发原语：队列、栅栏、STM</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 74
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/Go_concurrency_primitive_extentions/" >Go 扩展并发原语</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/04</span><a class="archive-post-title" href= "/2021/08/04/Go_engineering-standard/" >Go 工程化标准实践</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/Go_memory-model/" >Go 内存模型（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span><a class="archive-post-title" href= "/2021/07/28/Go_channel-applications/" >Go Channel 应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2021/07/23/Fenix_transparent-multilevel-diversion-system/" >《凤凰架构》阅读笔记（四）：透明多级分流系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2021/07/22/Fenix_transaction/" >《凤凰架构》阅读笔记（三）：事务处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span><a class="archive-post-title" href= "/2021/07/21/Fenix_access-remote-service/" >《凤凰架构》阅读笔记（二）：访问远程服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span><a class="archive-post-title" href= "/2021/07/21/Fenix_architecture-evolution/" >《凤凰架构》阅读笔记（一）：软件架构演进</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span><a class="archive-post-title" href= "/2021/07/21/Fenix_build-services/" >《凤凰架构》阅读笔记（五）：服务构建与流量治理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/Go_error_handling/" >Go 异常处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservices/" >微服务概览与治理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/Algorithm_max-flow-problem/" >最大流问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >分布式系统模式：Gossip 传播（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >分布式系统模式：版本化值（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >一致性哈希（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span><a class="archive-post-title" href= "/2021/06/17/Go_concurrency_primitives/" >Go 并发原语</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/13</span><a class="archive-post-title" href= "/2021/06/13/Go_cheat-sheet/" >Go Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/06</span><a class="archive-post-title" href= "/2021/06/06/2021-06-06_diary/" >Weekly Summary (2021-05-31_2021-06-06)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/05</span><a class="archive-post-title" href= "/2021/06/05/2021-06-05_diary/" >基于记忆规律的学习方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2021/05/31/2021-05-31_diary/" >2021 下半年工作学习安排</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >如何用图论解决 Secret Santa 问题？（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span><a class="archive-post-title" href= "/2021/04/28/OS_linux-memory-monitoring/" >Linux 内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2021/04/20/OS_linux-io-monitoring/" >Linux I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2021/04/10/OS_linux-cpu-monitoring/" >Linux CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span><a class="archive-post-title" href= "/2021/04/05/OS_linux-network-monitoring/" >Linux 网络原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_system_initialization/" >Linux - 架构与系统初始化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >Java 程序员的 C++（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2021/02/24/DDIA_note-13/" >《DDIA》阅读笔记（九）：一致性与共识（共识问题）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2021/02/21/2021-02-21_diary/" >近期工作学习规划</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2021/02/19/DDIA_note-12/" >《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2021/02/13/DDIA_note-11/" >《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span><a class="archive-post-title" href= "/2021/02/06/DDIA_note-10/" >《DDIA》阅读笔记（八）：分布式系统的挑战</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2021/01/27/DDIA_note-9/" >《DDIA》阅读笔记（七）：事务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2021/01/22/DDIA_note-8/" >《DDIA》阅读笔记（六）：数据分区</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-7/" >《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2021/01/20/DDIA_note-6/" >《DDIA》阅读笔记（五）：数据复制（多主节点）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >选择合适的数据库（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2021/01/09/DDIA_note-5/" >《DDIA》阅读笔记（五）：数据复制（单主节点）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2021/01/01/DB_tree-table-design-summary/" >树形表结构设计总结</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2020/12/19/DDIA_note-4/" >《DDIA》阅读笔记（四）：数据编码与演化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2020/12/13/DDIA_note-3/" >《DDIA》阅读笔记（三）：数据存储与检索</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span><a class="archive-post-title" href= "/2020/12/04/DDIA_note-2/" >《DDIA》阅读笔记（二）：数据模型与查询语言</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2020/12/02/DDIA_note-1/" >《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2020/10/08/Maven_external_dependencies_management/" >Maven 打包依赖外置</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2020/10/04/JVM_prod-analysis-cmd/" >Java 应用常用调试分析方法总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_cheat-sheet/" >Kafka Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2020/08/09/Arthas_cheat-sheet/" >Arthas Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2020/07/12/Java_override-and-bridge-method/" >Java 多态、重写与桥接方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/JVM_java-memory-area/" >Java 内存区域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/28</span><a class="archive-post-title" href= "/2020/05/28/DB_data-warehouse-design-basic/" >数据仓库设计基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span><a class="archive-post-title" href= "/2020/04/08/2020-04-08_diary/" >关于使用思维导图做笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href= "/2020/03/28/Algorithm_leetcode-high-frequency-problems/" >LeetCode 高频面试题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href= "/2020/03/06/InfoSecty_personal-infomation-security-guide/" >個人信息安全保護指南</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2020/02/22/2020-02-22_diary/" >免费 JetBrains 全家桶</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/16</span><a class="archive-post-title" href= "/2020/02/16/Nginx_cheat-sheet/" >Nginx Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_cheat-sheet/" >Git Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_cheat-sheet/" >Docker & K8S Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2020/02/03/JVM_jstat-monitor-analysis/" >JVM jstat 监控分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/JVM_GC-log-analysis/" >JVM GC 日志分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2020/01/01/JVM_mindmap/" >Java 虚拟机与并发编程</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span><a class="archive-post-title" href= "/2019/12/05/Design_design-patterns/" >设计模式与设计原则</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2019/10/04/Python_async-programming/" >Python 异步编程总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2019/09/19/Python_data-structure/" >Python 数据结构应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2019/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2019/06/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2019/06/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2019/05/30/Vue_user-guide-4/" >Vue 学习笔记：前端路由、请求发送和状态管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/24</span><a class="archive-post-title" href= "/2019/05/24/Vue_user-guide-3/" >Vue 学习笔记：组件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span><a class="archive-post-title" href= "/2019/05/23/Vue_user-guide-2/" >Vue 学习笔记（2）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Vue_user-guide-1/" >Vue 学习笔记（1）</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
+    
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
+    
+        <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《数据密集型应用系统设计》阅读笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="《凤凰架构》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《凤凰架构》阅读笔记</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Kylo Yip"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
