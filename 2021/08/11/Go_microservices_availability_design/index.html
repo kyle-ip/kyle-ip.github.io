@@ -25,35 +25,26 @@
     <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
-    <meta name="description" content="原文链接：https:&#x2F;&#x2F;www.kenneth-truyers.net&#x2F;2016&#x2F;10&#x2F;13&#x2F;git-nosql-database&#x2F;amp">
-<meta property="og:type" content="website">
-<meta property="og:title" content="作为 NoSql 数据库的 Git">
-<meta property="og:url" content="https://yipwinghong.github.io/DB_git-nosql-database.html">
+    <meta name="description" content="系统的可用性设计，主要包括隔离、超时、限流、降级、重试、负载均衡等方面。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务可用性设计">
+<meta property="og:url" content="https://yipwinghong.github.io/2021/08/11/Go_microservices_availability_design/index.html">
 <meta property="og:site_name" content="Kylo&#39;s Notebook">
-<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;www.kenneth-truyers.net&#x2F;2016&#x2F;10&#x2F;13&#x2F;git-nosql-database&#x2F;amp">
+<meta property="og:description" content="系统的可用性设计，主要包括隔离、超时、限流、降级、重试、负载均衡等方面。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image.png">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-6.png">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-15.png">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-16.png">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-17.png">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-18.png">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-19.png">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image55_thumb.png">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-20.png">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-21.png">
-<meta property="og:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-22.png">
-<meta property="article:published_time" content="2021-05-25T08:41:00.000Z">
-<meta property="article:modified_time" content="2021-06-21T23:57:57.481Z">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservices_availability_design.assets/image-20210808160550587.png">
+<meta property="article:published_time" content="2021-08-11T13:42:39.000Z">
+<meta property="article:modified_time" content="2021-08-08T15:45:11.935Z">
 <meta property="article:author" content="Kylo Yip">
-<meta property="article:tag" content="数据库">
 <meta property="article:tag" content="技术">
+<meta property="article:tag" content="Go">
+<meta property="article:tag" content="微服务">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.kenneth-truyers.net/content/images/2016/10/image.png">
+<meta name="twitter:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservices_availability_design.assets/image-20210808160550587.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>作为 NoSql 数据库的 Git · Kylo&#39;s Notebook</title>
+    <title>微服务可用性设计 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -236,6 +227,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -258,6 +251,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>Kylo's Notebook</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >Kylo&#39;s Notebook</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">微服务可用性设计</a>
+        </div>
+    </div>
     
 </header>
     
@@ -282,24 +286,78 @@
 
 
 
+
+height:100vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(https://api.ixiaowai.cn/mcapi/mcapi.php)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            微服务可用性设计
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "微服务">微服务</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">5.8k</span>Reading time: <span class="post-count reading-time">20 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/11</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -402,160 +460,394 @@
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <blockquote>
-<p>原文链接：<a target="_blank" rel="noopener" href="https://tanelpoder.com/posts/reasons-why-select-star-is-bad-for-sql-performance">Reasons why SELECT * is bad for SQL performance</a></p>
-</blockquote>
-<h1 id="作为-NoSql-数据库的-Git"><a href="#作为-NoSql-数据库的-Git" class="headerlink" title="作为 NoSql 数据库的 Git"></a>作为 NoSql 数据库的 Git</h1><p>Git 的官方手册指出，它是一个愚蠢的内容跟踪器。Git 可能是世界上使用最广泛的版本控制系统，奇怪的是它没有将自己描述为源代码控制系统。</p>
-<p>而实际上使用 Git 可以跟踪任何类型的内容，例如创建一个基于 Git 的 NoSQL 数据库。</p>
-<p>官方手册说它“愚蠢”的原因是 Git 不对用户存储的内容做任何假设，底层的 Git 模型是相当基本的。本文打算探讨将 Git 用作 NoSQL 数据库（键值存储）的可能性，即可以将文件系统用作数据存储，然后使用 <code>git add</code> 和 <code>git commit</code> 来保存文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> saving a document</span> </span><br><span class="line">echo &#x27;&#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth&quot;&#125;&#x27; &gt; 1.json </span><br><span class="line">git add 1.json </span><br><span class="line">git commit -m &quot;added a file&quot; </span><br><span class="line"><span class="meta">#</span><span class="bash"> reading a document</span> </span><br><span class="line">git show master:1.json =&gt; &#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth&quot;&#125;</span><br></pre></td></tr></table></figure>
-
-<p> 这样做效果很好，但现在这种做法是把文件系统作为数据库：路径是键，值是存储在其中的任何东西，其中有几个弊端：</p>
+        <h1 id="微服务可用性设计"><a href="#微服务可用性设计" class="headerlink" title="微服务可用性设计"></a>微服务可用性设计</h1><p>从单体架构到微服务架构，系统的复杂度变高。因此要接受系统出错的情况变得更频繁的现实，而由局部故障引起连锁反应的情况尤其需要重视。总的来说是要做到：</p>
 <ul>
-<li>  需要把所有的数据写到磁盘上，然后才能把它们保存到 Git 中。</li>
-<li>  需要多次保存数据。</li>
-<li>  文件存储没有被重复利用，失去 Git 提供的自动删除重复数据的优势。</li>
-<li>  如果想同时在多个分支上工作，需要切换、创建多个目录。</li>
+<li><p>  变更管理：大多数问题是由变更引起的，恢复可用代码不总是坏事。</p>
+</li>
+<li><p>  避免过载：过载保护、流量调度等。</p>
+</li>
+<li><p>  依赖管理：任何依赖都可能故障，需要做注入故障测试（chaos monkey testing）。</p>
+</li>
+<li><p>  优雅降级：提供有损服务，避免核心链路依赖故障。</p>
+</li>
+<li><p>  重试退避：结合退让算法，冻结时间，API retry detail 控制策略。</p>
+</li>
+<li><p>  超时控制：结合进程内 + 服务间实现超时控制。</p>
+</li>
+<li><p>  极限压测 + 故障演练。</p>
+</li>
+<li><p>  扩容 + 重启 + 消除有害流量。</p>
+</li>
 </ul>
-<p>目标是得到一个裸仓库，其中没有任何文件存在于文件系统中，而只存在于 Git 数据库中。</p>
-<p>以下是 Git 的数据模型及其工作的管道命令。</p>
-<h2 id="作为-NoSql-数据库的-Git-1"><a href="#作为-NoSql-数据库的-Git-1" class="headerlink" title="作为 NoSql 数据库的 Git"></a>作为 NoSql 数据库的 Git</h2><p>Git 是一个内容可寻址的文件系统，这意味着它是一个简单的键值存储。每当向它插入内容，就会得到一个密钥，以便以后检索插入的内容。</p>
-<p>创建内容：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">Initialize a repository</span> </span><br><span class="line">mkdir MyRepo </span><br><span class="line">cd MyRepo git init </span><br><span class="line"><span class="meta">#</span><span class="bash"> Save some content</span> </span><br><span class="line">echo &#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth&quot;&#125; | git hash-object -w --stdin da95f8264a0ffe3df10e94eed6371ea83aee9a4d</span><br></pre></td></tr></table></figure>
-
-<p>hash-object 是一个 git plumbing 命令，用于接收内容、将其存储在数据库中，并返回密钥。</p>
+<h2 id="隔离设计"><a href="#隔离设计" class="headerlink" title="隔离设计"></a>隔离设计</h2><p>本质上是对系统或资源进行分割，从而实现当系统发生故障时能限定传播范围和影响范围，即发生故障后只有出问题的服务不可用，保证其他服务仍然可用。</p>
+<p>没有考虑隔离可能出现的问题：</p>
+<ul>
+<li><p>  转码集群被超大视频资源攻击，导致转码大量延迟。</p>
+</li>
+<li><p>  缩略图服务，被大图实时缩略耗尽所有 CPU，导致正常缩略小图被丢弃。</p>
+</li>
+<li><p>  数据库实例 cgroup 未隔离，导致大 SQL 引起集体故障。</p>
+</li>
+<li><p>  INFO 日志量过大，导致异常 ERROR 日志采集延迟。</p>
+</li>
+</ul>
+<h3 id="服务隔离"><a href="#服务隔离" class="headerlink" title="服务隔离"></a>服务隔离</h3><p><strong>动静隔离</strong>：小到 CPU 的 cacheline false sharing、数据库表设计中为避免 buffer pool 频繁过期隔离动静表，大到架构设计中的图片、静态资源等缓存加速，本质上都体现动静隔离的思路，即加速/缓存访问变换频次小的资源。比如 CDN 场景中，将静态资源和动态 API 分离。</p>
+<ul>
+<li><p>  通过 CDN 访问静态文件，降低应用服务器负载。</p>
+</li>
+<li><p>  对象存储存储费用最低。</p>
+</li>
+<li><p>  海量存储空间，无需考虑存储架构升级。</p>
+</li>
+<li><p>  静态 CDN 带宽加速，延迟低。</p>
+</li>
+</ul>
+<p><strong>读写分离</strong>：MySQL BufferPool 用于缓存 DataPage（缓存表的行），如果频繁更新 DataPage 会不断置换，导致命中率下降。所以在表设计时可沿用类似的思路，分离主表和统计表，减少主表更新而更多地更新统计表。即便在上游 Cache 未命中而透穿到 MySQL，仍然能利用上 BufferPool 的缓存。</p>
 <blockquote>
-<p>  -w 选项指定存储内容，否则只会计算哈希值。</p>
-<p>  -stdin 选项则要求 Git 从输入中读取内容（而不是从文件中）。</p>
+<p>  主从、Replicaset、CQRS，都是读写分离的思路。</p>
 </blockquote>
-<p>该密钥是对内容执行 sha-1 加密生成的，如果运行上述命令，可以看到它返回完全相同的 sha-1 加密串。</p>
-<p>对于写入数据库的内容，执行以下命令可以把它读回来。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git cat-file -p da95f8264a0ffe3df10e94eed6371ea83aee9a4d </span><br><span class="line">&#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth&quot;&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Git-Blobs"><a href="#Git-Blobs" class="headerlink" title="Git Blobs"></a>Git Blobs</h3><p>现在有一个键值存储，其中有一个对象，即 blob。</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image.png"></p>
-<p>唯一的问题是无法对其进行更新，因为是以密钥为键，更新内容后密钥将会更改。这意味着对于文件的每个版本，都必须记住一个不同的密钥。</p>
-<p>而目标应该是指定自己的密钥，并使用该密钥来跟踪版本。</p>
-<h3 id="Git-Trees"><a href="#Git-Trees" class="headerlink" title="Git Trees"></a>Git Trees</h3><p>树解决了两个问题：</p>
+<h3 id="轻重隔离"><a href="#轻重隔离" class="headerlink" title="轻重隔离"></a>轻重隔离</h3><p><strong>核心隔离</strong>：业务根据不同等级进行资源池划分（L0/L1/L2），根据核心/非核心的故障域的差异隔离（机器资源、依赖资源）；部署多集群（使用子集算法选取部分连接进行 RPC 建联），通过冗余资源来提升吞吐和容灾能力。</p>
+<p><strong>快慢隔离</strong>：服务吞吐类似蓄水池，当出现洪流时需要一定时间才能排放完，此时其他支流在池中停留的时间取决于前面的排放能力，耗时就会增加，从而对小请求产生延迟上的影响。比如在日志传输体系架构设计中，如果整个流都投放到单个 Kafka topic 中（实现更好的顺序 IO），流内区分不同的 logid、发送到指定的 sink 端（ES、HDFS deng1），则会出现差速（即消费能力的差异，比如 HDFS 抖动吞吐下降，ES 正常水位，全局数据就会整体反压），最终整体吞吐能力就被最慢的一端拉低。因此可以按照各种纬度隔离：sink、部门、业务、logid、重要性（S/A/B/C）等。而且业务日志也属于某个 logid，日志等级可以作为隔离通道。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservices_availability_design.assets/image-20210808160550587.png" alt="image-20210808160550587"></p>
+<p><strong>热点隔离</strong>：热点即经常访问的数据，比如统计某个热点数据中访问频次最高的 Top K 数据，并对其访问进行缓存。</p>
 <ul>
-<li>  需要记住对象的哈希值及其版本。 </li>
-<li>  存储文件组。 </li>
+<li><p>  小表广播：从 remote cache 提升为 local cache，app 定时更新；甚至可让运营平台支持广播刷新 local cache。</p>
+</li>
+<li><p>  主动预热：比如某些页面高在线率情况下通过 bypass 监控主动防御。</p>
+</li>
 </ul>
-<p>可以把树看作文件系统中的一个目录，要创建树必须遵循两个步骤：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Create and populate a staging area</span> </span><br><span class="line">git update-index --add --cacheinfo 100644 da95f8264a0ffe3df10e94eed6371ea83aee9a4d 1.json </span><br><span class="line"><span class="meta">#</span><span class="bash"> write the tree</span> </span><br><span class="line">git write-tree d6916d3e27baa9ef2742c2ba09696f22e41011a1</span><br></pre></td></tr></table></figure>
-
-<p>这会返回一个 sha 加密串，可用于读取该树。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git cat-file -p d6916d3e27baa9ef2742c2ba09696f22e41011a1 100644 blob </span><br><span class="line">da95f8264a0ffe3df10e94eed6371ea83aee9a4d 1.json</span><br></pre></td></tr></table></figure>
-
-<p>此时对象数据库状态如下：</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-6.png"></p>
-<p>要修改文件可遵循相同的步骤：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Add a blob</span> </span><br><span class="line">echo &#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth truyers&quot;&#125; | git hash-object -w --stdin 42d0d209ecf70a96666f5a4c8ed97f3fd2b75dda </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Create and populate a staging area</span> </span><br><span class="line">git update-index --add --cacheinfo 100644 42d0d209ecf70a96666f5a4c8ed97f3fd2b75dda 1.json </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Write the tree</span> </span><br><span class="line">git write-tree 2c59068b29c38db26eda42def74b7142de392212</span><br></pre></td></tr></table></figure>
-
-<p> 此时面临以下情况：</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-15.png" alt="Git Object Database: tree and blob"></p>
-<p>现在两棵树代表文件的两个状态，但这没有起到什么作用，仍然需要记住这些树的 sha-1 值来获取内容。</p>
-<h3 id="Git-Commits"><a href="#Git-Commits" class="headerlink" title="Git Commits"></a>Git Commits</h3><p>一个提交包含 5 个关键信息。</p>
+<h3 id="物理隔离"><a href="#物理隔离" class="headerlink" title="物理隔离"></a>物理隔离</h3><p><strong>线程隔离</strong>：主要通过线程池隔离（也是实现服务隔离的基础）。把业务分类并交给不同的线程池处理，当某个线程池处理某种业务请求发生问题时，不会将故障扩散和影响到其他线程池，保证服务可用。</p>
+<blockquote>
+<p>  正常调用不受影响，一旦出现故障、线程池的使用达到 maxSize，再次请求接口会触发 fallback 处理并进行熔断（除此之外还可以基于信号量）。</p>
+</blockquote>
+<blockquote>
+<p>  对于 Go 而言所有 I/O 都是非阻塞且托管给 Runtime 的，因此只会阻塞 Goroutine、不阻塞底层线程（协程被阻塞时，线程与协程解绑）。因此只需要考虑对 Goroutine 总量的控制，不需要考虑语言层面的线程隔离。</p>
+<p>  限制 Goroutine 的总量，可参考 <strong>自适应限流</strong>。</p>
+</blockquote>
+<p><strong>进程隔离</strong>：比如基于虚拟化和容器化的编排（KVM、Docker Swarm、Kubernetes）。</p>
+<p><strong>集群隔离</strong>：配置多套集群，在逻辑上是同一个应用，而在物理上部署多套、通过 cluster 区分（region.zone.cluster.appid）。</p>
+<h2 id="超时控制"><a href="#超时控制" class="headerlink" title="超时控制"></a>超时控制</h2><p>超时控制本质上是快速失败（Failfast），在组件的实现应重点考虑，以免等待断开的实例直到超时。由于挂起的请求和无响应不仅浪费资源，还会降低用户体验。这种情况很常见，比如：</p>
 <ul>
-<li>  作者</li>
-<li>  创建日期</li>
-<li>  创建原因（消息）</li>
-<li>  它指向的单个树对象</li>
-<li>  一个或多个先前的提交（目前仅考虑仅具有一个父提交的提交，具有多个父提交的提交是合并提交）。 </li>
+<li><p>  SLB 入口 Nginx 没配置超时导致连锁故障。</p>
+</li>
+<li><p>  服务依赖 DB 连接池漏配超时导致请求阻塞，最终服务集体 OOM。</p>
+</li>
+<li><p>  下游服务发版耗时增加，而上游服务配置超时过短，导致上游请求失败。</p>
+</li>
 </ul>
-<p>要提交上述的树：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Commit the first tree (without a parent)</span> </span><br><span class="line">echo &quot;commit 1st version&quot; | git commit-tree d6916d3 05c1cec5685bbb84e806886dba0de5e2f120ab2a </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Commit the second tree with the first commit as a parent</span> </span><br><span class="line">echo &quot;Commit 2nd version&quot; | git commit-tree 2c59068 -p 05c1cec5 </span><br><span class="line">9918e46dfc4241f0782265285970a7c16bf499e4</span><br></pre></td></tr></table></figure>
-
-<p>这将进入以下状态：</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-16.png" alt="Git Object Database: commit, tree and blob"></p>
-<p>现在已经为文件建立了一个完整的历史记录，可以用任何 git 客户端打开该仓库，可见 1.json 是如何被正确追踪的。</p>
-<p>为了证明这一点，运行 git log 有以下输出：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git log --stat 9918e46 9918e46dfc4241f0782265285970a7c16bf499e4 &quot;Commit 2nd version&quot;</span><br><span class="line">1.json | 1 + 1 file changed, 1 insertions(+) </span><br><span class="line">05c1cec5685bbb84e806886dba0de5e2f120ab2a &quot;Commit 1st version&quot; 1.json | 1 + 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
-
-<p>并获得最后一个提交的文件内容。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git show 9918e46:1.json </span><br><span class="line">&#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth truyers&quot;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但这样还是没有达到目的，因为必须记住上次提交的哈希值。</p>
-<p>到现在为止创建的所有对象都是 Git 对象数据库的一部分，该数据库的一个特点是它只存储不可变的对象。一旦写入一个 blob、一棵树或一个提交，就不能在不改变键的情况下修改它，并且不能删除它们（至少不能直接删除，git gc 命令会删除悬空的对象）。</p>
-<h3 id="Git-References"><a href="#Git-References" class="headerlink" title="Git References"></a>Git References</h3><p>另一个层次是 Git 引用。引用不是对象数据库的一部分，而是引用数据库的一部分，而且它是可变的。引用有不同的类型，如分支、标签和远程，它们在本质上是相似的，只是有一些小的区别。</p>
-<p>到目前为止只考虑分支，一个分支是一个指向提交的指针。要创建分支，可以把提交的哈希值写到文件系统中：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 05c1cec5685bbb84e806886dba0de5e2f120ab2a &gt; .git/refs/heads/master</span><br></pre></td></tr></table></figure>
-
-<p>现在有一个主干分支，其指向第一次提交。为了移动这个分支，可执行以下命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git update-ref refs/heads/master 9918e46</span><br></pre></td></tr></table></figure>
-
-<p>状态可见下图：</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-17.png"></p>
-<p>现在可以读取文件的当前状态： </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git show master:1.json </span><br><span class="line">&#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth truyers&quot;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>只要把分支指针移到最新的提交上，即使添加了新版本的文件和后续的树和提交，上面的命令也可以工作。</p>
-<p>对于一个简单的键值存储，以上这些内容都相当复杂。然而可以将这些东西抽象化，使客户端应用程序只需要指定分支和一个键（将在另一篇文章中再来讨论这个问题）。</p>
-<p>现在讨论将 Git 用作 NoSQL 数据库的潜在优势和缺点。</p>
-<h2 id="数据效率"><a href="#数据效率" class="headerlink" title="数据效率"></a>数据效率</h2><p>在存储数据方面，Git 是非常高效的。如前所述，由于哈希值的计算方式，相同内容的 blobs 只会被存储一次。可以在一个空的 Git 仓库中添加一大堆内容相同的文件，然后检查 .git 目录的大小与磁盘上的大小，可以发现 .git 目录小了不少。</p>
-<p>不止于此，Git 对树也有同样的作用。如果在一棵子树上修改了一个文件，Git 只会创建一个新的子树，而只是引用其他没有受到影响的树。</p>
-<p>下面的例子展示了一个指向有两个子目录的层次结构的提交。</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-18.png" alt="Git NoSQL Database: nested trees"></p>
-<p>现在如果想替换 blob 4658ea84，Git 只会替换那些被改变的项目，保留没有被改变的项目作为引用。</p>
-<p>在用不同的文件替换 blob 并提交更改后，图看起来如下（新对象用红色标记）。</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-19.png" alt="Git NoSQL Database: storage efficiency"></p>
-<p>如上，Git 只替换了必要的项目并引用了已经存在的项目。</p>
-<p>尽管 Git 在引用已有数据方面非常高效，但如果每一个小的修改都生成一个完整的拷贝，在一段时间后还是会得到一个巨大的版本库。</p>
-<p>为了缓解以上问题，引入了自动垃圾收集过程。git gc 命令运行时，它将查看所有的 Blobs，并在可能情况下删除 Blobs，转而存储基本数据的单一副本，以及 Blobs 每个版本的增量。因此 Git 仍然可以检索到 blob 的每个唯一版本，而不需要多次存储数据。</p>
-<h2 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h2><p>Git 可作为一个完全的版本系统。有了版本控制，也就有了（永远）不必删除数据的优势。</p>
-<p>在 SQL 数据库中有这样的例子：</p>
-<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id | <span class="type">name</span> | <span class="type">deleted</span> <span class="number">1</span> | <span class="type">kenneth</span> | <span class="type">1</span></span><br></pre></td></tr></table></figure>
-
-<p>一般这样的简单记录即可保存数据（但通常不是），数据本身可能依赖于其他数据（无论实现细节上它们是否为外键），当要还原数据时很可能无法孤立地进行操作。而使用 Git 只需将分支指向另一个提交即可回到数据库级别（而不是记录级别）的正确状态。</p>
-<p>另一种做法：</p>
-<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id | <span class="type">street</span> | <span class="type">lastUpdate</span> <span class="number">1</span> | <span class="type">town</span> rd | <span class="type">20161012</span></span><br></pre></td></tr></table></figure>
-
-<p> 这种做法将更少机会用到：已知该数据已被更新，却没有待更新的内容以及更新前的状态信息。 每当更新数据时，实际上就是在删除数据并插入新数据，旧数据将永远丢失。 </p>
-<p>使用 Git 可以在任何文件上运行 git log 查看更改的内容、对象，时间和原因。 </p>
-<h2 id="Git-工具"><a href="#Git-工具" class="headerlink" title="Git 工具"></a>Git 工具</h2><p>Git 拥有丰富的工具集，可用于检索和处理数据。虽然大多数记录都集中在代码上，但并不意味着不能用它们来处理其他数据。</p>
-<p>基本的 Git 命令：</p>
+<p>良好的超时策略能尽可能避免服务堆积请求，并尽快清空高延迟的请求、释放 Goroutine。服务是互相调用的，所以在延迟叠加前，应注意防止超时的操作。</p>
 <ul>
-<li>  使用 git diff 查找两个提交/ 分支/ 标签/ 的变化差异。</li>
-<li>  使用 git bisect 找出由于数据变化而停止工作的情况。</li>
-<li>  使用 git hooks 获取自动变更通知，建立全文索引，更新缓存，发布数据，…</li>
-<li>  还原、分支、合并，…</li>
+<li><p>  关心网路传递具有不确定性。</p>
+</li>
+<li><p>  客户端和服务端要设置一致的超时策略。</p>
+</li>
+<li><p>  超时时间都需要默认值。</p>
+</li>
+<li><p>  高延迟服务会导致 client 浪费资源等待。</p>
+</li>
 </ul>
-<p>还有一些外部工具：</p>
+<h3 id="超时策略"><a href="#超时策略" class="headerlink" title="超时策略"></a>超时策略</h3><p>实际业务开发中由于超时设置不当造成问题：依赖的微服务超时策略不清楚，或随着业务迭代耗时超生变化、意外导致依赖者出现超时。因此服务提供者应定义好 latency SLO、更新到 gRPC Proto 定义中，服务后续迭代都应保证该 SLO。</p>
 <ul>
-<li>  使用 Git 客户端实现数据可视化以便浏览 。</li>
-<li>  使用 pull requests 在合并之前检查数据更改。</li>
-<li>  Gitinspector：Git 存储库的统计分析。</li>
+<li><p>  在 kit 基础库配置默认超时，进行配置防御保护，避免出现过大的超时策略。</p>
+</li>
+<li><p>  配置中心设置公共模版（比如内网 RPC 不能超过 100ms、公网 1s），对于未配置的服务统一使用公共配置。</p>
+</li>
 </ul>
-<h2 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h2><p>由于它是一个键值存储，Git 具备一般 NoSQL 存储的优势：比如无模式的数据库，可以存储任何内容，它甚至不一定是 JSON。</p>
-<h2 id="连接性"><a href="#连接性" class="headerlink" title="连接性"></a>连接性</h2><p>Git 可以在分区网络中工作，可以将所有内容放在 USB 存储上，在不连接网络时保存数据，然后在重新联机时推送并合并。这在开发代码时的常用做法相同。在某些场景中这可以节省时间。</p>
-<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>上面的例子是提交了对一个文件的每一个改动，但有时不一定要这样做，还可以把各种变化作为一个提交，这样做可以方便以后原子化地回滚这些改动。</p>
-<p>长时间的事务：创建一个分支，向其提交几个改动然后合并或丢弃它。</p>
-<h2 id="备份与副本"><a href="#备份与副本" class="headerlink" title="备份与副本"></a>备份与副本</h2><p>对于传统的数据库，通常要为完整的备份和增量的备份建立一个调度计划，但这是相当麻烦的。由于 Git 已经存储了所有历史记录，所以永远不需要做完整的备份。</p>
-<p>此外备份仅仅是执行 Git 推送，而可以推送到任何地方，GitHub、BitBucket 或自我托管的 Git 服务器。</p>
-<p>复制也同样简单，使用 git 钩子设置一个触发器，在每次提交后运行 Git 推送，比如：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git remote add replica git@replica.server.com:app.git </span><br><span class="line">cat .git/hooks/post-commit </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span> </span><br><span class="line">git push replica</span><br></pre></td></tr></table></figure>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> google.example.library.v1;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">service</span> <span class="title">LibraryService</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Lagency SLO: 95th in 100ms, 99th in 150ms.</span></span><br><span class="line">    <span class="function"><span class="keyword">rpc</span> CreateBook(CreateBookRequest) <span class="keyword">returns</span> (Book)</span>; </span><br><span class="line">    <span class="function"><span class="keyword">rpc</span> GetBook(GetBookRequest) <span class="keyword">returns</span> Book)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">rpc</span> ListBooks(ListBooksRequest) <span class="keyword">returns</span> (ListBooksResponse)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>上述是 Git 作为数据库的优点，然而还有以下缺点。</p>
-<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><p>只支持按键查询，唯一的好处是可以将数据在目录中组织，这样就可以轻易地通过前缀获得内容。任何其他的查询都是不支持的，除非执行完整的递归搜索。</p>
-<p>唯一的做法是建立专门用于查询的索引。如果不需要过时，可以按调度计划维护索引，或者可以在提交发生后立即使用 git hook 更新索引。 </p>
-<h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><p>如果只是在编写 Blob，那么不必担心并发问题。但当开始编写提交并更新分支时，就会出现问题了。</p>
-<p>下图中两个进程同时尝试创建提交： </p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image55_thumb.png" alt="Git NoSQL Database: concurrency"></p>
-<p>在上图中可见，当第二个进程修改树的副本时，它实际上是在一棵过期的树上工作。当提交时它将失去第一个进程所做的修改。</p>
-<p>同样的情况也适用于移动分支头。在提交和更新分支头之间可能会有另一个提交，因此有可能将分支头更新为错误的提交。这种问题唯一的解决方法是锁定从读取当前树副本到更新分支头之间的任何写操作。</p>
-<h2 id="速度"><a href="#速度" class="headerlink" title="速度"></a>速度</h2><p>在创建分支时 Git 的速度很快，但当考虑到每秒提交次数时，它实际上就很慢了，因为需要一直向磁盘写入。</p>
-<p>通常在写代码时不会注意到这点，因为每秒不会做很多提交。</p>
-<p>在本地机器上进行一些测试，可见极限时每秒 110 次。虽然 110 次/秒的提交量对很多应用来说是足够的，但不能满足所有的情况。这是本地开发机器上的理论最大值，而其他因素都会影响速度。</p>
-<h3 id="树的大小"><a href="#树的大小" class="headerlink" title="树的大小"></a>树的大小</h3><p>一般来说，用户倾向于使用很多子目录，而不是把所有的文件放在同一个目录中，这将使写入速度尽可能地接近最大值。原因是每次创建一个新的提交时都必须复制树，再对其进行修改，然后保存修改后的树。运行 git gc 会确保将其保存为一个 delta，而不是两个不同的树。</p>
-<p>在第一种情况下，根目录下存储有 10.000 个 blobs。当添加一个文件时会复制包含 10.000 个项目的树，添加一个并保存它。由于树的大小，这可能是一个冗长的操作。</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-20.png" alt="Git NoSQL Database: large trees"></p>
-<p>在第二个示例下有 4 层树，每层有 10 个子树，最后一层有 10 个 blobs（10<em>10</em>10 * 10  = 10.000 个文件）。</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-21.png" alt="Git NoSQL Database: nested trees"></p>
-<p>在这种情况下，如果想添加一个 blob，不需要复制整个层次结构，而只复制引导 blob 的分支（下图显示了必须要复制和修改的树）。</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-22.png" alt="Git NoSQL Database: nested tree modifications"></p>
-<p>因此通过使用子目录，可以复制 5 棵有 10 个条目的树，这将提高了速度。而当数据增长得越多，就越希望使用子目录。</p>
-<h2 id="在事务中合并值"><a href="#在事务中合并值" class="headerlink" title="在事务中合并值"></a>在事务中合并值</h2><p>如果需要以每秒 100 次以上的速度进行提交，那么也许不必地单独回滚。在这种情况下，可以不提交每个改动，而是在一次提交中合并提交多个改动。由于可以同时写 Blobs，所以可以同时写 1000 个文件到磁盘，然后做一次提交，把它们保存到版本库中。但这也有缺点，如果你想获得原始的速度，这是个好办法。</p>
-<p>解决这个问题的方法是给 git增加一个不同的后端，它不会立即把内容刷到磁盘上，而是先写到内存数据库中，然后再异步刷到磁盘。不过，实现这一点并不那么容易。当我使用libgit2sharp连接到版本库来测试这个解决方案时，我尝试使用Voron后端（它可以作为开源版本，以及使用ElasticSearch的变体）。这使速度提高了不少，但你失去了能用任何标准的git工具检查数据的好处。</p>
+<p>如何运用好超时监控？</p>
+<ul>
+<li><p>  双峰分布：比如 95% 的请求耗时在 100ms 内，5%的请求可能永远不会完成（长超时）。</p>
+</li>
+<li><p>  不能只看 mean，可参考耗时分布统计，比如 95th，99th。</p>
+</li>
+<li><p>  设置合理的超时，拒绝超长请求，或当 Server 不可用要主动失败。</p>
+</li>
+</ul>
+<h3 id="超时传递"><a href="#超时传递" class="headerlink" title="超时传递"></a>超时传递</h3><p>当上游服务已经超时返回 504，下游服务仍在执行会导致把资源浪费在无用功上。超时传递指把当前服务的剩余 Quota 传递到下游服务中，继承超时策略，实现请求级别的全局超时控制。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">        <span class="selector-tag">1s</span>   <span class="selector-tag">100ms</span></span><br><span class="line"><span class="selector-tag">----</span>&gt; <span class="selector-attr">[SvcA]</span> <span class="selector-tag">----</span>&gt; <span class="selector-attr">[Redis]</span> (left <span class="number">900ms</span>)</span><br><span class="line">           | <span class="selector-tag">500ms</span></span><br><span class="line">           +<span class="selector-tag">-----</span>&gt; <span class="selector-attr">[SvcB]</span> (left <span class="number">400ms</span>)</span><br><span class="line"><span class="selector-tag">350ms</span></span><br><span class="line"><span class="selector-tag">min</span>(<span class="attribute">config</span>: <span class="number">500ms</span>, <span class="attribute">left</span>: <span class="number">400ms</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>进程内超时控制</strong>：请求在每个阶段开始前就要检查是否有足够的时间来处理，以及继承该超时策略（可使用 Go 标准库 <code>context.WithTimeout</code>）。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *asiiConn)</span> <span class="title">Get</span><span class="params">(ctx context.Context, key <span class="keyword">string</span>)</span> <span class="params">(result *Item, err error)</span></span> &#123;</span><br><span class="line">	c.conn.SetWriteDeadline(shrinkDeadline(ctx, c.writeTimeout))</span><br><span class="line">	<span class="keyword">if</span> _, err = fmt.Fprintf(c.rw, <span class="string">&quot;gets %s\r\n&quot;</span>, key); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在传递到某个环节发现剩余执行时间小于超时时间，应马上取消传递。在需要强制执行时，下游服务可覆盖上游超时传递和配额。</p>
+<blockquote>
+<p>  在 gRPC 框架中，会依赖 gRPC Metadata Exchange，基于 HTTP2 的 Headers 传递 grpc-timeout 字段，自动传递到下游，构建带 timeout 的 context。</p>
+</blockquote>
+<h2 id="过载保护"><a href="#过载保护" class="headerlink" title="过载保护"></a>过载保护</h2><h3 id="静态限流"><a href="#静态限流" class="headerlink" title="静态限流"></a>静态限流</h3><p><strong>令牌桶算法</strong>：存放固定容量令牌的桶，按照固定速率往桶里添加令牌（/x/time/rate）。</p>
+<ul>
+<li><p>  假设限制 2r/s，则按照 500ms 的固定速率往桶中添加令牌。</p>
+</li>
+<li><p>  桶中最多存放 b 个令牌，在桶满时新添加的令牌被丢弃或拒绝。</p>
+</li>
+<li><p>  当某 n 字节大的数据包到达，从桶中删除 n 个令牌，允许数据包发送到网络上。</p>
+</li>
+<li><p>  如果桶中令牌不足 n 个，则不会删除令牌，该数据包被限流处理（丢弃或进入缓冲区等待）。</p>
+</li>
+</ul>
+<p><strong>漏桶算法</strong>：作为计量工具被使用时，可用于流量整形或可以用于流量整形（/go.uber.org/ratelimit）。</p>
+<ul>
+<li><p>  固定容量的漏桶，按照固定速率流出水滴（为空则没有）。</p>
+</li>
+<li><p>  允许以任意速率把水滴加入漏桶，但当超过桶容量则被丢弃。</p>
+</li>
+</ul>
+<p>思路都是设定一个指标，在超过该指标后则阻止或减少流量进入，当系统负载降低到某一水平后再恢复。</p>
+<p>但由于这些策略相对被动、难以适应流量变化，实际效果取决于阈值设置的合理性：</p>
+<ul>
+<li><p>  当集群增加或减少机器限流阈值应重新设置。</p>
+</li>
+<li><p>  考虑设置限流阈值的依据。</p>
+</li>
+<li><p>  考虑如何降低人力运维成本。</p>
+</li>
+<li><p>  在调用方反馈故障后设置限流，但错过流量高峰再评估则没有意义。</p>
+</li>
+</ul>
+<h3 id="自适应限流"><a href="#自适应限流" class="headerlink" title="自适应限流"></a>自适应限流</h3><p><strong>过载保护</strong>：通过计算系统临近过载时的峰值吞吐量作为限流的阈值来进行流量控制，实现系统保护。在系统稳定的前提下可保持系统的吞吐量；但当临近过载时，则主动抛弃一定量的负载以自保。常见做法：</p>
+<ul>
+<li><p>  利特尔法则。</p>
+</li>
+<li><p>  CPU、内存作为信号量进行节流。</p>
+</li>
+<li><p>  队列管理：队列长度、LIFO。</p>
+</li>
+<li><p>  可控延迟算法：CoDel。</p>
+</li>
+</ul>
+<p>考虑接近峰值时的系统吞吐：</p>
+<ul>
+<li><p>  CPU：可使用独立的线程采样，每隔 250ms 触发一次。在计算均值时使用简单滑动平均去除峰值的影响。</p>
+</li>
+<li><p>  Inflight：在当前线上服务中进行请求的计量。</p>
+</li>
+<li><p>  Pass&amp;RT: 比如最近 5s，pass 为每 100ms 采样窗口内成功请求的数量，rt 为单个采样窗口中平均响应时间。</p>
+</li>
+</ul>
+<p>具体做法：</p>
+<ul>
+<li><p>  使用 CPU 滑动均值（如 CPU &gt; 800）作为启发阈值，一旦触发则进入过载保护：<code>pass * rt &lt; inflight</code>。</p>
+</li>
+<li><p>  限流生效后 CPU 会在临界值（800）附近抖动。如果不使用冷却时间，短时间的 CPU 下降就可能导致大量请求被放行，严重时迅速占满 CPU。</p>
+</li>
+<li><p>  设置冷却时间，在冷却后重新判断阈值（CPU &gt; 800 ），再决定是否持续进入过载保护。</p>
+</li>
+</ul>
+<h2 id="限流设计"><a href="#限流设计" class="headerlink" title="限流设计"></a>限流设计</h2><p>指在一段时间内，定义某个客户端或应用可接收或处理多少个请求。通过限流可以过滤产生流量峰值的客户端或微服务，或确保应用程序在自动扩展失效前不会出现过载的情况。</p>
+<p>常见缺少限流措施的例子：</p>
+<ul>
+<li><p>  二层缓存穿透、大量回源导致的核心服务故障。</p>
+</li>
+<li><p>  异常客户端引起的服务故障：请求放大或资源数放大。</p>
+</li>
+<li><p>  用户重试导致的大面积故障。</p>
+</li>
+</ul>
+<p>限流设计的难点：</p>
+<ul>
+<li><p>  根据 QPS 限流：需要不同的请求可能需要不同数量的资源来处理；某种静态 QPS 限流不太准确。</p>
+</li>
+<li><p>  为每个用户设置限制：全局过载发生时，针对某些“异常”进行控制；可能出现“超售”配额。</p>
+</li>
+<li><p>  可根据优先级丢弃请求（不容易实现）。</p>
+</li>
+<li><p>  要考虑拒绝请求的成本。</p>
+</li>
+</ul>
+<h3 id="分布式限流"><a href="#分布式限流" class="headerlink" title="分布式限流"></a>分布式限流</h3><p>目的是控制某个应用全局的流量，而非只对单个节点处理。比如：</p>
+<ul>
+<li><p>  单个大流量的接口，使用 Redis 容易产生热点。</p>
+</li>
+<li><p>  pre-request 模式产生高频的网络往返，对性能有一定影响。</p>
+</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">                                 +------------&gt; <span class="selector-attr">[限制算法模块]</span></span><br><span class="line">                                 ↓         逐条上报汇总</span><br><span class="line"><span class="selector-attr">[req1]</span><span class="selector-attr">[req2]</span>...<span class="selector-attr">[reqn]</span> ----&gt; <span class="selector-attr">[计数控制模块]</span> &lt;-----------&gt; <span class="selector-attr">[Redis]</span></span><br><span class="line">                                 ↑</span><br><span class="line">                                 +------------- <span class="selector-attr">[配置模块]</span></span><br></pre></td></tr></table></figure>
+
+<p>由于令牌桶、漏桶仅针对单个节点，无法实现分布式限流。可以从获取单个速率 quota 升级为批量 quota，再使用令牌桶算法来限制。</p>
+<ul>
+<li><p>  每次接收服务心跳后异步批量获取 quota，可大大减少请求 Redis 的频次，获取后在本地消费，基于令牌桶实现拦截。</p>
+</li>
+<li><p>  如果每次申请的 quota 需要手动设定静态值则不太灵活。可以在初次使用时默认值，保留历史窗口数据，再基于窗口数据发起 quota 请求（基于单个节点按需申请，要避免出现不公平的现象）。</p>
+</li>
+</ul>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">                               ↑ 丢弃或等待</span><br><span class="line">                               |       放行</span><br><span class="line"><span class="comment">[req1]</span><span class="comment">[req2]</span>...<span class="comment">[reqn]</span> ----&gt; <span class="comment">[拦截器]</span> -------&gt; </span><br><span class="line">                             ↑   |</span><br><span class="line">                             |   +--------+ 反馈统计信息</span><br><span class="line">                             |            ↓</span><br><span class="line">                    异步更新  +-----&gt; <span class="comment">[算法分配调度]</span> &lt;--- <span class="comment">[配额管理]</span></span><br><span class="line">              （每秒增加 n 个令牌）</span><br></pre></td></tr></table></figure>
+
+<p><strong>最大最小公平分享</strong>（Max-Min Fairness）是在实际中广泛使用分享技术，用于实现资源分配。公平分享分配给每个用户想要的、可以满足的最小需求，并将没有使用的资源均匀分配给需要大资源的用户。其定义如下：</p>
+<ul>
+<li>  按照资源需求递增的顺序进行分配。</li>
+<li>  不存在用户得到的资源超过自身需求。</li>
+<li>  未被满足的用户等价的分享资源。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>优点</th>
+<th>缺点</th>
+<th>现有实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单机限制</td>
+<td>实现简单<br />稳定可靠<br />性能高</td>
+<td>流量不均匀会引发错误<br />机器数量变化时，需要手动调整配额</td>
+<td>多数语言都提供相应实现</td>
+</tr>
+<tr>
+<td>动态限制</td>
+<td>根据服务情况动态限流<br />无需调整额度</td>
+<td>需要主动收集请求的性能数据<br />客户端主动善意限流<br />只限于接口调用，应用场景较少</td>
+<td>BBR 限流（各种连接池）</td>
+</tr>
+<tr>
+<td>全局限制</td>
+<td>流量不均不会误触发限流<br />机器数量变动时无需调整<br />应用场景丰富，任何资源都能使用</td>
+<td>实现较复杂<br />需要手动配置</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<h3 id="重要性"><a href="#重要性" class="headerlink" title="重要性"></a>重要性</h3><p>如果每个接口配置阈值会导致运营工作繁重，最简单做法是配置服务级别 quota，更细粒度的可根据不同重要性设定 quota，因此引入了重要性（criticality）:</p>
+<ul>
+<li><p>  最重要（CRITICAL_PLUS）：最终的要求预留类型，拒绝这些请求会造成严重的用户可见性问题。</p>
+</li>
+<li><p>  重要（CRITICAL）：生产任务发出的默认请求类型。拒绝这些请求也会造成用户可见性问题（次重要）。</p>
+</li>
+<li><p>  可丢弃的（SHEDDABLE_PLUS）：可容忍某种程度不可用性，是批量任务发出的请求的默认值，通常可以过几分钟、几小时后重试。</p>
+</li>
+<li><p>  可丢弃的（SHEDDABLE）：可能会经常遇到部分不可用、偶尔会完全不可用的情况。</p>
+</li>
+</ul>
+<p>gRPC 系统之间需要自动传递重要性信息：如果后端接收请求 A，在处理过程中发出请求 B 和 C 给其他后端，则这些请求会使用与 A 相同的重要性属性。</p>
+<ul>
+<li><p>  全局配额不足时优先拒绝较低优先级的。</p>
+</li>
+<li><p>  全局配额可按重要性分别设置。</p>
+</li>
+<li><p>  过载保护时低优先级请求先被拒绝。</p>
+</li>
+</ul>
+<h3 id="熔断"><a href="#熔断" class="headerlink" title="熔断"></a>熔断</h3><p>虽然使用超时限制操作的持续时间，防止挂起操作并保证系统响应，但由于环境是高度动态变化的，几乎不可能确定准确的、每种情况下都能正常工作的时间限制。</p>
+<p>当服务依赖的资源出现大量错误或某用户超过资源配额时，后端任务会快速拒绝请求、返回配额不足的错误。但由于拒绝回复仍然会消耗一定资源，有可能导致后端忙于发送拒绝请求导致过载。</p>
+<p>使用断路器可阻止重复的故障，避免导致雪崩效应使整个系统崩溃。</p>
+<h4 id="Gutter"><a href="#Gutter" class="headerlink" title="Gutter"></a>Gutter</h4><p>基于熔断的 Gutter Kafka 用于接管自动修复系统运行过程中的负载，只需要付出 10% 的资源就能解决部分系统可用性问题。</p>
+<p>基于 Failover 思路解决可用性问题很普遍，但是完整的 Failover 需要翻倍的机器资源，在平时不接收流量时造成资源浪费；而且高负载情况下接管流量也不一定能完整接住。所以利用熔断的思路，是把抛弃的流量转移到 Gutter 集群，Gutter 也接不住的流量再重新回抛到主集群（最大力度接收）。</p>
+<h3 id="客户端流控"><a href="#客户端流控" class="headerlink" title="客户端流控"></a>客户端流控</h3><p>一般客户端的做法总是积极重试，访问一个不可达的服务。要实现流控：</p>
+<ul>
+<li><p>  客户端需要限制请求频次，做一定的请求退让（retry backoff）。</p>
+</li>
+<li><p>  可通过接口级别的 error_details，挂载到每个 API 的响应。</p>
+</li>
+</ul>
+<h2 id="降级设计"><a href="#降级设计" class="headerlink" title="降级设计"></a>降级设计</h2><p>通过降级回复可减少工作量，或丢弃不重要的请求。通常需要有能力区分不同的请求、了解可以降级的流量（比如降低回复质量来减少回复所需的计算量或时间）。</p>
+<p>缺少降级措施的例子：</p>
+<ul>
+<li><p>  客户端解析协议失败，app 奔溃。</p>
+</li>
+<li><p>  客户端部分协议不兼容，导致页面失败。</p>
+</li>
+<li><p>  local cache 数据源缓存，发版失效 + 依赖接口故障，引起白屏。</p>
+</li>
+<li><p>  没有 playbook，导致的 MTTR 上升。</p>
+</li>
+</ul>
+<p>降级设计需要考虑：</p>
+<ul>
+<li><p>  流量评估和优雅降级的决定性指标（CPU、延迟、队列长度、线程数量、错误等）。</p>
+</li>
+<li><p>  进入降级模式时需要执行的动作。</p>
+</li>
+<li><p>  流量抛弃或优雅降级应在服务的哪个层次实现、是否每个层次都实现、或选择某个高层次选取关键节点实现？</p>
+</li>
+<li><p>  优雅降级只在容量规划失误或出现意外的负载时触发。</p>
+</li>
+<li><p>  充分的测试演练，平时不会触发和使用代码，需要定期针对一小部分的流量进行演练，保证功能正常。</p>
+</li>
+<li><p>  足够简单。</p>
+</li>
+</ul>
+<p>降级的本质是提供有损的服务：</p>
+<ul>
+<li><p>  模块化 UI ，对非核心模块降级。</p>
+</li>
+<li><p>  页面上次缓存副本。</p>
+</li>
+<li><p>  设置默认值、热门推荐等。</p>
+</li>
+<li><p>  流量拦截 + 定期数据缓存（过期副本策略）。</p>
+</li>
+</ul>
+<p>一般处理方法：</p>
+<ul>
+<li><p>  页面降级、延迟服务、写/读降级、缓存降级。</p>
+</li>
+<li><p>  抛出异常、返回约定协议、Mock 数据、Fallback 处理。</p>
+</li>
+</ul>
+<h2 id="重试设计"><a href="#重试设计" class="headerlink" title="重试设计"></a>重试设计</h2><p>当请求返回错误（比如配额不足、超时、内部错误等），对于后端部分节点过载的情况，倾向于立刻重试。</p>
+<p>重试要确保接口的幂等性：</p>
+<ul>
+<li><p>  全局唯一 ID：根据业务生成全局唯一 ID，在调用接口时会传入。接口提供方从存储系统中去检索该 ID 是否存在，如果存在则说明操作已经执行过，将拒绝本次服务请求；否则接收服务请求并将 ID 存入存储系统中，之后包含相同业务 ID 参数的请求将被拒绝。</p>
+</li>
+<li><p>  去重表：适用于在业务中有唯一标识的插入场景。比如在支付场景中一个订单只会支付一次，可建立将订单 ID 作为唯一索引的去重表。在支付时一并写入去重表的行为放入同一事务中，当出现重复支付时抛出唯一约束异常，操作回滚。</p>
+</li>
+<li><p>  多版本并发控制：适合对更新请求作幂等性控制。比如更新商品名称，可在更新接口中增加版本号实现幂等性控制。</p>
+</li>
+</ul>
+<p>留意重试带来流量放大：</p>
+<ul>
+<li><p>  限制重试次数和基于重试分布的策略（重试比率：10%）。</p>
+</li>
+<li><p>  随机化、指数型递增的重试周期：exponential ackoff + jitter。</p>
+</li>
+<li><p>  客户端记录重试次数直方图，传递到服务端进行分布判定，交由服务端判定拒绝。</p>
+</li>
+<li><p>  只应在失败层次进行重试，当重试仍然失败，全局约定错误码以避免级联重试。</p>
+</li>
+</ul>
+<p>重试设计不当的例子：</p>
+<ul>
+<li><p>  Nginx upstream retry 过大，导致服务雪崩。</p>
+</li>
+<li><p>  业务不幂等，重试导致数据重复。</p>
+</li>
+<li><p>  多层级重试传递，放大流量引起雪崩。</p>
+</li>
+</ul>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>特指数据中心内部的负载均衡。在理想情况下，某个服务的负载会完全均匀地分发给所有后端任务。在任何时刻节点消耗同样数量的 CPU。目标是实现：</p>
+<ul>
+<li><p>  均衡的流量分发。</p>
+</li>
+<li><p>  可靠地识别异常节点。</p>
+</li>
+<li><p>  scale-out，增加同质节点扩容。</p>
+</li>
+<li><p>  减少错误，提高可用性。</p>
+</li>
+</ul>
+<p>有时 backend 之间的负载差异较大，一般是 JSQ（最闲轮询）算法带来的问题，缺乏服务端全局视图：</p>
+<ul>
+<li><p>  每个请求的处理成本不同。</p>
+</li>
+<li><p>  物理机环境的差异：服务器本身很难强同质性，以及存在共享资源争用的情况（内存缓存、带宽、I/O 等）。</p>
+</li>
+<li><p>  性能因素，比如 Java 的 FGC、JIT 等。</p>
+</li>
+</ul>
+<p>因此目标需要综合考虑负载和可用性。参考《<a target="_blank" rel="noopener" href="http://www.eecs.harvard.edu/~michaelm/postscripts/tpds2001.pdf">The power of two choices in randomized load balancing</a>》，可采用 p2c 算法随机选取两个节点打分，选择更优的节点：</p>
+<ul>
+<li><p>  考虑服务端指标（CPU 等）和客户端指标（health、inflight、latency 等），使用简单的线性方程进行打分。</p>
+</li>
+<li><p>  对新启动的节点使用常量惩罚值（penalty），以及使用探针方式最小化放量，目的是预热。</p>
+</li>
+<li><p>  对于打分较低的节点，为避免进入黑名单而无法恢复，要使用统计衰减的方式，让节点指标逐渐恢复到初始状态（默认值）。</p>
+</li>
+<li><p>  当前发出的请求超过了 predict lagtency，就会增加惩罚。</p>
+</li>
+</ul>
+<blockquote>
+<p>  指标计算结合 moving average，使用时间衰减，计算 vt = v(t-1) * β + at * (1-β) 。</p>
+<p>  其中 β 为若干次幂的倒数，即：Math.Exp((-span) / 600ms)。</p>
+</blockquote>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -566,6 +858,11 @@
             
         </li>
         <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/08/08/Go_concurrency_primitive_extentions/" title= "Go 扩展并发原语">
+                    <div class="prevTitle">Go 扩展并发原语</div>
+                </a>
             
         </li>
     </ul>
@@ -699,6 +996,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:100vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%8F%AF%E7%94%A8%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">微服务可用性设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%94%E7%A6%BB%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.1.</span> <span class="toc-text">隔离设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E9%9A%94%E7%A6%BB"><span class="toc-number">1.1.1.</span> <span class="toc-text">服务隔离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%BB%E9%87%8D%E9%9A%94%E7%A6%BB"><span class="toc-number">1.1.2.</span> <span class="toc-text">轻重隔离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E9%9A%94%E7%A6%BB"><span class="toc-number">1.1.3.</span> <span class="toc-text">物理隔离</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%85%E6%97%B6%E6%8E%A7%E5%88%B6"><span class="toc-number">1.2.</span> <span class="toc-text">超时控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E6%97%B6%E7%AD%96%E7%95%A5"><span class="toc-number">1.2.1.</span> <span class="toc-text">超时策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E6%97%B6%E4%BC%A0%E9%80%92"><span class="toc-number">1.2.2.</span> <span class="toc-text">超时传递</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E8%BD%BD%E4%BF%9D%E6%8A%A4"><span class="toc-number">1.3.</span> <span class="toc-text">过载保护</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E9%99%90%E6%B5%81"><span class="toc-number">1.3.1.</span> <span class="toc-text">静态限流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E9%80%82%E5%BA%94%E9%99%90%E6%B5%81"><span class="toc-number">1.3.2.</span> <span class="toc-text">自适应限流</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E6%B5%81%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.4.</span> <span class="toc-text">限流设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%99%90%E6%B5%81"><span class="toc-number">1.4.1.</span> <span class="toc-text">分布式限流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-number">1.4.2.</span> <span class="toc-text">重要性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%86%94%E6%96%AD"><span class="toc-number">1.4.3.</span> <span class="toc-text">熔断</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Gutter"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">Gutter</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%B5%81%E6%8E%A7"><span class="toc-number">1.4.4.</span> <span class="toc-text">客户端流控</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%8D%E7%BA%A7%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.5.</span> <span class="toc-text">降级设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.6.</span> <span class="toc-text">重试设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.7.</span> <span class="toc-text">负载均衡</span></a></li></ol></li></ol>
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -1767,6 +2082,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
