@@ -6,7 +6,7 @@
   <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-08-08T15:45:11.935Z</updated>
+  <updated>2021-08-09T08:16:23.639Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://yipwinghong.github.io/2021/08/11/Go_microservices_availability_design/"/>
     <id>https://yipwinghong.github.io/2021/08/11/Go_microservices_availability_design/</id>
     <published>2021-08-11T13:42:39.000Z</published>
-    <updated>2021-08-08T15:45:11.935Z</updated>
+    <updated>2021-08-09T08:16:23.639Z</updated>
     
     
     <summary type="html">系统的可用性设计，主要包括隔离、超时、限流、降级、重试、负载均衡等方面。</summary>
