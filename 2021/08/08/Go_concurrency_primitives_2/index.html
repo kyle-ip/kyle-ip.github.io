@@ -27,13 +27,13 @@
     <meta name="description" content="">
     <meta name="description" content="本文讲述从 Go 标准库或第三方库扩展，实现更多复杂功能的并发原语。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Go 扩展并发原语">
-<meta property="og:url" content="https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitive_extentions/index.html">
+<meta property="og:title" content="Go 并发原语（二）">
+<meta property="og:url" content="https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitives_2/index.html">
 <meta property="og:site_name" content="Kylo&#39;s Notebook">
 <meta property="og:description" content="本文讲述从 Go 标准库或第三方库扩展，实现更多复杂功能的并发原语。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-08-08T11:42:39.000Z">
-<meta property="article:modified_time" content="2021-08-08T07:30:55.998Z">
+<meta property="article:modified_time" content="2021-08-09T08:25:44.709Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="Go">
@@ -41,7 +41,7 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>Go 扩展并发原语 · Kylo&#39;s Notebook</title>
+    <title>Go 并发原语（二） · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -256,7 +256,7 @@
             <a href="/" >Kylo&#39;s Notebook</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">Go 扩展并发原语</a>
+            <a href="#" class="post-name">Go 并发原语（二）</a>
         </div>
     </div>
     
@@ -299,7 +299,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Go 扩展并发原语
+            Go 并发原语（二）
             <!-- 404 -->
             
         </h1>
@@ -326,7 +326,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">5.1k</span>Reading time: <span class="post-count reading-time">21 min</span></span>
+                        <span>Word count: <span class="post-count word-count">6.5k</span>Reading time: <span class="post-count reading-time">27 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -455,7 +455,44 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="Go-扩展并发原语"><a href="#Go-扩展并发原语" class="headerlink" title="Go 扩展并发原语"></a>Go 扩展并发原语</h1><h2 id="Semaphore-信号量"><a href="#Semaphore-信号量" class="headerlink" title="Semaphore 信号量"></a>Semaphore 信号量</h2><p>信号量表示为使用一个（范围 [0, n] 的）变量实现并发控制的能力。当 goroutine 完成对此信号量等待（wait）时该计数值就减 1，对此信号量释放（release）时，该计数值就加 1。只有当计数器大于 0，等待的 goroutine 才有可能成功返回。</p>
+        <h1 id="Go-并发原语（二）"><a href="#Go-并发原语（二）" class="headerlink" title="Go 并发原语（二）"></a>Go 并发原语（二）</h1><h2 id="Atomic-原子操作"><a href="#Atomic-原子操作" class="headerlink" title="Atomic 原子操作"></a>Atomic 原子操作</h2><p>原子操作即由 CPU 提供基础支持、确保指令必然完全执行/不执行的操作。即使在多处理器、多核、有 CPU cache（多 goroutine 访问），该操作也能保证原子性。</p>
+<p>Go 标准库 <code>sync/atomic</code> 为 int32、int64、uint32、uint64、uintptr、Pointer 等类型提供了原子操作方法：AddXXX、CompareAndSwapXXX、SwapXXX、LoadXXX、StoreXXX 等，其操作对象是 <strong>变量的地址</strong>。</p>
+<p><code>Add</code>：加法运算的第一个参数 delta 可以是负数，相当于减法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">AddInt32</span><span class="params">(addr *<span class="keyword">int32</span>, delta <span class="keyword">int32</span>)</span> <span class="params">(<span class="built_in">new</span> <span class="keyword">int32</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>对于无符号整型，可以利用补码规则：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AddUint32(&amp;x, ^<span class="keyword">uint32</span>(c<span class="number">-1</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">// -1</span></span><br><span class="line">AddUint32(&amp;x, ^<span class="keyword">uint32</span>(<span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+
+<p><code>CAS</code>：比较替换，只有 addr 的值为 old，才把它修改为 new 并返回 true，否则返回 false（同理还有 <code>Swap</code>，区别是直接替换、不比较）。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CompareAndSwapInt32</span><span class="params">(addr *<span class="keyword">int32</span>, <span class="built_in">new</span> <span class="keyword">int32</span>)</span> <span class="params">(swapped <span class="keyword">bool</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>Load</code> 和 <code>Store</code>：取出 addr 地址中的值，以及把一个值存入到指定的 addr 地址中。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">LoadInt32</span><span class="params">(addr *<span class="keyword">int32</span>)</span> <span class="params">(val <span class="keyword">int32</span>)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">StoreInt32</span><span class="params">(addr *<span class="keyword">int32</span>, val <span class="keyword">int32</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>Value</code>：支持原子地存取对象类型（不能 <code>CAS</code> 和 <code>Swap</code>），常用于配置变更等场景中。</p>
+<p>参考以下实现配置变更的例子：</p>
+<ul>
+<li><p>  定义 <code>Value</code> 类型的变量 <code>config</code>， 用于存储配置信息。</p>
+</li>
+<li><p>  启动一个 goroutine，让它随机 sleep 一段时间，之后变更配置，并通过 <code>Cond</code> 通知其它 reader 加载新配置。</p>
+</li>
+<li><p>  启动一个 goroutine 等待配置变更的信号，一旦有变更就会加载最新的配置。</p>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Config <span class="keyword">struct</span> &#123;</span><br><span class="line">    NodeName <span class="keyword">string</span></span><br><span class="line">    Addr     <span class="keyword">string</span></span><br><span class="line">    Count    <span class="keyword">int32</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadNewConfig</span><span class="params">()</span> <span class="title">Config</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> Config&#123;</span><br><span class="line">        NodeName: <span class="string">&quot;北京&quot;</span>,</span><br><span class="line">        Addr:     <span class="string">&quot;10.77.95.27&quot;</span>,</span><br><span class="line">        Count:    rand.Int31(),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> config atomic.Value</span><br><span class="line">    config.Store(loadNewConfig())</span><br><span class="line">    <span class="keyword">var</span> cond = sync.NewCond(&amp;sync.Mutex&#123;&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置新 config</span></span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">for</span> &#123;</span><br><span class="line">            time.Sleep(time.Duration(<span class="number">5</span>+rand.Int63n(<span class="number">5</span>)) * time.Second)</span><br><span class="line">            config.Store(loadNewConfig())</span><br><span class="line">            cond.Broadcast() <span class="comment">// 通知等待着配置已变更</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">for</span> &#123;</span><br><span class="line">            cond.L.Lock()</span><br><span class="line">            cond.Wait()                 <span class="comment">// 等待变更信号</span></span><br><span class="line">            c := config.Load().(Config) <span class="comment">// 读取新的配置</span></span><br><span class="line">            fmt.Printf(<span class="string">&quot;new config: %+v\n&quot;</span>, c)</span><br><span class="line">            cond.L.Unlock()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">    <span class="keyword">select</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>  在操作系统中，write 的地址基本上是对齐的（aligned）。 比如 32 位操作系统、CPU 和编译器，write 的地址总是 4 的倍数，64 位系统则总是 8 的倍数。这种情况下通过一个指令就可以实现地址的写操作，不会导致其他线程看到部分写。如果地址不是对齐，处理器需要分成两个指令处理，如果只执行了一个指令便被其它线程看到，被称为 撕裂写（torn write） 。因此赋值操作必须是原子操作，才能保证数据完整。</p>
+<p>  对于多核处理器，某个核对地址的值的更改在更新到主内存中前，是在多级缓存中存放的，此时其它核看到的数据可能不一样。由于 cache、指令重排，可见性等问题的存在，实现原子性依赖于内存屏障（memory fence）：写内存屏障告知处理器，必须等到其管道中未完成的写被刷新到内存中再进行操作。此操作会让其它处理器的缓存失效，以便使之从主内存中获取最新值。</p>
+</blockquote>
+<p>atomic 包方法会提供内存屏障功能，所以可以保证赋值的完整性，还能保证可见性：某个核更新了某地址的值，其它处理器总是能读取到它的最新值。需要注意的是，处理器之间保证数据的一致性也是会降低性能的。</p>
+<h3 id="功能扩展"><a href="#功能扩展" class="headerlink" title="功能扩展"></a>功能扩展</h3><p>一些第三方库对标准库的原子操作 API 提供了进一步封装。比如 <a target="_blank" rel="noopener" href="https://github.com/uber-go/atomic">uber-go/atomic</a> 定义和封装了几种与常见类型对应的原子操作类型：Bool、Duration、Error、Float64、Int32、Int64、String、Uint32、Uint64 等。以及原子操作方法：CAS、Store、Swap、Toggle 等。其使用也更友好：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> running atomic.Bool</span><br><span class="line">running.Store(<span class="literal">true</span>)</span><br><span class="line">running.Toggle()</span><br><span class="line">fmt.Println(running.Load()) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="扩展：实现无锁队列"><a href="#扩展：实现无锁队列" class="headerlink" title="扩展：实现无锁队列"></a>扩展：实现无锁队列</h3><p>原子操作常用来实现 Lock-Free 数据结构，相比起同步的数据结构往往有更高的性能。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> LKQueue <span class="keyword">struct</span> &#123;</span><br><span class="line">    head unsafe.Pointer</span><br><span class="line">    tail unsafe.Pointer</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过链表实现，这个数据结构代表链表中的节点</span></span><br><span class="line"><span class="keyword">type</span> node <span class="keyword">struct</span> &#123;</span><br><span class="line">    value <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">    next  unsafe.Pointer</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewLKQueue</span><span class="params">()</span> *<span class="title">LKQueue</span></span> &#123;</span><br><span class="line">    n := unsafe.Pointer(&amp;node&#123;&#125;)</span><br><span class="line">    <span class="keyword">return</span> &amp;LKQueue&#123;head: n, tail: n&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(q *LKQueue)</span> <span class="title">Add</span><span class="params">(v <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    n := &amp;node&#123;value: v&#125;</span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">        tail := load(&amp;q.tail)</span><br><span class="line">        next := load(&amp;tail.next)</span><br><span class="line">        <span class="keyword">if</span> tail == load(&amp;q.tail) &#123;</span><br><span class="line">            <span class="keyword">if</span> next == <span class="literal">nil</span> &#123;                     <span class="comment">// 还没有新数据入队</span></span><br><span class="line">                <span class="keyword">if</span> cas(&amp;tail.next, next, n) &#123;    <span class="comment">// 增加到队尾</span></span><br><span class="line">                    cas(&amp;q.tail, tail, n)        <span class="comment">// 入队成功，移动尾巴指针</span></span><br><span class="line">                    <span class="keyword">return</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;                             <span class="comment">// 已有新数据加到队列后面，需要移动尾指针</span></span><br><span class="line">                cas(&amp;q.tail, tail, next)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(q *LKQueue)</span> <span class="title">Poll</span><span class="params">()</span> <span class="title">interface</span></span>&#123;&#125; &#123;</span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">        head := load(&amp;q.head)</span><br><span class="line">        tail := load(&amp;q.tail)</span><br><span class="line">        next := load(&amp;head.next)</span><br><span class="line">        <span class="keyword">if</span> head == load(&amp;q.head) &#123;</span><br><span class="line">            <span class="keyword">if</span> head == tail &#123;                        <span class="comment">// head 和 tail一样</span></span><br><span class="line">                <span class="keyword">if</span> next == <span class="literal">nil</span> &#123;                     <span class="comment">// 空队列</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">                &#125;</span><br><span class="line">                                                     <span class="comment">// 只是尾指针还未调整，尝试调整它指向下一个。</span></span><br><span class="line">                cas(&amp;q.tail, tail, next)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                                     <span class="comment">// 读取出队的数据，头指针移动到下一个。</span></span><br><span class="line">                v := next.value</span><br><span class="line">                <span class="keyword">if</span> cas(&amp;q.head, head, next) &#123;</span><br><span class="line">                    <span class="keyword">return</span> v</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">load</span><span class="params">(p *unsafe.Pointer)</span> <span class="params">(n *node)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 将 unsafe.Pointer 原子加载转换成 node</span></span><br><span class="line">    <span class="keyword">return</span> (*node)(atomic.LoadPointer(p))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">cas</span><span class="params">(p *unsafe.Pointer, old, <span class="built_in">new</span> *node)</span> <span class="params">(ok <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 封装 CAS，避免直接将 *node 转换成 unsafe.Pointer</span></span><br><span class="line">    <span class="keyword">return</span> atomic.CompareAndSwapPointer(p, unsafe.Pointer(old), unsafe.Pointer(<span class="built_in">new</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Semaphore-信号量"><a href="#Semaphore-信号量" class="headerlink" title="Semaphore 信号量"></a>Semaphore 信号量</h2><p>信号量表示为使用一个（范围 [0, n] 的）变量实现并发控制的能力。当 goroutine 完成对此信号量等待（wait）时该计数值就减 1，对此信号量释放（release）时，该计数值就加 1。只有当计数器大于 0，等待的 goroutine 才有可能成功返回。</p>
 <blockquote>
 <p>  更复杂的信号量可以使用抽象数据类型代替变量，用来代表复杂的资源类型。</p>
 </blockquote>
@@ -648,8 +685,6 @@ height:100vh;
 <li><p>  <a target="_blank" rel="noopener" href="https://github.com/mdlayher/schedgroup">mdlayher/schedgroup</a>：提供与时间相关、处理一组 goroutine 的并发原语 schedgroup，可指定任务在某时间后执行（提供 <code>Delay</code>、<code>Schedule</code>、<code>Wait</code> 等方法）。</p>
 </li>
 </ul>
-<h2 id="分布式并发原语：Leader-选举、互斥锁和读写锁"><a href="#分布式并发原语：Leader-选举、互斥锁和读写锁" class="headerlink" title="分布式并发原语：Leader 选举、互斥锁和读写锁"></a>分布式并发原语：Leader 选举、互斥锁和读写锁</h2><p>…</p>
-<h2 id="分布式并发原语：队列、栅栏、STM"><a href="#分布式并发原语：队列、栅栏、STM" class="headerlink" title="分布式并发原语：队列、栅栏、STM"></a>分布式并发原语：队列、栅栏、STM</h2><p>…</p>
 <p>待续。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
@@ -820,7 +855,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Go-%E6%89%A9%E5%B1%95%E5%B9%B6%E5%8F%91%E5%8E%9F%E8%AF%AD"><span class="toc-number">1.</span> <span class="toc-text">Go 扩展并发原语</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="toc-number">1.1.</span> <span class="toc-text">Semaphore 信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#P-V-%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.1.</span> <span class="toc-text">P&#x2F;V 操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%BA%93%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.1.2.</span> <span class="toc-text">标准库实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Channel-%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.1.3.</span> <span class="toc-text">使用 Channel 实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SingleFlight-%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6"><span class="toc-number">1.2.</span> <span class="toc-text">SingleFlight 请求合并</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.2.2.</span> <span class="toc-text">应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CyclicBarrier-%E5%BE%AA%E7%8E%AF%E6%A0%85%E6%A0%8F"><span class="toc-number">1.3.</span> <span class="toc-text">CyclicBarrier 循环栅栏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%BA%94%E7%94%A8"><span class="toc-number">1.3.2.</span> <span class="toc-text">基本应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ErrGroup-%E5%AD%90%E4%BB%BB%E5%8A%A1%E7%BC%96%E6%8E%92"><span class="toc-number">1.4.</span> <span class="toc-text">ErrGroup 子任务编排</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-Pipeline"><span class="toc-number">1.4.1.</span> <span class="toc-text">实现 Pipeline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%BA%93"><span class="toc-number">1.4.2.</span> <span class="toc-text">扩展库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%B9%B6%E5%8F%91%E5%8E%9F%E8%AF%AD%EF%BC%9ALeader-%E9%80%89%E4%B8%BE%E3%80%81%E4%BA%92%E6%96%A5%E9%94%81%E5%92%8C%E8%AF%BB%E5%86%99%E9%94%81"><span class="toc-number">1.5.</span> <span class="toc-text">分布式并发原语：Leader 选举、互斥锁和读写锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%B9%B6%E5%8F%91%E5%8E%9F%E8%AF%AD%EF%BC%9A%E9%98%9F%E5%88%97%E3%80%81%E6%A0%85%E6%A0%8F%E3%80%81STM"><span class="toc-number">1.6.</span> <span class="toc-text">分布式并发原语：队列、栅栏、STM</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Go-%E5%B9%B6%E5%8F%91%E5%8E%9F%E8%AF%AD%EF%BC%88%E4%BA%8C%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Go 并发原语（二）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Atomic-%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.</span> <span class="toc-text">Atomic 原子操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E6%89%A9%E5%B1%95"><span class="toc-number">1.1.1.</span> <span class="toc-text">功能扩展</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%EF%BC%9A%E5%AE%9E%E7%8E%B0%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97"><span class="toc-number">1.1.2.</span> <span class="toc-text">扩展：实现无锁队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="toc-number">1.2.</span> <span class="toc-text">Semaphore 信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#P-V-%E6%93%8D%E4%BD%9C"><span class="toc-number">1.2.1.</span> <span class="toc-text">P&#x2F;V 操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%BA%93%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">标准库实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Channel-%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">使用 Channel 实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SingleFlight-%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6"><span class="toc-number">1.3.</span> <span class="toc-text">SingleFlight 请求合并</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.2.</span> <span class="toc-text">应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CyclicBarrier-%E5%BE%AA%E7%8E%AF%E6%A0%85%E6%A0%8F"><span class="toc-number">1.4.</span> <span class="toc-text">CyclicBarrier 循环栅栏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%BA%94%E7%94%A8"><span class="toc-number">1.4.2.</span> <span class="toc-text">基本应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ErrGroup-%E5%AD%90%E4%BB%BB%E5%8A%A1%E7%BC%96%E6%8E%92"><span class="toc-number">1.5.</span> <span class="toc-text">ErrGroup 子任务编排</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-Pipeline"><span class="toc-number">1.5.1.</span> <span class="toc-text">实现 Pipeline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%BA%93"><span class="toc-number">1.5.2.</span> <span class="toc-text">扩展库</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1384,7 +1419,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/Go_concurrency_primitive_extentions/" >Go 扩展并发原语</a>
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/Go_concurrency_primitives_2/" >Go 并发原语（二）</a>
         </li>
     
     
@@ -1469,7 +1504,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/17</span><a class="archive-post-title" href= "/2021/06/17/Go_concurrency_primitives/" >Go 并发原语</a>
+            <span class="archive-post-date">06/17</span><a class="archive-post-title" href= "/2021/06/17/Go_concurrency_primitives_1/" >Go 并发原语（一）</a>
         </li>
     
     
@@ -1775,9 +1810,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1789,11 +1824,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
@@ -1803,15 +1838,15 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
-        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
-    
-        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
-    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
         <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     

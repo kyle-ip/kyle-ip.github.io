@@ -38,11 +38,11 @@
   </entry>
   
   <entry>
-    <title>Go 扩展并发原语</title>
-    <link href="https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitive_extentions/"/>
-    <id>https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitive_extentions/</id>
+    <title>Go 并发原语（二）</title>
+    <link href="https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitives_2/"/>
+    <id>https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitives_2/</id>
     <published>2021-08-08T11:42:39.000Z</published>
-    <updated>2021-08-08T07:30:55.998Z</updated>
+    <updated>2021-08-09T08:25:44.709Z</updated>
     
     
     <summary type="html">本文讲述从 Go 标准库或第三方库扩展，实现更多复杂功能的并发原语。</summary>
@@ -373,11 +373,11 @@
   </entry>
   
   <entry>
-    <title>Go 并发原语</title>
-    <link href="https://yipwinghong.github.io/2021/06/17/Go_concurrency_primitives/"/>
-    <id>https://yipwinghong.github.io/2021/06/17/Go_concurrency_primitives/</id>
+    <title>Go 并发原语（一）</title>
+    <link href="https://yipwinghong.github.io/2021/06/17/Go_concurrency_primitives_1/"/>
+    <id>https://yipwinghong.github.io/2021/06/17/Go_concurrency_primitives_1/</id>
     <published>2021-06-17T11:42:39.000Z</published>
-    <updated>2021-08-01T08:44:14.031Z</updated>
+    <updated>2021-08-09T08:25:17.495Z</updated>
     
     
     <summary type="html">Go 标准库（sync）中提供了很多原生支持的并发原语，本文将简单讲解其基本用法。</summary>
