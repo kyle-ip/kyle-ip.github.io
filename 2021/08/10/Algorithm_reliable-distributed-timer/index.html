@@ -25,17 +25,38 @@
     <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Kylo&#39;s Notebook">
-<meta property="og:url" content="https://yipwinghong.github.io/tags/OS/index.html">
+    <meta name="description" content="原文链接：https:&#x2F;&#x2F;0x709394.me&#x2F;How-To%20Design%20A%20Reliable%20Distributed%20Timer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="可靠的分布式计时器（译）">
+<meta property="og:url" content="https://yipwinghong.github.io/2021/08/10/Algorithm_reliable-distributed-timer/index.html">
 <meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;0x709394.me&#x2F;How-To%20Design%20A%20Reliable%20Distributed%20Timer">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103302.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103527.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103357.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195209.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195227.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806105745.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806114120.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806142855.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806152334.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806161123.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806203653.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806202724.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195302.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806202140.png">
+<meta property="article:published_time" content="2021-08-10T13:10:14.000Z">
+<meta property="article:modified_time" content="2021-08-10T03:13:31.555Z">
 <meta property="article:author" content="Kylo Yip">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103302.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>Kylo&#39;s Notebook</title>
+    <title>可靠的分布式计时器（译） · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -218,6 +239,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -240,6 +263,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>Kylo's Notebook</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >Kylo&#39;s Notebook</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">可靠的分布式计时器（译）</a>
+        </div>
+    </div>
     
 </header>
     
@@ -264,24 +298,76 @@
 
 
 
+
+height:100vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(https://api.ixiaowai.cn/mcapi/mcapi.php)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            可靠的分布式计时器（译）
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "算法">算法</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">2.4k</span>Reading time: <span class="post-count reading-time">8 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/10</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -382,176 +468,157 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/04/28/OS_linux-memory-monitoring/" >
-            
-                <span>Linux 内存原理与分析</span>
-        </a>
-        <div class="abstract-content">
-            学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（内存）。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/28</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "OS">OS</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p>  原文链接：<a target="_blank" rel="noopener" href="https://0x709394.me/How-To%20Design%20A%20Reliable%20Distributed%20Timer">https://0x709394.me/How-To%20Design%20A%20Reliable%20Distributed%20Timer</a></p>
+<p>  在最近的几个月，作者一直在维护一个遗留的、用于处理一些重要的支付业务（10 亿个/天，峰值 2 万个/秒）的分布式计时器。尽管这是一段古老且充满黑魔法的代码，但也能看出设计者深厚的洞察力、设计之巧妙，因此作者把设计思路总结为下文。</p>
+<p>  不包含实际代码，也许只有数值和图解，毕竟一图胜千言。</p>
+</blockquote>
+<h1 id="可靠的分布式计时器"><a href="#可靠的分布式计时器" class="headerlink" title="可靠的分布式计时器"></a>可靠的分布式计时器</h1><h2 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h2><p>实现计时器的算法有红黑树、最小堆和时间轮等，其中最有效、最常用的算法是时间轮，因此备受关注。</p>
+<p>基于时间轮的计时器建模，分为两个内部操作：</p>
+<ul>
+<li><p>  <strong>单位计数</strong>：类似时钟的每个“滴答”。 如果设置计时器的粒度是 T 个时间单位（比如 1s），则每 T 个时间单位就会发生一次单位计数。这会检查是否存在未完成、已过期的计时器，是则把它删除并调用过期处理。</p>
+</li>
+<li><p>  <strong>到期处理</strong>：调用用户提供的回调函数（或其他用户请求操作，取决于模型设计）。 </p>
+</li>
+</ul>
+<h3 id="简单时间轮"><a href="#简单时间轮" class="headerlink" title="简单时间轮"></a>简单时间轮</h3><p>即维护一个大的定时轮，其中有 8 个槽位，每个槽位挂载即将到期的任务。假设每个槽位表示 1s，则当前槽位就是 slot1，如果要添加一个需要 2s 后触发的任务，则这个任务就会被插入到 slot3 中。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103302.png" alt="img"></p>
+<p>单位计数的时间复杂度为 O(1)。但由于只有 8 个槽位，无法添加一个 20s 后启动的任务。如果有大周期的定时任务，则必须维护有大量槽位的时间轮，这需要指数级的内存。</p>
+<h3 id="哈希时间轮"><a href="#哈希时间轮" class="headerlink" title="哈希时间轮"></a>哈希时间轮</h3><p>在以上设计中，如果计时器周期较大，则会消耗大量资源。经过改进后，可以使用散列代替每个时间单位使用一个槽位的做法。构造一个固定槽位数的环形缓冲区（比如 8 个）。 如果当前槽位为 0，要存储 3s 后的任务，可以插入 slot3；如果想要存储 9s 后的任务，则可以插入 slot1（9 % 8 = 1）。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103527.png" alt="img"></p>
+<p>单位计数的时间复杂度为 O(1) - O(n)，这是一种以时间换空间的权衡策略。</p>
+<h3 id="分层时间轮"><a href="#分层时间轮" class="headerlink" title="分层时间轮"></a>分层时间轮</h3><p>以上两种做法具有时间或空间效率上的缺点。Varghese 和 Lauck 在 1987 年曾发表过一篇论文，介绍了 <a target="_blank" rel="noopener" href="http://www.cs.columbia.edu/~nahum/w6998/papers/sosp87-timing-wheels.pdf">分层计时轮</a>（Hierarchical Timing Wheels），为了更好地理解它，可以参考旧水表：第一级轮（秒轮）旋转一圈，触发第二级（分轮）打一个槽，第三级（时轮）同理。 因此要表示一天（60*60*24s）则需要 60+60+24 个槽位；要表示一个月，则只需要一个有 30 个槽位的四级轮（月轮）。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103357.png" alt="img"></p>
+<p>单位计数的时间复杂度为 O(1) - O(n)。</p>
+<h2 id="单位计数"><a href="#单位计数" class="headerlink" title="单位计数"></a>单位计数</h2><p>介绍完时间轮算法，回到设计可靠的分布式计时器的话题，其中决定如何存储计时器任务至关重要。需要权衡实现复杂度和时间、空间，因此选择散列时间轮算法。</p>
+<h3 id="插入任务"><a href="#插入任务" class="headerlink" title="插入任务"></a>插入任务</h3><p>使用 TableKV 实现散列时间轮算法：假设有 10m 个桶，当前时间为 2021:08:05 11:17:33 +08=（UNIX 时间戳：1628176653）。有一个任务将在 10s 后触发（``start_time = 1628176653 + 10<code>，或 </code>start_time = 1628176653 + 10 + 100000000<code>即 100000010s 后），这些任务都将存储到桶</code>start_time % 1006060030` 中。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195209.png" alt="img"></p>
+<h3 id="取出任务"><a href="#取出任务" class="headerlink" title="取出任务"></a>取出任务</h3><p>随着时间到了 2021:08:05 11:17:43 +08（UNIX 时间戳：1628176663），需要通过计算桶号来从槽位中取出任务：<code>current_timestamp(1628176663) % 100000000 = 2817663</code> 定位桶号，在桶 28176663 中找到满足 <code>start_time &lt;= current_timestamp</code> 的任务，即为所有预期的到期任务。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195227.png" alt="img"></p>
+<h2 id="全局时钟与锁"><a href="#全局时钟与锁" class="headerlink" title="全局时钟与锁"></a>全局时钟与锁</h2><p>当在到达当前时间时获取所有到期任务，如果服务在分布式系统上运行，通常会有多个主机（物理机或 docker），在其机器上有多个 <code>current_time</code>。这样不能保证多台主机的所有时钟都由同一个网络时间服务器同步，则所有时钟可能会略有不同。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806105745.png" alt="img"></p>
+<p>为了得到正确的时间，需要维护一个单调的全局时钟（也有其它方法处理时间和顺序）。 由于只关心 Unix 时间戳，可以维护一个由 Unix 时间戳表示的全局系统时钟。所有机器每秒请求全局时钟以获取当前时间，再获取到期得任务。</p>
+<p>但这样就有新的问题：如果所有机器都可以获取到期任务，将会导致这些任务被处理多次。因此还需要一个互斥锁来保证只有一台机器可以获取到期任务。可以使用乐观锁策略实现全局时钟和互斥锁。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806114120.png" alt="img"></p>
+<p>步骤如下：</p>
+<ul>
+<li><p>  所有机器获取带版本的全局时间戳（tA）。</p>
+</li>
+<li><p>  所有机器都增加时间戳（tB）和更新版本（乐观锁，只有一台机器会成功）。</p>
+</li>
+<li><p>  获得互斥锁的机器被授权去取 tA 的过期任务，其他没有获得互斥锁的机器被挂起等待 1s。</p>
+</li>
+<li><p>  基于 tB 循环回到步骤 1。 </p>
+</li>
+</ul>
+<p>可以将不断获取锁和获取到期数据的功能封装在一个 scheduler  组件中。 </p>
+<h2 id="过期处理"><a href="#过期处理" class="headerlink" title="过期处理"></a>过期处理</h2><p>用于调用用户提供的回调函数或其他用户请求的操作。在分布式计算中，通过 RPC 执行一个过程调用是很常见的，比如在计时器任务到期时发起一个 RPC 请求，从计时器服务到回调服务。因此在触发计时器任务时，调用者需要把参数和服务信息提供给计时器。</p>
+<p>可以将服务元信息和参数数据打包并序列化为二进制数据，发送给计时器。 当从插槽中拉出数据时，定时器可以重构 Request/Response/Client 类型并设置为自定义数据，然后直接执行即可。</p>
+<p> <img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806142855.png" alt="img"></p>
+<p>如果需要触发的过期任务很多、要尽可能多地处理，可以创建线程池、进程池、协程池来并发执行 RPC。 </p>
+<h2 id="服务解耦"><a href="#服务解耦" class="headerlink" title="服务解耦"></a>服务解耦</h2><p>如果回调函数包含大量操作（100ms+），即使已经有线程/进程/协程池来处理定时器任务也难免会宕，导致吞吐量下降。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806152334.png" alt="img"></p>
+<p>使用消息队列可显着简化解耦服务编码，同时提高性能、可靠性和可扩展性。</p>
+<p>通常将消息队列与发布/订阅的消息传递设计模式结合，计时器可将任务数据发布为消息，并订阅相同主题的消息，使用消息队列作为缓冲区。在订阅者中 RPC 客户端执行回调请求。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806161123.png" alt="img"></p>
+<p>此时计时器的状态机如下：</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806203653.png" alt="img"></p>
+<p>有了消息队列，就能实现缓冲、重试或批量工作，并为工作负载削峰。</p>
+<h2 id="高可用问题"><a href="#高可用问题" class="headerlink" title="高可用问题"></a>高可用问题</h2><h3 id="错过到期任务"><a href="#错过到期任务" class="headerlink" title="错过到期任务"></a>错过到期任务</h3><p>调度进程被关闭、崩溃或其他未知问题可能会导致任务错过到期。定位遗漏的任务并重新执行是一项重要的工作。由于使用全局 <code>current_timestamp</code> 获取到期任务，可以用另一个调度程序来使用 <code>delay10mintimestamp</code> 来获取错过的到期任务。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806202724.png" alt="img"></p>
+<p>为了在任务集合中找到错过的到期任务，需要设置一个范围（延迟 10min - 当前时间），并在批量地 cross 桶查找。找到错过的任务后，计时器再将它们作为消息发布到消息队列。一些开源分布式定时器项目（如 Quartz）提供了处理丢失任务的指令：Misfire。</p>
+<p>如果 NoSQL 组件不支持 find-cross-buckets 功能，还可以逐个查找范围内的所有桶。</p>
+<h3 id="回调执行错误"><a href="#回调执行错误" class="headerlink" title="回调执行错误"></a>回调执行错误</h3><p>由于分布式系统是无共享系统，其通过消息在网络中进行通信（异步或同步），由于网络不可靠，调用用户提供的回调时如果网络暂时中断或回调服务暂时关闭，RPC 请求可能会失败。</p>
+<p>可利用重试处理暂时性错误（暂时出现、可能很快消失）。通过允许系统重复发送请求直到得到明确的响应来帮助实现弹性。利用消息队列可获得免费的重试能力，同时计时器也可以处理用户请求重试。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195302.png" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>综上所述，计时器的整体架构如下：</p>
+<ul>
+<li><p>  添加附带指定元信息和任务信息的计时器任务。</p>
+</li>
+<li><p>  通过散列时间轮算法将任务插入到桶中（状态设置为 pending）。</p>
+</li>
+<li><p>  时间同步调度器尝试获取锁并获取全局当前时间。</p>
+</li>
+<li><p>  取锁调度器获取预期的到期任务数据。</p>
+</li>
+<li><p>  使用线程池将任务数据作为消息发布到消息队列，将任务状态设置为 delivered。</p>
+</li>
+<li><p>  消息订阅者从消息队列拉取消息。</p>
+</li>
+<li><p>  向回调服务发送 RPC 请求，并设置任务状态为 success 或 fail。</p>
+</li>
+<li><p>  如有必要则执行重试。</p>
+</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806202140.png" alt="img"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><p>  <a target="_blank" rel="noopener" href="http://www.cs.columbia.edu/~nahum/w6998/papers/ton97-timing-wheels.pdf">Hashed And Hierarchical Timing Wheels: Efficient Data Structures For Implementing A Timer Facility</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.acolyer.org/2015/11/23/hashed-and-hierarchical-timing-wheels/">Hashed and Hierarchical Timing Wheels: Data Structures for the Efficient Implementation of a Timer Facility</a></p>
+</li>
+</ul>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/04/20/OS_linux-io-monitoring/" >
-            
-                <span>Linux I/O 原理与分析</span>
-        </a>
-        <div class="abstract-content">
-            学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（I/O）。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "OS">OS</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/04/10/OS_linux-cpu-monitoring/" >
-            
-                <span>Linux CPU 原理与分析</span>
-        </a>
-        <div class="abstract-content">
-            学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（CPU）。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/10</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "OS">OS</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/04/05/OS_linux-network-monitoring/" >
-            
-                <span>Linux 网络原理与分析</span>
-        </a>
-        <div class="abstract-content">
-            学会 Linux 系统原理，并使用命令行工具分析 Linux 系统问题（网络）。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/05</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "OS">OS</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/04/01/OS_system_initialization/" >
-            
-                <span>Linux - 架构与系统初始化</span>
-        </a>
-        <div class="abstract-content">
-            第 n 次重学操作系统，这次是从开机开始...= =
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "OS">OS</a>
-    
-</div>
-            
-        </div>
-    </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2021/08/11/Go_microservices_availability_design/" title= "微服务可用性设计">
+                    <div class="nextTitle">微服务可用性设计</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/08/08/Go_concurrency_primitives_2/" title= "Go 并发原语（二）">
+                    <div class="prevTitle">Go 并发原语（二）</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+     
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -645,6 +712,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:100vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E9%9D%A0%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E6%97%B6%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">可靠的分布式计时器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">算法描述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E6%97%B6%E9%97%B4%E8%BD%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">简单时间轮</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E6%97%B6%E9%97%B4%E8%BD%AE"><span class="toc-number">1.1.2.</span> <span class="toc-text">哈希时间轮</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B1%82%E6%97%B6%E9%97%B4%E8%BD%AE"><span class="toc-number">1.1.3.</span> <span class="toc-text">分层时间轮</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E4%BD%8D%E8%AE%A1%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">单位计数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.2.1.</span> <span class="toc-text">插入任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E5%87%BA%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.2.2.</span> <span class="toc-text">取出任务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E6%97%B6%E9%92%9F%E4%B8%8E%E9%94%81"><span class="toc-number">1.3.</span> <span class="toc-text">全局时钟与锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E6%9C%9F%E5%A4%84%E7%90%86"><span class="toc-number">1.4.</span> <span class="toc-text">过期处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E8%A7%A3%E8%80%A6"><span class="toc-number">1.5.</span> <span class="toc-text">服务解耦</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E9%97%AE%E9%A2%98"><span class="toc-number">1.6.</span> <span class="toc-text">高可用问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%99%E8%BF%87%E5%88%B0%E6%9C%9F%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.6.1.</span> <span class="toc-text">错过到期任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E8%B0%83%E6%89%A7%E8%A1%8C%E9%94%99%E8%AF%AF"><span class="toc-number">1.6.2.</span> <span class="toc-text">回调执行错误</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.7.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.8.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -1725,6 +1810,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({

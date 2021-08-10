@@ -38,6 +38,25 @@
   </entry>
   
   <entry>
+    <title>可靠的分布式计时器（译）</title>
+    <link href="https://yipwinghong.github.io/2021/08/10/Algorithm_reliable-distributed-timer/"/>
+    <id>https://yipwinghong.github.io/2021/08/10/Algorithm_reliable-distributed-timer/</id>
+    <published>2021-08-10T13:10:14.000Z</published>
+    <updated>2021-08-10T03:13:31.555Z</updated>
+    
+    
+    <summary type="html">原文链接：https://0x709394.me/How-To%20Design%20A%20Reliable%20Distributed%20Timer</summary>
+    
+    
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Go 并发原语（二）</title>
     <link href="https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitives_2/"/>
     <id>https://yipwinghong.github.io/2021/08/08/Go_concurrency_primitives_2/</id>
@@ -381,25 +400,6 @@
     
     
     <summary type="html">Go 标准库（sync）中提供了很多原生支持的并发原语，本文将简单讲解其基本用法。</summary>
-    
-    
-    
-    
-    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-    <category term="Go" scheme="https://yipwinghong.github.io/tags/Go/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Go Cheat Sheet</title>
-    <link href="https://yipwinghong.github.io/2021/06/13/Go_cheat-sheet/"/>
-    <id>https://yipwinghong.github.io/2021/06/13/Go_cheat-sheet/</id>
-    <published>2021-06-13T06:42:39.000Z</published>
-    <updated>2021-07-18T13:29:36.507Z</updated>
-    
-    
-    <summary type="html">参考：https://github.com/a8m/golang-cheat-sheet</summary>
     
     
     
