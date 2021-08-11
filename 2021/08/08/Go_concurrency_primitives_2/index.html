@@ -33,7 +33,7 @@
 <meta property="og:description" content="本文讲述从 Go 标准库或第三方库扩展，实现更多复杂功能的并发原语。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-08-08T11:42:39.000Z">
-<meta property="article:modified_time" content="2021-08-09T08:25:44.709Z">
+<meta property="article:modified_time" content="2021-08-11T15:11:53.057Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="Go">
@@ -326,7 +326,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">6.5k</span>Reading time: <span class="post-count reading-time">27 min</span></span>
+                        <span>Word count: <span class="post-count word-count">6.9k</span>Reading time: <span class="post-count reading-time">30 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -686,6 +686,88 @@ height:100vh;
 </li>
 </ul>
 <p>待续。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2018/11/goroutine-leaks-the-forgotten-sender.html">Goroutine Leaks - The Forgotten Sender (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2019/04/concurrency-trap-2-incomplete-work.html">Concurrency Trap #2: Incomplete Work (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2014/01/concurrency-goroutines-and-gomaxprocs.html">Concurrency, Goroutines and GOMAXPROCS (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://dave.cheney.net/practical-go/presentations/qcon-china.html#_concurrency">Practical Go: Real world advice for writing maintainable Go programs (cheney.net)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://golang.org/ref/mem">The Go Memory Model - The Go Programming Language (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.csdn.net/caoshangpa/article/details/78853919">理解Memory Barrier（内存屏障）_草上爬的博客-CSDN博客</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.csdn.net/qcrao/article/details/92759907">曹大谈内存重排_梦醒人间-CSDN博客</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://cch123.github.io/ooo/">从 Memory Reordering 说起 (cch123.github.io)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.golang.org/codelab-share">Share Memory By Communicating - The Go Blog (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://dave.cheney.net/2018/01/06/if-aligned-memory-writes-are-atomic-why-do-we-need-the-sync-atomic-package">If aligned memory writes are atomic, why do we need the sync/atomic package? – The acme of foolishness (cheney.net)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.golang.org/race-detector">Introducing the Go Race Detector - The Go Blog (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://dave.cheney.net/2014/06/27/ice-cream-makers-and-data-races">Ice cream makers and data races – The acme of foolishness (cheney.net)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2014/06/ice-cream-makers-and-data-races-part-ii.html">Ice Cream Makers and Data Races Part II (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://medium.com/a-journey-with-go/go-how-to-reduce-lock-contention-with-the-atomic-package-ba3b2664b549">Go: How to Reduce Lock Contention with the Atomic Package | by Vincent Blanchon | A Journey With Go | Medium</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://medium.com/a-journey-with-go/go-discovery-of-the-trace-package-e5a821743c3c">Go: Discovery of the Trace Package | by Vincent Blanchon | A Journey With Go | Medium</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://medium.com/a-journey-with-go/go-mutex-and-starvation-3f4f4e75ad50">Go: Mutex and Starvation. While developing in Golang, a mutex can… | by Vincent Blanchon | A Journey With Go | Medium</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2017/10/the-behavior-of-channels.html">The Behavior Of Channels (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://medium.com/a-journey-with-go/go-buffered-and-unbuffered-channels-29a107c00268">Go: Buffered and Unbuffered Channels | by Vincent Blanchon | A Journey With Go | Medium</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://medium.com/a-journey-with-go/go-ordering-in-select-statements-fd0ff80fd8d6">Go: Ordering in Select Statements | by Vincent Blanchon | A Journey With Go | Medium</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2014/02/the-nature-of-channels-in-go.html">The Nature Of Channels In Go (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2013/10/my-channel-select-bug.html">My Channel Select Bug (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.golang.org/io2013-talk-concurrency">Advanced Go Concurrency Patterns - The Go Blog (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.golang.org/waza-talk">Concurrency is not parallelism - The Go Blog (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.golang.org/io2012-videos">Go videos from Google I/O 2012 - The Go Blog (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.golang.org/concurrency-timeouts">Go Concurrency Patterns: Timing out, moving on - The Go Blog (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.golang.org/pipelines">Go Concurrency Patterns: Pipelines and cancellation - The Go Blog (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2014/02/running-queries-concurrently-against.html">Running MongoDB Queries Concurrently With Go (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blogtitle.github.io/go-advanced-concurrency-patterns-part-3-channels/">Go advanced concurrency patterns: part 3 (channels) - Blog Title</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2013/05/thread-pooling-in-go-programming.html">Thread Pooling in Go Programming (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2013/09/pool-go-routines-to-process-task.html">Pool Go Routines To Process Task Oriented Work (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blogtitle.github.io/categories/concurrency/">Concurrency - Blog Title</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://golang.org/ref/spec#Channel_types">The Go Programming Language Specification - The Go Programming Language (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://drive.google.com/file/d/1nPdvhB0PutEJzdCq5ms6UI58dp50fcAN/view">Rethinking Classical Concurrency Patterns.pdf - Google 云端硬盘</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://medium.com/a-journey-with-go/go-context-and-cancellation-by-propagation-7a808bbc889c">Go: Context and Cancellation by Propagation | by Vincent Blanchon | A Journey With Go | Medium</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.golang.org/context">Go Concurrency Patterns: Context - The Go Blog (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2019/09/context-package-semantics-in-go.html">Context Package Semantics In Go (ardanlabs.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://golang.org/doc/effective_go#concurrency">Effective Go - The Go Programming Language (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34417106?hmsr=toutiao.io">Go Context的踩坑经历 - 知乎 (zhihu.com)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://talks.golang.org/2014/gotham-context.slide#1">Cancelation, Context, and Plumbing (golang.org)</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://medium.com/@cep21/how-to-correctly-use-context-context-in-go-1-7-8f2c0fafdf39">How to correctly use context.Context in Go 1.7 | by Jack Lindamood | Medium</a></p>
+</li>
+</ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -855,7 +937,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Go-%E5%B9%B6%E5%8F%91%E5%8E%9F%E8%AF%AD%EF%BC%88%E4%BA%8C%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Go 并发原语（二）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Atomic-%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.</span> <span class="toc-text">Atomic 原子操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E6%89%A9%E5%B1%95"><span class="toc-number">1.1.1.</span> <span class="toc-text">功能扩展</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%EF%BC%9A%E5%AE%9E%E7%8E%B0%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97"><span class="toc-number">1.1.2.</span> <span class="toc-text">扩展：实现无锁队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="toc-number">1.2.</span> <span class="toc-text">Semaphore 信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#P-V-%E6%93%8D%E4%BD%9C"><span class="toc-number">1.2.1.</span> <span class="toc-text">P&#x2F;V 操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%BA%93%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">标准库实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Channel-%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">使用 Channel 实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SingleFlight-%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6"><span class="toc-number">1.3.</span> <span class="toc-text">SingleFlight 请求合并</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.2.</span> <span class="toc-text">应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CyclicBarrier-%E5%BE%AA%E7%8E%AF%E6%A0%85%E6%A0%8F"><span class="toc-number">1.4.</span> <span class="toc-text">CyclicBarrier 循环栅栏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%BA%94%E7%94%A8"><span class="toc-number">1.4.2.</span> <span class="toc-text">基本应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ErrGroup-%E5%AD%90%E4%BB%BB%E5%8A%A1%E7%BC%96%E6%8E%92"><span class="toc-number">1.5.</span> <span class="toc-text">ErrGroup 子任务编排</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-Pipeline"><span class="toc-number">1.5.1.</span> <span class="toc-text">实现 Pipeline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%BA%93"><span class="toc-number">1.5.2.</span> <span class="toc-text">扩展库</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Go-%E5%B9%B6%E5%8F%91%E5%8E%9F%E8%AF%AD%EF%BC%88%E4%BA%8C%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Go 并发原语（二）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Atomic-%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.</span> <span class="toc-text">Atomic 原子操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E6%89%A9%E5%B1%95"><span class="toc-number">1.1.1.</span> <span class="toc-text">功能扩展</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%EF%BC%9A%E5%AE%9E%E7%8E%B0%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97"><span class="toc-number">1.1.2.</span> <span class="toc-text">扩展：实现无锁队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="toc-number">1.2.</span> <span class="toc-text">Semaphore 信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#P-V-%E6%93%8D%E4%BD%9C"><span class="toc-number">1.2.1.</span> <span class="toc-text">P&#x2F;V 操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%BA%93%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">标准库实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Channel-%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">使用 Channel 实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SingleFlight-%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6"><span class="toc-number">1.3.</span> <span class="toc-text">SingleFlight 请求合并</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.2.</span> <span class="toc-text">应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CyclicBarrier-%E5%BE%AA%E7%8E%AF%E6%A0%85%E6%A0%8F"><span class="toc-number">1.4.</span> <span class="toc-text">CyclicBarrier 循环栅栏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%BA%94%E7%94%A8"><span class="toc-number">1.4.2.</span> <span class="toc-text">基本应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ErrGroup-%E5%AD%90%E4%BB%BB%E5%8A%A1%E7%BC%96%E6%8E%92"><span class="toc-number">1.5.</span> <span class="toc-text">ErrGroup 子任务编排</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-Pipeline"><span class="toc-number">1.5.1.</span> <span class="toc-text">实现 Pipeline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%BA%93"><span class="toc-number">1.5.2.</span> <span class="toc-text">扩展库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.6.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1822,9 +1904,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
