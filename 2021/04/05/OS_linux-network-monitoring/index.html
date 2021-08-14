@@ -511,52 +511,50 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
-
 <h2 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h2><p><strong>OSI 网络模型</strong>：即来自国际标准化组织制定的开放式系统互联通信参考模型（Open System Interconnection Reference Model），分为七层，其各自负责：</p>
 <ul>
-<li><p>  应用层：为应用程序提供统一的接口。</p>
+<li><p>应用层：为应用程序提供统一的接口。</p>
 </li>
-<li><p>  表示层：把数据转换成兼容接收系统的格式。</p>
+<li><p>表示层：把数据转换成兼容接收系统的格式。</p>
 </li>
-<li><p>  会话层：维护计算机之间的通信连接。</p>
+<li><p>会话层：维护计算机之间的通信连接。</p>
 </li>
-<li><p>  传输层：为数据加上传输表头，形成数据包。</p>
+<li><p>传输层：为数据加上传输表头，形成数据包。</p>
 </li>
-<li><p>  网络层：数据的路由和转发。</p>
+<li><p>网络层：数据的路由和转发。</p>
 </li>
-<li><p>  数据链路层：MAC 寻址、错误侦测和改错。</p>
+<li><p>数据链路层：MAC 寻址、错误侦测和改错。</p>
 </li>
-<li><p>  物理层：在物理网络中传输数据帧。</p>
+<li><p>物理层：在物理网络中传输数据帧。</p>
 </li>
 </ul>
 <p><strong>TCP/IP 网络模型</strong>：Linux 中具体实现的四层网络模型。</p>
 <ul>
-<li><p>  应用层：向用户提供一组应用程序，比如 HTTP、FTP、DNS 等。对应 OSI 模型的应用层、表示层和会话层。</p>
+<li><p>应用层：向用户提供一组应用程序，比如 HTTP、FTP、DNS 等。对应 OSI 模型的应用层、表示层和会话层。</p>
 </li>
-<li><p>  传输层：端到端的通信，比如 TCP、UDP 等。</p>
+<li><p>传输层：端到端的通信，比如 TCP、UDP 等。</p>
 </li>
-<li><p>  网络层：网络包的封装、寻址和路由，比如 IP、ICMP 等。</p>
+<li><p>网络层：网络包的封装、寻址和路由，比如 IP、ICMP 等。</p>
 </li>
-<li><p>  网络接口层：网络包在物理网络中的传输，比如 MAC 寻址、错误侦测以及通过网卡传输网络帧等。对应 OSI 模型的数据链路层和物理层。</p>
+<li><p>网络接口层：网络包在物理网络中的传输，比如 MAC 寻址、错误侦测以及通过网卡传输网络帧等。对应 OSI 模型的数据链路层和物理层。</p>
 </li>
 </ul>
 <p>网络传输时，数据包会按照协议栈对上层数据逐层进行处理，然后封装该层的协议头，再发送给下一层（在原有的负载前后增加固定格式的元数据）。</p>
 <p>由于物理链路中不能传输任意大小的数据包，网络接口配置的最大传输单元（MTU，以太网中默认值为 1500）规定了最大的 IP 包大小。</p>
 <p>Linux 内核中的网络协议栈也类似 TCP/IP 的四层结构：</p>
 <figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span></span><br><span class="line"><span class="comment">|</span>      <span class="comment">应用程序</span>       <span class="comment">|</span></span><br><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">↓</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span></span><br><span class="line"><span class="comment">|</span>      <span class="comment">系统调用</span>       <span class="comment">|</span></span><br><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">↓</span>--<span class="literal">-</span><span class="literal">+</span></span><br><span class="line">       <span class="comment">↓</span>     <span class="comment">|</span>  <span class="comment">VFS</span>  <span class="comment">|</span></span><br><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">↓</span>--<span class="literal">-</span><span class="literal">+</span>   </span><br><span class="line"><span class="comment">|</span>      <span class="comment">套接字</span>         <span class="comment">|</span></span><br><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span></span><br><span class="line"><span class="comment">|</span> <span class="comment">TCP</span> <span class="comment">|</span> <span class="comment">UDP</span> <span class="comment">|</span>      <span class="literal">+</span><span class="literal">-</span><span class="comment">↓</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">+</span></span><br><span class="line"><span class="literal">+</span>--<span class="comment">↓</span>--<span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="comment">↓</span>--<span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span> <span class="comment">ICMP</span> <span class="comment">|</span></span><br><span class="line"><span class="comment">|</span>        <span class="comment">IP</span>        <span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span></span><br><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">↓</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">↓</span> <span class="comment">ARP</span>  <span class="comment">|</span></span><br><span class="line"><span class="comment">|</span>      <span class="comment">链路层</span>       <span class="comment">↓</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span> </span><br><span class="line"><span class="literal">+</span>--<span class="comment">↓</span>--<span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="comment">↓</span>--<span class="literal">-</span><span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="comment">↓</span>--<span class="literal">+</span></span><br><span class="line"><span class="comment">|</span> <span class="comment">igb</span> <span class="comment">|</span> <span class="string">.</span><span class="string">.</span><span class="string">.</span>  <span class="comment">|</span> <span class="comment">bnx</span> <span class="comment">|</span></span><br><span class="line"><span class="literal">+</span>--<span class="comment">↓</span>--<span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="comment">↓</span>--<span class="literal">-</span><span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="comment">↓</span>--<span class="literal">+</span></span><br><span class="line"><span class="comment">|</span> <span class="comment">网卡</span> <span class="comment">|</span> <span class="comment">网卡</span> <span class="comment">|</span> <span class="comment">网卡</span> <span class="comment">|</span> </span><br><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span></span><br></pre></td></tr></table></figure>
-
 <p>其中网卡是发送和接收网络包的基本设备。在系统启动时，网卡通过内核中的网卡驱动程序注册到系统中。在网络收发过程中，内核通过中断与网卡进行交互。</p>
 <h2 id="网络收发流程"><a href="#网络收发流程" class="headerlink" title="网络收发流程"></a>网络收发流程</h2><h3 id="网络包接收"><a href="#网络包接收" class="headerlink" title="网络包接收"></a>网络包接收</h3><p>网卡接收到网络帧：</p>
 <ul>
-<li><p>  通过 DMA 把包放到收包队列中。</p>
+<li><p>通过 DMA 把包放到收包队列中。</p>
 </li>
-<li><p>  通过硬中断告知中断处理程序已收到网络包。</p>
+<li><p>通过硬中断告知中断处理程序已收到网络包。</p>
 </li>
-<li><p>  网卡中断处理程序为网络帧分配内核数据结构（sk_buff），将其拷贝到 sk_buff 缓冲区中。</p>
+<li><p>网卡中断处理程序为网络帧分配内核数据结构（sk_buff），将其拷贝到 sk_buff 缓冲区中。</p>
 </li>
-<li><p>  通过软中断通知内核收到了新的网络帧。</p>
+<li><p>通过软中断通知内核收到了新的网络帧。</p>
 </li>
-<li><p>  内核协议栈从缓冲区中取出网络帧，通过网络协议栈从下到上逐层处理。</p>
+<li><p>内核协议栈从缓冲区中取出网络帧，通过网络协议栈从下到上逐层处理。</p>
 </li>
 </ul>
 <blockquote>
@@ -564,11 +562,11 @@ height:100vh;
 </blockquote>
 <p>网络协议栈解析：</p>
 <ul>
-<li><p>  链路层：检查报文合法性，找出上层协议类型（比如 IPv4），再去除帧头帧尾，交给网络层。</p>
+<li><p>链路层：检查报文合法性，找出上层协议类型（比如 IPv4），再去除帧头帧尾，交给网络层。</p>
 </li>
-<li><p>  网络层：取出 IP 头，判断网络包下一步走向：交给上层处理或转发等。当确认这个包要发送到本机后，即取出上层协议类型（比如 TCP），去除 IP 头再交给传输层。</p>
+<li><p>网络层：取出 IP 头，判断网络包下一步走向：交给上层处理或转发等。当确认这个包要发送到本机后，即取出上层协议类型（比如 TCP），去除 IP 头再交给传输层。</p>
 </li>
-<li><p>  传输层：取出 TCP/UDP 头后，根据 <code>&lt;源 IP、源端口、目的 IP、目的端口&gt;</code> 四元组作为标识，并把数据拷贝到对应的 Socket 的接收缓存中。</p>
+<li><p>传输层：取出 TCP/UDP 头后，根据 <code>&lt;源 IP、源端口、目的 IP、目的端口&gt;</code> 四元组作为标识，并把数据拷贝到对应的 Socket 的接收缓存中。</p>
 </li>
 </ul>
 <p>随即应用程序可以通过 Socket 接口读取到新接收的数据。</p>
@@ -580,103 +578,97 @@ height:100vh;
 <h3 id="套接字"><a href="#套接字" class="headerlink" title="套接字"></a>套接字</h3><p>套接字可屏蔽 Linux 内核中不同协议的差异，为应用程序提供统一访问接口。</p>
 <p>每个套接字都有读写缓冲区：</p>
 <ul>
-<li><p>  读缓冲区缓存远端发来的数据，读缓冲区满就不能再接收新的数据。</p>
+<li><p>读缓冲区缓存远端发来的数据，读缓冲区满就不能再接收新的数据。</p>
 </li>
-<li><p>  写缓冲区缓存要发出去的数据，写缓冲区满，应用程序写操作就会被阻塞。</p>
+<li><p>写缓冲区缓存要发出去的数据，写缓冲区满，应用程序写操作就会被阻塞。</p>
 </li>
 </ul>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/3af644b6d463869ece19786a4634f765.png" alt="img"></p>
 <h2 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h2><p>分析网络问题常参考以下指标：</p>
 <ul>
-<li><p>  带宽：链路的最大传输速率，单位通常为 b/s。常用带宽有 1000M、10G、40G、100G 等。</p>
+<li><p>带宽：链路的最大传输速率，单位通常为 b/s。常用带宽有 1000M、10G、40G、100G 等。</p>
 </li>
-<li><p>  吞吐量：表示单位时间内成功传输的数据量，单位通常为 b/s（比特 / 秒）或者 B/s（字节 / 秒）。其受带宽限制，网络的使用率 == 吞吐量 / 带宽。</p>
+<li><p>吞吐量：表示单位时间内成功传输的数据量，单位通常为 b/s（比特 / 秒）或者 B/s（字节 / 秒）。其受带宽限制，网络的使用率 == 吞吐量 / 带宽。</p>
 </li>
-<li><p>  延时：表示从网络请求发出后一直到收到远端响应所需的时间。可以表示为建立连接需要的时间（比如 TCP 握手延时），或一个数据包往返所需的时间（比如 RTT）等。</p>
+<li><p>延时：表示从网络请求发出后一直到收到远端响应所需的时间。可以表示为建立连接需要的时间（比如 TCP 握手延时），或一个数据包往返所需的时间（比如 RTT）等。</p>
 </li>
-<li><p>  传输速率：一般以 PPS（Packet Per Second，包 / 秒）衡量，即以网络包为单位的传输速率，常用于评估网络转发能力，比如硬件交换机通常可以达到线性转发（即 PPS 可以达到或者接近理论最大值），基于 Linux 服务器的转发则容易受网络包大小的影响；而对 TCP 或 Web 服务，更多会用并发连接数和每秒请求数（QPS，Query per Second）等指标反映实际应用程序的性能。</p>
+<li><p>传输速率：一般以 PPS（Packet Per Second，包 / 秒）衡量，即以网络包为单位的传输速率，常用于评估网络转发能力，比如硬件交换机通常可以达到线性转发（即 PPS 可以达到或者接近理论最大值），基于 Linux 服务器的转发则容易受网络包大小的影响；而对 TCP 或 Web 服务，更多会用并发连接数和每秒请求数（QPS，Query per Second）等指标反映实际应用程序的性能。</p>
 </li>
 </ul>
 <p>其中带宽跟物理网卡配置是直接关联的，只是实际带宽会受限于整个网络链路中最小的模块。而“网络带宽测试”实际上是测试吞吐量。</p>
 <p>除此之外还关心网络可用性（网络能否正常通信）、并发连接数（TCP 连接数量）、丢包率（丢包百分比）、重传率（重新传输的网络包比例）等。</p>
 <h3 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h3><p>分析网络问题需要查看网络接口的配置状态，使用 <code>ifconfig</code>、<code>ip</code> 命令（net-tools/iproute2）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0</span><br><span class="line"><span class="meta">#</span><span class="bash">                               物理连通            MTU，因网络架构而作调整（比如 VXLAN 等）</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt; mtu 1500</span></span><br><span class="line"><span class="meta">#</span><span class="bash">           IP 地址、子网掩码、MAC 地址</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       inet 10.240.0.30 netmask 255.240.0.0 broadcast 10.255.255.255</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       inet6 fe80::20d:3aff:fe07:cf2a prefixlen 64 scopeid 0x20&lt;link&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       ether 78:0d:3a:07:cf:3a txqueuelen 1000 (Ethernet)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">           收发字节数、包数、错误数和丢包情况：指标不为 0 时通常表示出现网络 I/O 问题。</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       RX packets 40809142 bytes 9542369803 (9.5 GB)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       RX errors 0 dropped 0 overruns 0 frame 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       TX packets 32637401 bytes 4815573306 (4.8 GB)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0</span></span><br><span class="line"></span><br><span class="line">ip -s addr show dev eth0</span><br><span class="line"><span class="meta">#</span><span class="bash">                                  网络连通</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state UP group default qlen 1000</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   link/ether 78:0d:3a:07:cf:3a brd ff:ff:ff:ff:ff:ff</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   inet 10.240.0.30/12 brd 10.255.255.255 scope global eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       valid_lft forever preferred_lft forever</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   inet6 fe80::20d:3aff:fe07:cf2a/64 scope link</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       valid_lft forever preferred_lft forever</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   RX: bytes packets errors dropped overrun mcast</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    9542432350 40809397 0       0       0       193</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   TX: bytes packets errors dropped carrier collsns</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    4815625265 32637658 0       0       0       0</span></span><br></pre></td></tr></table></figure>
-
 <p>网络 I/O 异常状态：</p>
 <ul>
-<li><p>  errors：错误数据包数，校验错误、帧同步错误等。</p>
+<li><p>errors：错误数据包数，校验错误、帧同步错误等。</p>
 </li>
-<li><p>  dropped：丢弃数据包数。数据包已经收到了 Ring Buffer，但因为内存不足等原因丢包。</p>
+<li><p>dropped：丢弃数据包数。数据包已经收到了 Ring Buffer，但因为内存不足等原因丢包。</p>
 </li>
-<li><p>  overruns：超限数据包数。网络 I/O 速度过快，导致 Ring Buffer 中的数据包来不及处理（队列满）而导致的丢包；</p>
+<li><p>overruns：超限数据包数。网络 I/O 速度过快，导致 Ring Buffer 中的数据包来不及处理（队列满）而导致的丢包；</p>
 </li>
-<li><p>  carrier：发生 carrirer 错误的数据包数。比如双工模式不匹配、物理电缆出现问题等。</p>
+<li><p>carrier：发生 carrirer 错误的数据包数。比如双工模式不匹配、物理电缆出现问题等。</p>
 </li>
-<li><p>  collisions：碰撞数据包数。</p>
+<li><p>collisions：碰撞数据包数。</p>
 </li>
 </ul>
 <h3 id="套接字信息"><a href="#套接字信息" class="headerlink" title="套接字信息"></a>套接字信息</h3><p>使用 <code>netstat</code>、<code>ss</code> 查看套接字信息：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -l 只显示监听套接字，-n 显示数字地址和端口，-p 显示进程信息</span></span><br><span class="line">netstat -nlp | head -n 3</span><br><span class="line"><span class="meta">#</span><span class="bash"> Active Internet connections (only servers)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      840/systemd-resolve</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -l 只显示监听套接字，-t 只显示 TCP 套接字，-n 显示数字地址和端口，-p 表示显示进程信息</span></span><br><span class="line">ss -ltnp | head -n 3</span><br><span class="line"><span class="meta">#</span><span class="bash"> State    Recv-Q    Send-Q        Local Address:Port        Peer Address:Port</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> LISTEN   0         128           127.0.0.53%lo:53               0.0.0.0:*        users:((<span class="string">&quot;systemd-resolve&quot;</span>,pid=840,fd=13))</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> LISTEN   0         128                 0.0.0.0:22               0.0.0.0:*        users:((<span class="string">&quot;sshd&quot;</span>,pid=1459,fd=3))</span></span><br></pre></td></tr></table></figure>
-
 <p>如果接收队列（Recv-Q）和发送队列（Send-Q）的值不为 0，说明有网络包的堆积发生。当 Socket 的状态为： </p>
 <ul>
-<li><p>  Established：Recv-Q 表示套接字缓冲未被应用程序取走的字节数（即接收队列长度），Send-Q 表示还没有被远端主机确认的字节数（即发送队列长度）。</p>
+<li><p>Established：Recv-Q 表示套接字缓冲未被应用程序取走的字节数（即接收队列长度），Send-Q 表示还没有被远端主机确认的字节数（即发送队列长度）。</p>
 </li>
-<li><p>  Listening：Recv-Q 表示全连接队列的长度，Send-Q 表示全连接队列的最大长度。</p>
+<li><p>Listening：Recv-Q 表示全连接队列的长度，Send-Q 表示全连接队列的最大长度。</p>
 </li>
 </ul>
 <p><strong>全连接</strong>：服务器收到了客户端的 ACK、完成了 TCP 三次握手，然后把这个连接放到全连接队列中。全连接中的套接字还需要被 <code>accept()</code> 系统调用取走，服务器才可以开始真正处理客户端请求。</p>
 <p><strong>半连接</strong>：未完成 TCP 三次握手的连接，服务器收到客户端 SYN 包后会把它放到半连接队列中，再向客户端发送 SYN+ACK 包。</p>
 <h3 id="协议栈信息"><a href="#协议栈信息" class="headerlink" title="协议栈信息"></a>协议栈信息</h3><p>使用 <code>netstat</code> 或 <code>ss</code> 查看协议栈信息：包括 TCP 协议的主动连接、被动连接、失败重试、发送和接收的分段数量等。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">netstat -s</span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Tcp:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     3244906 active connection openings</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     23143 passive connection openings</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     115732 failed connection attempts</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     2964 connection resets received</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     1 connections established</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     13025010 segments received</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     17606946 segments sent out</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     44438 segments retransmitted</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     42 bad segments received</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     5315 resets sent</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     InCsumErrors: 42</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"></span><br><span class="line">ss -s</span><br><span class="line"><span class="meta">#</span><span class="bash"> Total: 186 (kernel 1446)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> TCP:   4 (estab 1, closed 0, orphaned 0, synrecv 0, timewait 0/0), ports 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Transport Total     IP        IPv6</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> *    1446      -         -</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> RAW    2         1         1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> UDP    2         2         0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> TCP    4         3         1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="网络质量统计信息"><a href="#网络质量统计信息" class="headerlink" title="网络质量统计信息"></a>网络质量统计信息</h3><p>使用 <code>sar</code> 可查看网络统计信息，比如网络接口（DEV）、网络接口错误（EDEV）、TCP、UDP、ICMP 等：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sar -n DEV 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> Linux 4.15.0-1035-azure (ubuntu)   01/06/19   _x86_64_  (2 CPU)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">                          接收和发送的 PPS      接收和发送的吞吐量    接收和发送的压缩数据包数          网络接口使用率</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 13:21:40        IFACE    rxpck/s   txpck/s    rxkB/s    txkB/s    rxcmp/s   txcmp/s    rxmcst/s   %ifutil</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 13:21:41         eth0     18.00     20.00      5.79      4.25      0.00      0.00        0.00      0.00</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 13:21:41      docker0      0.00      0.00      0.00      0.00      0.00      0.00        0.00      0.00</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 13:21:41           lo      0.00      0.00      0.00      0.00      0.00      0.00        0.00      0.00</span></span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>  其中网络接口的使用率：半双工模式下为 (rxkB/s+txkB/s)/Bandwidth，全双工模式下为 max(rxkB/s, txkB/s)/Bandwidth。</p>
 </blockquote>
 <p>使用 <code>ethtool</code> 可查询带宽（单位 Gb/s 或 Mb/s，注意是比特）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ethtool eth0 | grep Speed</span><br><span class="line"><span class="meta">#</span><span class="bash">   Speed: 1000Mb/s</span></span><br></pre></td></tr></table></figure>
-
 <p>使用基于 ICMP 协议的 <code>ping</code> 可测试远程主机的连通性和延时：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ping -c3 114.114.114.114</span><br><span class="line"><span class="meta">#</span><span class="bash"> PING 114.114.114.114 (114.114.114.114) 56(84) bytes of data.</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 每个 ICMP 请求的信息，包括 ICMP 序列号（icmp_seq）、TTL（生存时间，或者跳数）和往返延时。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 64 bytes from 114.114.114.114: icmp_seq=1 ttl=54 time=244 ms</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 64 bytes from 114.114.114.114: icmp_seq=2 ttl=47 time=244 ms</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 64 bytes from 114.114.114.114: icmp_seq=3 ttl=67 time=244 ms</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 三次 ICMP 请求汇总。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> --- 114.114.114.114 ping statistics ---</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3 packets transmitted, 3 received, 0% packet loss, time 2001ms</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> rtt min/avg/max/mdev = 244.023/244.070/244.105/0.034 ms</span></span><br></pre></td></tr></table></figure>
-
 <h2 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h2><p>从 C10K、C100K、C1000K、C10M 问题入手可以更好理解 Linux 网络工作原理。</p>
 <p>从 C1000K 开始，依靠单机支撑就需要仔细考虑：</p>
 <ul>
-<li><p>  从物理资源的角度：处理大量请求需要配备大内存、万兆网卡，以及基于多网卡绑定以承载大吞吐量。</p>
+<li><p>从物理资源的角度：处理大量请求需要配备大内存、万兆网卡，以及基于多网卡绑定以承载大吞吐量。</p>
 </li>
-<li><p>  从软件资源的角度：大量的连接也会占用大量的软件资源，如文件描述符、连接状态跟踪（CONNTRACK）、网络协议栈缓存（比如套接字读写缓存、TCP 读写缓存）等。</p>
+<li><p>从软件资源的角度：大量的连接也会占用大量的软件资源，如文件描述符、连接状态跟踪（CONNTRACK）、网络协议栈缓存（比如套接字读写缓存、TCP 读写缓存）等。</p>
 </li>
-<li><p>  从优化的角度：中断处理处理成本也很高，需要多队列网卡、中断负载均衡、CPU 绑定、RPS/RFS（软中断负载均衡到多个 CPU 核上），以及将网络包的处理卸载（Offload）到网络设备（如 TSO/GSO、LRO/GRO、VXLAN OFFLOAD）等各种硬件和软件的优化。</p>
+<li><p>从优化的角度：中断处理处理成本也很高，需要多队列网卡、中断负载均衡、CPU 绑定、RPS/RFS（软中断负载均衡到多个 CPU 核上），以及将网络包的处理卸载（Offload）到网络设备（如 TSO/GSO、LRO/GRO、VXLAN OFFLOAD）等各种硬件和软件的优化。</p>
 </li>
 </ul>
 <h3 id="I-O-模型优化"><a href="#I-O-模型优化" class="headerlink" title="I/O 模型优化"></a>I/O 模型优化</h3><p>当物理资源足够，首先考虑的是 I/O 模型：如何在一个线程内处理多个请求、如何节省资源地处理用户请求。</p>
 <p>I/O 多路复用是著名的并发解决方案，其提供两种 I/O 事件通知方式：</p>
 <ul>
-<li><p>  <strong>水平触发</strong>：只要文件描述符可以非阻塞地执行 I/O 就会触发通知。即应用程序可随时检查文件描述符的状态，然后再根据状态进行 I/O 操作。</p>
+<li><p><strong>水平触发</strong>：只要文件描述符可以非阻塞地执行 I/O 就会触发通知。即应用程序可随时检查文件描述符的状态，然后再根据状态进行 I/O 操作。</p>
 </li>
-<li><p>  <strong>边缘触发</strong>：只有在文件描述符的状态发生改变（I/O 请求达到）时才发送一次通知。此时应用程序需要尽可能多地执行 I/O，直到无法继续读写才可以停止。如果 I/O 没执行完，或因为某种原因未来得及处理，这次通知就会丢失。</p>
+<li><p><strong>边缘触发</strong>：只有在文件描述符的状态发生改变（I/O 请求达到）时才发送一次通知。此时应用程序需要尽可能多地执行 I/O，直到无法继续读写才可以停止。如果 I/O 没执行完，或因为某种原因未来得及处理，这次通知就会丢失。</p>
 </li>
 </ul>
 <p>I/O 多路复用也有多种实现方法：</p>
 <ul>
 <li><p><strong>非阻塞 I/O + 水平触发通知</strong>：select 和 poll 从文件描述符列表中找出可以执行 I/O ，再进行真正的读写。由于 I/O 是非阻塞的，一个线程中就可以同时监控一批套接字文件描述符，达到单线程处理多请求的目的。但也存在以下问题：</p>
 <ul>
-<li><p>  需要对文件描述符列表进行轮询，请求数多时会比较耗时。</p>
+<li><p>需要对文件描述符列表进行轮询，请求数多时会比较耗时。</p>
 </li>
-<li><p>  select 使用固定长度的位相量表示文件描述符集合，有最大描述符数量的限制（32 位系统 1024）；轮询检查套接字状态，处理耗时 O(N)。</p>
+<li><p>select 使用固定长度的位相量表示文件描述符集合，有最大描述符数量的限制（32 位系统 1024）；轮询检查套接字状态，处理耗时 O(N)。</p>
 </li>
-<li><p>  poll 使用不定长数组存放文件描述符，没有最大描述符数量的限制（只受系统文件描述符限制），但也需要轮询文件描述符列表。</p>
+<li><p>poll 使用不定长数组存放文件描述符，没有最大描述符数量的限制（只受系统文件描述符限制），但也需要轮询文件描述符列表。</p>
 </li>
-<li><p>  调用 select 和 poll 时需要把文件描述符集合从用户空间传入内核空间，由内核修改后再传出到用户空间中，存在切换成本。</p>
+<li><p>调用 select 和 poll 时需要把文件描述符集合从用户空间传入内核空间，由内核修改后再传出到用户空间中，存在切换成本。</p>
 </li>
 </ul>
 </li>
-<li><p>  <strong>非阻塞 I/O + 边缘触发通知</strong>：Linux 2.6 新增的 epoll 使用 <strong>红黑树</strong> <strong>在内核中管理</strong> 文件描述符，不需要应用程序在每次操作时都传入传出；使用事件驱动机制，只关注有 I/O 事件发生的文件描述符，而不是轮询扫描整个集合。</p>
+<li><p><strong>非阻塞 I/O + 边缘触发通知</strong>：Linux 2.6 新增的 epoll 使用 <strong>红黑树</strong> <strong>在内核中管理</strong> 文件描述符，不需要应用程序在每次操作时都传入传出；使用事件驱动机制，只关注有 I/O 事件发生的文件描述符，而不是轮询扫描整个集合。</p>
 </li>
-<li><p>  <strong>异步 I/O（Asynchronous I/O）</strong>：Linux 2.6 新增的异步 I/O 允许应用程序同时发起多个 I/O 操作，在 I/O 完成后系统以事件通知（比如信号或者回调函数）告知应用程序前来查询结果。然而在较长时间内都不完善（比如 glibc 提供的异步 I/O 库），且使用难度较高。</p>
+<li><p><strong>异步 I/O（Asynchronous I/O）</strong>：Linux 2.6 新增的异步 I/O 允许应用程序同时发起多个 I/O 操作，在 I/O 完成后系统以事件通知（比如信号或者回调函数）告知应用程序前来查询结果。然而在较长时间内都不完善（比如 glibc 提供的异步 I/O 库），且使用难度较高。</p>
 </li>
 </ul>
 <h3 id="工作模型优化"><a href="#工作模型优化" class="headerlink" title="工作模型优化"></a>工作模型优化</h3><p>I/O 多路复用还可以结合不同工作模型使用：</p>
@@ -695,149 +687,134 @@ height:100vh;
 </blockquote>
 <p>DPDK（Data Plane Development Kit，数据平面开发套件）是用户态网络标准，其跳过内核协议栈、由用户态进程轮询处理网络接收：</p>
 <ul>
-<li><p>  PPS 非常高的场景中，查询时间比实际工作时间少很多，绝大部分时间都能处理网络包。</p>
+<li><p>PPS 非常高的场景中，查询时间比实际工作时间少很多，绝大部分时间都能处理网络包。</p>
 </li>
-<li><p>  跳过内核协议栈后省去了繁杂的处理路径，应用程序可针对具体场景优化网络包处理逻辑，不需要关注所有细节。</p>
+<li><p>跳过内核协议栈后省去了繁杂的处理路径，应用程序可针对具体场景优化网络包处理逻辑，不需要关注所有细节。</p>
 </li>
-<li><p>  通过大页、CPU 绑定、内存对齐、流水线并发等多种机制，优化网络包的处理效率。</p>
+<li><p>通过大页、CPU 绑定、内存对齐、流水线并发等多种机制，优化网络包的处理效率。</p>
 </li>
 </ul>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/PR-3303.png" alt="pr-3303" style="zoom:67%;" />
-
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/PR-3303.png" alt="pr-3303" style="zoom:67%;" /></p>
 <p>XDP（eXpress Data Path）：是 Linux 内核提供的高性能网络数据路径，它允许网络包在进入内核协议栈之前就进行处理。XDP 底层和 bcc-tools 一样，都是基于 Linux 内核的 eBPF 机制实现。其对内核的要求比较高（Linux 4.8+），并且不提供缓存队列。基于 XDP 的应用程序通常是专用的网络应用，如 IDS（入侵检测系统）、DDoS 防御、 cilium 容器网络插件等。</p>
-<img src="http://www.iovisor.org/wp-content/uploads/sites/8/2016/09/xdp-packet-processing-1024x560.png" alt="XDP Packet Processing" style="zoom: 80%;" />
-
+<p><img src="http://www.iovisor.org/wp-content/uploads/sites/8/2016/09/xdp-packet-processing-1024x560.png" alt="XDP Packet Processing" style="zoom: 80%;" /></p>
 <h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><h3 id="基准测试"><a href="#基准测试" class="headerlink" title="基准测试"></a>基准测试</h3><p>测试前应确定待评估的应用程序网络性能属于协议栈哪一层。</p>
 <h3 id="转发性能"><a href="#转发性能" class="headerlink" title="转发性能"></a>转发性能</h3><p>包括网络接口层和网络层，通常关注每秒可处理的网络包数 PPS，特别是 64B 小包的处理能力。</p>
 <p>使用 <code>hping3</code> 工具可测试网络包处理能力的性能，但更常用的是内核自带的 pktgen，其作为一个内核线程运行，需要加载 pktgen 内核模块后再通过 <code>/proc</code> 文件系统来交互：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 需要配置 pktgen 内核模块（即 CONFIG_NET_PKTGEN=m）后重新编译内核才可以使用。</span></span><br><span class="line">modprobe pktgen</span><br><span class="line"></span><br><span class="line">ps -ef | grep pktgen | grep -v grep</span><br><span class="line"><span class="meta">#</span><span class="bash"> root     26384     2  0 06:17 ?        00:00:00 [kpktgend_0]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> root     26385     2  0 06:17 ?        00:00:00 [kpktgend_1]</span></span><br><span class="line"></span><br><span class="line">ls /proc/net/pktgen/</span><br><span class="line"><span class="meta">#</span><span class="bash"> kpktgend_0  kpktgend_1  pgctrl</span></span><br></pre></td></tr></table></figure>
-
 <p>pktgen 在每个 CPU 上启动一个内核线程，可通过 <code>/proc/net/pktgen</code> 下的同名文件与线程交互；<code>pgctrl</code> 用于开启和停止测试。</p>
 <p>假设一台机器通过 eth0 网卡向另一台机器发包：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 定义一个工具函数，方便后面配置各种测试选项</span></span><br><span class="line">function pgset() &#123;</span><br><span class="line">    local result</span><br><span class="line">    echo $1 &gt; $PGDEV</span><br><span class="line"></span><br><span class="line">    result=`cat $PGDEV | fgrep &quot;Result: OK:&quot;`</span><br><span class="line">    if [ &quot;$result&quot; = &quot;&quot; ]; then</span><br><span class="line">         cat $PGDEV | fgrep Result:</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 为 0 号线程绑定 eth0 网卡</span></span><br><span class="line">PGDEV=/proc/net/pktgen/kpktgend_0</span><br><span class="line">pgset &quot;rem_device_all&quot;   # 清空网卡绑定</span><br><span class="line">pgset &quot;add_device eth0&quot;  # 添加eth0网卡</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置 eth0 网卡的测试选项</span></span><br><span class="line">PGDEV=/proc/net/pktgen/eth0</span><br><span class="line">pgset &quot;count 1000000&quot;    # 总发包数量</span><br><span class="line">pgset &quot;delay 5000&quot;       # 不同包之间的发送延迟(单位纳秒)</span><br><span class="line">pgset &quot;clone_skb 0&quot;      # SKB包复制</span><br><span class="line">pgset &quot;pkt_size 64&quot;      # 网络包大小</span><br><span class="line">pgset &quot;dst 192.168.0.30&quot; # 目的IP</span><br><span class="line">pgset &quot;dst_mac 11:11:11:11:11:11&quot;  # 目的MAC</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动测试</span></span><br><span class="line">PGDEV=/proc/net/pktgen/pgctrl</span><br><span class="line">pgset &quot;start&quot;</span><br></pre></td></tr></table></figure>
-
 <p>一段时间测试完成后，可以从 <code>/proc</code> 获取结果：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat /proc/net/pktgen/eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 测试选项</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Params: count 1000000  min_pkt_size: 64  max_pkt_size: 64</span></span><br><span class="line"><span class="meta">#</span><span class="bash">      frags: 0  delay: 0  clone_skb: 0  ifname: eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">      flows: 0 flowlen: 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 测试进度，packts so far（pkts-sofar）表示已经发送了 100 万个包。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Current:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">      pkts-sofar: 1000000  errors: 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">      started: 1534853256071us  stopped: 1534861576098us idle: 70673us</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 测试结果，包含测试所用时间、网络包数量和分片、PPS、吞吐量以及错误数。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Result: OK: 8320027(c8249354+d70673) usec, 1000000 (64byte,0frags)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   120191pps 61Mb/sec (61537792bps) errors: 0</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 测试结果：PPS 为 120k，吞吐量为 61Mb/s，无发生错误。</span></span><br></pre></td></tr></table></figure>
-
 <p>测试结果可以参照千兆交换机的 PPS：线速（满负载、无差错转发）PPS 即 1000Mbit 除以以太网帧的大小，<code>1000Mbps/((64+20)*8bit) = 1.5 Mpps</code>（20B 为以太网帧前导和帧间距的大小）。</p>
 <h3 id="TCP-UDP-性能"><a href="#TCP-UDP-性能" class="headerlink" title="TCP/UDP 性能"></a>TCP/UDP 性能</h3><p>一些应用直接基于 TCP/UDP 构建服务，适合使用 <code>iperf</code> 和 <code>netperf</code> 测试吞吐量。安装 iperf3：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt -y install iperf3</span><br></pre></td></tr></table></figure>
-
 <p>目标机器上启动 iperf3 服务端：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -s 启动服务端，-i 汇报间隔，-p 监听端口</span></span><br><span class="line">iperf3 -s -i 1 -p 10000</span><br></pre></td></tr></table></figure>
-
 <p>在另一台机器上运行 iperf3 客户端：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -c 启动客户端（指定目标服务器 ip），-b 目标带宽(单位是bits/s)，-t 表示测试时间，-P 并发数，-p 目标服务器监听端口</span></span><br><span class="line">iperf3 -c 192.168.0.30 -b 1G -t 15 -P 2 -p 10000</span><br></pre></td></tr></table></figure>
-
 <p>在服务端上查看输出：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> [ ID] Interval           Transfer     Bandwidth</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> [SUM]   0.00-15.04  sec  0.00 Bytes  0.00 bits/sec                  sender</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> [SUM]   0.00-15.04  sec  1.51 GBytes   860 Mbits/sec                receiver</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 测试结果：TCP 接收的带宽（吞吐量）为 860 Mb/s</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="HTTP-性能"><a href="#HTTP-性能" class="headerlink" title="HTTP 性能"></a>HTTP 性能</h3><p><code>webbench</code>、<code>ab</code>（Apache 自带）等都是常用的 HTTP 压力测试工具，主要测试 HTTP 服务的每秒请求数、请求延迟、吞吐量以及请求延迟的分布情况等。安装 ab：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt install -y apache2-utils</span><br><span class="line"><span class="meta">#</span><span class="bash"> CentOS: yum install -y httpd-tools</span></span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>ab</code> 测试 Nginx 性能：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -c 并发请求数，-n 总请求数</span></span><br><span class="line">ab -c 1000 -n 10000 http://192.168.0.30/</span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Server Software:        nginx/1.15.8</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Server Hostname:        192.168.0.30</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Server Port:            80</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 请求汇总</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     每秒处理请求数。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Requests per second:    1078.54 [<span class="comment">#/sec] (mean)</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">     平均延迟，包括线程运行的调度时间和网络请求响应时间。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Time per request:       927.183 [ms] (mean)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     实际请求的响应时间。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Time per request:       0.927 [ms] (mean, across all concurrent requests)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     吞吐量。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Transfer rate:          890.00 [Kbytes/sec] received</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 连接时间汇总</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Connection Times (ms)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">               min  mean[+/-sd] median   max</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Connect:        0   27 152.1      1    1038    <span class="comment"># 连接</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Processing:     9  207 843.0     22    9242    <span class="comment"># 处理</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Waiting:        8  207 843.0     22    9242    <span class="comment"># 等待</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Total:         15  233 857.7     23    9268    <span class="comment"># 总</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 请求延迟汇总（百分位数）</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Percentage of the requests served within a certain time (ms)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   50%     23    50% 的请求可在 23ms 内完成</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   66%     24</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   75%     24</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   80%     26</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   90%    274</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   95%   1195</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   98%   2335</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   99%   4663</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  100%   9268 (longest request)</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="应用负载性能"><a href="#应用负载性能" class="headerlink" title="应用负载性能"></a>应用负载性能</h3><p>工具本身的性能对测试至关重要。通过以上工具测试不能直接表示应用程序的实际性能，其与用户的实际请求很可能不一致。比如用户请求往往附带各种负载（payload），会影响 Web 应用程序内部的处理逻辑从而影响最终性能。</p>
 <p>因此测试还要求性能工具本身可以模拟用户的请求负载，常用的工具有 wrk、TCPCopy、Jmeter、LoadRunner 等（后两者甚至提供脚本录制、回放、GUI 等功能）。</p>
 <p>wrk 内置 LuaJIT，可以用来实现复杂场景的性能测试。在调用 Lua 脚本时可将 HTTP 请求分为三个阶段，即 setup、running、done：</p>
 <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">setup:</span></span><br><span class="line"><span class="section">+--------------------------------+</span></span><br><span class="line"><span class="section">|         setup(trread)          | 每个线程执行一次</span></span><br><span class="line"><span class="section">+--------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="section">running:</span></span><br><span class="line"><span class="section">+--------------------------------+</span></span><br><span class="line"><span class="section">|          init(args)            | 每个线程执行一次</span></span><br><span class="line"><span class="section">+--------------------------------+</span></span><br><span class="line"><span class="section">|             delay()            | &#123;</span></span><br><span class="line"><span class="section">+--------------------------------+</span></span><br><span class="line"><span class="section">|            request()           |     每次请求调用</span></span><br><span class="line"><span class="section">+--------------------------------+</span></span><br><span class="line"><span class="section">|  response(status,header,body)  | &#125;</span></span><br><span class="line"><span class="section">+--------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="section">done:</span></span><br><span class="line"><span class="section">+--------------------------------+</span></span><br><span class="line"><span class="section">| done(summary,latency,requests) | 整个过程执行一次</span></span><br><span class="line"><span class="section">+--------------------------------+</span></span><br></pre></td></tr></table></figure>
-
 <p>比如可以在 setup 阶段，为请求设置认证参数：</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- auth.lua</span></span><br><span class="line"><span class="comment">-- example script that demonstrates response handling and</span></span><br><span class="line"><span class="comment">-- retrieving an authentication token to set on all future</span></span><br><span class="line"><span class="comment">-- requests</span></span><br><span class="line">token = <span class="literal">nil</span></span><br><span class="line"><span class="built_in">path</span>  = <span class="string">&quot;/authenticate&quot;</span></span><br><span class="line"></span><br><span class="line">request = <span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">   <span class="keyword">return</span> wrk.<span class="built_in">format</span>(<span class="string">&quot;GET&quot;</span>, <span class="built_in">path</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">response = <span class="function"><span class="keyword">function</span><span class="params">(status, headers, body)</span></span></span><br><span class="line">   <span class="keyword">if</span> <span class="keyword">not</span> token <span class="keyword">and</span> <span class="built_in">status</span> == <span class="number">200</span> <span class="keyword">then</span></span><br><span class="line">      token = headers[<span class="string">&quot;X-Token&quot;</span>]</span><br><span class="line">      <span class="built_in">path</span>  = <span class="string">&quot;/resource&quot;</span></span><br><span class="line">      wrk.headers[<span class="string">&quot;X-Token&quot;</span>] = token</span><br><span class="line">   <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-
 <p>再启动测试：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 源码安装</span></span><br><span class="line">cd wrk</span><br><span class="line">apt  -y install build-essential</span><br><span class="line">make</span><br><span class="line">cp wrk /usr/local/bin/</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -c 并发连接数，-t 线程数</span></span><br><span class="line">wrk -c 1000 -t 2 -s auth.lua http://192.168.0.30/</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Running 10s <span class="built_in">test</span> @ http://192.168.0.30/</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   2 threads and 1000 connections</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   Thread Stats   Avg      Stdev     Max   +/- Stdev</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     Latency    65.83ms  174.06ms   1.99s    95.85%</span></span><br><span class="line"><span class="meta">#</span><span class="bash">     Req/Sec     4.87k   628.73     6.78k    69.00%</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   96954 requests <span class="keyword">in</span> 10.06s, 78.59MB <span class="built_in">read</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">   Socket errors: connect 0, <span class="built_in">read</span> 0, write 0, timeout 179</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Requests/sec:   9641.31</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Transfer/sec:      7.82MB</span></span><br></pre></td></tr></table></figure>
-
 <h2 id="优化总结"><a href="#优化总结" class="headerlink" title="优化总结"></a>优化总结</h2><p>性能优化首先是要确定目标，不同应用中每个指标的优化标准、优先级都不同：</p>
 <ul>
-<li><p>  对于 NAT 网关而言，其直接影响整个数据中心的网络出入性能，所以通常需要达到或接近线性转发，PPS 是最主要的性能目标。</p>
+<li><p>对于 NAT 网关而言，其直接影响整个数据中心的网络出入性能，所以通常需要达到或接近线性转发，PPS 是最主要的性能目标。</p>
 </li>
-<li><p>  对于数据库、缓存等系统而言，目的是快速完成网络收发，即延迟是主要的性能目标。</p>
+<li><p>对于数据库、缓存等系统而言，目的是快速完成网络收发，即延迟是主要的性能目标。</p>
 </li>
-<li><p>  对于 Web 服务而言，需要同时兼顾吞吐量和延迟。</p>
+<li><p>对于 Web 服务而言，需要同时兼顾吞吐量和延迟。</p>
 </li>
 </ul>
 <h3 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h3><p>即优化 I/O 模型、工作模型以及应用层网络协议。</p>
 <p><strong>选用网络模型</strong>：</p>
 <ul>
-<li><p>  使用 I/O 多路复用 epoll 取代 select 和 poll。</p>
+<li><p>使用 I/O 多路复用 epoll 取代 select 和 poll。</p>
 </li>
-<li><p>  使用异步 I/O（比较复杂）。</p>
+<li><p>使用异步 I/O（比较复杂）。</p>
 </li>
 </ul>
 <p><strong>选用工作模型</strong>：</p>
 <ul>
-<li><p>  主进程（管理网络连接）+ 多个 worker 子进程（实际的业务处理）。</p>
+<li><p>主进程（管理网络连接）+ 多个 worker 子进程（实际的业务处理）。</p>
 </li>
-<li><p>  监听到相同端口的多进程模型。所有进程监听相同接口，开启 SO_REUSEPORT 选项，由内核负责进程的负载均衡。</p>
+<li><p>监听到相同端口的多进程模型。所有进程监听相同接口，开启 SO_REUSEPORT 选项，由内核负责进程的负载均衡。</p>
 </li>
 </ul>
 <p><strong>协议优化</strong>：</p>
 <ul>
-<li><p>  使用长连接取代短连接：可显著降低 TCP 连接建立成本，在每秒请求次数较多时效果非常明显。</p>
+<li><p>使用长连接取代短连接：可显著降低 TCP 连接建立成本，在每秒请求次数较多时效果非常明显。</p>
 </li>
-<li><p>  使用内存来缓存不常变化的数据：可降低网络 I/O 次数，同时加快应用程序的响应速度。</p>
+<li><p>使用内存来缓存不常变化的数据：可降低网络 I/O 次数，同时加快应用程序的响应速度。</p>
 </li>
-<li><p>  使用 Protocol Buffer 等序列化的方式，压缩网络 I/O 的数据量，可提高应用程序的吞吐。</p>
+<li><p>使用 Protocol Buffer 等序列化的方式，压缩网络 I/O 的数据量，可提高应用程序的吞吐。</p>
 </li>
-<li><p>  使用 DNS 缓存、预取、HTTPDNS 等方式减少 DNS 解析的延迟，并提升网络 I/O 整体速度。</p>
+<li><p>使用 DNS 缓存、预取、HTTPDNS 等方式减少 DNS 解析的延迟，并提升网络 I/O 整体速度。</p>
 </li>
 </ul>
 <h3 id="套接字层"><a href="#套接字层" class="headerlink" title="套接字层"></a>套接字层</h3><p>为了提高网络的吞吐量，通常需要调整缓冲区的大小。</p>
 <ul>
-<li><p>  增大每个套接字的缓冲区大小 net.core.optmem_max。</p>
+<li><p>增大每个套接字的缓冲区大小 net.core.optmem_max。</p>
 </li>
-<li><p>  增大套接字接收缓冲区大小 net.core.rmem_max 和发送缓冲区大小 net.core.wmem_max。</p>
+<li><p>增大套接字接收缓冲区大小 net.core.rmem_max 和发送缓冲区大小 net.core.wmem_max。</p>
 </li>
-<li><p>  增大 TCP 接收缓冲区大小 net.ipv4.tcp_rmem 和发送缓冲区大小 net.ipv4.tcp_wmem（三个数值分别是 min，default，max，系统会根据设置自动调整 TCP 接收 / 发送缓冲区的大小，UDP 同理）。</p>
+<li><p>增大 TCP 接收缓冲区大小 net.ipv4.tcp_rmem 和发送缓冲区大小 net.ipv4.tcp_wmem（三个数值分别是 min，default，max，系统会根据设置自动调整 TCP 接收 / 发送缓冲区的大小，UDP 同理）。</p>
 </li>
 </ul>
 <p>修改网络连接行为的配置项：</p>
 <ul>
-<li><p>  为 TCP 连接设置 TCP_NODELAY 可禁用 Nagle 算法。</p>
+<li><p>为 TCP 连接设置 TCP_NODELAY 可禁用 Nagle 算法。</p>
 </li>
-<li><p>  为 TCP 连接开启 TCP_CORK 可让小包聚合成大包后再发送（会阻塞小包发送）。</p>
+<li><p>为 TCP 连接开启 TCP_CORK 可让小包聚合成大包后再发送（会阻塞小包发送）。</p>
 </li>
-<li><p>  使用 SO_SNDBUF 和 SO_RCVBUF  可分别调整套接字发送缓冲区和接收缓冲区大小。</p>
+<li><p>使用 SO_SNDBUF 和 SO_RCVBUF  可分别调整套接字发送缓冲区和接收缓冲区大小。</p>
 </li>
 </ul>
 <h3 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h3><p>主要时优化 TCP 和 UDP 协议。首先要了解 TCP 基本原理（比如流量控制、慢启动、拥塞避免、延迟确认）以及状态流转：</p>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/c072bb9c9dfd727ed187bc24beb3e3d1.png" alt="img" style="zoom:67%;" />
-
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/c072bb9c9dfd727ed187bc24beb3e3d1.png" alt="img" style="zoom:67%;" /></p>
 <h4 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h4><p><strong>TIME_WAIT 状态优化</strong>：对于请求量较大的场景，可能会看到大量处于 TIME_WAIT 状态的连接占用内存和端口资源。</p>
 <ul>
-<li><p>  增大处于 TIME_WAIT 状态的连接数量 net.ipv4.tcp_max_tw_buckets ，并增大连接跟踪表的大小 net.netfilter.nf_conntrack_max。</p>
+<li><p>增大处于 TIME_WAIT 状态的连接数量 net.ipv4.tcp_max_tw_buckets ，并增大连接跟踪表的大小 net.netfilter.nf_conntrack_max。</p>
 </li>
-<li><p>  减小 net.ipv4.tcp_fin_timeout 和 net.netfilter.nf_conntrack_tcp_timeout_time_wait ，让系统尽快释放其所占用的资源。</p>
+<li><p>减小 net.ipv4.tcp_fin_timeout 和 net.netfilter.nf_conntrack_tcp_timeout_time_wait ，让系统尽快释放其所占用的资源。</p>
 </li>
-<li><p>  开启端口复用 net.ipv4.tcp_tw_reuse。被 TIME_WAIT 状态占用的端口还能用到新连接中。增大本地端口的范围 net.ipv4.ip_local_port_range 以支持更多连接、提高整体并发能力。</p>
+<li><p>开启端口复用 net.ipv4.tcp_tw_reuse。被 TIME_WAIT 状态占用的端口还能用到新连接中。增大本地端口的范围 net.ipv4.ip_local_port_range 以支持更多连接、提高整体并发能力。</p>
 </li>
-<li><p>  增加最大文件描述符数量。使用 fs.nr_open 和 fs.file-max 分别增大进程和系统的最大文件描述符数；或在应用程序的 systemd 配置文件中设置应用程序的最大文件描述符数 LimitNOFILE。</p>
+<li><p>增加最大文件描述符数量。使用 fs.nr_open 和 fs.file-max 分别增大进程和系统的最大文件描述符数；或在应用程序的 systemd 配置文件中设置应用程序的最大文件描述符数 LimitNOFILE。</p>
 </li>
 </ul>
 <p><strong>缓解 SYN FLOOD</strong>：</p>
 <ul>
-<li><p>  增大 TCP 半连接最大数量 net.ipv4.tcp_max_syn_backlog ，或开启 TCP SYN Cookies net.ipv4.tcp_syncookies 绕开半连接数量限制（不可同时使用）。</p>
+<li><p>增大 TCP 半连接最大数量 net.ipv4.tcp_max_syn_backlog ，或开启 TCP SYN Cookies net.ipv4.tcp_syncookies 绕开半连接数量限制（不可同时使用）。</p>
 </li>
-<li><p>  减少 SYN_RECV 状态连接重传 SYN+ACK 包次数 net.ipv4.tcp_synack_retries。</p>
+<li><p>减少 SYN_RECV 状态连接重传 SYN+ACK 包次数 net.ipv4.tcp_synack_retries。</p>
 </li>
 </ul>
 <p><strong>Keepalive 优化</strong>：长连接场景通常使用 Keepalive 检测 TCP 连接状态，以便对端连接断开后自动回收。系统默认的 Keepalive 探测间隔和重试次数一般无法满足应用程序的性能要求。</p>
 <ul>
-<li><p>  缩短最后一次数据包到 Keepalive 探测包的间隔时间 net.ipv4.tcp_keepalive_time。</p>
+<li><p>缩短最后一次数据包到 Keepalive 探测包的间隔时间 net.ipv4.tcp_keepalive_time。</p>
 </li>
-<li><p>  缩短发送 Keepalive 探测包的间隔时间 net.ipv4.tcp_keepalive_intvl。</p>
+<li><p>缩短发送 Keepalive 探测包的间隔时间 net.ipv4.tcp_keepalive_intvl。</p>
 </li>
-<li><p>  减少 Keepalive 探测失败后，一直到通知应用程序前的重试次数 net.ipv4.tcp_keepalive_probes。</p>
+<li><p>减少 Keepalive 探测失败后，一直到通知应用程序前的重试次数 net.ipv4.tcp_keepalive_probes。</p>
 </li>
 </ul>
 <h4 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h4><ul>
-<li><p>  增大套接字缓冲区大小以及 UDP 缓冲区范围。</p>
+<li><p>增大套接字缓冲区大小以及 UDP 缓冲区范围。</p>
 </li>
-<li><p>  增大本地端口号的范围。</p>
+<li><p>增大本地端口号的范围。</p>
 </li>
-<li><p>  根据 MTU 大小调整 UDP 数据包大小，减少或避免分片。</p>
+<li><p>根据 MTU 大小调整 UDP 数据包大小，减少或避免分片。</p>
 </li>
 </ul>
 <blockquote>
@@ -846,18 +823,18 @@ height:100vh;
 <h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><p>主要是对路由、 IP 分片以及 ICMP 等进行调优。</p>
 <p>从路由和转发的角度出发：</p>
 <ul>
-<li><p>  在需要转发的服务器中（比如 NAT 网关或使用 Docker 容器时），开启 IP 转发，即设置 net.ipv4.ip_forward = 1。</p>
+<li><p>在需要转发的服务器中（比如 NAT 网关或使用 Docker 容器时），开启 IP 转发，即设置 net.ipv4.ip_forward = 1。</p>
 </li>
-<li><p>  调整数据包的生存周期 TTL，比如设置 net.ipv4.ip_default_ttl = 64。而增大该值会降低系统性能。</p>
+<li><p>调整数据包的生存周期 TTL，比如设置 net.ipv4.ip_default_ttl = 64。而增大该值会降低系统性能。</p>
 </li>
-<li><p>  开启数据包的反向地址校验，比如设置 net.ipv4.conf.eth0.rp_filter = 1。可以防止 IP 欺骗，并减少伪造 IP 带来的 DDoS 问题。</p>
+<li><p>开启数据包的反向地址校验，比如设置 net.ipv4.conf.eth0.rp_filter = 1。可以防止 IP 欺骗，并减少伪造 IP 带来的 DDoS 问题。</p>
 </li>
 </ul>
 <p>从分片的角度出发：最主要是调整 MTU 的大小。</p>
 <ul>
-<li><p>  通常根据以太网标准设置，网络帧最大为 1518B，去掉以太网头部 18B 后剩余 1500 即为 MTU。在使用 VXLAN、GRE 等叠加网络技术会使原来的网络包变大，MTU 也要相应增大。</p>
+<li><p>通常根据以太网标准设置，网络帧最大为 1518B，去掉以太网头部 18B 后剩余 1500 即为 MTU。在使用 VXLAN、GRE 等叠加网络技术会使原来的网络包变大，MTU 也要相应增大。</p>
 </li>
-<li><p>  很多网络设备支持巨帧，还可以把 MTU 调大为 9000，以提高网络吞吐量。</p>
+<li><p>很多网络设备支持巨帧，还可以把 MTU 调大为 9000，以提高网络吞吐量。</p>
 </li>
 </ul>
 <blockquote>
@@ -865,72 +842,68 @@ height:100vh;
 </blockquote>
 <p>从 ICMP 的角度出发：为避免 ICMP 主机探测、ICMP Flood 等网络问题，可通过内核选项限制 ICMP 行为。</p>
 <ul>
-<li><p>  禁止 ICMP 协议，即设置 net.ipv4.icmp_echo_ignore_all = 1，外部主机无法通过 ICMP 探测主机。</p>
+<li><p>禁止 ICMP 协议，即设置 net.ipv4.icmp_echo_ignore_all = 1，外部主机无法通过 ICMP 探测主机。</p>
 </li>
-<li><p>  禁止广播 ICMP，即设置 net.ipv4.icmp_echo_ignore_broadcasts = 1。</p>
+<li><p>禁止广播 ICMP，即设置 net.ipv4.icmp_echo_ignore_broadcasts = 1。</p>
 </li>
 </ul>
 <h3 id="链路层"><a href="#链路层" class="headerlink" title="链路层"></a>链路层</h3><p>主要是优化网络包的收发、网络功能卸载以及网卡选项。</p>
 <p>网卡收包后调用中断处理程序（特别是软中断）需要消耗大量的 CPU，而将中断处理程序调度到不同的 CPU 上执行可以显著提高网络吞吐量。</p>
 <ul>
-<li><p>  为网卡硬中断配置 CPU 亲和性（smp_affinity），或者开启 irqbalance 服务。</p>
+<li><p>为网卡硬中断配置 CPU 亲和性（smp_affinity），或者开启 irqbalance 服务。</p>
 </li>
-<li><p>  开启 RPS（Receive Packet Steering）和 RFS（Receive Flow Steering），将应用程序和软中断的处理调度到相同 CPU 上，可以增加 CPU 缓存命中率，减少网络延迟。</p>
+<li><p>开启 RPS（Receive Packet Steering）和 RFS（Receive Flow Steering），将应用程序和软中断的处理调度到相同 CPU 上，可以增加 CPU 缓存命中率，减少网络延迟。</p>
 </li>
 </ul>
 <p>利用网卡的功能：在内核中通过软件处理的功能转移到网卡中。</p>
 <ul>
-<li><p>  TSO（TCP Segmentation Offload）和 UFO（UDP Fragmentation Offload）：在 TCP/UDP 协议中直接发送大包；而 TCP 包的分段（按照 MSS 分段）和 UDP 的分片（按照 MTU 分片）功能由网卡来完成 。</p>
+<li><p>TSO（TCP Segmentation Offload）和 UFO（UDP Fragmentation Offload）：在 TCP/UDP 协议中直接发送大包；而 TCP 包的分段（按照 MSS 分段）和 UDP 的分片（按照 MTU 分片）功能由网卡来完成 。</p>
 </li>
-<li><p>  GSO（Generic Segmentation Offload）：在网卡不支持 TSO/UFO 时，将 TCP/UDP 包的分段延迟到进入网卡前再执行。可以减少 CPU 的消耗，以及在发生丢包时只重传分段后的包。</p>
+<li><p>GSO（Generic Segmentation Offload）：在网卡不支持 TSO/UFO 时，将 TCP/UDP 包的分段延迟到进入网卡前再执行。可以减少 CPU 的消耗，以及在发生丢包时只重传分段后的包。</p>
 </li>
-<li><p>  LRO（Large Receive Offload）：在接收 TCP 分段包时，由网卡将其组装合并后再交给上层网络处理。在需要 IP 转发时下不能开启 LRO，如果多个包的头部信息不一致，LRO 合并会导致网络包的校验错误。</p>
+<li><p>LRO（Large Receive Offload）：在接收 TCP 分段包时，由网卡将其组装合并后再交给上层网络处理。在需要 IP 转发时下不能开启 LRO，如果多个包的头部信息不一致，LRO 合并会导致网络包的校验错误。</p>
 </li>
-<li><p>  GRO（Generic Receive Offload）：修复了 LRO 的缺陷并且更为通用，同时支持 TCP 和 UDP。</p>
+<li><p>GRO（Generic Receive Offload）：修复了 LRO 的缺陷并且更为通用，同时支持 TCP 和 UDP。</p>
 </li>
-<li><p>  RSS（Receive Side Scaling）：也称为多队列接收，基于硬件的多个接收队列来分配网络接收进程，使得让多个 CPU 来处理接收到的网络包。</p>
+<li><p>RSS（Receive Side Scaling）：也称为多队列接收，基于硬件的多个接收队列来分配网络接收进程，使得让多个 CPU 来处理接收到的网络包。</p>
 </li>
-<li><p>  VXLAN 卸载：让网卡完成 VXLAN 的组包功能。</p>
+<li><p>VXLAN 卸载：让网卡完成 VXLAN 的组包功能。</p>
 </li>
 </ul>
 <p>优化网络接口：可提升网络吞吐量。</p>
 <ul>
-<li><p>  开启网络接口的多队列功能。每个队列可以用不同的中断号调度到不同 CPU 上执行，从而提升网络的吞吐量。</p>
+<li><p>开启网络接口的多队列功能。每个队列可以用不同的中断号调度到不同 CPU 上执行，从而提升网络的吞吐量。</p>
 </li>
-<li><p>  增大网络接口的缓冲区大小以及队列长度等，提升网络传输的吞吐量（可能导致延迟增大）。</p>
+<li><p>增大网络接口的缓冲区大小以及队列长度等，提升网络传输的吞吐量（可能导致延迟增大）。</p>
 </li>
-<li><p>  使用 Traffic Control 工具为不同网络流量配置 QoS。</p>
+<li><p>使用 Traffic Control 工具为不同网络流量配置 QoS。</p>
 </li>
 </ul>
 <p>绕过内核协议栈：</p>
 <ul>
-<li><p>  DPDK：跳过内核协议栈，直接由用户态进程轮询处理网络请求。再结合大页、CPU 绑定、内存对齐、流水线并发等多种机制，优化网络包的处理效率。</p>
+<li><p>DPDK：跳过内核协议栈，直接由用户态进程轮询处理网络请求。再结合大页、CPU 绑定、内存对齐、流水线并发等多种机制，优化网络包的处理效率。</p>
 </li>
-<li><p>  XDP：内核自带，在网络包进入内核协议栈前就对其进行处理。</p>
+<li><p>XDP：内核自带，在网络包进入内核协议栈前就对其进行处理。</p>
 </li>
 </ul>
 <p>关于工具和参数的选用，可以参考下表：</p>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/a1eb07e281e5795be83c11d7255c543b.png" alt="img" style="zoom:67%;" />
-
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/0d87b39b89a1b7f325fc5477c0182ea0.png" alt="img" style="zoom:67%;" />
-
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/5f2d4957663dd8bf3410da8180ab18f0.png" alt="img" style="zoom:67%;" />
-
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/b07ea76a8737ed93395736795ede44e0.png" alt="img" style="zoom:67%;" />
-
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/a1eb07e281e5795be83c11d7255c543b.png" alt="img" style="zoom:67%;" /></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/0d87b39b89a1b7f325fc5477c0182ea0.png" alt="img" style="zoom:67%;" /></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/5f2d4957663dd8bf3410da8180ab18f0.png" alt="img" style="zoom:67%;" /></p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-network-monitoring.assets/b07ea76a8737ed93395736795ede44e0.png" alt="img" style="zoom:67%;" /></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>分析案例可参考：</p>
 <ul>
-<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/81850">37 | 案例篇：DNS 解析时快时慢，我该怎么办？</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/81850">37 | 案例篇：DNS 解析时快时慢，我该怎么办？</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/82321">38 | 案例篇：怎么使用 tcpdump 和 Wireshark 分析网络流量？</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/82321">38 | 案例篇：怎么使用 tcpdump 和 Wireshark 分析网络流量？</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/82573">39 | 案例篇：怎么缓解 DDoS 攻击带来的性能下降问题？</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/82573">39 | 案例篇：怎么缓解 DDoS 攻击带来的性能下降问题？</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/82833">40 | 案例篇：网络请求延迟变大了，我该怎么办？</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/82833">40 | 案例篇：网络请求延迟变大了，我该怎么办？</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/83189">41 | 案例篇：如何优化 NAT 性能？（上）</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/83189">41 | 案例篇：如何优化 NAT 性能？（上）</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/83520">42 | 案例篇：如何优化 NAT 性能？（下）</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/83520">42 | 案例篇：如何优化 NAT 性能？（下）</a></p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -950,8 +923,8 @@ height:100vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/04/01/OS_page-cache-basic/" title= "Page Cache 基础">
-                    <div class="prevTitle">Page Cache 基础</div>
+                <a href= "/2021/04/01/OS_system_initialization/" title= "Linux - 架构与系统初始化">
+                    <div class="prevTitle">Linux - 架构与系统初始化</div>
                 </a>
             
         </li>
@@ -1650,16 +1623,9 @@ top:100vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 76
         </div>
         <!-- search  -->
         
@@ -1821,11 +1787,6 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">04/05</span><a class="archive-post-title" href= "/2021/04/05/OS_linux-network-monitoring/" >Linux 网络原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_page-cache-basic/" >Page Cache 基础</a>
         </li>
     
     
@@ -2087,9 +2048,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     

@@ -468,38 +468,38 @@ height:100vh;
 <p>依赖于数据源提供的事务能力，在代码层面只做标准化封装，不能深入参与事务过程（比如调用 JDBC <code>rollback()</code> 方法，不能保证事务必然被回滚）。</p>
 <p>事务的四大要素是原子性、隔离性、持久性和一致性。</p>
 <ul>
-<li><p>  <strong>一致性</strong>（Consistency）：保证数据正确不会产生矛盾。</p>
+<li><p><strong>一致性</strong>（Consistency）：保证数据正确不会产生矛盾。</p>
 </li>
-<li><p>  <strong>原子性</strong>（Atomic）：同一项业务处理过程中，保证多个对数据的修改必须同时成功或撤销。</p>
+<li><p><strong>原子性</strong>（Atomic）：同一项业务处理过程中，保证多个对数据的修改必须同时成功或撤销。</p>
 </li>
-<li><p>  <strong>隔离性</strong>（Isolation）：不同的业务处理过程中，保证各自业务读、写数据不会相互影响。</p>
+<li><p><strong>隔离性</strong>（Isolation）：不同的业务处理过程中，保证各自业务读、写数据不会相互影响。</p>
 </li>
-<li><p>  <strong>持久性</strong>（Durability）：所有被成功提交的数据修改都能够正确地被持久化。</p>
+<li><p><strong>持久性</strong>（Durability）：所有被成功提交的数据修改都能够正确地被持久化。</p>
 </li>
 </ul>
 <p>前三者是手段，一致性是目的，应着眼于前三者。</p>
 <h3 id="原子性和持久性"><a href="#原子性和持久性" class="headerlink" title="原子性和持久性"></a>原子性和持久性</h3><p>前者保证多个操作生效情况统一，后者保证事务生效后不会丢失修改（即成功写入磁盘）。</p>
 <p>数据入库过程中可能发生以下情形：</p>
 <ul>
-<li><p>  <strong>未提交事务，写入后崩溃</strong>：程序未写完数据，数据库已将其中部分数据写入磁盘，此时崩溃，重启后数据库必须得知崩溃前发生过不完整的写操作，将修改过的数据从磁盘中恢复原状，以保证原子性。</p>
+<li><p><strong>未提交事务，写入后崩溃</strong>：程序未写完数据，数据库已将其中部分数据写入磁盘，此时崩溃，重启后数据库必须得知崩溃前发生过不完整的写操作，将修改过的数据从磁盘中恢复原状，以保证原子性。</p>
 </li>
-<li><p>  <strong>已提交事务，写入前崩溃</strong>：程序写完数据，数据库还未将全部变动写入到磁盘，此时崩溃，重启后数据库必须得知崩溃前发生过完整的写操作，将未写入磁盘的部分数据重新写入，以保证持久性。</p>
+<li><p><strong>已提交事务，写入前崩溃</strong>：程序写完数据，数据库还未将全部变动写入到磁盘，此时崩溃，重启后数据库必须得知崩溃前发生过完整的写操作，将未写入磁盘的部分数据重新写入，以保证持久性。</p>
 </li>
 </ul>
 <p>按照事务提交时点为界，写入数据分为两类情况：</p>
 <ul>
-<li><p>  <strong>FORCE</strong>：事务提交后要求变动数据同时完成写入，否则是 NO-FORCE。为了优化磁盘 I/O 性能考虑，没有必要强制数据写入立即进行（确保有日志即可）。</p>
+<li><p><strong>FORCE</strong>：事务提交后要求变动数据同时完成写入，否则是 NO-FORCE。为了优化磁盘 I/O 性能考虑，没有必要强制数据写入立即进行（确保有日志即可）。</p>
 </li>
-<li><p>  <strong>STEAL</strong>：事务提交前允许变动数据提前写入，否则是 NO-STEAL。提前提前写有利于利用空闲 I/O 资源、节省缓存区内存。</p>
+<li><p><strong>STEAL</strong>：事务提交前允许变动数据提前写入，否则是 NO-STEAL。提前提前写有利于利用空闲 I/O 资源、节省缓存区内存。</p>
 </li>
 </ul>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/FORCE-STEAL.png" alt="FORCE-STEAL"></p>
 <h4 id="提交日志（Commit-Logging）"><a href="#提交日志（Commit-Logging）" class="headerlink" title="提交日志（Commit Logging）"></a>提交日志（Commit Logging）</h4><p>提交日志允许 NO-FORCE，但不允许 STEAL。</p>
 <p>修改数据发生在事务提交后（假如事务提交前就有部分变动写入磁盘，一旦崩溃或事务回滚就会出错），在写数据时：</p>
 <ul>
-<li><p>  将修改操作的全部信息顺序追加到 <strong>重做日志</strong>（Redo Log），包括修改的动作、修改前后的数据、数据的物理位置（内存页和磁盘块）等。</p>
+<li><p>将修改操作的全部信息顺序追加到 <strong>重做日志</strong>（Redo Log），包括修改的动作、修改前后的数据、数据的物理位置（内存页和磁盘块）等。</p>
 </li>
-<li><p>  在日志落盘后，数据库在日志中检查到事务执行成功的 <strong>提交记录</strong>（Commit Record）才根据日志修改数据，完成后再在日志加入 <strong>结束记录</strong>（End Record），表示事务已持久化。</p>
+<li><p>在日志落盘后，数据库在日志中检查到事务执行成功的 <strong>提交记录</strong>（Commit Record）才根据日志修改数据，完成后再在日志加入 <strong>结束记录</strong>（End Record），表示事务已持久化。</p>
 </li>
 </ul>
 <p>日志完整即事务成功，否则就是失败；即使发生崩溃，重启后根据日志提交或回滚即可。</p>
@@ -507,11 +507,11 @@ height:100vh;
 <h4 id="预写日志（Write-Ahead-Logging）"><a href="#预写日志（Write-Ahead-Logging）" class="headerlink" title="预写日志（Write-Ahead Logging）"></a>预写日志（Write-Ahead Logging）</h4><p>增加了回滚日志（Undo Log），允许 NO-FORCE 和 STEAL，特点是高性能。</p>
 <p>在修改落盘前先记录 Undo Log，注明修改了位置、变更值等，以便在事务回滚或崩溃恢复时根据 Undo Log 擦除提前写入的数据。在崩溃恢复时：</p>
 <ul>
-<li><p>  <strong>分析</strong>（Analysis）：从最后一次检查点（Checkpoint，此前变动已落盘）扫描日志，找出没有 End Record 的事务组成待恢复事务集合（至少包括 Transaction Table 和 Dirty Page Table 两个部分）。</p>
+<li><p><strong>分析</strong>（Analysis）：从最后一次检查点（Checkpoint，此前变动已落盘）扫描日志，找出没有 End Record 的事务组成待恢复事务集合（至少包括 Transaction Table 和 Dirty Page Table 两个部分）。</p>
 </li>
-<li><p>  <strong>重做</strong>（Redo）：依据上阶段的事务集合来重演（Repeat History）：找出所有包含 Commit Record 的日志，将数据变动写入磁盘，完成后在日志中增加一条 End Record，从事务集合移除。要求幂等。</p>
+<li><p><strong>重做</strong>（Redo）：依据上阶段的事务集合来重演（Repeat History）：找出所有包含 Commit Record 的日志，将数据变动写入磁盘，完成后在日志中增加一条 End Record，从事务集合移除。要求幂等。</p>
 </li>
-<li><p>  <strong>回滚</strong>（Undo）：处理前量阶段剩余的恢复事务集合，根据 Undo Log 将已提前写入磁盘的信息改写回去。要求幂等。</p>
+<li><p><strong>回滚</strong>（Undo）：处理前量阶段剩余的恢复事务集合，根据 Undo Log 将已提前写入磁盘的信息改写回去。要求幂等。</p>
 </li>
 </ul>
 <blockquote>
@@ -520,19 +520,19 @@ height:100vh;
 </blockquote>
 <h3 id="隔离性"><a href="#隔离性" class="headerlink" title="隔离性"></a>隔离性</h3><p>现代数据库提供了三种锁：</p>
 <ul>
-<li><p>  排他锁（X-Lock）：即写锁，数据加写锁后只有持有写锁的事务才能写入，其他事务不能写入数据也不能施加读锁（注意此时其它事务是可以读取的）。</p>
+<li><p>排他锁（X-Lock）：即写锁，数据加写锁后只有持有写锁的事务才能写入，其他事务不能写入数据也不能施加读锁（注意此时其它事务是可以读取的）。</p>
 </li>
-<li><p>  共享锁（S-Lock）：即读锁，数据加读锁后不能再被加上写锁，但可以被添加多个读锁，即允许多个事务同时读取；持有读锁的事务可以升级为写锁。</p>
+<li><p>共享锁（S-Lock）：即读锁，数据加读锁后不能再被加上写锁，但可以被添加多个读锁，即允许多个事务同时读取；持有读锁的事务可以升级为写锁。</p>
 </li>
-<li><p>  范围锁（Range Lock）：对某个范围加写锁，该范围不能被写入。比如 <code>SELECT ... FOR UPDATE</code>。</p>
+<li><p>范围锁（Range Lock）：对某个范围加写锁，该范围不能被写入。比如 <code>SELECT ... FOR UPDATE</code>。</p>
 </li>
 </ul>
 <h4 id="可串行化（Serializable）"><a href="#可串行化（Serializable）" class="headerlink" title="可串行化（Serializable）"></a>可串行化（Serializable）</h4><p>表现和串行事务一样，要求所有读写操作都加锁、事务结束才释放，性能极差。</p>
 <h4 id="可重复读（Repeatable-Read）"><a href="#可重复读（Repeatable-Read）" class="headerlink" title="可重复读（Repeatable Read）"></a>可重复读（Repeatable Read）</h4><p>对事务数据加的读锁和写锁直至事务结束才释放。由于没有加范围锁，因此可能出现 <strong>幻读</strong>（Phantom Reads）问题：在事务执行过程中，两个完全相同的范围查询得到了不同的结果集（读取到不该读的）。</p>
 <ul>
-<li><p>  只读事务：比如事务 A 的两个相同的查询操作之间，被事务 B 在其查询范围内插入一条数据，不会发生幻读。</p>
+<li><p>只读事务：比如事务 A 的两个相同的查询操作之间，被事务 B 在其查询范围内插入一条数据，不会发生幻读。</p>
 </li>
-<li><p>  读写事务：比如事务 A 有先查询后更新两个操作（针对同一个范围，比如 id &lt; 100），其间被事务 B 在其操作范围内插入一条数据，将会影响到 A 后面的更新（即发生幻读，也有说法是 <strong>写倾斜</strong>）。</p>
+<li><p>读写事务：比如事务 A 有先查询后更新两个操作（针对同一个范围，比如 id &lt; 100），其间被事务 B 在其操作范围内插入一条数据，将会影响到 A 后面的更新（即发生幻读，也有说法是 <strong>写倾斜</strong>）。</p>
 </li>
 </ul>
 <h4 id="读已提交（Read-Committed）"><a href="#读已提交（Read-Committed）" class="headerlink" title="读已提交（Read Committed）"></a>读已提交（Read Committed）</h4><p>对事务数据加写锁会持续到事务结束，但读锁在读完成后即释放。可能出现 <strong>不可重复读</strong>（Non-Repeatable Reads）问题：事务执行过程中，对同一行数据的两次查询得到不同结果。</p>
@@ -544,19 +544,19 @@ height:100vh;
 </blockquote>
 <h4 id="多版本并发控制（MVCC）"><a href="#多版本并发控制（MVCC）" class="headerlink" title="多版本并发控制（MVCC）"></a>多版本并发控制（MVCC）</h4><p>作为 <strong>无锁</strong> 优化方案被提出：每个事务都有全局递增的 ID，每行数据都包括记录事务 ID 的两个版本号。</p>
 <ul>
-<li><p>  插入：CREATE_VERSION 记录事务 ID，DELETE_VERSION 为空。</p>
+<li><p>插入：CREATE_VERSION 记录事务 ID，DELETE_VERSION 为空。</p>
 </li>
-<li><p>  删除：DELETE_VERSION 记录事务 ID，CREATE_VERSION 为空。</p>
+<li><p>删除：DELETE_VERSION 记录事务 ID，CREATE_VERSION 为空。</p>
 </li>
-<li><p>  修改：即删除和插入的组合。先将原数据复制一份，原有数据的 DELETE_VERSION 记录事务 ID，CREATE_VERSION 为空；复制的数据的 CREATE_VERSION 记录事务 ID，DELETE_VERSION 为空。</p>
+<li><p>修改：即删除和插入的组合。先将原数据复制一份，原有数据的 DELETE_VERSION 记录事务 ID，CREATE_VERSION 为空；复制的数据的 CREATE_VERSION 记录事务 ID，DELETE_VERSION 为空。</p>
 </li>
 <li><p>查询：</p>
 <ul>
-<li><p>  可重复读：读取 CREATE_VERSION &lt;= 当前事务 ID 的版本集合，并取其中的最新版本（事务 ID 最大）。</p>
+<li><p>可重复读：读取 CREATE_VERSION &lt;= 当前事务 ID 的版本集合，并取其中的最新版本（事务 ID 最大）。</p>
 </li>
-<li><p>  读已提交：总是读取最新（最近被 Commit）版本。</p>
+<li><p>读已提交：总是读取最新（最近被 Commit）版本。</p>
 </li>
-<li><p>  读未提交总是读取最新数据、可串行化所有读写都加锁，这两者都不必考虑。</p>
+<li><p>读未提交总是读取最新数据、可串行化所有读写都加锁，这两者都不必考虑。</p>
 </li>
 </ul>
 </li>
@@ -564,42 +564,40 @@ height:100vh;
 <p>MVCC 只是针对“读+写”场景的优化，对于“写+写”场景就只能加锁。此时值得考虑的是使用乐观锁还是悲观锁。前者常用于竞争不频繁的情况，否则效率比后者更低。</p>
 <h2 id="全局事务"><a href="#全局事务" class="headerlink" title="全局事务"></a>全局事务</h2><p>适用于单个服务使用多个数据源的场景。</p>
 <h3 id="两阶段提交"><a href="#两阶段提交" class="headerlink" title="两阶段提交"></a>两阶段提交</h3><p>XA（eXtended Architecture）是语言无关的通用规范，其定义了 <strong>全局事务管理器</strong>（协调全局事务）和 <strong>局部事务管理器</strong>（驱动本地事务）的通信接口。XA 接口是双向的，可在一个事务管理器和多个资源管理器之间协调，实现全局事务统一提交和回滚。</p>
-<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BA%8C%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4">两段式提交</a>协议（2 Phase Commit，2PC）：</p>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/二阶段提交">两段式提交</a>协议（2 Phase Commit，2PC）：</p>
 <ul>
-<li><p>  <strong>准备阶段</strong>：又称投票阶段。协调者询问事务参与者是否准备好（Redo Log 中记录提交操作的内容，但此时暂不写入 Commit Record）提交，参与者回复 Prepared 或 Non-Prepared。参与者在数据落盘后仍继续持有锁，维持数据隔离。</p>
+<li><p><strong>准备阶段</strong>：又称投票阶段。协调者询问事务参与者是否准备好（Redo Log 中记录提交操作的内容，但此时暂不写入 Commit Record）提交，参与者回复 Prepared 或 Non-Prepared。参与者在数据落盘后仍继续持有锁，维持数据隔离。</p>
 </li>
-<li><p>  <strong>提交阶段</strong>：又称执行阶段。如果协调者在上一阶段收到所有参与者回复 Prepared，先在本地持久化事务状态为 Commit，再向所有参与者发送 Commit 指令，参与者提交（写入 Commit Record）；如果任意一个参与者回复 Non-Prepared 或超时未回复，协调者将事务状态持久化为 Abort，再向所有参与者发送 Abort 指令，参与者回滚（清理已提交数据，负担较重）。</p>
+<li><p><strong>提交阶段</strong>：又称执行阶段。如果协调者在上一阶段收到所有参与者回复 Prepared，先在本地持久化事务状态为 Commit，再向所有参与者发送 Commit 指令，参与者提交（写入 Commit Record）；如果任意一个参与者回复 Non-Prepared 或超时未回复，协调者将事务状态持久化为 Abort，再向所有参与者发送 Abort 指令，参与者回滚（清理已提交数据，负担较重）。</p>
 </li>
 </ul>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626877032.jpg" alt="1626877032" style="zoom: 80%;" />
-
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626877032.jpg" alt="1626877032" style="zoom: 80%;" /></p>
 <p>保证一致性的前提：</p>
 <ul>
-<li><p>  提交阶段网络可靠，不会丢失消息，且全过程中网络都没有误差（不传递错误消息。因此不能解决 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Byzantine_fault">拜占庭将军</a> 一类问题）。准备阶段失败可以回滚，而提交阶段失败就无法补救（等崩溃节点恢复）。此阶段耗时应尽可能短。</p>
+<li><p>提交阶段网络可靠，不会丢失消息，且全过程中网络都没有误差（不传递错误消息。因此不能解决 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Byzantine_fault">拜占庭将军</a> 一类问题）。准备阶段失败可以回滚，而提交阶段失败就无法补救（等崩溃节点恢复）。此阶段耗时应尽可能短。</p>
 </li>
-<li><p>  网络分区、机器崩溃等导致失联的节点最终都能恢复，不会永久丢失。在准备阶段已写入完整的 Redo Log，失联节点恢复后会从日志中找到未提交的事务，再向协调者查询状态，确定之后提交或回滚。</p>
+<li><p>网络分区、机器崩溃等导致失联的节点最终都能恢复，不会永久丢失。在准备阶段已写入完整的 Redo Log，失联节点恢复后会从日志中找到未提交的事务，再向协调者查询状态，确定之后提交或回滚。</p>
 </li>
 </ul>
 <p>存在缺陷：</p>
 <ul>
-<li><p>  <strong>单点问题</strong>：参与者等待协调者指令时无法做超时处理，协调者宕机所有参与者都会受到影响。如协调者没有恢复或没有正常发送 Commit 或 Rollback 指令，所有参与者都会一直等待。</p>
+<li><p><strong>单点问题</strong>：参与者等待协调者指令时无法做超时处理，协调者宕机所有参与者都会受到影响。如协调者没有恢复或没有正常发送 Commit 或 Rollback 指令，所有参与者都会一直等待。</p>
 </li>
-<li><p>  <strong>性能问题</strong>：统一调度参与者，期间两次远程服务调用，三次数据持久化，完成时间取决于最慢的节点。准备阶段负担很重，协调者发出准备消息，每个参与者即对数据加锁、写 Redo Log，当某参与者无法提交，则所有节点都做了无用功。</p>
+<li><p><strong>性能问题</strong>：统一调度参与者，期间两次远程服务调用，三次数据持久化，完成时间取决于最慢的节点。准备阶段负担很重，协调者发出准备消息，每个参与者即对数据加锁、写 Redo Log，当某参与者无法提交，则所有节点都做了无用功。</p>
 </li>
-<li><p>  <strong>一致性风险</strong>：当网络不稳定或宕机不确定可恢复时，就可能出现一致性问题。在分布式系统中，宕机故障必然导致一致性无法完全保证（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Consensus_(computer_science)#Solvability_results_for_some_agreement_problems">FLP 不可能原理</a>），而网络稳定性带来的风险：提交阶段网络被断开，协调者无法向所有参与者发出 Commit 指令，就导致部分协调者提交、部分参与者未提交但无法回滚。</p>
+<li><p><strong>一致性风险</strong>：当网络不稳定或宕机不确定可恢复时，就可能出现一致性问题。在分布式系统中，宕机故障必然导致一致性无法完全保证（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Consensus_(computer_science">FLP 不可能原理</a>#Solvability_results_for_some_agreement_problems)），而网络稳定性带来的风险：提交阶段网络被断开，协调者无法向所有参与者发出 Commit 指令，就导致部分协调者提交、部分参与者未提交但无法回滚。</p>
 </li>
 </ul>
-<p>针对以上问题发展出 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4">三段式提交</a>（3PC）：准备阶段细分为 CanCommit、PreCommit，提交阶段改称 DoCommit，参与者错过 Docommit 消息则默认提交。</p>
+<p>针对以上问题发展出 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/三阶段提交">三段式提交</a>（3PC）：准备阶段细分为 CanCommit、PreCommit，提交阶段改称 DoCommit，参与者错过 Docommit 消息则默认提交。</p>
 <ul>
-<li><p>  <strong>询问阶段</strong>：CanCommit，协调者让参与者评估事务是否有可能完成，如得到都是正面响应，即因部分提交时失败导致全部回滚的风险减低。</p>
+<li><p><strong>询问阶段</strong>：CanCommit，协调者让参与者评估事务是否有可能完成，如得到都是正面响应，即因部分提交时失败导致全部回滚的风险减低。</p>
 </li>
-<li><p>  事务失败回滚概率变小，如果在 PreCommit 后协调者宕机，参与者没等到 DoCommit 消息，默认的操作策略是提交而不是回滚或者持续等待，因此避免了协调者单点问题的风险。在回滚场景 3PC 性能比 2PC 好很多，但在提交场景性能依然很差（白做了一次询问）。</p>
+<li><p>事务失败回滚概率变小，如果在 PreCommit 后协调者宕机，参与者没等到 DoCommit 消息，默认的操作策略是提交而不是回滚或者持续等待，因此避免了协调者单点问题的风险。在回滚场景 3PC 性能比 2PC 好很多，但在提交场景性能依然很差（白做了一次询问）。</p>
 </li>
-<li><p>  但 3PC 甚至增加了一致性风险。比如在 PreCommit 阶段后协调者发出 Abort 指令，因网络问题部分参与者一直未能收到指令，则将错误地提交事务。</p>
+<li><p>但 3PC 甚至增加了一致性风险。比如在 PreCommit 阶段后协调者发出 Abort 指令，因网络问题部分参与者一直未能收到指令，则将错误地提交事务。</p>
 </li>
 </ul>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626877819.jpg" alt="1626877819" style="zoom: 80%;" />
-
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626877819.jpg" alt="1626877819" style="zoom: 80%;" /></p>
 <h2 id="共享事务"><a href="#共享事务" class="headerlink" title="共享事务"></a>共享事务</h2><p>适用于多个服务使用一个数据源的场景（但这更可能是伪需求）。</p>
 <blockquote>
 <p>  在同一进程中很容易做到：比如 WebSphere 内置可共享连接以供 JDBC、ORM、JMS 等不同的持久化工具使用。</p>
@@ -608,15 +606,14 @@ height:100vh;
 <p>各个服务共享数据库连接。下面三个服务发出请求交由中间服务器上的同一个数据库连接，通过本地事务方式完成。比如根据不同服务节点传来的同一个事务 ID，使用同一个数据库连接来处理跨越多个服务的事务。</p>
 <p>这与实际生产系统中的压力方向相悖：服务集群中数据库压力最大、最不容易伸缩拓展。因此只有类似为多个数据库实例做负载均衡的代理，而不是反过来由一个数据库为多个应用提供事务协调的服务代理（如果确实如此，应该反思为何要拆分微服务…= =）。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[Service1]</span>---------+</span><br><span class="line">                   ↓</span><br><span class="line"><span class="selector-attr">[Service2]</span>-----&gt; <span class="selector-attr">[Proxy]</span>-----&gt; <span class="selector-attr">[DB]</span></span><br><span class="line">                   ↑</span><br><span class="line"><span class="selector-attr">[Service3]</span>---------+</span><br></pre></td></tr></table></figure>
-
 <h2 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h2><p>适用于多个服务使用多个数据源的场景。</p>
 <h3 id="CAP-与-ACID"><a href="#CAP-与-ACID" class="headerlink" title="CAP 与 ACID"></a>CAP 与 ACID</h3><p>CAP 定理指出，在分布式系统中涉及到数据共享时，以下三个特性最多可满足两个：</p>
 <ul>
-<li><p>  <strong>一致性</strong>（Consistency）：在任何时刻、任何节点中所看到的数据都是符合预期的。</p>
+<li><p><strong>一致性</strong>（Consistency）：在任何时刻、任何节点中所看到的数据都是符合预期的。</p>
 </li>
-<li><p>  <strong>可用性</strong>（Availability）：系统不间断地提供服务的能力，包括两个指标，可靠性（Reliability，常用平均无故障时间度量）和可维护性（Serviceability，常用平均可修复时间度量）。</p>
+<li><p><strong>可用性</strong>（Availability）：系统不间断地提供服务的能力，包括两个指标，可靠性（Reliability，常用平均无故障时间度量）和可维护性（Serviceability，常用平均可修复时间度量）。</p>
 </li>
-<li><p>  <strong>分区容忍性</strong>（Partition Tolerance）：分布式环境中部分节点因网络原因而彼此失联后，即与其他节点形成“网络分区”时，系统仍能正确地提供服务。</p>
+<li><p><strong>分区容忍性</strong>（Partition Tolerance）：分布式环境中部分节点因网络原因而彼此失联后，即与其他节点形成“网络分区”时，系统仍能正确地提供服务。</p>
 </li>
 </ul>
 <blockquote>
@@ -624,38 +621,37 @@ height:100vh;
 </blockquote>
 <p>通常考虑两种系统：</p>
 <ul>
-<li><p>  CP 系统：放弃可用性，一旦发生分区，节点间信息同步时间可无限延长。问题退化到 <strong>全局事务</strong> 的场景，可通过 2PC、3PC 等获得 C 和 P。常用于对数据质量要求很高的场景，比如 DTP 模型的分布式数据库事务、HBase。</p>
+<li><p>CP 系统：放弃可用性，一旦发生分区，节点间信息同步时间可无限延长。问题退化到 <strong>全局事务</strong> 的场景，可通过 2PC、3PC 等获得 C 和 P。常用于对数据质量要求很高的场景，比如 DTP 模型的分布式数据库事务、HBase。</p>
 </li>
-<li><p>  AP 系统：放弃一致性，一旦发生分区，节点之间所提供的数据可能不一致。这是分布式系统的主流选择，因为如果可用性随节点数量增加而下降，则失去分布式的价值。比如大多数的 NoSQL 或分布式缓存框架。</p>
+<li><p>AP 系统：放弃一致性，一旦发生分区，节点之间所提供的数据可能不一致。这是分布式系统的主流选择，因为如果可用性随节点数量增加而下降，则失去分布式的价值。比如大多数的 NoSQL 或分布式缓存框架。</p>
 </li>
 </ul>
 <p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Eventual_consistency">最终一致性</a>（Eventual Consistency）：如果数据在一段时间内没有被其它操作更改，则最终将会达到与强一致性过程相同的结果，面向最终一致性的算法被称为“乐观复制算法”。这是探讨分布式事务所追求的目标（也是 AC 系统尽可能得到正确结果的途径）。</p>
 <p>相较于 ACID，在分布式场景达到一致性还有另一种途径：BASE，即：</p>
 <ul>
-<li><p>  基本可用性（Basically Available）</p>
+<li><p>基本可用性（Basically Available）</p>
 </li>
-<li><p>  柔性事务（Soft State）</p>
+<li><p>柔性事务（Soft State）</p>
 </li>
-<li><p>  最终一致性（Eventually Consistent）</p>
+<li><p>最终一致性（Eventually Consistent）</p>
 </li>
 </ul>
 <h3 id="可靠事件队列"><a href="#可靠事件队列" class="headerlink" title="可靠事件队列"></a>可靠事件队列</h3><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Best-effort_delivery">最大努力交付</a>（Best-Effort Delivery，参考 TCP 中未收到 ACK 应答自动重新发包）：节点 A 写数据操作需要关联到其它节点（B、C），可在本地数据库中建立一个本地消息表，在系统中建立一个用于跟踪事务状态消息服务：</p>
 <ul>
-<li><p>  A 写数据时，利用本地事务在消息表记录事务 ID 与变更操作，标记为“进行中”。</p>
+<li><p>A 写数据时，利用本地事务在消息表记录事务 ID 与变更操作，标记为“进行中”。</p>
 </li>
 <li><p>A 定时轮询消息表，将“进行中”的消息发送到事务关联的 B、C 节点。</p>
 <ul>
-<li><p>  如果 B、C 都完成了操作并返回结果为成功，A 把消息状态标记修改为“已完成”，最终一致性达成。</p>
+<li><p>如果 B、C 都完成了操作并返回结果为成功，A 把消息状态标记修改为“已完成”，最终一致性达成。</p>
 </li>
-<li><p>  如果 B、C 至少一个未收到消息或返回结果未成功，该消息在表中一直处于“进行中”状态，在 A 轮询时不断重试（要求消息具备幂等性）。</p>
-</li>
-</ul>
-</li>
-<li><p>  轮询确保自动重试直到成功或人工介入，因此不存在回滚。</p>
+<li><p>如果 B、C 至少一个未收到消息或返回结果未成功，该消息在表中一直处于“进行中”状态，在 A 轮询时不断重试（要求消息具备幂等性）。</p>
 </li>
 </ul>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626883659.jpg" alt="1626883659" style="zoom:80%;" />
-
+</li>
+<li><p>轮询确保自动重试直到成功或人工介入，因此不存在回滚。</p>
+</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626883659.jpg" alt="1626883659" style="zoom:80%;" /></p>
 <blockquote>
 <p>  一些支持分布式事务的消息框架原生支持分布式事务操作（如 RocketMQ），轮询重试可交由消息框架来保障。</p>
 </blockquote>
@@ -664,16 +660,14 @@ height:100vh;
 <h3 id="TCC-事务（回滚）"><a href="#TCC-事务（回滚）" class="headerlink" title="TCC 事务（回滚）"></a>TCC 事务（回滚）</h3><p>一些业务必须考虑隔离性，比如电商场景下的 <strong>超售问题</strong>：两个客户在短时间内都成功购买了同一件商品（数量允许），但他们购买的数量之超过了库存。在刚性事务的 <strong>可重复读</strong> 级别下必然可避免（保证后提交的事务无法获得锁而失败），但在分布式事务下，可考虑 TCC 方案，其优势是可提供强隔离性。</p>
 <p>TCC 分为三个阶段：</p>
 <ul>
-<li><p>  <strong>Try</strong>：尝试执行，完成所有业务可执行性检查（保障一致性）、预留业务资源（保障隔离性）。</p>
+<li><p><strong>Try</strong>：尝试执行，完成所有业务可执行性检查（保障一致性）、预留业务资源（保障隔离性）。</p>
 </li>
-<li><p>  <strong>Confirm</strong>：确认执行，使用 Try 阶段的资源完成业务处理。可能会重复执行，需要具备幂等性。</p>
+<li><p><strong>Confirm</strong>：确认执行，使用 Try 阶段的资源完成业务处理。可能会重复执行，需要具备幂等性。</p>
 </li>
-<li><p>  <strong>Cancel</strong>：取消执行，释放 Try 阶段的资源。可能会重复执行，需要具备幂等性。</p>
+<li><p><strong>Cancel</strong>：取消执行，释放 Try 阶段的资源。可能会重复执行，需要具备幂等性。</p>
 </li>
 </ul>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626883556.jpg" alt="1626883556" style="zoom:80%;" />
-
-
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transaction.assets/1626883556.jpg" alt="1626883556" style="zoom:80%;" /></p>
 <p>TCC 具备高性能、强隔离的优点（在业务执行时只操作预留资源，几乎不会涉及锁和资源的争用，因此性能很高），其类似 2PC 的准备和提交阶段，但前者在用户代码层面实现，后者在基础设施层面实现，因此 TCC 更灵活、可设计资源锁定的粒度。</p>
 <p>缺点是业务侵入性强，意味着更高的开发成本和替换成本；且所要求的技术可控性上约束较大：比如与第三方对接，操作权限和数据结构不能随心所欲自行定义，不能要求对接方配合操作，Try 阶段就无法施行。</p>
 <blockquote>
@@ -682,24 +676,24 @@ height:100vh;
 <h3 id="SAGA-事务（补偿）"><a href="#SAGA-事务（补偿）" class="headerlink" title="SAGA 事务（补偿）"></a>SAGA 事务（补偿）</h3><p>SAGA 最初是通过把一个大事务分解为可交错运行的一系列子事务集合，避免大事务长时间锁定资源、提升运作效率的方法。</p>
 <p>后来发展成将分布式大事务分解为本地小事务集合的设计模式，其由两部分组成：</p>
 <ul>
-<li><p>  大事务 T 拆分若干个小事务 Ti，每个子事务被视为是原子行为，如分布式事务能正常提交，其最终一致性等价于连续按序提交的子事务。</p>
+<li><p>大事务 T 拆分若干个小事务 Ti，每个子事务被视为是原子行为，如分布式事务能正常提交，其最终一致性等价于连续按序提交的子事务。</p>
 </li>
 <li><p>为每个子事务 Ti 设计对应的补偿动作 Ci，需满足：</p>
 <ul>
-<li><p>  Ti 与 Ci 都具备幂等性。</p>
+<li><p>Ti 与 Ci 都具备幂等性。</p>
 </li>
-<li><p>  Ti 与 Ci 满足交换律。</p>
+<li><p>Ti 与 Ci 满足交换律。</p>
 </li>
-<li><p>  Ci 必须成功提交（失败则重试，直到成功或人工介入）。</p>
+<li><p>Ci 必须成功提交（失败则重试，直到成功或人工介入）。</p>
 </li>
 </ul>
 </li>
 </ul>
 <p>如果所有的 Ti 都成功提交则事务完成，否则以下取其一：</p>
 <ul>
-<li><p>  <strong>正向恢复</strong>（Forward Recovery）：重试 Ti 直到成功（不补偿）。适用于所有事务最终都必须成功的场景。</p>
+<li><p><strong>正向恢复</strong>（Forward Recovery）：重试 Ti 直到成功（不补偿）。适用于所有事务最终都必须成功的场景。</p>
 </li>
-<li><p>  <strong>反向恢复</strong>（Backward Recovery）：执行 Ci 补偿直到成功。执行模式是 T1, T2, … Ti（失败）, Ci（补偿）, …, C2, C1。</p>
+<li><p><strong>反向恢复</strong>（Backward Recovery）：执行 Ci 补偿直到成功。执行模式是 T1, T2, … Ti（失败）, Ci（补偿）, …, C2, C1。</p>
 </li>
 </ul>
 <p>不需为资源设计冻结和撤销冻结的操作，补偿操作更容易实现（尤其与第三方对接时，自行补偿比要求对方配合撤销容易）。</p>
@@ -708,11 +702,11 @@ height:100vh;
 <p>  通常不会直接靠裸编码实现，一般是在事务中间件的基础上完成，比如 Seata 也支持 SAGA 事务模式。</p>
 </blockquote>
 <h3 id="AT-事务（补偿）"><a href="#AT-事务（补偿）" class="headerlink" title="AT 事务（补偿）"></a>AT 事务（补偿）</h3><p>阿里的 GTS 提出“<a target="_blank" rel="noopener" href="https://seata.io/zh-cn/docs/overview/what-is-seata.html">AT 事务模式</a>”也是基于 <strong>补偿代替回滚</strong> 的应用。</p>
-<p>AT 事务参照了 XA 规范实现，针对 2PC 的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Liebig's_law_of_the_minimum">木桶效应</a> 设计了解决方案（在准备阶段中，协调者必须等待所有数据源都返回成功，才能统一发出 Commit 命令）。</p>
+<p>AT 事务参照了 XA 规范实现，针对 2PC 的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Liebig&#39;s_law_of_the_minimum">木桶效应</a> 设计了解决方案（在准备阶段中，协调者必须等待所有数据源都返回成功，才能统一发出 Commit 命令）。</p>
 <ul>
-<li><p>  在事务提交时自动拦截所有 SQL，将 SQL 对数据修改前、修改后的结果分别保存快照，生成行锁，通过本地事务一起提交到操作的数据源中，即自动记录了 Redo Log 和 Undo Log。</p>
+<li><p>在事务提交时自动拦截所有 SQL，将 SQL 对数据修改前、修改后的结果分别保存快照，生成行锁，通过本地事务一起提交到操作的数据源中，即自动记录了 Redo Log 和 Undo Log。</p>
 </li>
-<li><p>  如果分布式事务提交，则清理每个数据源中对应的日志；如果回滚，就根据日志数据自动产生补偿的“逆向 SQL”。</p>
+<li><p>如果分布式事务提交，则清理每个数据源中对应的日志；如果回滚，就根据日志数据自动产生补偿的“逆向 SQL”。</p>
 </li>
 </ul>
 <p>基于这种补偿，分布式事务中每个数据源都可以单独提交即释放锁和资源，相比起 2PC 极大提升了系统吞吐量。但也牺牲了隔离性、影响到原子性：缺乏隔离性后的补偿不一定总能成功，比如在本地事务提交后、分布式事务完成前，数据被补偿前又被其他操作修改、出现了脏写。一旦出现事务需要回滚，只能由人工介入处理。</p>
@@ -1435,16 +1429,9 @@ top:100vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 76
         </div>
         <!-- search  -->
         
@@ -1606,11 +1593,6 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">04/05</span><a class="archive-post-title" href= "/2021/04/05/OS_linux-network-monitoring/" >Linux 网络原理与分析</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_page-cache-basic/" >Page Cache 基础</a>
         </li>
     
     
@@ -1872,9 +1854,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
