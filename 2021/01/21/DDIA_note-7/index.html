@@ -506,6 +506,8 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
+
 <h1 id="无主节点复制"><a href="#无主节点复制" class="headerlink" title="无主节点复制"></a>无主节点复制</h1><p>无主节点复制方案与多主节点复制方案都比单主节点复制方案更可靠，但代价也是系统的复杂性和弱一致性保证。</p>
 <p>客户端将写请求发送到多个节点上，读取时从多个节点上并行读取，并检测和纠正某些过期数据。</p>
 <ul>
@@ -574,7 +576,7 @@ height:100vh;
 <li><p><strong>数据回传</strong>：是否应该接收该写请求，将它们暂时写入一些可访问的节点中（当网络问题恢复，临时节点需要把这期间的写入发送到原始主节点上）？</p>
 </li>
 </ul>
-<p>Sloppy 对于提高写入可用性特别有用：只要有 w 个节点可用，数据库就可以接收新的写入。但即使满足 w + r > n，除非回传结束，否则无法保证客户端一定能从 r 个节点读到新值。</p>
+<p>Sloppy 对于提高写入可用性特别有用：只要有 w 个节点可用，数据库就可以接收新的写入。但即使满足 w + r &gt; n，除非回传结束，否则无法保证客户端一定能从 r 个节点读到新值。</p>
 <h3 id="多数据中心"><a href="#多数据中心" class="headerlink" title="多数据中心"></a>多数据中心</h3><p>无主节点复制旨在更容忍并发写入冲突、网络中断和延迟尖峰等，因此也可适用于多数据中心操作。</p>
 <ul>
 <li><p>Cassandra 和 Voldemort 默认配置为无主节点模型，其跨数据中心操作：副本数量 n 是 <strong>包含所有数据中心的节点总数</strong>，可以指定各数据中心副本数。客户端的写入会发送到所有副本，但通常只等待来自本地数据中心内的 Quorum 节点数确认，以避免高延迟和跨数据中心可能导致的网络异常。</p>
@@ -1344,9 +1346,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 76
+        Total : 77
         </div>
         <!-- search  -->
         
@@ -1508,6 +1517,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">04/05</span><a class="archive-post-title" href= "/2021/04/05/OS_linux-network-monitoring/" >Linux 网络原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_page-cache-basic/" >Page Cache 基础</a>
         </li>
     
     
@@ -1771,17 +1785,17 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     

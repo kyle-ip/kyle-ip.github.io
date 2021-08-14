@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/ee11664d015f034e4042b9fa4fyycff3.jpg">
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/1802a35475ee2755fb45aec55ed2d98a.png">
 <meta property="article:published_time" content="2021-04-20T07:50:33.000Z">
-<meta property="article:modified_time" content="2021-08-13T15:55:42.451Z">
+<meta property="article:modified_time" content="2021-08-14T02:19:52.839Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="Linux">
@@ -502,51 +502,22 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
 <h2 id="文件系统与磁盘"><a href="#文件系统与磁盘" class="headerlink" title="文件系统与磁盘"></a>文件系统与磁盘</h2><p>由于磁盘是 <strong>块设备</strong>，可被划分为不同的 <strong>分区</strong>，在磁盘或者分区上可再创建 <strong>文件系统</strong>，并挂载到系统的某个目录中，系统通过挂载目录来读写文件。</p>
 <p>Linux 中一切皆文件，因此可通过相同的文件接口来访问磁盘和文件。磁盘读写的原理：磁盘读写的最小单位是扇区（512B），为了提高读写效率，文件系统把连续的扇区组成逻辑块，每次都以逻辑块（常见 4KB，即连续的 8 个扇区）为最小单元来管理数据。其有两种 I/O 方式：</p>
 <ul>
-<li><p><strong>普通文件</strong> ：I/O 请求首先经过文件系统，由文件系统与磁盘交互。</p>
+<li><p>  <strong>普通文件</strong> ：I/O 请求首先经过文件系统，由文件系统与磁盘交互。</p>
 </li>
-<li><p><strong>块设备文件</strong>：跳过文件系统、直接与磁盘交互，即 <strong>裸 I/O</strong>。</p>
+<li><p>  <strong>块设备文件</strong>：跳过文件系统、直接与磁盘交互，即 <strong>裸 I/O</strong>。</p>
 </li>
 </ul>
 <p>两种 I/O 方式使用的缓存不同，文件系统管理的缓存是 Cache 的一部分，裸磁盘的缓存则是使用 Buffer。</p>
-<h2 id="I-O-应用"><a href="#I-O-应用" class="headerlink" title="I/O 应用"></a>I/O 应用</h2><p>以读取磁盘文件内容、通过网卡发送的场景为例。涉及以下几个环节：</p>
-<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[磁盘文件] -&gt; [PageCache]（内核态）-&gt; [用户缓冲区]（用户态）-&gt; Socket 缓冲区（内核态）-&gt; [网卡]</span><br></pre></td></tr></table></figure>
-<p>其中从内核态到用户态再到内核态涉及 2 次拷贝，再加上读磁盘和写网卡一共 4 次拷贝。由于用户进程缓冲区空间有限（比如 32KB），要发送一个大文件（假设 320MB）就需要 320MB / 32KB 共 10,000 次才能完成，即 40,000 次上下文切换。</p>
-<h3 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h3><p>如果使用零拷贝则无需经过用户缓冲区（用户态），即只有 2 次上下文切换，3 次内存拷贝；如果网卡支持 SG-DMA 计数，则无需 Socket 缓冲区，可以进一步优化为 2 次上下文切换和 2 次内存拷贝。</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[磁盘文件]</span> -&gt; <span class="selector-attr">[PageCache]</span> -&gt; Socket 缓冲区 -&gt; <span class="selector-attr">[网卡]</span></span><br><span class="line"></span><br><span class="line"><span class="selector-attr">[磁盘文件]</span> -&gt; <span class="selector-attr">[PageCache]</span> -&gt; <span class="selector-attr">[网卡]</span></span><br></pre></td></tr></table></figure>
-<p>零拷贝带来以下好处：</p>
-<ul>
-<li><p>开发者无需关心 Socket 缓冲区大小，把发送字节数设为文件未发送字节数（比如 320MB），则一次性经网卡发出的数据量为 Socket 缓冲区大小（比如 1.4MB），上下文切换次数和内存拷贝次数约为 2 * 320MB / 1.4MB 共 457 次，拷贝数据量也只有 640MB（耗费 CPU 资源更少）。</p>
-</li>
-<li><p>利用 PageCache：PageCahce 基于 LRU 缓存最近访问的数据，效率远高于访问磁盘。再加上预读出更多数据，在淘汰出 PageCache 前就被进程访问，发挥更大收益。</p>
-</li>
-</ul>
-<p>但也有其局限性：</p>
-<ul>
-<li><p>使用零拷贝不允许进程在发送操作前对文件内容进行加工（比如压缩）。</p>
-</li>
-<li><p>当文件太大，文件中某一部分内容被再次访问的概率非常低，却耗费 CPU 或 DMA 的多一次拷贝；而且大文件快速把 PageCache 占满，其它热点小文件就无法利用 PageCache。</p>
-</li>
-</ul>
-<h3 id="异步-I-O"><a href="#异步-I-O" class="headerlink" title="异步 I/O"></a>异步 I/O</h3><p>异步 I/O 可用于处理磁盘或网络 I/O，其前半部分是进程向内核发起读请求、不等待数据就绪即返回，使进程可并发处理其它任务。后半部分是当内核把磁盘中的数据拷贝到进程缓冲区、发送通知给进程，再继续处理数据。</p>
-<p>异步 I/O 解决了阻塞问题，但其实现上存在无法利用 PageCache 的缺陷，只支持直接 I/O。</p>
-<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[磁盘文件] -&gt; [用户缓冲区]（用户态）-&gt; Socket 缓冲区（内核态）-&gt; [网卡]</span><br></pre></td></tr></table></figure>
-<p>直接 I/O 的应用场景：</p>
-<ul>
-<li><p>由应用程序实现磁盘文件缓存，避免 PageCache 额外的性能消耗（比如 MySQL）。</p>
-</li>
-<li><p>高并发下传输大文件，本身难以命中 PageCache、带来额外的内存拷贝、挤占小文件 I/O 的内存，使用 直接 I/O 更合理。</p>
-</li>
-</ul>
-<p>除此之外，直接 I/O 无法享用基于 PageCache 的磁盘预读和 I/O 合并（即内核 I/O 调度试图在 PageCache 中缓存尽量多的连续 I/O，在合并成大 I/O 后再一次发给磁盘以减少寻址操作）带来的性能提升，因此应用场景很有限。</p>
 <h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><p>Linux 文件系统的四大基本要素：目录项、索引节点、逻辑块、超级块，接下来是具体的解析。</p>
 <h3 id="索引节点和目录项"><a href="#索引节点和目录项" class="headerlink" title="索引节点和目录项"></a>索引节点和目录项</h3><p><strong>文件系统</strong> 是对存储设备上的文件进行组织管理的机制。由于 Linux 中一切皆文件，除了普通的文件和目录，块设备、套接字、管道等也都通过统一的文件系统来管理，并使用两个数据结构记录文件元信息和目录结构：</p>
 <ul>
-<li><p><strong>索引节点（index node，即 inode）</strong>：用来记录文件的元数据，比如 <strong>inode 编号</strong>、<strong>文件大小</strong>、<strong>访问权限</strong>、<strong>修改日期</strong>、<strong>数据位置</strong> 等，与文件一一对应，并会被持久化存储到磁盘中（因此也占用磁盘空间）。</p>
+<li><p>  <strong>索引节点（index node，即 inode）</strong>：用来记录文件的元数据，比如 <strong>inode 编号</strong>、<strong>文件大小</strong>、<strong>访问权限</strong>、<strong>修改日期</strong>、<strong>数据位置</strong> 等，与文件一一对应，并会被持久化存储到磁盘中（因此也占用磁盘空间）。</p>
 </li>
-<li><p><strong>目录项（directory entry，即 entry）</strong>：用来记录 <strong>文件名称</strong>、<strong>索引节点指针</strong> 以及 <strong>与其他目录项的关联关系</strong>（树状结构）。多个关联的目录项构成文件系统的目录结构。目录项是由内核维护的一个内存数据结构，通常也称为 <strong>目录项缓存</strong>。</p>
+<li><p>  <strong>目录项（directory entry，即 entry）</strong>：用来记录 <strong>文件名称</strong>、<strong>索引节点指针</strong> 以及 <strong>与其他目录项的关联关系</strong>（树状结构）。多个关联的目录项构成文件系统的目录结构。目录项是由内核维护的一个内存数据结构，通常也称为 <strong>目录项缓存</strong>。</p>
 </li>
 </ul>
 <blockquote>
@@ -555,135 +526,182 @@ height:100vh;
 <p>目录项和索引节点的关系是多对一，一个文件可以有多个别名（比如建立硬链接为文件创建别名）。由于前者是内存缓存数据，后者是磁盘数据，为了协调磁盘与 CPU 的性能差异，文件内容会缓存到页缓存 Cache 中。</p>
 <p>磁盘在执行文件系统格式化时，会被分成三个存储区域：</p>
 <ul>
-<li><p><strong>超级块</strong>：存储整个文件系统的状态。</p>
+<li><p>  <strong>超级块</strong>：存储整个文件系统的状态。</p>
 </li>
-<li><p><strong>索引节点区</strong>：存储索引节点。</p>
+<li><p>  <strong>索引节点区</strong>：存储索引节点。</p>
 </li>
-<li><p><strong>数据块区</strong>：存储文件数据。</p>
+<li><p>  <strong>数据块区</strong>：存储文件数据。</p>
 </li>
 </ul>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/328d942a38230a973f11bae67307be47.png" alt="img"  /></p>
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/328d942a38230a973f11bae67307be47.png" alt="img"  />
+
 <h3 id="虚拟文件系统（VFS）"><a href="#虚拟文件系统（VFS）" class="headerlink" title="虚拟文件系统（VFS）"></a>虚拟文件系统（VFS）</h3><p>即为了支持不同的文件系统，Linux 内核在用户进程和文件系统之间引入的抽象层。</p>
-<p>VFS 定义了一组所有文件系统都支持的数据结构和标准接口。用户进程和内核中的其他子系统与 VFS 提供的统一接口进行交互，而不需要再关心底层文件系统的实现细节。</p>
+<p>VFS 定义一组所有文件系统都支持的数据结构和标准接口。用户进程和内核中的其他子系统与 VFS 提供的统一接口进行交互，而不需要再关心底层文件系统的实现细节。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/728b7b39252a1e23a7a223cdf4aa1612.png" alt="img"></p>
 <p>VFS 支持的各种文件系统可分为三类：</p>
 <ul>
-<li><p>磁盘文件系统：把数据直接存储在计算机本地挂载的磁盘中，如 Ext4、XFS、OverlayFS 等。</p>
+<li><p>  磁盘文件系统：把数据直接存储在计算机本地挂载的磁盘中，如 Ext4、XFS、OverlayFS 等。</p>
 </li>
-<li><p>内存文件系统：即虚拟文件系统，不需要磁盘分配存储空间、但会占用内存。比如 <code>/proc</code>、<code>/sys</code>（向用户空间导出层次化的内核对象）。</p>
+<li><p>  内存文件系统：即虚拟文件系统，不需要磁盘分配存储空间、但会占用内存。比如 <code>/proc</code>、<code>/sys</code>（向用户空间导出层次化的内核对象）。</p>
 </li>
-<li>网络文件系统：用于访问其他计算机数据的文件系统，如 NFS、SMB、iSCSI 等。</li>
+<li><p>  网络文件系统：用于访问其他计算机数据的文件系统，如 NFS、SMB、iSCSI 等。</p>
+</li>
 </ul>
 <p>文件系统要先挂载到 VFS 目录树中的某个子目录（<strong>挂载点</strong>）才能访问其中的文件。比如在安装系统时，要先挂载一个根目录（/），在根目录下再把其他文件系统（其他的磁盘分区、/proc、/sys、NFS 等）挂载进来。</p>
+<h3 id="Page-Cache"><a href="#Page-Cache" class="headerlink" title="Page Cache"></a>Page Cache</h3><p>已知应用程序通过系统调用向内核发起 I/O 操作，在进入块 I/O 层之前有以下几种情况：</p>
+<ul>
+<li><p>  Memory-Mapped I/O：通过内存映射把数据写入 Page Cache。</p>
+</li>
+<li><p>  Buffered I/O：由 VFS 处理系统调用，把数据写入 Page Cache。</p>
+</li>
+<li><p>  Direct I/O：由 VFS 处理系统调用，不经过 Page Cache 直接写入块 I/O 层。</p>
+</li>
+</ul>
+<p>因此 Page Cache 是内核态内存，不属于用户。</p>
 <h3 id="文件系统-I-O"><a href="#文件系统-I-O" class="headerlink" title="文件系统 I/O"></a>文件系统 I/O</h3><p>文件系统被挂载后，就可以通过挂载点访问其管理的文件。VFS 有标准的文件访问接口，以系统调用的方式提供给应用程序使用。比如 <code>cat</code> 命令，就是依次调用 <code>open()</code>、<code>read()</code>、<code>write()</code> 函数来执行：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">open</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">int</span> flags, <span class="keyword">mode_t</span> mode)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">read</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count)</span></span>; </span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">open</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">int</span> flags, <span class="keyword">mode_t</span> mode)</span></span>; </span><br><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">read</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count)</span></span>; </span><br><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> count)</span></span>; </span><br></pre></td></tr></table></figure>
+
+<p>以读取磁盘文件内容、通过网卡发送的场景为例。涉及以下几个环节：</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[磁盘文件] -&gt; [PageCache]（内核态）-&gt; [用户缓冲区]（用户态）-&gt; Socket 缓冲区（内核态）-&gt; [网卡]</span><br></pre></td></tr></table></figure>
+
+<p>其中从内核态到用户态再到内核态涉及 2 次拷贝，再加上读磁盘和写网卡一共 4 次拷贝。</p>
+<p>由于用户进程缓冲区空间有限（比如 32KB），要发送一个大文件（假设 320MB）就需要 320MB / 32KB 共 10,000 次才能完成，即 40,000 次上下文切换。</p>
+<h4 id="直接与非直接-I-O"><a href="#直接与非直接-I-O" class="headerlink" title="直接与非直接 I/O"></a>直接与非直接 I/O</h4><ul>
+<li><p>  直接 I/O：跳过操作系统页缓存，直接与文件系统交互访问文件。</p>
+</li>
+<li><p>  非直接 I/O：文件读写时经过系统页缓存，再由内核或额外的系统调用真正写入磁盘。</p>
+</li>
+</ul>
+<p>在系统调用中指定 O_DIRECT 标志即实现直接 I/O（默认非直接 I/O）。直接 I/O、非直接 I/O，本质上还是和文件系统交互；在数据库等场景中也有裸 I/O，即跳过文件系统读写磁盘的情况。</p>
+<p><strong>零拷贝</strong>：属于非直接 I/O，其特点是无需经过用户缓冲区（用户态），即只有 2 次上下文切换，3 次内存拷贝；如果网卡支持 SG-DMA 技术，则无需 Socket 缓冲区，可以进一步优化为 2 次上下文切换和 2 次内存拷贝。</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">[磁盘文件]</span> -&gt; <span class="comment">[Page Cache]</span> -&gt; Socket 缓冲区 -&gt; <span class="comment">[网卡]</span></span><br><span class="line"></span><br><span class="line">SG-DMA: </span><br><span class="line"><span class="comment">[磁盘文件]</span> -&gt; <span class="comment">[Page Cache]</span> -&gt; <span class="comment">[网卡]</span></span><br></pre></td></tr></table></figure>
+
+<p>零拷贝有以下特点：</p>
+<ul>
+<li><p>  开发者无需关心 Socket 缓冲区大小，把发送字节数设为文件未发送字节数（比如 320MB），则一次性经网卡发出的数据量为 Socket 缓冲区大小（比如 1.4MB），上下文切换次数和内存拷贝次数约为 2 * 320MB / 1.4MB 共 457 次，拷贝数据量也只有 640MB（耗费 CPU 资源更少）。</p>
+</li>
+<li><p>  利用 Page Cache：Page Cahce 基于 LRU 缓存最近访问的数据，效率远高于访问磁盘。再加上预读出更多数据，在淘汰出 Page Cache 前就被进程访问，发挥更大收益。</p>
+</li>
+<li><p>  使用零拷贝不允许进程在发送操作前对文件内容进行加工（比如压缩）。</p>
+</li>
+<li><p>  当文件太大，文件中某一部分内容被再次访问的概率非常低，却耗费 CPU 或 DMA 的多一次拷贝；而且大文件快速把 Page Cache 占满，其它热点小文件就无法利用 Page Cache。</p>
+</li>
+</ul>
+<p>直接 I/O 的应用场景：</p>
+<ul>
+<li><p>  由应用程序实现磁盘文件缓存，避免 Page Cache 额外的性能消耗（比如 MySQL）。</p>
+</li>
+<li><p>  高并发下传输大文件，本身难以命中 Page Cache、带来额外的内存拷贝、挤占小文件 I/O 的内存，使用 直接 I/O 更合理。</p>
+</li>
+</ul>
+<p>除此之外，直接 I/O 无法享用基于 Page Cache 的 <strong>磁盘预读</strong> 和 <strong>I/O 合并</strong>（即内核 I/O 调度试图在 Page Cache 中缓存尽量多的连续 I/O，在合并成大 I/O 后再一次发给磁盘以减少寻址操作）带来的性能提升，因此应用场景很有限。</p>
+<h4 id="阻塞与非阻塞-I-O"><a href="#阻塞与非阻塞-I-O" class="headerlink" title="阻塞与非阻塞 I/O"></a>阻塞与非阻塞 I/O</h4><p>阻塞 / 非阻塞针对的是 I/O 调用者（即应用程序）。</p>
+<ul>
+<li><p>  阻塞 I/O：应用程序执行 I/O 操作后如没有获得响应就会阻塞当前线程，不能执行其他任务。</p>
+</li>
+<li><p>  非阻塞 I/O：应用程序执行 I/O 操作后不会阻塞当前的线程，可以继续执行其它任务，随后再通过轮询或者事件通知的形式获取调用结果。</p>
+</li>
+</ul>
+<p>比如访问管道或者网络套接字时，设置 O_NONBLOCK 标志就表示用非阻塞方式访问（默认阻塞，即 <code>send()</code> 操作的线程阻塞，无法去做其它事）。</p>
+<p>如果使用 epoll，系统会告诉该套接字的状态，因此可以用非阻塞的方式使用。当这个套接字不可写时，可以转去做其它事，比如读写其它套接字。</p>
+<h4 id="同步与异步-I-O"><a href="#同步与异步-I-O" class="headerlink" title="同步与异步 I/O"></a>同步与异步 I/O</h4><p>同步 / 异步针对的是 I/O 执行者（即系统）。</p>
+<ul>
+<li><p>  同步 I/O：应用程序发起 I/O 操作后要等到整个 I/O 完成后，才能获得 I/O 响应。</p>
+</li>
+<li><p>  异步 I/O：应用程序发起 I/O 操作后不等待完成，I/O 完成后响应由内核以事件通知应用程序。</p>
+</li>
+</ul>
+<p>操作文件时设置 O_DSYNC（等文件数据写入磁盘后才能返回）或 O_SYNC（在前者基础上要求文件元数据也要写入磁盘后才能返回）标志就代表同步 I/O。比如访问管道或者网络套接字时设置了 O_ASYNC 选项，相应的 I/O 就是异步 I/O，内核会再通过 SIGIO 或者 SIGPOLL，来通知进程文件是否可读写。</p>
+<p>异步 I/O 解决了阻塞问题，但其实现上存在无法利用 PageCache 的缺陷，只支持直接 I/O。</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[磁盘文件] -&gt; [用户缓冲区]（用户态）-&gt; Socket 缓冲区（内核态）-&gt; [网卡]</span><br></pre></td></tr></table></figure>
+
 <h4 id="缓冲与非缓冲-I-O"><a href="#缓冲与非缓冲-I-O" class="headerlink" title="缓冲与非缓冲 I/O"></a>缓冲与非缓冲 I/O</h4><p>缓冲指标准库内部实现的缓存，由于不论是否被标准库缓存，最终还是经过系统调用来访问文件，系统调用后再通过页缓存来减少磁盘的 I/O 操作。</p>
 <ul>
-<li><p>缓冲 I/O：利用标准库缓存加速文件访问，标准库内部再通过系统调度访问文件。</p>
+<li><p>  缓冲 I/O：利用标准库缓存加速文件访问，标准库内部再通过系统调度访问文件。</p>
 </li>
-<li><p>非缓冲 I/O：直接通过系统调用来访问文件，不经过标准库缓存。</p>
+<li><p>  非缓冲 I/O：直接通过系统调用来访问文件，不经过标准库缓存。</p>
 </li>
 </ul>
 <blockquote>
 <p>  比如很多程序遇到换行时才真正输出，而换行前的内容，其实就是被标准库暂时缓存。</p>
 </blockquote>
-<h4 id="直接-I-O-与非直接-I-O"><a href="#直接-I-O-与非直接-I-O" class="headerlink" title="直接 I/O 与非直接 I/O"></a>直接 I/O 与非直接 I/O</h4><ul>
-<li><p>直接 I/O：跳过操作系统页缓存，直接与文件系统交互访问文件。</p>
-</li>
-<li><p>非直接 I/O：文件读写时经过系统页缓存，再由内核或额外的系统调用真正写入磁盘。</p>
-</li>
-</ul>
-<p>在系统调用中指定 O_DIRECT 标志即实现直接 I/O（默认非直接 I/O）。直接 I/O、非直接 I/O，本质上还是和文件系统交互；在数据库等场景中也有裸 I/O，即跳过文件系统读写磁盘的情况。</p>
-<h4 id="阻塞-I-O-与非阻塞-I-O"><a href="#阻塞-I-O-与非阻塞-I-O" class="headerlink" title="阻塞 I/O 与非阻塞 I/O"></a>阻塞 I/O 与非阻塞 I/O</h4><p>阻塞 / 非阻塞针对的是 I/O 调用者（即应用程序）。</p>
-<ul>
-<li><p>阻塞 I/O：应用程序执行 I/O 操作后如没有获得响应就会阻塞当前线程，不能执行其他任务。</p>
-</li>
-<li><p>非阻塞 I/O：应用程序执行 I/O 操作后不会阻塞当前的线程，可以继续执行其它任务，随后再通过轮询或者事件通知的形式获取调用结果。</p>
-</li>
-</ul>
-<p>比如访问管道或者网络套接字时，设置 O_NONBLOCK 标志就表示用非阻塞方式访问（默认阻塞，即 <code>send()</code> 操作的线程阻塞，无法去做其它事）。</p>
-<p>如果使用 epoll，系统会告诉该套接字的状态，因此可以用非阻塞的方式使用。当这个套接字不可写时，可以转去做其它事，比如读写其它套接字。</p>
-<h4 id="同步和异步-I-O"><a href="#同步和异步-I-O" class="headerlink" title="同步和异步 I/O"></a>同步和异步 I/O</h4><p>同步 / 异步针对的是 I/O 执行者（即系统）。</p>
-<ul>
-<li><p>同步 I/O：应用程序执行 I/O 操作后要等到整个 I/O 完成后，才能获得 I/O 响应。</p>
-</li>
-<li><p>异步 I/O：应用程序执行 I/O 操作后不用等待完成和完成后的响应，而是继续执行。I/O 完成后响应会用事件通知的方式告诉应用程序。</p>
-</li>
-</ul>
-<p>比如在操作文件时如果设置了 O_SYNC 或 O_DSYNC 标志就代表同步 I/O。设置 O_DSYNC 后就要等文件数据写入磁盘后才能返回。O_SYNC 是在 O_DSYNC 基础上要求文件元数据也要写入磁盘后才能返回。</p>
-<p>比如访问管道或者网络套接字时设置了 O_ASYNC 选项，相应的 I/O 就是异步 I/O，内核会再通过 SIGIO 或者 SIGPOLL，来通知进程文件是否可读写。</p>
 <h3 id="如何监控？"><a href="#如何监控？" class="headerlink" title="如何监控？"></a>如何监控？</h3><p>使用 <code>df</code> 查看文件系统磁盘空间、索引节点使用情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">df -h /dev/sda1 </span><br><span class="line"><span class="meta">#</span><span class="bash"> Filesystem      Size  Used Avail Use% Mounted on</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> /dev/sda1        29G  3.1G   26G  11% /</span> </span><br><span class="line"></span><br><span class="line">df -i /dev/sda1 </span><br><span class="line"><span class="meta">#</span><span class="bash"> Filesystem      Inodes  IUsed   IFree IUse% Mounted on</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> /dev/sda1      3870720 157460 3713260    5% /</span> </span><br></pre></td></tr></table></figure>
+
 <p>通过 <code>/proc/meminfo</code> 查看缓存大小：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/meminfo | grep -E &quot;SReclaimable|Cached&quot; </span><br><span class="line"><span class="meta">#</span><span class="bash"> Cached:           748316 kB</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> SwapCached:            0 kB</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> SReclaimable:     179508 kB</span> </span><br></pre></td></tr></table></figure>
+
 <p>内核使用 Slab 机制管理目录项和索引节点的缓存。<code>/proc/meminfo</code> 只给出了 Slab 的整体大小，查看 <code>/proc/slabinfo</code> 可查看 Slab 缓存具体情况（所有目录项和各种文件系统索引节点的缓存）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/slabinfo | grep -E &#x27;^#|dentry|inode&#x27; </span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="comment"># name            &lt;active_objs&gt; &lt;num_objs&gt; &lt;objsize&gt; &lt;objperslab&gt; &lt;pagesperslab&gt; : tunables &lt;limit&gt; &lt;batchcount&gt; &lt;sharedfactor&gt; : slabdata &lt;active_slabs&gt; &lt;num_slabs&gt; &lt;sharedavail&gt;</span></span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> xfs_inode              0      0    960   17    4 : tunables    0    0    0 : slabdata      0      0      0</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> ...</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> ext4_inode_cache   32104  34590   1088   15    4 : tunables    0    0    0 : slabdata   2306   2306      0hugetlbfs_inode_cache     13     13    624   13    2 : tunables    0    0    0 : slabdata      1      1      0</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> sock_inode_cache    1190   1242    704   23    4 : tunables    0    0    0 : slabdata     54     54      0</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> shmem_inode_cache   1622   2139    712   23    4 : tunables    0    0    0 : slabdata     93     93      0</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> proc_inode_cache    3560   4080    680   12    2 : tunables    0    0    0 : slabdata    340    340      0</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> inode_cache        25172  25818    608   13    2 : tunables    0    0    0 : slabdata   1986   1986      0</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> dentry             76050 121296    192   21    1 : tunables    0    0    0 : slabdata   5776   5776      0</span> </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> dentry 行表示目录项缓存，inode_cache 行表示 VFS 索引节点缓存，其余的则是各种文件系统的索引节点缓存。</span></span><br></pre></td></tr></table></figure>
+
 <p>使用 <code>slabtop</code> 查看目录项和索引节点占用的 Slab 缓存。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">slabtop </span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Objects (% used)    : 277970 / 358914 (77.4%)</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Slabs (% used)      : 12414 / 12414 (100.0%)</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Caches (% used)     : 83 / 135 (61.5%)</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Size (% used)       : 57816.88K / 73307.70K (78.9%)</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Minimum / Average / Maximum Object : 0.01K / 0.20K / 22.88K</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash">   OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 69804  23094   0%    0.19K   3324       21     13296K dentry</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 16380  15854   0%    0.59K   1260       13     10080K inode_cache</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 58260  55397   0%    0.13K   1942       30      7768K kernfs_node_cache</span> </span><br><span class="line"><span class="meta">#</span><span class="bash">    485    413   0%    5.69K     97        5      3104K task_struct</span> </span><br><span class="line"><span class="meta">#</span><span class="bash">   1472   1397   0%    2.00K     92       16      2944K kmalloc-2048</span> </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 按下 c 按照缓存大小排序，按下 a 按照活跃对象数排序</span> </span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">slabtop </span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Objects (% used)    : 277970 / 358914 (77.4%)</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Slabs (% used)      : 12414 / 12414 (100.0%)</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Caches (% used)     : 83 / 135 (61.5%)</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Active / Total Size (% used)       : 57816.88K / 73307.70K (78.9%)</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Minimum / Average / Maximum Object : 0.01K / 0.20K / 22.88K</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash">   OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 69804  23094   0%    0.19K   3324       21     13296K dentry</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 16380  15854   0%    0.59K   1260       13     10080K inode_cache</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 58260  55397   0%    0.13K   1942       30      7768K kernfs_node_cache</span> </span><br><span class="line"><span class="meta">#</span><span class="bash">    485    413   0%    5.69K     97        5      3104K task_struct</span> </span><br><span class="line"><span class="meta">#</span><span class="bash">   1472   1397   0%    2.00K     92       16      2944K kmalloc-2048</span> </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 按下 c 按照缓存大小排序，按下 a 按照活跃对象数排序。</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="磁盘-I-O"><a href="#磁盘-I-O" class="headerlink" title="磁盘 I/O"></a>磁盘 I/O</h2><p>磁盘是可以持久化存储的设备，根据存储介质分类：</p>
 <ul>
-<li><p><strong>机械磁盘</strong>（Hard Disk Driver，HDD）：最小读写单位为扇区（一般 512Bytes）。主要由盘片和读写磁头组成，数据就存储在盘片的环状磁道中。在读写数据前需要移动读写磁头，定位到数据所在的磁道才能访问数据。如果 I/O 请求刚好连续则不需要磁道寻址，且可以通过预读的方式减少 I/O 次数获得最佳性能。与之相对随机 I/O 需要更多的磁头寻道和盘片旋转，读写速度较慢。</p>
+<li><p>  <strong>机械磁盘</strong>（Hard Disk Driver，HDD）：最小读写单位为扇区（一般 512Bytes）。主要由盘片和读写磁头组成，数据就存储在盘片的环状磁道中。在读写数据前需要移动读写磁头，定位到数据所在的磁道才能访问数据。如果 I/O 请求刚好连续则不需要磁道寻址，且可以通过预读的方式减少 I/O 次数获得最佳性能。与之相对随机 I/O 需要更多的磁头寻道和盘片旋转，读写速度较慢。</p>
 </li>
-<li><p><strong>固态磁盘</strong> （Solid State Disk，SSD）：最小读写单位为页（一般 4KB、8KB）。由固态电子元器件组成，不需要磁道寻址，连续 I/O 和随机 I/O 的性能都比机械磁盘好。但同样存在“先擦除再写入”的限制，随机读写导致大量的垃圾回收，所以随机 I/O 的性能比起连续 I/O 来差很多。</p>
+<li><p>  <strong>固态磁盘</strong> （Solid State Disk，SSD）：最小读写单位为页（一般 4KB、8KB）。由固态电子元器件组成，不需要磁道寻址，连续 I/O 和随机 I/O 的性能都比机械磁盘好。但同样存在“先擦除再写入”的限制，随机读写导致大量的垃圾回收，所以随机 I/O 的性能比起连续 I/O 来差很多。</p>
 </li>
 </ul>
 <p>根据接口来分类： 不同的接口往往分配不同的设备名称。IDE（Integrated Drive Electronics，前缀 hd）、SCSI（Small Computer System Interface，前缀 sd） 、SAS（Serial Attached SCSI，前缀 sd） 、SATA（Serial ATA，前缀 sd） 、FC（Fibre Channel） 等。多块同类型的磁盘会按照 a、b、c 等的字母顺序来编号。</p>
 <p>根据架构分类：把磁盘接入服务器后，按照不同的使用方式可以把它们划分为多种不同的架构。</p>
 <ul>
-<li><p>直接作为独立磁盘设备来使用，在磁盘上划分不同的逻辑分区（/dev/sda1）。</p>
+<li><p>  直接作为独立磁盘设备来使用，在磁盘上划分不同的逻辑分区（/dev/sda1）。</p>
 </li>
-<li><p>把多块磁盘组合成一个逻辑磁盘，构成冗余独立磁盘阵列（Redundant Array of Independent Disks，RAID），以提高读写性能或提供冗余。</p>
+<li><p>  把多块磁盘组合成一个逻辑磁盘，构成冗余独立磁盘阵列（Redundant Array of Independent Disks，RAID），以提高读写性能或提供冗余。</p>
 </li>
-<li><p>把磁盘组合成网络存储集群，再通过 NFS、SMB、iSCSI 等网络存储协议暴露给服务器使用。</p>
+<li><p>  把磁盘组合成网络存储集群，再通过 NFS、SMB、iSCSI 等网络存储协议暴露给服务器使用。</p>
 </li>
 </ul>
 <p>在 Linux 中磁盘以块为单位读写数据（块设备），并支持随机读写。每个块设备在驱动程序中被赋予主设备号（用来区分设备类型）和次设备号（给多个同类设备编号）。</p>
 <h3 id="通用块层"><a href="#通用块层" class="headerlink" title="通用块层"></a>通用块层</h3><p>即在文件系统和磁盘驱动中间的一个块设备抽象层。</p>
 <ul>
-<li><p>与虚拟文件系统的功能类似。向上为文件系统和应用程序提供访问块设备的标准接口；向下把各种异构的磁盘设备抽象为统一的块设备，并提供统一框架来管理这些设备的驱动程序。</p>
+<li><p>  与虚拟文件系统的功能类似。向上为文件系统和应用程序提供访问块设备的标准接口；向下把各种异构的磁盘设备抽象为统一的块设备，并提供统一框架来管理这些设备的驱动程序。</p>
 </li>
-<li><p>I/O 调度：给文件系统和应用程序发来的 I/O 请求排队，并通过重新排序、请求合并等方式提高磁盘读写的效率。</p>
+<li><p>  I/O 调度：给文件系统和应用程序发来的 I/O 请求排队，并通过重新排序、请求合并等方式提高磁盘读写的效率。</p>
 </li>
 </ul>
 <p>I/O 调度算法：</p>
 <ul>
-<li><p>NONE：对文件系统和应用程序的 I/O 其实不做任何处理，常用在虚拟机中（此时磁盘 I/O 调度完全由物理机负责）。</p>
+<li><p>  NONE：对文件系统和应用程序的 I/O 其实不做任何处理，常用在虚拟机中（此时磁盘 I/O 调度完全由物理机负责）。</p>
 </li>
-<li><p>NOOP：一个先入先出的队列，只做一些最基本的请求合并，常用于 SSD 磁盘。</p>
+<li><p>  NOOP：一个先入先出的队列，只做一些最基本的请求合并，常用于 SSD 磁盘。</p>
 </li>
-<li><p>CFQ：完全公平调度器（Completely Fair Scheduler），通常是默认的 I/O 调度器。为每个进程维护了一个 I/O 调度队列，按照时间片均匀分布每个进程的 I/O 请求；另外还支持进程 I/O 的优先级调度，适用于运行大量进程的系统。</p>
+<li><p>  CFQ：完全公平调度器（Completely Fair Scheduler），通常是默认的 I/O 调度器。为每个进程维护了一个 I/O 调度队列，按照时间片均匀分布每个进程的 I/O 请求；另外还支持进程 I/O 的优先级调度，适用于运行大量进程的系统。</p>
 </li>
-<li><p>DeadLine：分别为读、写请求创建 I/O 队列，提高机械磁盘的吞吐量，并确保达到最终期限的请求被优先处理。多用在 I/O 压力比较重的场景，比如数据库等。</p>
+<li><p>  DeadLine：分别为读、写请求创建 I/O 队列，提高机械磁盘的吞吐量，并确保达到最终期限的请求被优先处理。多用在 I/O 压力比较重的场景，比如数据库等。</p>
 </li>
 </ul>
 <h3 id="I-O-栈"><a href="#I-O-栈" class="headerlink" title="I/O 栈"></a>I/O 栈</h3><p>存储系统 I/O 的工作原理：</p>
 <ul>
-<li><p><strong>文件系统层</strong>：虚拟文件系统和物理文件系统。为上层应用程序提供标准的文件访问接口；对下通过通用块层来存储和管理磁盘数据。</p>
+<li><p>  <strong>文件系统层</strong>：虚拟文件系统和物理文件系统。为上层应用程序提供标准的文件访问接口；对下通过通用块层来存储和管理磁盘数据。</p>
 </li>
-<li><p><strong>通用块层</strong>：包括块设备 I/O 队列和 I/O 调度器。会对文件系统的 I/O 请求进行排队，再通过重新排序和请求合并，然后才要发送给下一级的设备层。</p>
+<li><p>  <strong>通用块层</strong>：包括块设备 I/O 队列和 I/O 调度器。会对文件系统的 I/O 请求进行排队，再通过重新排序和请求合并，然后才要发送给下一级的设备层。</p>
 </li>
-<li><p><strong>设备层</strong>：包括存储设备和相应的驱动程序，负责最终物理设备的 I/O 操作。</p>
+<li><p>  <strong>设备层</strong>：包括存储设备和相应的驱动程序，负责最终物理设备的 I/O 操作。</p>
 </li>
 </ul>
 <p>存储系统的 I/O 是整个系统中最慢的部分，Linux 通过多种缓存机制来优化 I/O 效率：</p>
 <ul>
-<li><p>优化文件访问：使用页缓存、索引节点缓存、目录项缓存等多种缓存机制减少对下层块设备的直接调用。</p>
+<li><p>  优化文件访问：使用页缓存、索引节点缓存、目录项缓存等多种缓存机制减少对下层块设备的直接调用。</p>
 </li>
-<li><p>优化块设备访问：使用缓冲区来缓存块设备的数据。</p>
+<li><p>  优化块设备访问：使用缓冲区来缓存块设备的数据。</p>
 </li>
 </ul>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/Linux-storage-stack-diagram_v4.10.png" alt="img" style="zoom:67%;" /></p>
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/Linux-storage-stack-diagram_v4.10.png" alt="img" style="zoom:67%;" />
+
 <h2 id="磁盘性能指标"><a href="#磁盘性能指标" class="headerlink" title="磁盘性能指标"></a>磁盘性能指标</h2><p>衡量磁盘性能需要考虑：</p>
 <ul>
-<li><p><strong>使用率</strong>：磁盘处理 I/O 的时间百分比。过高的使用率（80%+）通常意味着磁盘 I/O 存在性能瓶颈。只考虑是否有 I/O，不考虑 I/O 大小。</p>
+<li><p>  <strong>使用率</strong>：磁盘处理 I/O 的时间百分比。过高的使用率（80%+）通常意味着磁盘 I/O 存在性能瓶颈。只考虑是否有 I/O，不考虑 I/O 大小。</p>
 </li>
-<li><p><strong>饱和度</strong>：磁盘处理 I/O 的繁忙程度。过高的饱和度意味着磁盘存在严重的性能瓶颈（100% 时磁盘无法接受新的 I/O 请求），大量顺序读写场景下更能反映系统性能（比如多媒体）。</p>
+<li><p>  <strong>饱和度</strong>：磁盘处理 I/O 的繁忙程度。过高的饱和度意味着磁盘存在严重的性能瓶颈（100% 时磁盘无法接受新的 I/O 请求），大量顺序读写场景下更能反映系统性能（比如多媒体）。</p>
 </li>
-<li><p><strong>IOPS（Input/Output Per Second）</strong>：每秒的 I/O 请求数，大量随机读写场景下更能反映系统性能（比如数据库、大量小文件）。</p>
+<li><p>  <strong>IOPS（Input/Output Per Second）</strong>：每秒的 I/O 请求数，大量随机读写场景下更能反映系统性能（比如数据库、大量小文件）。</p>
 </li>
-<li><p><strong>吞吐量</strong>：每秒的 I/O 请求大小。</p>
+<li><p>  <strong>吞吐量</strong>：每秒的 I/O 请求大小。</p>
 </li>
-<li><p><strong>响应时间</strong>：I/O 请求从发出到收到响应的间隔时间。</p>
+<li><p>  <strong>响应时间</strong>：I/O 请求从发出到收到响应的间隔时间。</p>
 </li>
 </ul>
 <p>以上指标可使用工具 <code>fio</code> 结合具体应用场景（顺序读/写，随机读/写）进行基准测试来评估。</p>
@@ -692,71 +710,77 @@ height:100vh;
 </blockquote>
 <h3 id="如何监控？-1"><a href="#如何监控？-1" class="headerlink" title="如何监控？"></a>如何监控？</h3><p>使用 <code>iostat</code> 命令查看每个磁盘的使用率、IOPS、吞吐量等（数据源于 <code>/proc/diskstats</code>）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -d -x 表示显示所有磁盘 I/O 的指标</span></span><br><span class="line">iostat -d -x 1 </span><br><span class="line"><span class="meta">#</span><span class="bash"> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> loop0            0.00    0.00      0.00      0.00     0.00     0.00   0.00   0.00    0.00    0.00   0.00     0.00     0.00   0.00   0.00</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> loop1            0.00    0.00      0.00      0.00     0.00     0.00   0.00   0.00    0.00    0.00   0.00     0.00     0.00   0.00   0.00</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> sda              0.00    0.00      0.00      0.00     0.00     0.00   0.00   0.00    0.00    0.00   0.00     0.00     0.00   0.00   0.00</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> sdb              0.00    0.00      0.00      0.00     0.00     0.00   0.00   0.00    0.00    0.00   0.00     0.00     0.00   0.00   0.00</span> </span><br></pre></td></tr></table></figure>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/cff31e715af51c9cb8085ce1bb48318d.png" alt="img" style="zoom:67%;" /></p>
+
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/cff31e715af51c9cb8085ce1bb48318d.png" alt="img" style="zoom:67%;" />
+
 <p>使用 <code>pidstat</code> 观察进程 I/O 情况：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pidstat -d 1 </span><br><span class="line"><span class="meta">#</span><span class="bash"> 13:39:51      UID       PID   kB_rd/s   kB_wr/s kB_ccwr/s iodelay  Command</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 13:39:52      102       916      0.00      4.00      0.00       0  rsyslogd</span></span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>  其每列的含义：</p>
 <ul>
-<li><p>用户 ID（UID）和进程 ID（PID） 。</p>
+<li><p>  用户 ID（UID）和进程 ID（PID） 。</p>
 </li>
-<li><p>每秒读取的数据大小（kB_rd/s） ，单位 KB。</p>
+<li><p>  每秒读取的数据大小（kB_rd/s） ，单位 KB。</p>
 </li>
-<li><p>每秒发出的写请求数据大小（kB_wr/s） ，单位 KB。</p>
+<li><p>  每秒发出的写请求数据大小（kB_wr/s） ，单位 KB。</p>
 </li>
-<li><p>每秒取消的写请求数据大小（kB_ccwr/s） ，单位 KB。</p>
+<li><p>  每秒取消的写请求数据大小（kB_ccwr/s） ，单位 KB。</p>
 </li>
-<li><p>块 I/O 延迟（iodelay），包括等待同步块 I/O 和换入块 I/O 结束的时间，单位时钟周期。</p>
+<li><p>  块 I/O 延迟（iodelay），包括等待同步块 I/O 和换入块 I/O 结束的时间，单位时钟周期。</p>
 </li>
 </ul>
 </blockquote>
 <p>使用 <code>iotop</code> 根据 I/O 大小对进程进行排序：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">iotop</span><br><span class="line"><span class="meta">#</span><span class="bash"> 进程的磁盘读写大小总数和磁盘真实的读写大小总数。因为缓存、缓冲区、I/O 合并等因素的影响，可能并不相等。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Total DISK READ :       0.00 B/s | Total DISK WRITE :       7.85 K/s</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Actual DISK READ:       0.00 B/s | Actual DISK WRITE:       0.00 B/s</span> </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 线程 ID、I/O 优先级、每秒读磁盘的大小、每秒写磁盘的大小、换入和等待 I/O 的时钟百分比等。</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 15055 be/3 root        0.00 B/s    7.85 K/s  0.00 %  0.00 % systemd-journald</span> </span><br></pre></td></tr></table></figure>
+
 <h2 id="优化总结"><a href="#优化总结" class="headerlink" title="优化总结"></a>优化总结</h2><h3 id="应用优化"><a href="#应用优化" class="headerlink" title="应用优化"></a>应用优化</h3><p>大文件异步 I/O 和直接 I/O，小文件零拷贝（文件大小的阈值可灵活配置，参考 Nginx 的 directio 指令）。</p>
 <h3 id="文件系统优化"><a href="#文件系统优化" class="headerlink" title="文件系统优化"></a>文件系统优化</h3><ul>
-<li><p>根据实际负载场景选择最适合的文件系统。比如相比于 ext4（Ubuntu 默认），xfs（CentOS 默认）支持更大的磁盘分区（&gt;16TB）和更大的文件数量，但缺点在于无法收缩，而 ext4 则可以。</p>
+<li><p>  根据实际负载场景选择最适合的文件系统。比如相比于 ext4（Ubuntu 默认），xfs（CentOS 默认）支持更大的磁盘分区（&gt;16TB）和更大的文件数量，但缺点在于无法收缩，而 ext4 则可以。</p>
 </li>
-<li><p>优化文件系统的配置选项。包括文件系统的特性（如 ext_attr、dir_index）、日志模式（如 journal、ordered、writeback）、挂载选项（如 noatime）等。比如使用 <code>tune2fs</code> 可以调整文件系统的特性（也可以查看文件系统超级块的内容）。 而通过 <code>/etc/fstab</code> 或 <code>mount</code> 命令行参数，可以调整文件系统的日志模式和挂载选项等。</p>
+<li><p>  优化文件系统的配置选项。包括文件系统的特性（如 ext_attr、dir_index）、日志模式（如 journal、ordered、writeback）、挂载选项（如 noatime）等。比如使用 <code>tune2fs</code> 可以调整文件系统的特性（也可以查看文件系统超级块的内容）。 而通过 <code>/etc/fstab</code> 或 <code>mount</code> 命令行参数，可以调整文件系统的日志模式和挂载选项等。</p>
 </li>
-<li><p>优化文件系统的缓存。比如可以优化 pdflush 脏页的刷新频率（设置 dirty_expire_centisecs 和 dirty_writeback_centisecs）以及脏页的限额（调整 dirty_background_ratio 和 dirty_ratio 等）。还可以优化内核回收目录项缓存和索引节点缓存的倾向，即调整 vfs_cache_pressure（<code>/proc/sys/vm/vfs_cache_pressure</code>，默认值 100），数值越大表示越容易回收。</p>
+<li><p>  优化文件系统的缓存。比如可以优化 pdflush 脏页的刷新频率（设置 dirty_expire_centisecs 和 dirty_writeback_centisecs）以及脏页的限额（调整 dirty_background_ratio 和 dirty_ratio 等）。还可以优化内核回收目录项缓存和索引节点缓存的倾向，即调整 vfs_cache_pressure（<code>/proc/sys/vm/vfs_cache_pressure</code>，默认值 100），数值越大表示越容易回收。</p>
 </li>
-<li><p>使用内存文件系统 tmpfs 以获得更好的 I/O 性能 。tmpfs 把数据直接保存在内存中，而不是磁盘中。比如 <code>/dev/shm</code> 就是大多数 Linux 默认配置的一个内存文件系统，大小默认为总内存的一半，在不需要持久化时建议使用。</p>
+<li><p>  使用内存文件系统 tmpfs 以获得更好的 I/O 性能 。tmpfs 把数据直接保存在内存中，而不是磁盘中。比如 <code>/dev/shm</code> 就是大多数 Linux 默认配置的一个内存文件系统，大小默认为总内存的一半，在不需要持久化时建议使用。</p>
 </li>
 </ul>
 <h3 id="磁盘优化"><a href="#磁盘优化" class="headerlink" title="磁盘优化"></a>磁盘优化</h3><ul>
-<li><p>换用性能更好的磁盘，比如用 SSD 替代 HDD。</p>
+<li><p>  换用性能更好的磁盘，比如用 SSD 替代 HDD。</p>
 </li>
-<li><p>使用 RAID  把多块磁盘组合成一个逻辑磁盘，构成冗余独立磁盘阵列。可以提高数据的可靠性和数据的访问性能。</p>
+<li><p>  使用 RAID  把多块磁盘组合成一个逻辑磁盘，构成冗余独立磁盘阵列。可以提高数据的可靠性和数据的访问性能。</p>
 </li>
-<li><p>针对磁盘和应用程序 I/O 模式的特征，选择最适合的 I/O 调度算法。比如 SSD 和虚拟机中的磁盘通常用 noop 调度算法。而数据库应用更推荐使用 deadline 算法。</p>
+<li><p>  针对磁盘和应用程序 I/O 模式的特征，选择最适合的 I/O 调度算法。比如 SSD 和虚拟机中的磁盘通常用 noop 调度算法。而数据库应用更推荐使用 deadline 算法。</p>
 </li>
-<li><p>对应用程序的数据进行磁盘级别的隔离。比如可以为日志、数据库等 I/O 压力比较重的应用，配置单独的磁盘。</p>
+<li><p>  对应用程序的数据进行磁盘级别的隔离。比如可以为日志、数据库等 I/O 压力比较重的应用，配置单独的磁盘。</p>
 </li>
 <li><p>在顺序读比较多的场景中可以增大磁盘的预读数据，比如调整 /dev/sdb 的预读大小：</p>
 <ul>
-<li><p>调整选项 <code>/sys/block/sdb/queue/read_ahead_kb</code>，默认大小是 128 KB，单位为 KB。</p>
+<li><p>  调整选项 <code>/sys/block/sdb/queue/read_ahead_kb</code>，默认大小是 128 KB，单位为 KB。</p>
 </li>
-<li><p>使用 <code>blockdev</code> 工具设置，比如 <code>blockdev --setra 8192 /dev/sdb</code>，单位是 512B（0.5KB），其数值总是 read_ahead_kb 两倍。</p>
-</li>
-</ul>
-</li>
-<li><p>优化内核块设备 I/O 的选项。比如可以适当增大磁盘队列长度 <code>/sys/block/sdb/queue/nr_requests</code>，以提升磁盘的吞吐量（也会导致 I/O 延迟增大）。</p>
-</li>
-<li><p>发现性能急剧下降时还需要确认磁盘本身是否出现硬件错误：使用 <code>dmesg</code> 查看是否有硬件 I/O 故障的日志；使用 <code>badblocks</code>、<code>`smartctl</code> 等工具检测磁盘硬件问题，或用 e2fsck 等来检测文件系统的错误；如果发现问题可以使用 <code>fsck</code> 等工具来修复。</p>
+<li><p>  使用 <code>blockdev</code> 工具设置，比如 <code>blockdev --setra 8192 /dev/sdb</code>，单位是 512B（0.5KB），其数值总是 read_ahead_kb 两倍。</p>
 </li>
 </ul>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/6f26fa18a73458764fcda00212006698.png" alt="img" style="zoom:67%;" /></p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/ee11664d015f034e4042b9fa4fyycff3.jpg" alt="img" style="zoom: 90%;" /></p>
+</li>
+<li><p>  优化内核块设备 I/O 的选项。比如可以适当增大磁盘队列长度 <code>/sys/block/sdb/queue/nr_requests</code>，以提升磁盘的吞吐量（也会导致 I/O 延迟增大）。</p>
+</li>
+<li><p>  发现性能急剧下降时还需要确认磁盘本身是否出现硬件错误：使用 <code>dmesg</code> 查看是否有硬件 I/O 故障的日志；使用 <code>badblocks</code>、``smartctl<code>等工具检测磁盘硬件问题，或用 e2fsck 等来检测文件系统的错误；如果发现问题可以使用</code>fsck` 等工具来修复。</p>
+</li>
+</ul>
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/6f26fa18a73458764fcda00212006698.png" alt="img" style="zoom:67%;" />
+
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/ee11664d015f034e4042b9fa4fyycff3.jpg" alt="img" style="zoom: 90%;" />
+
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-io-monitoring.assets/1802a35475ee2755fb45aec55ed2d98a.png" alt="img"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>分析案例可参考：</p>
 <ul>
-<li><p><a href="hhttps://time.geekbang.org/column/article/77885">26 | 案例篇：如何找出狂打日志的“内鬼”？</a></p>
+<li><p>  <a href="hhttps://time.geekbang.org/column/article/77885">26 | 案例篇：如何找出狂打日志的“内鬼”？</a></p>
 </li>
-<li><p><a href="hhttps://time.geekbang.org/column/article/78409">27 | 案例篇：为什么我的磁盘I/O延迟很高？</a></p>
+<li><p>  <a href="hhttps://time.geekbang.org/column/article/78409">27 | 案例篇：为什么我的磁盘I/O延迟很高？</a></p>
 </li>
-<li><p><a href="hhttps://time.geekbang.org/column/article/78633">28 | 案例篇：一个SQL查询要15秒，这是怎么回事？</a></p>
+<li><p>  <a href="hhttps://time.geekbang.org/column/article/78633">28 | 案例篇：一个SQL查询要15秒，这是怎么回事？</a></p>
 </li>
-<li><p><a href="hhttps://time.geekbang.org/column/article/78984">29 | 案例篇：Redis响应严重延迟，如何解决？</a></p>
+<li><p>  <a href="hhttps://time.geekbang.org/column/article/78984">29 | 案例篇：Redis响应严重延迟，如何解决？</a></p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -928,7 +952,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux-I-O-%E5%8E%9F%E7%90%86%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">Linux I&#x2F;O 原理与分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%8E%E7%A3%81%E7%9B%98"><span class="toc-number">1.1.</span> <span class="toc-text">文件系统与磁盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I-O-%E5%BA%94%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">I&#x2F;O 应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%B6%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.2.1.</span> <span class="toc-text">零拷贝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5-I-O"><span class="toc-number">1.2.2.</span> <span class="toc-text">异步 I&#x2F;O</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.3.</span> <span class="toc-text">文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E8%8A%82%E7%82%B9%E5%92%8C%E7%9B%AE%E5%BD%95%E9%A1%B9"><span class="toc-number">1.3.1.</span> <span class="toc-text">索引节点和目录项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88VFS%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">虚拟文件系统（VFS）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-I-O"><span class="toc-number">1.3.3.</span> <span class="toc-text">文件系统 I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%93%E5%86%B2%E4%B8%8E%E9%9D%9E%E7%BC%93%E5%86%B2-I-O"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">缓冲与非缓冲 I&#x2F;O</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5-I-O-%E4%B8%8E%E9%9D%9E%E7%9B%B4%E6%8E%A5-I-O"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">直接 I&#x2F;O 与非直接 I&#x2F;O</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E-I-O-%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E-I-O"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">阻塞 I&#x2F;O 与非阻塞 I&#x2F;O</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E5%92%8C%E5%BC%82%E6%AD%A5-I-O"><span class="toc-number">1.3.3.4.</span> <span class="toc-text">同步和异步 I&#x2F;O</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7%EF%BC%9F"><span class="toc-number">1.3.4.</span> <span class="toc-text">如何监控？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%81%E7%9B%98-I-O"><span class="toc-number">1.4.</span> <span class="toc-text">磁盘 I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%9D%97%E5%B1%82"><span class="toc-number">1.4.1.</span> <span class="toc-text">通用块层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O-%E6%A0%88"><span class="toc-number">1.4.2.</span> <span class="toc-text">I&#x2F;O 栈</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">1.5.</span> <span class="toc-text">磁盘性能指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7%EF%BC%9F-1"><span class="toc-number">1.5.1.</span> <span class="toc-text">如何监控？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">优化总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E4%BC%98%E5%8C%96"><span class="toc-number">1.6.1.</span> <span class="toc-text">应用优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%BC%98%E5%8C%96"><span class="toc-number">1.6.2.</span> <span class="toc-text">文件系统优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E4%BC%98%E5%8C%96"><span class="toc-number">1.6.3.</span> <span class="toc-text">磁盘优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux-I-O-%E5%8E%9F%E7%90%86%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">Linux I&#x2F;O 原理与分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%8E%E7%A3%81%E7%9B%98"><span class="toc-number">1.1.</span> <span class="toc-text">文件系统与磁盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.2.</span> <span class="toc-text">文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E8%8A%82%E7%82%B9%E5%92%8C%E7%9B%AE%E5%BD%95%E9%A1%B9"><span class="toc-number">1.2.1.</span> <span class="toc-text">索引节点和目录项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88VFS%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">虚拟文件系统（VFS）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Page-Cache"><span class="toc-number">1.2.3.</span> <span class="toc-text">Page Cache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-I-O"><span class="toc-number">1.2.4.</span> <span class="toc-text">文件系统 I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E4%B8%8E%E9%9D%9E%E7%9B%B4%E6%8E%A5-I-O"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">直接与非直接 I&#x2F;O</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E-I-O"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">阻塞与非阻塞 I&#x2F;O</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5-I-O"><span class="toc-number">1.2.4.3.</span> <span class="toc-text">同步与异步 I&#x2F;O</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%93%E5%86%B2%E4%B8%8E%E9%9D%9E%E7%BC%93%E5%86%B2-I-O"><span class="toc-number">1.2.4.4.</span> <span class="toc-text">缓冲与非缓冲 I&#x2F;O</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7%EF%BC%9F"><span class="toc-number">1.2.5.</span> <span class="toc-text">如何监控？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%81%E7%9B%98-I-O"><span class="toc-number">1.3.</span> <span class="toc-text">磁盘 I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%9D%97%E5%B1%82"><span class="toc-number">1.3.1.</span> <span class="toc-text">通用块层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O-%E6%A0%88"><span class="toc-number">1.3.2.</span> <span class="toc-text">I&#x2F;O 栈</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">1.4.</span> <span class="toc-text">磁盘性能指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7%EF%BC%9F-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">如何监控？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">优化总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E4%BC%98%E5%8C%96"><span class="toc-number">1.5.1.</span> <span class="toc-text">应用优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%BC%98%E5%8C%96"><span class="toc-number">1.5.2.</span> <span class="toc-text">文件系统优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E4%BC%98%E5%8C%96"><span class="toc-number">1.5.3.</span> <span class="toc-text">磁盘优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.6.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1476,9 +1500,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 76
+        Total : 77
         </div>
         <!-- search  -->
         
@@ -1640,6 +1671,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">04/05</span><a class="archive-post-title" href= "/2021/04/05/OS_linux-network-monitoring/" >Linux 网络原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_page-cache-basic/" >Page Cache 基础</a>
         </li>
     
     
@@ -1903,17 +1939,17 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
