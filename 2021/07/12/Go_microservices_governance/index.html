@@ -42,7 +42,7 @@
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713215913283.png">
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713215917434.png">
 <meta property="article:published_time" content="2021-07-12T12:42:39.000Z">
-<meta property="article:modified_time" content="2021-08-08T15:59:02.786Z">
+<meta property="article:modified_time" content="2021-08-16T08:45:39.149Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="Go">
@@ -471,50 +471,69 @@ height:100vh;
         <h1 id="微服务概览与治理"><a href="#微服务概览与治理" class="headerlink" title="微服务概览与治理"></a>微服务概览与治理</h1><h2 id="微服务概述"><a href="#微服务概述" class="headerlink" title="微服务概述"></a>微服务概述</h2><h3 id="单体架构"><a href="#单体架构" class="headerlink" title="单体架构"></a>单体架构</h3><blockquote>
 <p>  Browser &lt;-&gt; Gateway &lt;-&gt; Web Server &lt;-&gt; Database / Storage</p>
 </blockquote>
-<p>对于单体架构项目，其项目结构可设计为模块化，但是最终还是会打包并部署为单体式应用。当应用太复杂以至于任何单个开发者都不能理解，将使应用无法扩展、可靠性低，最终敏捷性开发和部署变得无法完成。</p>
+<p>对于单体架构项目，其项目结构可设计为模块化，但是最终还是会打包并部署为单体式应用。随着业务发展：</p>
+<ul>
+<li><p>应用变得复杂，以至于每位开发者都不能理解。</p>
+</li>
+<li><p>应用难以扩展、可靠性低。</p>
+</li>
+<li><p>无法实现敏捷开发和部署。</p>
+</li>
+</ul>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713153711034.png" alt="image-20210713153711034" style="zoom:66%" /></p>
 <h3 id="SOA-与微服务架构"><a href="#SOA-与微服务架构" class="headerlink" title="SOA 与微服务架构"></a>SOA 与微服务架构</h3><p>后端服务对外提供统一的一组接口，但完成请求处理所需的数据，由后端多个服务联动完成。</p>
 <figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Web Interface</span><br><span class="line">    | </span><br><span class="line">    +<span class="params">-------</span>+<span class="params">-------</span>+<span class="params">-------</span>+</span><br><span class="line">   svc1    svc2    svc3    svc4</span><br><span class="line">    +<span class="params">---</span>+<span class="params">---</span>+<span class="params">---</span>+<span class="params">---</span>+       |</span><br><span class="line">       svc5     +<span class="params">------</span>+<span class="params">----</span>+</span><br><span class="line">        |             svc8</span><br><span class="line">    +<span class="params">---</span>+<span class="params">---</span>+         </span><br><span class="line">   svc6    svc7</span><br></pre></td></tr></table></figure>
 <p>可以把微服务理解成 SOA（面向服务的架构）的实践：</p>
 <ul>
-<li><p><strong>小即是美</strong>：小的服务代码少（bug 少），易测试、维护，容易不断迭代完善。单个服务可以独立发版，确保网站可靠性（持续集成）。</p>
+<li><p><strong>小即是美</strong>：小的服务代码少（bug 少），易测试、维护，容易不断迭代完善。单个服务可独立发版，提高网站可靠性（持续集成）。</p>
 </li>
-<li><p><strong>单一职责</strong>：一个服务只需要专注做好一件事。</p>
+<li><p><strong>单一职责</strong>：每个服务可专注做好一件事。</p>
 </li>
-<li><p><strong>尽早创建原型</strong>：尽可能早的提供服务 API，建立服务契约，达成服务间沟通的一致性约定，后续再实现与完善（抽象 -&gt; 具体）。</p>
+<li><p><strong>尽早创建原型</strong>：尽可能早地提供服务 API，建立服务契约，达成服务间沟通的一致性约定，后续再实现与完善。</p>
 </li>
 <li><p><strong>可移植性</strong>：服务间轻量级交互协议在性能和可移植性二者间，首要考虑兼容性和移植性。</p>
 </li>
 </ul>
 <blockquote>
 <p>  由于运维的职责是控制变更，开发的职责是迭代功能上线，两者本质上有一定冲突。</p>
-<p>  随着系统复杂度提高，系统生产效率必然下降，但对于微服务架构而言，其下降的速度和幅度都比单体架构更小。</p>
+<p>  随着系统复杂度提高，系统生产效率必然下降。对于微服务架构而言，下降的速度和幅度都比单体架构更小。</p>
 </blockquote>
-<h3 id="微服务定义"><a href="#微服务定义" class="headerlink" title="微服务定义"></a>微服务定义</h3><p>微服务围绕业务功能构建，服务关注单一业务，相互之间采用轻量级的通信机制，可全自动独立部署，可使用不同的编程语言和数据存储技术。微服务架构通过业务拆分实现服务组件化，通过组件组合快速开发系统，业务单一的服务组件可以独立部署，使得整个系统变得清晰灵活。</p>
+<h3 id="微服务定义"><a href="#微服务定义" class="headerlink" title="微服务定义"></a>微服务定义</h3><p>服务围绕业务功能构建，关注单一业务，相互之间采用轻量级通信机制，可全自动独立部署，可使用不同的编程语言和数据存储技术。微服务架构通过业务拆分实现服务组件化，通过组件组合快速开发系统，业务单一的服务组件可以独立部署，使整个系统清晰灵活。</p>
 <ul>
-<li><p><strong>原子服务</strong>：针对单一的应用场景、业务提供 API。</p>
+<li><p><strong>原子服务</strong>：针对单一应用场景、业务提供 API。</p>
 </li>
 <li><p><strong>独立进程</strong>：拆分独立的 Web 服务、数据库，可各自扩缩容、提高吞吐量。</p>
 </li>
 <li><p><strong>隔离部署</strong>：容器编排实现精细化的资源管理，且减少单台服务器故障带来的影响。</p>
 </li>
-<li><p><strong>去中心化的服务治理</strong>：集中式负载均衡（统一的 LVS / Nginx） -&gt; 去中心化治理（缓存、消息队列、RPC 负载均衡）。</p>
+<li><p><strong>去中心化治理</strong>：</p>
+<ul>
+<li><p>数据去中心化，服务独享数据库，缓存等设施（也有个别情况由多个服务共享数据库，如面向用户的管理后台和面向管理员的管理后台）。</p>
+</li>
+<li><p>治理去中心化，比如集中式负载均衡（统一的 LVS / Nginx） -&gt; 去中心化治理（缓存、消息队列、RPC 负载均衡）。</p>
+</li>
+<li><p>技术去中心化，每个服务可使用合适的技术实施，但是注意技术栈过于发散对于企业或团队也有不利。</p>
+</li>
+</ul>
 </li>
 </ul>
 <h3 id="微服务缺点"><a href="#微服务缺点" class="headerlink" title="微服务缺点"></a>微服务缺点</h3><ul>
-<li><p><strong>分布式系统的复杂性</strong>：需要使用 RPC（同步）、消息队列（异步）来实现进程间通信；必须在代码层面处理 <strong>消息传递效率低</strong>、<strong>服务不可用</strong> 等局部失效问题。</p>
+<li><p><strong>分布式的复杂性</strong>：需要使用 RPC（同步）、消息队列（异步）来实现进程间通信；必须在代码层面处理 <strong>消息传递效率低</strong>、<strong>服务不可用</strong> 等局部失效问题。</p>
 </li>
-<li><p><strong>分区的数据库架构</strong>：同时更新多个业务主体的事务很普遍（对于单体式应用来说很容易）。在微服务架构应用中更新不同服务所使用的不同的数据库涉及分布式事务。</p>
+<li><p><strong>分区的数据库架构</strong>：同时更新多个业务主体的事务很普遍，在微服务架构应用中更新不同服务所使用的不同的数据库涉及 <strong>分布式事务</strong>。</p>
 </li>
 <li><p><strong>测试复杂</strong>：如集成测试、回归测试等，涉及多个服务多个分支。由于服务数量变多，构建稳定环境、确保每个服务正常交付难度加大。</p>
 </li>
+<li><p>服务间依赖复杂，需要引入链路追踪等工具分析调用状况；且服务间调用（尤其当循环调用时）流量容易被放大，可设计为更粗粒度的接口。</p>
+</li>
 <li><p>服务 <strong>模块间的依赖</strong>，应用的升级有可能会波及多个服务模块的修改。</p>
 </li>
-<li><p><strong>基础设施</strong>的建设复杂度高，运维难度大。</p>
+<li><p><strong>基础设施</strong> 建设复杂度高，运维难度大（自动化运维、日志采集、监控告警、持续集成与部署、容器编排）。</p>
 </li>
 </ul>
 <h3 id="组件服务化"><a href="#组件服务化" class="headerlink" title="组件服务化"></a>组件服务化</h3><p>传统应用通过库（library）实现组件，库和应用一起运行，库的局部变化意味着整个应用重新部署。 </p>
-<p>通过服务来实现组件，将应用拆散为运行在不同的进程中的一系列服务（即多个微服务组合成完整的用户场景），单一服务局部变化只需重新部署对应的服务进程。比如用 Go 实施一个微服务：</p>
+<p>通过服务来实现组件，将应用拆散为运行在不同的进程中的一系列服务（即多个微服务组合成完整的用户场景），单一服务局部变化只需重新部署对应的服务进程。</p>
+<p>比如用 Go 实现的微服务：</p>
 <ul>
 <li><p>kit：微服务的基础库（框架）</p>
 </li>
@@ -543,14 +562,14 @@ height:100vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713153848181.png" alt="image-20210713153848181" style="zoom:66%" /></p>
 <h3 id="可用性-amp-兼容性设计"><a href="#可用性-amp-兼容性设计" class="headerlink" title="可用性 &amp; 兼容性设计"></a>可用性 &amp; 兼容性设计</h3><p><strong>面向失败设计</strong>，微服务架构采用粗粒度的进程间通信，引入了额外的复杂性，如网络延迟、消息格式、负载均衡和容错，因此需要考虑：隔离、超时、负载保护、限流、降级、重试等。</p>
 <p>在服务需要变更时要特别小心，可能引发服务消费者的兼容性破坏，时刻谨记 <strong>保持服务契约（接口）的兼容性</strong>。</p>
-<p><strong>发送保守，接收开放</strong>。按照伯斯塔尔法则的思想来设计和实现服务时，发送的数据要更保守意味着最小化的传送必要的信息，接收时更开放意味着要最大限度的容忍冗余数据，保证兼容性。</p>
-<h2 id="微服务设计"><a href="#微服务设计" class="headerlink" title="微服务设计"></a>微服务设计</h2><p>进行 SOA 服务化演进时按照垂直功能进行拆分，对外暴露一批微服务，缺乏统一出口将会面临以下困难：</p>
+<p><strong>发送保守，接收开放</strong>。按照伯斯塔尔法则设计和实现服务时，发送保守即最小化地传送必要的信息，接收开放即要最大限度地容忍冗余数据，保证兼容性。</p>
+<h2 id="微服务设计"><a href="#微服务设计" class="headerlink" title="微服务设计"></a>微服务设计</h2><p>在 SOA 服务化演进过程中，按照垂直功能进行拆分，对外暴露一批微服务，缺乏统一出口将会面临以下困难：</p>
 <ul>
 <li><p>客户端到微服务直接通信，<strong>强耦合</strong>（比如用户一直持有较旧的 Android、iOS 客户端版本，旧的 API 不能下线，为应用升级带来困难）。</p>
 </li>
-<li><p><strong>客户端聚合数据</strong> 工作量巨大，需要多次请求，延迟高（一般是前轻后重，如果由前端负责繁重的数据逻辑，将影响应用的交付速度，无法快速迭代）。</p>
+<li><p><strong>客户端聚合数据</strong> 工作量巨大，需要多次请求，延迟高（一般前轻后重，如果由前端负责繁重的数据逻辑，将影响应用交付速度，无法快速迭代）。</p>
 </li>
-<li><p><strong>不利于协议统一</strong>，各个部门间有差异，需要端来兼容（统一工作难度大）。</p>
+<li><p><strong>不利于协议统一</strong>，各部门间有差异，需要端来兼容（统一工作难度大）。</p>
 </li>
 <li><p><strong>面向端的 API 适配</strong>，耦合到了内部服务。</p>
 </li>
@@ -571,17 +590,19 @@ height:100vh;
 <li><p>沟通效率提升，协作模式演进为移动业务 + 网关小组。</p>
 </li>
 </ul>
-<p>一个请求经过 BFF，会扇出（fan out）多个请求、并行访问下游的多层 RPC 服务来进行数据组装，其中就需要考虑部分失败、异常处理等问题。</p>
+<p>一个请求经过 BFF 会扇出（fan out）多个请求、并行访问下游多层 RPC 服务进行数据组装，其中需要考虑部分失败、异常处理等问题。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713161340504.png" alt="image-20210713161340504" style="zoom:66%" /></p>
 <blockquote>
-<p>  面向资源的接口设计：即 RESTful 接口，不进行过多的数据处理，返回原始数据。但无法承担复杂的业务逻辑，不适用于面向外网、复杂、多终端的接口，相比之下提供针对某一业务场景而统一的粗粒度接口更高效（封装容错、统一协议等）。</p>
-<p>  BFF（Backend For Frontend，服务于前端的后端）是一种对后端微服务的适配服务（主要包括聚合裁剪和格式适配等逻辑），向无线端设备暴露友好和统一的 API，方便无线设备接入访问后端服务。</p>
+<p>  面向资源的接口设计：即 RESTful 接口，不进行过多的数据处理，返回原始数据。无法承担复杂的业务逻辑，不适用于面向外网、复杂、多终端的接口，相比之下提供针对某一业务场景而统一的粗粒度接口更高效（封装容错、统一协议等）。</p>
+<p>  BFF（Backend For Frontend，服务于前端的后端）是一种对后端微服务的适配服务（包括聚合裁剪和格式适配等逻辑），向无线端设备暴露友好和统一的 API，方便无线设备接入访问后端服务。</p>
+<p>  网关不必为所有前端提供无差别服务，而应针对不同前端聚合不同服务，提供不同接口和网络访问协议支持。</p>
 </blockquote>
 <h4 id="避免单点"><a href="#避免单点" class="headerlink" title="避免单点"></a>避免单点</h4><p>如果所有微服务都接到同一个 app-interface 上，会有单点故障风险，严重代码缺陷或者流量洪峰可能引发集群宕机。而且单个模块也会导致后续业务集成复杂度高，根据康威法则，单块的无线 BFF 和多团队之间就出现不匹配问题，团队之间沟通协调成本高，交付效率低下，因此可拆解出多个 interface（如上图中的 BFF-View、BFF-Account、BFF-Space）。</p>
-<h4 id="关注分离"><a href="#关注分离" class="headerlink" title="关注分离"></a>关注分离</h4><p>很多跨横切面逻辑（Cross-Cutting Concerns），比如安全认证，日志监控，限流熔断等，随着时间的推移，代码变得越来越复杂。需要协调更新框架升级发版（路由、认证、限流、安全），因此全部上升，通过引入 API Gateway 把业务集成度高的 BFF 层和通用功能服务层进行分层处理。</p>
-<p>在新的架构中网关用于解耦拆分和后续升级迁移，在网关的配合下单块 BFF 实现解耦拆分，各业务线团队独立开发和交付各自的微服务，研发效率大大提升。把跨横切面逻辑从 BFF 剥离到网关上，BFF 的开发人员可以更加专注业务逻辑交付，实现了架构上的关注分离（Separation of Concerns）。</p>
+<h4 id="关注分离"><a href="#关注分离" class="headerlink" title="关注分离"></a>关注分离</h4><p>当跨横切面逻辑（Cross-Cutting Concerns 比如安全认证，日志监控，限流熔断等）代码变得越来越复杂，需要协调更新框架升级发版（路由、认证、限流、安全）。因此全部上升，引入 API Gateway 把业务集成度高的 BFF 层和通用功能服务层进行分层处理。</p>
+<p>网关用于解耦拆分和后续升级迁移，在网关配合下单块 BFF 实现解耦拆分，各业务线团队独立开发和交付各自的微服务，大大提升研发效率。把跨横切面逻辑从 BFF 剥离到网关上，BFF 的开发人员可以更加专注业务逻辑交付，实现了架构上的关注分离（Separation of Concerns）。</p>
 <blockquote>
-<p>  业务流量实际为：移动端 -&gt; API Gateway -&gt; BFF -&gt; Microservices，在 FE Web业务中，BFF 可以是 Node.js 来做服务端渲染（SSR，Server-Side Rendering），此处忽略了上游的 CDN、ELB。</p>
+<p>  业务流量实际为：移动端 -&gt; API Gateway -&gt; BFF -&gt; Microservices。</p>
+<p>  在 FE Web业务中，BFF 可以是 Node.js 来做服务端渲染（SSR，Server-Side Rendering），此处忽略了上游的 CDN、ELB。</p>
 </blockquote>
 <h3 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h3><p>对于外网请求，通常在 API Gateway 进行统一的认证拦截。认证成功则使用 JWT 方式通过 RPC metadata 传递的方式带到 BFF 层，BFF 校验 Token 完整性后把身份信息注入到应用的 Context 中。而 BFF 到其他下层的微服务建议直接在 RPC Request 中带入用户身份信息（userId）请求服务。</p>
 <ul>
@@ -590,18 +611,28 @@ height:100vh;
 <li><p>Biz Auth  -&gt; JWT -&gt; Request Args。</p>
 </li>
 </ul>
-<p>对于服务内部，一般要区分身份认证和授权（Full Trust / Half Trust /  Zero Trust）。</p>
-<h3 id="服务划分"><a href="#服务划分" class="headerlink" title="服务划分"></a>服务划分</h3><p>可通过业务职能（Business Capability）或是 DDD 界限上下文（Bounded Context）划分服务边界。</p>
+<p>对于服务内部，一般要区分身份认证和授权。安全级别：</p>
 <ul>
-<li>业务职能：由公司内部不同部门提供的职能。例如客户服务部门提供客户服务的职能。</li>
-<li>界限上下文：DDD 中用来划分不同业务边界的元素，业务边界即“解决不同业务问题”的问题域和对应的解决方案域，为了解决某种类型的业务问题，贴近领域知识（业务）。</li>
+<li><p>Full Trust：假定服务间安全。</p>
+</li>
+<li><p>Half Trust：服务间需要认证鉴权，但非所有接口都加密。</p>
+</li>
+<li><p>Zero Trust：所有请求通过身份认证鉴权后，还需要经过安全加密，防止被嗅探。</p>
+</li>
+</ul>
+<h3 id="服务划分"><a href="#服务划分" class="headerlink" title="服务划分"></a>服务划分</h3><p>可通过 <strong>业务职能</strong>（Business Capability）或是 DDD <strong>界限上下文</strong>（Bounded Context）划分服务边界。</p>
+<ul>
+<li><p>业务职能：基于公司内部不同部门提供的职能。例如客户服务部门提供客户服务的职能。</p>
+</li>
+<li><p>界限上下文：DDD 中用来划分不同业务边界的元素，业务边界即“解决不同业务问题”的问题域和对应的解决方案域，为了解决某种类型的业务问题，贴近领域知识（业务）。</p>
+</li>
 </ul>
 <blockquote>
 <p>  划分时从性能、便捷性、业务领域去思考和抽象。</p>
 </blockquote>
-<h4 id="CQRS"><a href="#CQRS" class="headerlink" title="CQRS"></a>CQRS</h4><p>将应用程序分为两部分：<strong>命令端</strong>（处理程序创建、更新和删除请求，并在数据更改时发出事件） 和 <strong>查询端</strong>（通过针对一个或多个物化视图执行查询来处理查询，这些物化视图通过订阅数据更改时发出的事件流而保持最新）。</p>
-<p>参考 Bilibili 案例：在稿件服务演进过程，围绕创作稿件、审核稿件、最终发布稿件有大量逻辑耦合，其中稿件本身的状态也有非常多种，但是最终前台用户只关注稿件能否查看（当审核条件变复杂，直接访问数据库查询结果时查询和变更容易相互影响）。</p>
-<p>针对审核稿件的数据状态与查询操作解耦：使用中间件 canal（订阅稿件数据库 binlog）将稿件审核结果发布到消息队列 Kafka 中，最终消费数据独立组建一个稿件查阅结果数据库，并对外提供一个独立查询服务，来拆分复杂架构和业务。架构从 Polling publisher -&gt; Transaction log tailing 实现了演进（Pull vs Push）。</p>
+<h4 id="CQRS"><a href="#CQRS" class="headerlink" title="CQRS"></a>CQRS</h4><p>将应用程序分为两部分：<strong>命令端</strong>（处理创建、更新和删除请求，并在数据更改时发出事件） 和 <strong>查询端</strong>（针对一或多个物化视图执行查询来处理查询，物化视图通过订阅数据更改时发出的事件流而保持最新）。</p>
+<p>参考 Bilibili 案例：在稿件服务演进过程，围绕创作稿件、审核稿件、最终发布稿件有大量逻辑耦合，其中稿件本身的状态也有非常多种。但是最终前台用户只关注稿件能否查看，当审核条件变复杂，直接访问数据库查询结果时查询和变更容易相互影响。</p>
+<p>针对审核稿件的数据状态与查询操作解耦：使用中间件 Canal（订阅稿件数据库 binlog）将审核结果发布到 Kafka 中，消费数据并组建稿件查阅结果数据库，对外提供独立查询服务来拆分复杂架构和业务。架构从 Polling publisher -&gt; Transaction log tailing 实现了演进（Pull vs Push）。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713160016914.png" alt="image-20210713160016914" style="zoom:66%;" /></p>
 <h2 id="RPC-与服务发现"><a href="#RPC-与服务发现" class="headerlink" title="RPC 与服务发现"></a>RPC 与服务发现</h2><h3 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h3><p>gRPC 是一种高性能的开源统一 RPC 框架：</p>
 <ul>
@@ -626,7 +657,7 @@ height:100vh;
 </li>
 <li><p><strong>流</strong>：Streaming API。</p>
 </li>
-<li><p><strong>阻塞 / 非阻塞</strong>：支持异步和同步处理在客户端和服务端间交互消息序列。</p>
+<li><p><strong>阻塞/非阻塞</strong>：支持异步和同步处理在客户端和服务端间交互消息序列。</p>
 </li>
 <li><p><strong>元数据交换</strong>：常见的横切关注点，如认证或跟踪，依赖数据交换。</p>
 </li>
@@ -636,51 +667,56 @@ height:100vh;
 <blockquote>
 <p>  设计时不要过早关注性能问题，先实现标准化。</p>
 </blockquote>
-<h3 id="Health-Check"><a href="#Health-Check" class="headerlink" title="Health Check"></a>Health Check</h3><p>gRPC 有 <strong>标准的健康检测协议</strong>，在所有语言实现中基本都提供了 <strong>生成代码</strong> 和 <strong>设置运行状态</strong> 的功能。</p>
-<p><strong>主动健康检查</strong> 可在服务不稳定时被消费者所感知，临时从负载均衡中摘除，减少错误请求。当服务提供者重新稳定、health check 成功后再重新加入到消费者的负载均衡、恢复请求。health check 同样也被用于外挂方式的容器健康检测，或者流量检测（k8s liveness &amp; readiness）。</p>
+<h3 id="Health-Check"><a href="#Health-Check" class="headerlink" title="Health Check"></a>Health Check</h3><p>gRPC 有标准的 <strong>健康检测协议</strong>，在所有语言实现中基本都提供了 <strong>生成代码</strong> 和 <strong>设置运行状态</strong> 功能。</p>
+<p><strong>主动健康检查</strong> 可在服务不稳定时被消费者所感知，临时从负载均衡中摘除，减少错误请求。当服务提供者重新稳定、health check 成功后再重新加入到消费者的负载均衡、恢复请求。</p>
+<p>health check 同样也被用于外挂方式的容器健康检测，或者流量检测（k8s liveness &amp; readiness）。</p>
 <blockquote>
-<p>  Kubernetes 结合 health check 实现的平滑发布：</p>
-<ol>
-<li>Kubernetes 向 discovery（注册中心）发起注销请求。</li>
-<li>Kubernetes 向 APP 发送 SIGTER 信号，进入优雅退出过程（待 Inflight 请求处理结束）。</li>
-<li>其他客户端在最多 2 个心跳周期内（一般是实时）退出。</li>
-<li>Kubernetes 退出超时（一般 10-60s），强制退出 SIGKILL。</li>
-</ol>
-</blockquote>
-<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">          [Discovery]</span><br><span class="line"> register      |          poll</span><br><span class="line">    +<span class="params">---</span> &gt; <span class="params">----</span>+<span class="params">----</span> &gt; <span class="params">----</span>+</span><br><span class="line">    |        call          |</span><br><span class="line">[Provider] <span class="params">----------</span>&gt; [Consumer]</span><br><span class="line">    +<span class="params">----------------------</span>+</span><br><span class="line">         health check</span><br></pre></td></tr></table></figure>
-<h3 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h3><h4 id="客户端发现"><a href="#客户端发现" class="headerlink" title="客户端发现"></a>客户端发现</h4><p>服务实例被启动时，网络地址会被写到注册表上，当服务实例终止时再从注册表中删除。</p>
-<p>服务实例的注册表通过心跳机制动态刷新，客户端使用负载均衡算法选择可用的服务实例响应请求（Smart Client）。</p>
-<p>由于客户端直连，比服务端服务发现少一次网络跳转，Consumer 需要内置特定的服务发现客户端。</p>
-<h4 id="服务端发现"><a href="#服务端发现" class="headerlink" title="服务端发现"></a>服务端发现</h4><p>客户端通过负载均衡器向服务发送请求，由负载均衡器查询服务注册表，将请求路由到可用的服务实例上。服务实例在服务注册表上被注册和注销，比如 Consul Template + Nginx，Kubernetes + etcd。</p>
-<p>Consumer 无需关注服务发现具体细节，只需知道服务的 DNS 域名。特点是支持异构语言开发，需要基础设施支撑，由于多了一次网络跳转可能有性能损失。</p>
-<blockquote>
-<p>  服务网格（Service Mesh）：介于两者之间的模型，服务网格部署在 pod 中、在同一台物理机上（同组的两个容器），两个容器通过本地进程间通信（IPC）。流量先发送给 Proxy，再由 Proxy 转发给直连的下游服务提供者。相当于把服务发现、负载均衡等功能转移到 Proxy 上，避免 Client 过重，同时由于 Proxy 非集中式部署，也实现去中心化（避免热点请求）。然而除非服务体量、规模足够大，或者服务涉及多种语言（框架层面不统一），使用 Service Mesh 带来的收益很有限。</p>
-<p>  由于微服务的核心是去中心化，建议使用客户端发现模式。</p>
-</blockquote>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713172437446.png" alt="image-20210713172437446" style="zoom:66%" /></p>
-<h4 id="实现服务发现"><a href="#实现服务发现" class="headerlink" title="实现服务发现"></a>实现服务发现</h4><p>早期常用 ZooKeeper 实现，但实际场景是海量服务发现注册时状态可以弱一致性（AP 系统）。使用 ZK 反而带来以下问题：</p>
+<p>  Kubernetes 结合 health check 实现平滑发布：</p>
 <ul>
-<li><p>要求任何时刻对 ZK 的访问能得到一致的数据，牺牲可用性。</p>
+<li><p>Kubernetes 向 discovery（注册中心）发起注销请求。</p>
 </li>
-<li><p>当出现网络抖动或分区（Java FGC 等）master 节点与其他节点失联会导致重新选举，或超过半数不可用导致服务发现瘫痪。</p>
+<li><p>Kubernetes 向 APP 发送 SIGTER 信号，进入优雅退出过程（待 Inflight 请求处理结束）。</p>
+</li>
+<li><p>其他客户端在最多 2 个心跳周期内（一般是实时）退出。</p>
+</li>
+<li><p>Kubernetes 退出超时（一般 10-60s），强制退出 SIGKILL。</p>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">          [Discovery]</span><br><span class="line"> register      |          poll</span><br><span class="line">    +<span class="params">---</span> &gt; <span class="params">----</span>+<span class="params">----</span> &gt; <span class="params">----</span>+</span><br><span class="line">    |        call          |</span><br><span class="line">[Provider] <span class="params">----------</span>&gt; [Consumer]</span><br><span class="line">    |                      |</span><br><span class="line">    +<span class="params">----------------------</span>+</span><br><span class="line">         health check</span><br></pre></td></tr></table></figure>
+<h3 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h3><h4 id="客户端发现"><a href="#客户端发现" class="headerlink" title="客户端发现"></a>客户端发现</h4><p>服务实例被启动时，网络地址会被写到注册表上，当服务实例终止时再从注册表中删除。</p>
+<p>服务注册表通过心跳机制动态刷新，客户端使用负载均衡算法选择可用的服务实例响应请求（Smart Client）。</p>
+<p>由于客户端直连，比服务端服务发现少一次网络跳转，Consumer 需要内置特定的服务发现客户端。</p>
+<p>由于微服务的核心是去中心化，更建议使用客户端发现模式。</p>
+<h4 id="服务端发现"><a href="#服务端发现" class="headerlink" title="服务端发现"></a>服务端发现</h4><p>客户端通过负载均衡器向服务发送请求，由负载均衡器查询服务注册表，将请求路由到可用的服务实例上。服务实例在服务注册表上被注册和注销，比如 Consul Template + Nginx，Kubernetes + etcd。</p>
+<p>Consumer 无需关注服务发现具体细节，只需知道 DNS 域名。支持异构语言开发，需要基础设施支撑，由于多一次网络跳转可能有性能损失。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713172437446.png" alt="image-20210713172437446" style="zoom:66%" /></p>
+<blockquote>
+<p>  <strong>服务网格</strong>（Service Mesh）：介于两者之间的模型，服务网格部署在 pod 中、在同一台物理机上（同组的两个容器），两个容器通过本地进程间通信（IPC）。流量先发送给 Proxy，再由 Proxy 转发给直连的下游服务提供者。相当于把服务发现、负载均衡等功能转移到 Proxy 上，避免 Client 过重，同时由于 Proxy 非集中式部署，也实现去中心化（避免热点请求）。然而除非服务体量、规模足够大，或者服务涉及多种语言（框架层面不统一），使用 Service Mesh 带来的收益很有限。</p>
+</blockquote>
+<h4 id="服务发现演进"><a href="#服务发现演进" class="headerlink" title="服务发现演进"></a>服务发现演进</h4><p>早期常用 ZooKeeper 实现，但在海量服务场景下可妥协为弱一致性，使用 ZK 反而带来以下问题：</p>
+<ul>
+<li><p>ZK 可提供非必要的强一致性，但也因此牺牲了可用性。</p>
+</li>
+<li><p>当出现网络抖动或分区（Java FGC 等），Master 节点失联会导致重新选举，当超过半数不可用会导致整体瘫痪。</p>
 </li>
 <li><p>节点数量多时大量服务长连接导致性能瓶颈。</p>
 </li>
 </ul>
-<p>Bilibili 参考了 Eureka 实现自己的 AP 发现服务（最终一致性：注册、注销的事件延迟）。基本思路：</p>
+<p>AP 式的发现服务（注册、注销的事件延迟）。基本思路：</p>
 <ul>
-<li><p>通过 Family（appid）和 Addr（IP:Port）定位实例（还可以附加更多的元数据：权重、染色标签、集群等。appid 使用三段式命名，business.service.xxx）</p>
+<li><p>通过 Family（appid）和 Addr（IP:Port）定位实例（使用三段式命名，business.service.xxx。还能附加权重、染色标签、集群等元数据）。</p>
 </li>
-<li><p>Provider  注册后定期（30s）心跳一次，注册、心跳、下线都需要同步，注册和下线需要进行长轮询推送（新启动时 load cache、JVM 预热，故障时 Provider 不建议重启和发布）。</p>
+<li><p>Provider  注册后定期（30s）发送心跳，注册、下线都需要同步，数据通过长轮询推送（新启动时 load cache、JVM 预热，故障时 Provider 不建议重启和发布）。</p>
 </li>
-<li><p>Consumer 启动时拉取实例，发起 30s 长轮询（故障时需要 client 侧 cache 节点信息）</p>
+<li><p>Consumer 启动时拉取实例，发起长轮询（30s ，故障时需要 client 侧 cache 节点信息）</p>
 </li>
 <li><p>Server 定期（60s）检测并剔除失效（90s）的实例。短时间里丢失了大量的心跳连接（15分钟内心跳低于期望值 * 85%）则开启自我保护，保留过期服务不删除。</p>
 </li>
 </ul>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713174424012.png" alt="image-20210713174424012" style="zoom:66%" /></p>
 <blockquote>
-<p>  全量复制：当数据每次都全部复制到所有 Discover 节点（比如 Eureka），随着规模变大，一旦涉及扩容操作，同样大规模的数据量又会被广播，写放大严重（可以使用读写分离、一致性哈希来优化，减少广播压力）。</p>
+<p>  全量复制：当数据每次都全部复制到所有 Discover 节点（比如 Eureka），随着规模变大，一旦涉及扩容操作，同样大规模的数据量被广播，写放大严重（可以使用读写分离、一致性哈希来优化，减少广播压力）。</p>
 <p>  Poll 模型的无效请求太多，更建议用 Push 实现，节点状态变化时推送到 Consumer 端，传播速度更快。</p>
 </blockquote>
 <h2 id="多集群，多租户"><a href="#多集群，多租户" class="headerlink" title="多集群，多租户"></a>多集群，多租户</h2><h3 id="多集群"><a href="#多集群" class="headerlink" title="多集群"></a>多集群</h3><p>对于重要级别较高的服务（L0），如果只有一套大集群，一旦故障影响范围巨大。需要考虑：</p>
@@ -700,14 +736,14 @@ height:100vh;
 </li>
 </ul>
 <figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">             svcA</span><br><span class="line">  +<span class="params">-------</span>+<span class="params">---</span>+<span class="params">---</span>+<span class="params">-------</span>+</span><br><span class="line"> svcB    svcC    svcD    svcE</span><br><span class="line">[pod..] [pod..] [pod..] pod[<span class="string">...</span>]</span><br></pre></td></tr></table></figure>
-<p>业务隔离集群可造成 cache hit ratio 下降，不同业务形态数据正交，由于统一为一套逻辑集群（物理上多套资源池），即 gRPC 客户端默认忽略服务发现中的 cluster 信息，按照全部节点全部连接（利用负载均衡为多套集群预热，确保缓存都生效），然而：</p>
+<p>业务隔离集群可造成缓存命中率下降，不同业务形态数据正交，可统一为一套逻辑集群（物理上多套资源池），即 gRPC 客户端默认忽略服务发现 cluster 信息，按照全部节点全部连接（利用负载均衡为多套集群预热，确保缓存都生效），存在问题：</p>
 <ul>
-<li><p>长连接导致的内存和 CPU 开销，health check 频率非常高。</p>
+<li><p>长连接导致的内存和 CPU 开销，health check 频率太高。</p>
 </li>
 <li><p>短连接极大的资源成本和延迟。</p>
 </li>
 </ul>
-<p>需要从全集群中选取一批节点，划分子集限制连接池大小：</p>
+<p>优化：从全集群中选取一批节点，划分子集限制连接池大小。</p>
 <ul>
 <li><p>挑选部分后端建立连接（通常 20-100 个，减少连接、health check 开销。部分场景需要大子集，比如大批量读写）。</p>
 </li>
@@ -717,14 +753,13 @@ height:100vh;
 </li>
 </ul>
 <blockquote>
-<p>Provider 和 Consumer 是动态变化的，算法如果不能感知其变化并再均衡，则会导致资源消耗不均匀。</p>
-<p>另外再均衡操作也不能过于敏感，导致节点频繁重连加大开销。</p>
+<p>Provider 和 Consumer 是动态变化的，算法如果不能感知其变化并再均衡，则会导致资源消耗不均匀；但再均衡操作也不能过于敏感，会导致节点频繁重连加大开销。</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">subset</span>(<span class="params">backend, client_id, subset_size</span>):</span></span><br><span class="line">    subset_count = <span class="built_in">len</span>(backends) / subset_size</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Group clients into rounds; each round uses the same shuffled list:</span></span><br><span class="line">    <span class="built_in">round</span> = client_id / subset_count</span><br><span class="line">    random.seed(<span class="built_in">round</span>)</span><br><span class="line">    random.shuffle(backends)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># The subset id corresponding to the current client</span></span><br><span class="line">    subset_id = client_id % subset_count</span><br><span class="line">    start = subset_id * subset_size</span><br><span class="line">    <span class="keyword">return</span> backends[start:start + subset_size]</span><br></pre></td></tr></table></figure>
-<h3 id="多租户"><a href="#多租户" class="headerlink" title="多租户"></a>多租户</h3><p>在微服务架构中，允许多系统共存是利用微服务稳定性以及模块化最有效的方式之一，称为 <strong>多租户（multi-tenancy）</strong>。租户可以是测试、金丝雀发布、影子系统（shadow systems）、服务层或者产品线，能保证代码隔离性并能基于流量租户做路由决策。</p>
-<p>对于 <strong>传输中的数据（data-in-flight）</strong>，例如消息队列中的请求或者消息、静态数据（data-at-rest）、存储或者持久化缓存，租户都能够保证隔离性和公平性，以及基于租户的路由机会。</p>
-<p>如果对服务 B 做出改变，需要确保它仍然能够和服务 A，C，D 正常交互。在微服务架构中，需要做出这些场景（即测试和该系统中其他服务的交互）通常有两种基本的方式：并行测试和生产环境测试。</p>
-<h4 id="并行测试"><a href="#并行测试" class="headerlink" title="并行测试"></a>并行测试</h4><p>需要和生产环境一样的过渡（staging）环境，并只用来处理测试流量。在并行测试中，工程师团队首先完成生产服务的一次变动，将变动的代码部署到测试栈。可以在不影响生产环境的情况下让开发者稳定的测试服务，同时能够在发布前更容易的识别和控制 bug。尽管这样做非常有效，但也带来了一些可能影响微服务架构的挑战：</p>
+<h3 id="多租户"><a href="#多租户" class="headerlink" title="多租户"></a>多租户</h3><p><strong>多租户（multi-tenancy）</strong>：建立多套共存的系统，便于实现微服务稳定性和模块化。租户可针对测试、金丝雀发布、影子系统（shadow systems）、服务层或者产品线来建立，可保证代码隔离性并基于流量租户做路由决策。</p>
+<p>对于 <strong>传输中的数据（data-in-flight）</strong>，例如消息队列中请求或者消息、静态数据（data-at-rest）、存储或者持久化缓存，租户都能够保证隔离性和公平性，以及基于租户的路由机会。</p>
+<p>如果对服务 B 做出改变，需要确保它仍然能够和服务 A，C，D 正常交互。要实现测试和该系统中其他服务的交互，有两种基本的方式：并行测试和生产环境测试。</p>
+<h4 id="并行测试"><a href="#并行测试" class="headerlink" title="并行测试"></a>并行测试</h4><p>需要和生产环境一样的过渡（staging）环境，只用于处理测试流量。当完成生产服务的变动，将代码部署到测试栈。可在不影响生产环境的情况下让开发者稳定地测试服务，同时在发布前更容易识别和控制 bug。存在以下问题：</p>
 <ul>
 <li><p>混用环境导致的不可靠测试。</p>
 </li>
@@ -733,9 +768,9 @@ height:100vh;
 <li><p>难以做负载测试，仿真线上真实流量情况。</p>
 </li>
 </ul>
-<h4 id="生产测试"><a href="#生产测试" class="headerlink" title="生产测试"></a>生产测试</h4><p>在生产环境测试（称为染色发布），待测试的服务 B’ 在一个隔离的沙盒环境中启动，并且在沙盒环境下可以访问集成环境（UAT）C 和 D。把测试流量路由到服务 B’，同时保持生产流量正常流入到集成服务，此时服务 B’ 仅仅处理测试流量而不处理生产流量。另外要确保集成流量不要被测试流量影响。</p>
+<h4 id="生产测试"><a href="#生产测试" class="headerlink" title="生产测试"></a>生产测试</h4><p>在生产环境测试（称为染色发布），待测试的服务 B’ 在隔离的、可访问集成环境（UAT）C 和 D 的沙盒环境中启动。把测试流量路由到服务 B’，保持生产流量正常流入到集成服务，此时服务 B’ 仅处理测试流量、不处理生产流量。同时要确保集成流量不要被测试流量影响。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713215913283.png" alt="image-20210713215913283" style="zoom:66%;" /></p>
-<p>在生产中测试提出了两个基本要求，构成了多租户体系结构的基础：</p>
+<p>两个基本要求作为多租户体系结构的基础：</p>
 <ul>
 <li><p><strong>流量路由</strong>：基于流入栈中的流量类型做路由（请求数据打上 tag）。</p>
 </li>
@@ -745,7 +780,8 @@ height:100vh;
 <blockquote>
 <p>  灰度测试成本代价很大，影响 1/N 的用户。其中 N 为节点数量。</p>
 </blockquote>
-<p>实现方式：给入站请求绑定上下文（如 HTTP Header），in-process 使用 context 传递，跨服务使用 metadata 传递（如 opentracing baggage item）。在架构中每个基础组件都能够理解租户信息，并且基于租户路由隔离流量。在平台中允许对运行不同的微服务有更多的控制，比如指标和日志。在微服务架构中典型的基础组件是日志、指标、存储、消息队列、缓存以及配置，基于租户信息隔离数据需要分别处理基础组件。</p>
+<p>比如为入站请求绑定上下文（如 HTTP Header），in-process 使用 context 传递，跨服务使用 metadata 传递（如 opentracing baggage item）。在架构中每个基础组件都能够理解租户信息，并基于租户路由隔离流量。</p>
+<p>在平台中允许对运行不同的微服务有更多的控制（指标和日志），典型的基础组件是日志、指标、存储、消息队列、缓存以及配置，基于租户信息隔离数据需要分别处理基础组件。</p>
 <p>多租户架构本质上描述为：跨服务传递请求携带上下文（context），数据隔离的流量路由方案。利用服务发现注册租户信息，注册成特定的租户。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservice.assets/image-20210713215917434.png" alt="image-20210713215917434" style="zoom:66%;" /></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
@@ -949,7 +985,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%A7%88%E4%B8%8E%E6%B2%BB%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">微服务概览与治理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">微服务概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-number">1.1.1.</span> <span class="toc-text">单体架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SOA-%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84"><span class="toc-number">1.1.2.</span> <span class="toc-text">SOA 与微服务架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.3.</span> <span class="toc-text">微服务定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BC%BA%E7%82%B9"><span class="toc-number">1.1.4.</span> <span class="toc-text">微服务缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%8C%96"><span class="toc-number">1.1.5.</span> <span class="toc-text">组件服务化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E4%B8%9A%E5%8A%A1%E7%BB%84%E7%BB%87%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.6.</span> <span class="toc-text">按业务组织服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%8C%96"><span class="toc-number">1.1.7.</span> <span class="toc-text">去中心化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="toc-number">1.1.8.</span> <span class="toc-text">自动化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E7%94%A8%E6%80%A7-amp-%E5%85%BC%E5%AE%B9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.1.9.</span> <span class="toc-text">可用性 &amp; 兼容性设计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.2.</span> <span class="toc-text">微服务设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3"><span class="toc-number">1.2.1.</span> <span class="toc-text">服务网关</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E5%8D%95%E7%82%B9"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">避免单点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E5%88%86%E7%A6%BB"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">关注分离</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%88%92%E5%88%86"><span class="toc-number">1.2.3.</span> <span class="toc-text">服务划分</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CQRS"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">CQRS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RPC-%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">RPC 与服务发现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gRPC"><span class="toc-number">1.3.1.</span> <span class="toc-text">gRPC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Health-Check"><span class="toc-number">1.3.2.</span> <span class="toc-text">Health Check</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="toc-number">1.3.3.</span> <span class="toc-text">服务发现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%8F%91%E7%8E%B0"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">客户端发现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8F%91%E7%8E%B0"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">服务端发现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">实现服务发现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E9%9B%86%E7%BE%A4%EF%BC%8C%E5%A4%9A%E7%A7%9F%E6%88%B7"><span class="toc-number">1.4.</span> <span class="toc-text">多集群，多租户</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E9%9B%86%E7%BE%A4"><span class="toc-number">1.4.1.</span> <span class="toc-text">多集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%A7%9F%E6%88%B7"><span class="toc-number">1.4.2.</span> <span class="toc-text">多租户</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">并行测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E4%BA%A7%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">生产测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.5.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%A7%88%E4%B8%8E%E6%B2%BB%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">微服务概览与治理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">微服务概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-number">1.1.1.</span> <span class="toc-text">单体架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SOA-%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84"><span class="toc-number">1.1.2.</span> <span class="toc-text">SOA 与微服务架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.3.</span> <span class="toc-text">微服务定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BC%BA%E7%82%B9"><span class="toc-number">1.1.4.</span> <span class="toc-text">微服务缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%8C%96"><span class="toc-number">1.1.5.</span> <span class="toc-text">组件服务化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E4%B8%9A%E5%8A%A1%E7%BB%84%E7%BB%87%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.6.</span> <span class="toc-text">按业务组织服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%8C%96"><span class="toc-number">1.1.7.</span> <span class="toc-text">去中心化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="toc-number">1.1.8.</span> <span class="toc-text">自动化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E7%94%A8%E6%80%A7-amp-%E5%85%BC%E5%AE%B9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.1.9.</span> <span class="toc-text">可用性 &amp; 兼容性设计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.2.</span> <span class="toc-text">微服务设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3"><span class="toc-number">1.2.1.</span> <span class="toc-text">服务网关</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E5%8D%95%E7%82%B9"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">避免单点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E5%88%86%E7%A6%BB"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">关注分离</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%88%92%E5%88%86"><span class="toc-number">1.2.3.</span> <span class="toc-text">服务划分</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CQRS"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">CQRS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RPC-%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">RPC 与服务发现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gRPC"><span class="toc-number">1.3.1.</span> <span class="toc-text">gRPC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Health-Check"><span class="toc-number">1.3.2.</span> <span class="toc-text">Health Check</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="toc-number">1.3.3.</span> <span class="toc-text">服务发现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%8F%91%E7%8E%B0"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">客户端发现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8F%91%E7%8E%B0"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">服务端发现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E6%BC%94%E8%BF%9B"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">服务发现演进</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E9%9B%86%E7%BE%A4%EF%BC%8C%E5%A4%9A%E7%A7%9F%E6%88%B7"><span class="toc-number">1.4.</span> <span class="toc-text">多集群，多租户</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E9%9B%86%E7%BE%A4"><span class="toc-number">1.4.1.</span> <span class="toc-text">多集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%A7%9F%E6%88%B7"><span class="toc-number">1.4.2.</span> <span class="toc-text">多租户</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">并行测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E4%BA%A7%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">生产测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.5.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1930,11 +1966,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
