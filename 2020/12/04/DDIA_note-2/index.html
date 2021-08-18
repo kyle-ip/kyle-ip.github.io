@@ -33,7 +33,7 @@
 <meta property="og:description" content="《DDIA》阅读笔记（二）：数据模型与查询语言">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-12-04T09:03:11.000Z">
-<meta property="article:modified_time" content="2021-07-18T13:29:36.475Z">
+<meta property="article:modified_time" content="2021-08-17T15:03:17.277Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="设计">
@@ -326,7 +326,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">3k</span>Reading time: <span class="post-count reading-time">10 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2.4k</span>Reading time: <span class="post-count reading-time">8 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -507,37 +507,39 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
 <p>关于数据模型：</p>
 <ul>
-<li><p>复杂的应用程序可能会有更多的中间层，其基本思想：每层都通过提供一个简洁的数据模型隐藏下层复杂性。抽象机制使得不同的人群可以高效协作。</p>
+<li><p>复杂的应用程序可能会有更多的中间层，每层通过提供简洁的数据模型隐藏下层复杂性。抽象机制使得不同的人群可高效协作。</p>
 </li>
-<li><p>有许多不同类型的数据模型，每种数据模型都有其最佳实践。精通一种数据模型需要很大功夫（即使不关心内部机制）。由于对其上的软件应用有巨大影响，因此需要慎重选择合适的数据模型。</p>
-</li>
-</ul>
-<h1 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h1><h2 id="关系模型：严格关联"><a href="#关系模型：严格关联" class="headerlink" title="关系模型：严格关联"></a>关系模型：严格关联</h2><p>在关系模型中数据被组织成关系（Repations），在 SQL 中被称为表（Table）,每个关系都是元组（Tuples）或无序集合（行），其实现为关系数据库管理系统（RDBMS）和 SQL。</p>
-<h3 id="数据访问"><a href="#数据访问" class="headerlink" title="数据访问"></a>数据访问</h3><ul>
-<li><p>关系模型定义了所有数据的格式：关系（表）只是元组（行）的集合，没有复杂的嵌套结构和访问路径，可以读取表中的任何一行或者所有行，支持任意条件查询。</p>
-</li>
-<li><p>可指定某些列作为键并匹配这些列来读取特定行。</p>
-</li>
-<li><p>可在任何表中插入新行，而不必担心与其他表之间的外键关系。</p>
-</li>
-<li><p>优势在于联结操作、多对一和多对多关系更简洁的表达上，与文档模型抗衡。</p>
-</li>
-<li><p>查询优化器：只需构建一次，使用该数据库的所有应用程序都可以从中受益。即由查询优化器决定以何种顺序执行查询、使用哪些索引。希望使用新的方式查询数据，只需声明一个新的索引，查询会自动使用最合适的索引。</p>
+<li><p>有许多不同类型的数据模型，都分别有其最佳实践。即使不关心内部机制，精通一种数据模型需要很大功夫。由于对其上的软件应用有巨大影响，需要慎重选择合适的数据模型。</p>
 </li>
 </ul>
-<h3 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h3><ul>
-<li><p>数据存储在关系表中，应用层代码中的对象与表、行和列的数据库模型之间需要一个笨拙的转换层。模型之间的脱离有时被称为阻抗失谐。使用 ORM 框架可减少转换层所需的样板代码量， 但也不能完全隐藏两个模型之间的差异。</p>
+<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><h3 id="关系模型：严格关联"><a href="#关系模型：严格关联" class="headerlink" title="关系模型：严格关联"></a>关系模型：严格关联</h3><p>数据被组织成关系（Repations），在 SQL 中被称为表（Table），每个关系都是元组（Tuples）或无序集合（行），其实现为关系数据库管理系统（RDBMS）和 SQL。</p>
+<h4 id="数据访问"><a href="#数据访问" class="headerlink" title="数据访问"></a>数据访问</h4><p>定义所有数据</p>
+<ul>
+<li><p>固定格式：关系（表）是元组（行）的集合，没有复杂的嵌套结构和访问路径，可读取表中任何行，支持任意条件查询。</p>
 </li>
-<li><p>关系型数据库遵顼严格的 <strong>写时模式</strong>，因此在数据量大时，模式更改、数据更新操作速度缓慢且可能需要停机。此时可以借鉴文档数据库的做法采用 <strong>读时填充</strong>：设置字段为 NULL，在读取时再填充值。</p>
+<li><p>可指定某些列作为键并匹配列来读取特定行。</p>
+</li>
+<li><p>可在任何表中插入新行，不必担心与其他表之间的外键关系。</p>
+</li>
+<li><p>优势在于联结操作、多对一和多对多关系更简洁的表达上。</p>
+</li>
+<li><p>查询优化器：只需构建一次，所有应用都可以从中受益。由查询优化器决定以何种顺序执行查询、使用的索引等。</p>
 </li>
 </ul>
-<h3 id="多对一关系"><a href="#多对一关系" class="headerlink" title="多对一关系"></a>多对一关系</h3><p>通常将诸如地址、行业等定义为 id（设计为字典表），而字符串在填写时供用户选择（而非输入），好处在于：</p>
+<h4 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h4><ul>
+<li><p>数据存储在关系表中，应用层代码中的对象与表、行和列的数据库模型之间需要笨拙的转换层。模型之间的脱离被称为 <strong>阻抗失谐</strong>。使用 ORM 可减少转换层所需的样板代码，但不能完全隐藏两个模型之间的差异。</p>
+</li>
+<li><p>遵顼严格的 <strong>写时模式</strong>，在数据量大时模式更改、数据更新速度缓慢且可能需要停机。此时可借鉴文档数据库的做法：采用 <strong>读时填充</strong>，即设置字段为 NULL，在读取时再填充值。</p>
+</li>
+</ul>
+<h4 id="多对一关系"><a href="#多对一关系" class="headerlink" title="多对一关系"></a>多对一关系</h4><p>将诸如地址、行业等定义为 id（设计为字典表），在填写时供用户选择而非输入，好处在于：</p>
 <ul>
 <li><p>保持样式和输入值一致</p>
 </li>
-<li><p>避免歧义（广州、广州市）</p>
+<li><p>避免歧义（广州和广州市）</p>
 </li>
 <li><p>易于更新</p>
 </li>
@@ -546,18 +548,19 @@ height:100vh;
 <li><p>搜索支持</p>
 </li>
 </ul>
-<p><strong>多对一</strong> 关系的表达（多人生活于某个地区、从事某一行业）不适宜使用文档模型：</p>
+<p><strong>多对一</strong> 关系（多人生活于某个地区、从事某一行业）使用关系模型比文档模型更合适：</p>
 <ul>
-<li><p>区别于一对多的树状结构（不需要联结，即使支持联结通常也很弱），相关项都由唯一的标识符引用，在关系模型中被称为外键，在文档模型中被称为文档引用。标识符可以查询时通过联结操作或相关后续查询来解析。迄今为止文档数据库并未遵循 CODASYL 标准。</p>
+<li><p>相关项由唯一标识符引用（外键，在文档模型中被称为文档引用），可在查询时通过联结操作或相关后续查询来解析。</p>
 </li>
-<li><p>如果数据库本身不支持联结，也必须在应用程序代码中通过对数据库进行多次查询来模拟联结，即从持久层转移到应用层。</p>
+<li><p>如数据库不支持联结，必须在应用代码中对数据库进行多次查询后再模拟联结（从持久层转移到应用层）。</p>
 </li>
-<li><p>即使应用程序初始版本适合采用无联结的文档模型，随着应用支持越来越多的功能，数据也变得更加互联一体化。</p>
+<li><p>随着应用功能迭代，即使初始版本采用无联结的文档模型，数据也可能变得更互联一体化。</p>
 </li>
 </ul>
-<h3 id="多对多关系"><a href="#多对多关系" class="headerlink" title="多对多关系"></a>多对多关系</h3><h2 id="非关系模型"><a href="#非关系模型" class="headerlink" title="非关系模型"></a>非关系模型</h2><p>此处主要指 NoSQL，其目的不是替代 SQL，而是“不仅仅是 SQL”。采用 NoSQL 数据库有几个驱动因素，包括：</p>
+<h4 id="多对多关系"><a href="#多对多关系" class="headerlink" title="多对多关系"></a>多对多关系</h4><p>更建议使用图模型。</p>
+<h3 id="非关系模型"><a href="#非关系模型" class="headerlink" title="非关系模型"></a>非关系模型</h3><p>主要指 NoSQL，其提供新的数据模型以及内置的复制和分区等手段改进传统关系模型。</p>
 <ul>
-<li><p>比关系型数据库更好的扩展性需求。</p>
+<li><p>更好的扩展性需求。</p>
 </li>
 <li><p>丰富的免费和开源软件。</p>
 </li>
@@ -566,55 +569,70 @@ height:100vh;
 <li><p>更少限制、更具动态和表达力的数据模型（不会对存储的数据强加模式）。</p>
 </li>
 </ul>
-<p>目标是通过提供新的数据模型以及内置的复制和分区等手段改进传统关系模型。NoSQL 有时也会结合关系型存储一起使用，被称为混合持久化。常见用于解决关系型数据库问题的 NoSQL 方案：</p>
+<table>
+<thead>
+<tr>
+<th>非关系模型</th>
+<th>解决问题（相对于关系模型）</th>
+<th>代表实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>键值数据库</td>
+<td>无法存储数据结构。</td>
+<td>Redis</td>
+</tr>
+<tr>
+<td>文档数据库</td>
+<td>强 schema 约束，不够灵活。</td>
+<td>MongoDB</td>
+</tr>
+<tr>
+<td>列式数据库</td>
+<td>大数据场景下的 I/O 性能差。</td>
+<td>HBase</td>
+</tr>
+<tr>
+<td>全文搜索引擎</td>
+<td>全文搜索性能差。</td>
+<td>Elasticsearch</td>
+</tr>
+</tbody></table>
+<p>有时也会结合关系型存储一起使用，被称为 <strong>混合持久化</strong>。</p>
+<h4 id="文档模型：弱关联"><a href="#文档模型：弱关联" class="headerlink" title="文档模型：弱关联"></a>文档模型：弱关联</h4><p>特点是模式灵活性， 由于局部性而带来较好性能，且更接近应用程序所使用的数据结构。</p>
+<p>尤其适合处理自包含文档，且文档与其他文档之间关联很少。</p>
+<h5 id="灵活性"><a href="#灵活性" class="headerlink" title="灵活性"></a>灵活性</h5><p>实现层次模型：在父记录中保存嵌套记录，而非存储在单独的表中。</p>
 <ul>
-<li><p>键值数据库：解决无法存储数据结构的问题（Redis）。</p>
+<li><p><strong>读时模式</strong>：在读数据的代码中采用某种隐形模式（而非数据库强制执行，类似运行时类型检查），适用于大量异构或动态结构的数据存储。解决 <strong>写时模式</strong> 在更改 schema 时面临的速度慢和停机的问题（尤其在数据量大时）。</p>
 </li>
-<li><p>文档数据库：解决强 schema 约束的问题（MongoDB）。</p>
-</li>
-<li><p>列式数据库：解决大数据场景下的 I/O 问题（HBase）。</p>
-</li>
-<li><p>全文搜索引擎：解决全文搜索性能问题（Elasticsearch）。</p>
+<li><p>非关联树状结构容易表达 <strong>一对多</strong> 关系（不需要联结，或只需要弱连结），比如一名用户身兼多个职位、拥有多段工作经历等。在读取时一次性加载整棵树，无需像关系模型般把结构分解为多个表（笨重而复杂）。</p>
 </li>
 </ul>
-<h3 id="文档模型：弱关联"><a href="#文档模型：弱关联" class="headerlink" title="文档模型：弱关联"></a>文档模型：弱关联</h3><p>支持文档数据模型的主要论点是模式灵活性， 由于局部性而带来较好的性能，对于某些应用而言它更接近于应用程序所使用的数据结构。</p>
-<p>目标用例是数据来自于自包含文档，且一个文档与其他文档之间的关联很少。</p>
-<h4 id="灵活性"><a href="#灵活性" class="headerlink" title="灵活性"></a>灵活性</h4><p>文档数据库是某种方式的层次模型：即在其父记录中保存了嵌套记录，而不是存储在单独的表中。</p>
+<h5 id="局限性-1"><a href="#局限性-1" class="headerlink" title="局限性"></a>局限性</h5><ul>
+<li><p>不能直接引用嵌套项，难以处理嵌套太深的结构。</p>
+</li>
+<li><p>在表示 <strong>多对一</strong> 和 <strong>多对多</strong> 关系时，与关系模型一样，相关项由外键或文档引用引用。可在查询时通过联结操作或相关后续查询来解析（文档数据库并未遵循 CODASYL 标准）。</p>
+</li>
+<li><p>处理多对多关系时可通过反规范化减少联结需求，应用代码需做额外工作保持数据一致性，实现更复杂且比基于数据库的联结更慢。</p>
+</li>
+</ul>
+<h5 id="数据局部性"><a href="#数据局部性" class="headerlink" title="数据局部性"></a>数据局部性</h5><p>文档通常存储为 JSON、 XML 或其二进制变体（如 MongoDB 的 BSON）编码的连续字符串：</p>
 <ul>
-<li><p><strong>读时模式</strong>：即为读数据的代码通常采用某种结构因而存在某种隐形模式（而不是由数据库强制执行，类似运行时类型检查），适用于大量异构、动态结构的数据存储。而关系型数据库的 <strong>写时模式</strong> 在更改模式时则面临速度慢和停机的问题（存在于数据量大的情况下，有各种工具可以解决限制）。</p>
+<li><p>存储局部性具有性能优势（关系模型数据划分在多个表，需要多次基于索引查找、更多的磁盘 I/O）。</p>
 </li>
-<li><p>非关联的树状结构也很容易表达 <strong>一对多</strong> 关系，比如一名用户身兼多个职位、拥有多段工作经历等。</p>
+<li><p>仅适用 <strong>同时访问文档大部分内容</strong> 的场景。如只访问其中一小部分则比较浪费。</p>
 </li>
-<li><p>当应用数据在一对多关系中，通常一次加载整个树，使用文档模型更合适。因为无需像关系模型般把文档结构分解为多个表，使得模式更为笨重，以及不必要的应用代码复杂化。</p>
-</li>
-<li><p>文档模型局限性在于不能直接引用嵌套项，难以处理嵌套太深的结构。对于联结的支持（多对多、多对一）缺失是否是问题取决于应用程序。</p>
+<li><p>更新时通常重写整个文档，只有修改量不改变源文档大小时，原地覆盖更新才更有效。建议文档尽量小且避免写入时扩增文档大小。</p>
 </li>
 </ul>
-<h4 id="局限性-1"><a href="#局限性-1" class="headerlink" title="局限性"></a>局限性</h4><ul>
-<li><p>在表示多对一和多对多的关系时， 关系数据库和文档数据库没有根本的不同：在这两种情况下相关项都由唯一标识符引用（称为外键或文档引用）。可以查询时通过联结操作或相关后续查询来解析（文档数据库并未遵循 CODASYL 标准）。</p>
-</li>
-<li><p>如果应用程序使用多对多关系，文档模型可以通过反规范化减少联结需求，但应用程序代码需要做额外的工作来保持非规范化数据的一致性，除了代码更复杂外通常也比数据库内的专用代码执行的联结慢。</p>
-</li>
-</ul>
-<h4 id="数据局部性"><a href="#数据局部性" class="headerlink" title="数据局部性"></a>数据局部性</h4><p>由于文档通常存储为 JSON、 XML 或其二进制变体（如 MongoDB 的 BSON）编码的连续字符串：</p>
+<h4 id="图模型：复杂关联"><a href="#图模型：复杂关联" class="headerlink" title="图模型：复杂关联"></a>图模型：复杂关联</h4><p>图模型目标用例是所有数据都可能会互相关联，适用于数据关联比较复杂的场景（比如 Page Rank）。</p>
 <ul>
-<li><p>存储局部性具有性能优势（相比起关系模型数据被划分到多个表，需要多次索引查找来检索，中间需要更多的磁盘 I/O）。</p>
+<li><p>由顶点和边组成。每个顶点可连接到其他任何顶点（而不是由模式限制关联），给定顶点可高效地得到所有入边和出边，从而遍历图。</p>
 </li>
-<li><p>仅适用 <strong>需要同时访问文档大部分内容</strong> 的场景。如果只是访问其中的一小部分，对于大型文档数据则比较浪费。</p>
-</li>
-<li><p>对文档进行更新时通常会重写整个文档，而只有修改量不改变源文档大小时原地覆盖更新才更有效。因此建议文档尽量小且避免写入时增加文档大小。</p>
+<li><p>除了同构数据，对于单个数据存储区，还提供了保存不同类型对象的一致性方式：对不同类型的关系使用不同标签，可在单个图中存储多种类型的信息，同时仍然保持整洁的数据模型。</p>
 </li>
 </ul>
-<h3 id="图模型：复杂关联"><a href="#图模型：复杂关联" class="headerlink" title="图模型：复杂关联"></a>图模型：复杂关联</h3><p>关系模型能够处理简单的多对多关系，随着数据之间的关联越来越复杂，将数据建模转化为图模型会更加自然（目标用例是所有数据都可能会互相关联）。</p>
-<ul>
-<li><p>由顶点和边组成。每个顶点可以连接到其他任何顶点，与文档模型类似，不存在模式限制某种事物是否可关联。给定某个顶点可高效地得到所有入边和出边，从而遍历图。</p>
-</li>
-<li><p>很多著名算法可以在图上运行，如 PageRank。</p>
-</li>
-<li><p>除了同构数据，还提供了单个数据存储区中保存完全不同类型对象的一致性方式。通过对不同类型的关系使用不同的标签，可以在单个图中存储多种不同类型的信息，同时仍然保持整洁的数据模型。</p>
-</li>
-</ul>
-<p>图相关模型和处理框架：</p>
+<p>相关模型和处理框架：</p>
 <ul>
 <li><p>属性图模型：比如 Neo4j 、 Titan 和 InfiniteGraph。</p>
 </li>
@@ -623,24 +641,20 @@ height:100vh;
 <li><p>图处理框架：比如 Pregel。</p>
 </li>
 </ul>
-<h1 id="数据查询语言"><a href="#数据查询语言" class="headerlink" title="数据查询语言"></a>数据查询语言</h1><h2 id="声明式语言"><a href="#声明式语言" class="headerlink" title="声明式语言"></a>声明式语言</h2><ul>
-<li><p>命令式语言：如数据处理代码，完全可以推理整个过程， 逐行遍历代码、 评估相关条件、更新对应的变量，并决定是否再循环一遍。由于指定了特定的执行顺序而难以并行化</p>
-</li>
-<li><p>声明式语言：如 SQL 与关系代数，只需指定所需的数据模式， 结果需满足什么条件，以及如何转换数据，而不需指明如何实现这一目标。SQL 隐藏了数据库引擎的细节，数据库系统能在不改变查询语旬的情况下提高性能，且通常适合于并行执行。</p>
-</li>
-</ul>
-<h2 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h2><p>MapReduce 是一种编程模型，用于在许多机器上批量处理海量数据。</p>
+<h2 id="查询语言"><a href="#查询语言" class="headerlink" title="查询语言"></a>查询语言</h2><h3 id="声明式语言"><a href="#声明式语言" class="headerlink" title="声明式语言"></a>声明式语言</h3><p>命令式语言：如数据处理代码，可推理整个过程：逐行遍历代码、 评估相关条件、更新对应的变量，并决定是否再循环一遍。缺点是由于指定了特定的执行顺序，难以并行化。</p>
+<p>声明式语言：如 SQL 与关系代数，只需指定所需的数据模式， 结果需满足的条件和转换数据的方式，不需指明如何实现目标。其隐藏了数据库引擎的细节，可在不改变查询语旬的情况下提高性能，通常适合于并行执行。</p>
+<h3 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h3><p>用于在许多机器上批量处理海量数据的编程模型。</p>
 <ul>
-<li><p>介于声明式查询语言和命令式查询 API 之间：查询的逻辑用代码片段来表示，代码片段可以被处理框架重复地调用。</p>
+<li><p>介于声明式和命令式查询 API 之间：查询逻辑用代码片段表示，代码片段可被框架重复调用。</p>
 </li>
-<li><p>map 和 reduce 函数对于可执行的操作限制必须为纯函数，只能使用传递进去的数据作为输入，不能执行额外的数据库查询，也不能有任何副作用。使得数据库能够在任何位置、 以任意顺序来运行函数，并在失败时重新运行这些函数。</p>
+<li><p>map 和 reduce 函数必须为纯函数，只能接收固定输入，不能执行额外的数据查询、不能有副作用。因此可在任何位置、 以任意顺序运行函数，在失败时重新运行。</p>
 </li>
-<li><p>某些 SQL 数据库也可以扩展使用 JavaScript 函数，在 MapReduce 模型中一个可用性问题是必须编写两个密切协调的JavaScript 函数，通常比编写单个查询更难。</p>
+<li><p>某些 SQL 数据库可扩展使用 JavaScript 函数，但存在可用性问题：编写两个密切协调的函数通常比编写单个查询更难。</p>
 </li>
-<li><p>聚合管道：声明式查询语言的支持，表达能力上相当干 SQL 的子集，但它使用了基于 JSON 的语法。</p>
+<li><p>聚合管道：声明式查询语言的支持，使用基于 JSON 的语法，在表达能力上相当于 SQL 子集。</p>
 </li>
 </ul>
-<h2 id="图查询语言"><a href="#图查询语言" class="headerlink" title="图查询语言"></a>图查询语言</h2><p>声明式：</p>
+<h3 id="图查询语言"><a href="#图查询语言" class="headerlink" title="图查询语言"></a>图查询语言</h3><p>声明式：</p>
 <ul>
 <li><p>Cypher：用于属性图的声明式查询语言，最早为 Neo4j 图形数据库而创建。</p>
 </li>
@@ -652,7 +666,6 @@ height:100vh;
 </li>
 </ul>
 <p>命令式：Gremlin</p>
-<p>以上。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -822,7 +835,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8ADDIA%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%9F%A5%E8%AF%A2%E8%AF%AD%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">《DDIA》阅读笔记（二）：数据模型与查询语言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%9E%8B%EF%BC%9A%E4%B8%A5%E6%A0%BC%E5%85%B3%E8%81%94"><span class="toc-number">2.1.</span> <span class="toc-text">关系模型：严格关联</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE"><span class="toc-number">2.1.1.</span> <span class="toc-text">数据访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">2.1.2.</span> <span class="toc-text">局限性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E5%AF%B9%E4%B8%80%E5%85%B3%E7%B3%BB"><span class="toc-number">2.1.3.</span> <span class="toc-text">多对一关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E5%AF%B9%E5%A4%9A%E5%85%B3%E7%B3%BB"><span class="toc-number">2.1.4.</span> <span class="toc-text">多对多关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">非关系模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E6%A8%A1%E5%9E%8B%EF%BC%9A%E5%BC%B1%E5%85%B3%E8%81%94"><span class="toc-number">2.2.1.</span> <span class="toc-text">文档模型：弱关联</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%81%B5%E6%B4%BB%E6%80%A7"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">灵活性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7-1"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">局限性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%B1%80%E9%83%A8%E6%80%A7"><span class="toc-number">2.2.1.3.</span> <span class="toc-text">数据局部性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E6%A8%A1%E5%9E%8B%EF%BC%9A%E5%A4%8D%E6%9D%82%E5%85%B3%E8%81%94"><span class="toc-number">2.2.2.</span> <span class="toc-text">图模型：复杂关联</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2%E8%AF%AD%E8%A8%80"><span class="toc-number">3.</span> <span class="toc-text">数据查询语言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E%E5%BC%8F%E8%AF%AD%E8%A8%80"><span class="toc-number">3.1.</span> <span class="toc-text">声明式语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MapReduce"><span class="toc-number">3.2.</span> <span class="toc-text">MapReduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E6%9F%A5%E8%AF%A2%E8%AF%AD%E8%A8%80"><span class="toc-number">3.3.</span> <span class="toc-text">图查询语言</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8ADDIA%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%9F%A5%E8%AF%A2%E8%AF%AD%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">《DDIA》阅读笔记（二）：数据模型与查询语言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%9E%8B%EF%BC%9A%E4%B8%A5%E6%A0%BC%E5%85%B3%E8%81%94"><span class="toc-number">1.1.1.</span> <span class="toc-text">关系模型：严格关联</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">数据访问</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">局限性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E5%AF%B9%E4%B8%80%E5%85%B3%E7%B3%BB"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">多对一关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E5%AF%B9%E5%A4%9A%E5%85%B3%E7%B3%BB"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">多对多关系</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text">非关系模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E6%A8%A1%E5%9E%8B%EF%BC%9A%E5%BC%B1%E5%85%B3%E8%81%94"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">文档模型：弱关联</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%81%B5%E6%B4%BB%E6%80%A7"><span class="toc-number">1.1.2.1.1.</span> <span class="toc-text">灵活性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7-1"><span class="toc-number">1.1.2.1.2.</span> <span class="toc-text">局限性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%B1%80%E9%83%A8%E6%80%A7"><span class="toc-number">1.1.2.1.3.</span> <span class="toc-text">数据局部性</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%BE%E6%A8%A1%E5%9E%8B%EF%BC%9A%E5%A4%8D%E6%9D%82%E5%85%B3%E8%81%94"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">图模型：复杂关联</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E8%AF%AD%E8%A8%80"><span class="toc-number">1.2.</span> <span class="toc-text">查询语言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E%E5%BC%8F%E8%AF%AD%E8%A8%80"><span class="toc-number">1.2.1.</span> <span class="toc-text">声明式语言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MapReduce"><span class="toc-number">1.2.2.</span> <span class="toc-text">MapReduce</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E6%9F%A5%E8%AF%A2%E8%AF%AD%E8%A8%80"><span class="toc-number">1.2.3.</span> <span class="toc-text">图查询语言</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1791,31 +1804,31 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1907,22 +1920,7 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-</body>
+    </body>
 </html>
 
 

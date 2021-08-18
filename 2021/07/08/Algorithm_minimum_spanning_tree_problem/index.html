@@ -36,8 +36,8 @@
 <meta property="article:published_time" content="2021-07-08T12:10:14.000Z">
 <meta property="article:modified_time" content="2021-08-11T14:54:25.154Z">
 <meta property="article:author" content="Kylo Yip">
-<meta property="article:tag" content="技术">
 <meta property="article:tag" content="算法">
+<meta property="article:tag" content="技术">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/MST.png">
     <meta http-equiv="Cache-control" content="no-cache">
@@ -320,9 +320,9 @@ height:100vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags = "算法">算法</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
     
 </div>
                 
@@ -462,24 +462,30 @@ height:100vh;
 </blockquote>
 <p>在图论领域，有权图（Weight Graph）最经典的问题是最小生成树问题（Minimum Spanning Tree）：对于一个 n 个节点的 <strong>连通图</strong>，求出包含原图 n 个节点、且确保所有边权值之和最小的连通子图，则为 <strong>最小生成树（MST）</strong>。</p>
 <p>有权图与其最小生成树：</p>
-<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/MST.png" alt="MST" style="zoom: 67%;" /></p>
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/MST.png" alt="MST" style="zoom: 67%;" />
+
+
+
 <p>先给出有权图的 Java 实现（省略细节），有权边 <code>WeightedEdge</code>（兼容有向、无向）：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedEdge</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">WeightedEdge</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 起点，终点，权值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> v, w, weight;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeightedEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w, <span class="keyword">int</span> weight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.v = v;</span><br><span class="line">        <span class="keyword">this</span>.w = w;</span><br><span class="line">        <span class="keyword">this</span>.weight = weight;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>有权图 <code>WeightedGraph</code>：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 顶点数，边数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> V, E;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 邻接表：使用红黑树描述</span></span><br><span class="line"><span class="comment">     * [</span></span><br><span class="line"><span class="comment">     *      0: &#123;1: 3, 2: 2, 3: -2&#125;,</span></span><br><span class="line"><span class="comment">     *      1: (2: 2, 3: 2, 4: 1)</span></span><br><span class="line"><span class="comment">     * ]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;Integer, Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取权值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v, w)) &#123;</span><br><span class="line">            <span class="keyword">return</span> adj[v].get(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">&quot;No edge %d-%d&quot;</span>, v, w));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     <span class="comment">// 边是否存在</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> adj[v].containsKey(w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="连通性判断"><a href="#连通性判断" class="headerlink" title="连通性判断"></a>连通性判断</h2><p>对于一个图，可求解出最小生成树的前提是该图为 <strong>连通图</strong>，即图中任意两个节点之间都能找到至少一条路径相连。</p>
 <p>对于非连通图，每个连通子图都称为一个 <strong>连通分量</strong>。</p>
 <p>因此判断图是否连通可使用以下深度优先遍历（DFS）算法：</p>
 <ul>
-<li><p>使用变量 <code>int left</code> 记录待访问节点数（初始化为图节点总数 <code>V</code>），数组 <code>boolean[] visited</code> 记录节点访问状态（避免重复访问）。</p>
+<li><p>  使用变量 <code>int left</code> 记录待访问节点数（初始化为图节点总数 <code>V</code>），数组 <code>boolean[] visited</code> 记录节点访问状态（避免重复访问）。</p>
 </li>
-<li><p>从任意一个节点 <code>v</code> 出发深度优先遍历图，每经过一个未被访问的邻接节点 <code>w</code> 即标记为已访问 <code>visited[w] = true;</code>，并把待访问节点数 -1 <code>left--</code>，否则跳过。</p>
+<li><p>  从任意一个节点 <code>v</code> 出发深度优先遍历图，每经过一个未被访问的邻接节点 <code>w</code> 即标记为已访问 <code>visited[w] = true;</code>，并把待访问节点数 -1 <code>left--</code>，否则跳过。</p>
 </li>
-<li><p>当从 <code>v</code> 出发的深度优先遍历结束，表示已找到一个连通分量。此时判断待访问节点数 <code>left</code> 是否为 0，是则表示刚才已完成整图遍历，该图为连通图，否则为非连通图。</p>
+<li><p>  当从 <code>v</code> 出发的深度优先遍历结束，表示已找到一个连通分量。此时判断待访问节点数 <code>left</code> 是否为 0，是则表示刚才已完成整图遍历，该图为连通图，否则为非连通图。</p>
 </li>
 </ul>
 <p>基本实现如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Stack&lt;Integer&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line"><span class="keyword">boolean</span>[] visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[V];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从 0 出发遍历图，判断图是否联通。</span></span><br><span class="line">stack.push(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">int</span> left = V - <span class="number">1</span>;</span><br><span class="line">visited[<span class="number">0</span>] = <span class="keyword">true</span>;</span><br><span class="line"><span class="keyword">while</span> (!stack.empty()) &#123;</span><br><span class="line">    <span class="keyword">int</span> v = stack.pop();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(v)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (visited[w]) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 每遇到一个未访问的邻接顶点，则 left--。</span></span><br><span class="line">        left--;</span><br><span class="line">        visited[w] = <span class="keyword">true</span>;</span><br><span class="line">        stack.push(w);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> left == <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
 <h2 id="切分定理（Bipartite）"><a href="#切分定理（Bipartite）" class="headerlink" title="切分定理（Bipartite）"></a>切分定理（Bipartite）</h2><p>将一个图中的顶点分为两部分，称为一个 <strong>切分</strong>。其中一条边的两个端点属于切分不同的两边，则该边称为 <strong>横切边</strong>。</p>
 <p>如果考虑边的权值，横切边的最短边就属于最小生成树（<strong>切分定理</strong>）。</p>
 <blockquote>
@@ -489,15 +495,16 @@ height:100vh;
 <p>介绍切分的概念，是为了引入在遍历图的过程中，把节点划归到不同子集的技巧，这种做法在介绍 Prim 算法时再做具体说明。</p>
 <h2 id="并查集（Union-Find）"><a href="#并查集（Union-Find）" class="headerlink" title="并查集（Union Find）"></a>并查集（Union Find）</h2><p>并查集是一种多叉树，其包含两种基本操作：合并和查询。假设待加入并查集的节点共 n 个。</p>
 <ul>
-<li><p>初始化：对于所有的 n 个点 [0, n-1]，代表每个点的集合都初始化为自身，比如 0 =&gt; {0}, 1 =&gt; {1}, …, n-1 =&gt; {n-1}。</p>
+<li><p>  初始化：对于所有的 n 个点 [0, n-1]，代表每个点的集合都初始化为自身，比如 0 =&gt; {0}, 1 =&gt; {1}, …, n-1 =&gt; {n-1}。</p>
 </li>
-<li><p>合并：将两个节点所表示的集合（表示为树）合并为一个集合，即将代表其中一个节点的树的根，嫁接到另一个节点表示的树的孩子上。</p>
+<li><p>  合并：将两个节点所表示的集合（表示为树）合并为一个集合，即将代表其中一个节点的树的根，嫁接到另一个节点表示的树的孩子上。</p>
 </li>
-<li><p>查找：查找节点所在的集合，即根节点。</p>
+<li><p>  查找：查找节点所在的集合，即根节点。</p>
 </li>
 </ul>
 <p>由于本文旨在总结最小生成树相关算法，并查集不是重点，只做简要说明并直接给出实现代码。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnionFind</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 父节点：parent[p] 即 p 的父节点。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] parent;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 集合大小（优化树结构）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] size;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化：[0, n) 所有节点的父节点都是它自身，集合大小都为 1。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UnionFind</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        parent = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">        size = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            parent[i] = i;</span><br><span class="line">            size[i] = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询：从给定节点迭代向其父节点查询，直到根节点。并更新沿途访问节点的根节点。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> p)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (p != parent[p]) &#123;</span><br><span class="line">            parent[p] = find(parent[p]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> parent[p];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 判断两个点是否相连。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isConnected</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> find(p) == find(q);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 合并：两个给定的节点迭代查询到根节点，如果它们有共同根节点则直接返回，否则把其中的一个的根节点接到另一个根节点上（节点数更多的作为根节点）。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">union</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 不去重（根的值相同也合并）。</span></span><br><span class="line">        <span class="comment">// parent[find(parent, p)] = find(parent, q);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 去重（根的值相同不合并）。</span></span><br><span class="line">        <span class="keyword">int</span> pRoot = find(p), qRoot = find(q);</span><br><span class="line">        <span class="keyword">if</span> (pRoot == qRoot) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (size[p] &gt; size [q]) &#123;</span><br><span class="line">            parent[qRoot] = pRoot;</span><br><span class="line">            size[pRoot] += size[qRoot];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            parent[pRoot] = qRoot;</span><br><span class="line">            size[qRoot] += size[pRoot];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 求大小：某个节点的大小等于其根节点的节点数。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">(<span class="keyword">int</span> p)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size[find(p)];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 联通分量个数：父节点为其自身的点的数量。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">cc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; parent.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (parent[i] == i) &#123;</span><br><span class="line">                cnt++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cnt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>有了以上基础，就可以开始进入最小生成树的求解了。</p>
 <h2 id="Kruskal-算法"><a href="#Kruskal-算法" class="headerlink" title="Kruskal 算法"></a>Kruskal 算法</h2><p>Kruskal 算法本质是贪心算法：每次尽量使用短边。</p>
 <p>每次按权值从小到大选取图上不会构成环的短边，直到覆盖所有顶点。</p>
@@ -510,16 +517,18 @@ height:100vh;
 <p>并查集用于存放图的节点，并判断节点是否直接或间接相连。</p>
 <p>比如 <strong>1-2</strong>、<strong>2-3</strong> 被添加到 <code>uf</code>，当 <strong>1-3</strong> 被尝试添加到 <code>uf</code> 时，会被判断为 1 和 3 已通过 2 相连，因此不再处理。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">   <span class="selector-attr">[3]</span></span><br><span class="line"> X    \ ✔</span><br><span class="line"><span class="selector-attr">[1]</span>---<span class="selector-attr">[2]</span></span><br><span class="line">    ✔</span><br></pre></td></tr></table></figure>
+
 <p>在这里直接给出使用并查集可在判断路径是成环时，优化节点查找效率的结论（接近 O(E)），感兴趣的话可以自己探究一下。</p>
 <p>基本实现：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;WeightedEdge&gt; <span class="title">mstKruskal</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 省略环的判断，以下代码仅在连通图中有效。</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 把所有边添加到 edges。</span></span><br><span class="line">        List&lt;WeightedEdge&gt; edges = <span class="keyword">new</span> ArrayList&lt;&gt;(E);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt; V; v++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(v)) &#123;</span><br><span class="line">                <span class="comment">// 不重复添加。</span></span><br><span class="line">                <span class="keyword">if</span> (v &lt; w) &#123;</span><br><span class="line">                    edges.add(<span class="keyword">new</span> WeightedEdge(v, w, getWeight(v, w)));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 按权值从小到大排序。</span></span><br><span class="line">        Collections.sort(edges);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用并查集判断每次取出的边是否与先前已取出的边形成环，不成环则收集。</span></span><br><span class="line">        </span><br><span class="line">        List&lt;WeightedEdge&gt; mst = <span class="keyword">new</span> ArrayList&lt;&gt;(V - <span class="number">1</span>);</span><br><span class="line">        UnionFind uf = <span class="keyword">new</span> UnionFind(V);</span><br><span class="line">        <span class="keyword">for</span> (WeightedEdge edge : edges) &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 比如 1-2 与 2-3 都已添加到 uf 中，则下次通过 uf 可判断 1 和 3 已相连，不需要再添加到 mst。</span></span><br><span class="line">            <span class="keyword">if</span> (uf.isConnected(edge.getV(), edge.getW())) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            mst.add(edge);</span><br><span class="line">            uf.union(edge.getV(), edge.getW());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mst;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>实现细节：</p>
 <ul>
-<li><p>使用一个数组 <code>edges</code> 记录所有的边，并按权值从小到大排列。</p>
+<li><p>  使用一个数组 <code>edges</code> 记录所有的边，并按权值从小到大排列。</p>
 </li>
-<li><p>初始化一个大小为 <code>V</code> 的并查集 <code>uf</code>，默认所有的边都不成环（表示为并查集中的点都不相连）。</p>
+<li><p>  初始化一个大小为 <code>V</code> 的并查集 <code>uf</code>，默认所有的边都不成环（表示为并查集中的点都不相连）。</p>
 </li>
-<li><p>遍历集合 <code>edges</code>，如果该边的两个顶点（<code>v</code> 和 <code>w</code>）在 <code>uf</code> 中没有相连，则添加到 <code>mst</code> 集合中，并在 <code>uf</code> 中连接 <code>v</code> 和 <code>w</code>。</p>
+<li><p>  遍历集合 <code>edges</code>，如果该边的两个顶点（<code>v</code> 和 <code>w</code>）在 <code>uf</code> 中没有相连，则添加到 <code>mst</code> 集合中，并在 <code>uf</code> 中连接 <code>v</code> 和 <code>w</code>。</p>
 </li>
 </ul>
 <p>时间复杂度：O(E*log(E))</p>
@@ -537,15 +546,16 @@ height:100vh;
 </ul>
 <p>先直接给出基本实现，再进一步分析实现的细节：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Iterable&lt;WeightedEdge&gt; <span class="title">mstPrim</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 省略环的判断，以下代码仅在连通图中有效。</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 标记节点当前归属的切分。</span></span><br><span class="line">        <span class="keyword">boolean</span>[] visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[V];</span><br><span class="line">        visited[<span class="number">0</span>] = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用最小堆（堆顶元素必然是最短边），初始化添加顶点 0 的所有邻接边。</span></span><br><span class="line">        Queue&lt;WeightedEdge&gt; pq = <span class="keyword">new</span> PriorityQueue&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(<span class="number">0</span>)) &#123;</span><br><span class="line">            pq.add(<span class="keyword">new</span> WeightedEdge(<span class="number">0</span>, w, getWeight(<span class="number">0</span>, w)));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;WeightedEdge&gt; mst = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span> (!pq.isEmpty()) &#123;</span><br><span class="line">            <span class="comment">// 每轮循环取出最短边，如果边的两点已归属于 true 切分，表示该边非横切边，跳过。</span></span><br><span class="line">            WeightedEdge minEdge = pq.remove();</span><br><span class="line">            <span class="keyword">if</span> (visited[minEdge.getV()] &amp;&amp; visited[minEdge.getW()]) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 收集最短横切边，并把该边当前归属于 false 切分的点划归 true。</span></span><br><span class="line">            mst.add(minEdge);</span><br><span class="line">            <span class="keyword">int</span> newV = visited[minEdge.getV()] ? minEdge.getW() : minEdge.getV();</span><br><span class="line">            visited[newV] = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 遍历新加入的 true 切分的点的邻接顶点，把未访问（即归属于 false 切分）的顶点添加到最小堆。</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> w : adj(newV)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!visited[w]) &#123;</span><br><span class="line">                    pq.add(<span class="keyword">new</span> WeightedEdge(newV, w, getWeight(newV, w)));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mst;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>与其他 DFS、BFS 算法的实现类似，Prim 算法的实现也是基于 <code>boolean[] visited</code> 数组，只是数组的值有了另一层面的意义：用于表示节点划归到不同的切分。对于初始节点 0，划归到 <code>true</code> 切分，其余节点为 <code>false</code> 切分。</p>
 <p>使用最小堆存放节点 0 的所有邻边，判断条件为权值的大小，使得随时可以 O(log(E)) 的代价取出最短边。</p>
 <p>循环执行以下步骤直到最小堆为空，其间使用 <code>mst</code> 集合收集最小生成树的边，最终返回即可：</p>
 <ul>
-<li><p>遍历最小堆，每轮循环取出堆顶的最短边，如果该边的两点已归属于 <code>true</code> 切分，表示该边非横切边，因此跳过。</p>
+<li><p>  遍历最小堆，每轮循环取出堆顶的最短边，如果该边的两点已归属于 <code>true</code> 切分，表示该边非横切边，因此跳过。</p>
 </li>
-<li><p>否则收集最短边到 <code>mst</code> 集，并把改横切边上，当前归属于 <code>false</code> 切分的端点 v 划归到 <code>true</code> 切分。</p>
+<li><p>  否则收集最短边到 <code>mst</code> 集，并把改横切边上，当前归属于 <code>false</code> 切分的端点 v 划归到 <code>true</code> 切分。</p>
 </li>
-<li><p>遍历新加入 <code>true</code> 的节点 <code>v</code> 的所有邻接节点 <code>w</code>，把其中未访问（即还属于 <code>false</code> 切分）的节点添加到最小堆。</p>
+<li><p>  遍历新加入 <code>true</code> 的节点 <code>v</code> 的所有邻接节点 <code>w</code>，把其中未访问（即还属于 <code>false</code> 切分）的节点添加到最小堆。</p>
 </li>
 </ul>
 <p>时间复杂度：由于使用了最小堆，可快速找到最短横切边，时间复杂度从 O(V*E) 优化到 O(E*log(E))，如改用索引堆（Index Heap）则可以进一步优化到 O(E*log(V))。</p>
@@ -554,11 +564,11 @@ height:100vh;
 </blockquote>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了最小生成树问题两种最经典的算法，实际上除此之外还有 Fredman-Tarjan 算法（Time: O(E+V*log(V))）、Chazelle 算法（Time: O(E*)），限于篇幅就不再一一介绍了，感兴趣的话可以自行查阅相关资料。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Kruskal&#39;s_algorithm">Kruskal’s algorithm - Wikipedia</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Kruskal's_algorithm">Kruskal’s algorithm - Wikipedia</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Prim&#39;s_algorithm">Prim’s algorithm - Wikipedia</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Prim's_algorithm">Prim’s algorithm - Wikipedia</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html">Data Structure Visualization (usfca.edu)</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html">Data Structure Visualization (usfca.edu)</a></p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -1699,31 +1709,31 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1815,22 +1825,7 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-</body>
+    </body>
 </html>
 
 

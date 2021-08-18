@@ -462,7 +462,7 @@ height:100vh;
     <article class="article-entry">
         <h1 id="《凤凰架构》阅读笔记（一）：软件架构演进"><a href="#《凤凰架构》阅读笔记（一）：软件架构演进" class="headerlink" title="《凤凰架构》阅读笔记（一）：软件架构演进"></a>《凤凰架构》阅读笔记（一）：软件架构演进</h1><h2 id="原始分布式架构"><a href="#原始分布式架构" class="headerlink" title="原始分布式架构"></a>原始分布式架构</h2><p>受限于早期计算机硬件局促的算力，单台计算机上搭载的信息系统难以达到较大规模。在大型单体系统出现之前人们就曾构想过 <strong>使用多个独立的分布式服务构建大型系统</strong>，并据此制定了分布式运算环境的技术体系。此阶段是分布式的最早期探索，目标是分布式环境中的服务调用、资源访问、数据存储等操作尽可能 <strong>透明化</strong>、<strong>简单化</strong>，使开发人员不必过于关注本地调用还是远程调用。</p>
 <p>因时代局限，简单、透明、性能、正确、鲁棒、一致的目标在当时无法完成：服务发现，负载均衡，熔断隔离降级，序列化协议，传输协议，认证授权，网络安全，数据一致等一系列问题难以兼顾实现。比如网络环境与本地环境访问文件的速度有数量级上的差距，与运用分布式突破单机算力限制的初衷矛盾，且这种巨大的性能差异已使得程序开发难以做到简单透明（必须意识到是分布式程序开发）。</p>
-<p>当时人们的经验是某个功能可进行分布式，并不意味着就该如此，不能强行追求透明的分布式操作（by Kyle Brown）。尽管违背了 UNIX 设计哲学，但只能迫于现实让步；再加上 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/摩尔定律">摩尔定律</a> 开始发挥稳定作用、微机性能快速提升，相比起构筑完美的分布式系统，在很长一段时间内 <strong>提升单机的处理能力，发展单体软件架构</strong> 的发展道路都是绝对主流（前者并未停止发展）。</p>
+<p>当时人们的经验是某个功能可进行分布式，并不意味着就该如此，不能强行追求透明的分布式操作（by Kyle Brown）。尽管违背了 UNIX 设计哲学，但只能迫于现实让步；再加上 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%91%A9%E5%B0%94%E5%AE%9A%E5%BE%8B">摩尔定律</a> 开始发挥稳定作用、微机性能快速提升，相比起构筑完美的分布式系统，在很长一段时间内 <strong>提升单机的处理能力，发展单体软件架构</strong> 的发展道路都是绝对主流（前者并未停止发展）。</p>
 <h2 id="单体架构"><a href="#单体架构" class="headerlink" title="单体架构"></a>单体架构</h2><p>常被称为 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Monolithic_application">巨石系统</a>，在软件架构演进过程中出现最早、应用最多最广。而实际上这在早期是唯一选择，“单体”是相对后来“微服务”而言形成的概念。</p>
 <p>单体架构本身很简单，兼顾性能与便捷性：易于开发、测试、部署，主要的过程调用是进程内调用、不会发生进程间通信，运行效率最高（无须考虑网络分区、对象复制等问题）。</p>
 <h3 id="拆分和扩展"><a href="#拆分和扩展" class="headerlink" title="拆分和扩展"></a>拆分和扩展</h3><p>纵向角度：可对代码进行纵向层次划分，收到的外部请求在各层之间以不同形式的数据结构进行流转传递，触及最末端的数据库后按相反的顺序回馈响应。</p>
@@ -470,11 +470,11 @@ height:100vh;
 <p>横向角度：支持按技术、功能、职责等维度将软件拆分为各种模块，以便重用和管理代码。它可以由多个 JAR、WAR、DLL、Assembly 或者其他模块格式来实现程序封装；从横向扩展（Scale Horizontally）的角度衡量，在负载均衡器之后同时部署若干个单体系统副本，达到分摊流量压力的效果也很常见。</p>
 <h3 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h3><p>单体系统在规模较小时具备优势，但随着规模变大、在拆分之后的隔离与自治能力上有所欠缺：</p>
 <ul>
-<li><p>任何一部分代码出现缺陷，过度消耗了进程空间的资源，不仅只对某一功能造成的影响，而是全局性、难以隔离的（比如内存泄漏、线程爆炸、阻塞、死循环等问题，或是数据库连接池泄漏等高层次资源的消耗，甚至可波及整台机器）。</p>
+<li><p>  任何一部分代码出现缺陷，过度消耗了进程空间的资源，不仅只对某一功能造成的影响，而是全局性、难以隔离的（比如内存泄漏、线程爆炸、阻塞、死循环等问题，或是数据库连接池泄漏等高层次资源的消耗，甚至可波及整台机器）。</p>
 </li>
-<li><p>所有代码都共享着同一进程空间，也就难以单独停止、更新、升级某一部分代码，可维护性较差（需要制定专门的停机更新计划，做灰度发布、A/B 测试也相对更复杂）。</p>
+<li><p>  所有代码都共享着同一进程空间，也就难以单独停止、更新、升级某一部分代码，可维护性较差（需要制定专门的停机更新计划，做灰度发布、A/B 测试也相对更复杂）。</p>
 </li>
-<li><p>通常每个模块的代码都需要使用一样的程序语言、编程框架开发，难以实现技术栈上的异构。</p>
+<li><p>  通常每个模块的代码都需要使用一样的程序语言、编程框架开发，难以实现技术栈上的异构。</p>
 </li>
 </ul>
 <p>而且在单体架构下程序的规模决定难以让全部人员关注完整的产品，组织中有开发、运维、支持等细致的分工的成员，各人只关注于自己的一块工作。</p>
@@ -494,23 +494,24 @@ height:100vh;
 <ul>
 <li><p>操作性比前面的架构风格更强，可称为一套软件设计基础平台。在一整套成体系可以互相精密协作的技术组件支持下，在技术可行性上解决了分布式环境下主要的技术问题：</p>
 <ul>
-<li><p>拥有指导制定技术标准的组织 Open CSA。</p>
+<li><p>  拥有指导制定技术标准的组织 Open CSA。</p>
 </li>
-<li><p>拥有清晰的软件设计的指导原则（服务封装性、自治、松耦合、可重用、可组合、无状态等）。</p>
+<li><p>  拥有清晰的软件设计的指导原则（服务封装性、自治、松耦合、可重用、可组合、无状态等）。</p>
 </li>
-<li><p>明确 SOAP 作为远程调用的协议，并据此（WSDL、UDDI 和 WS-*协议）来完成服务发布、发现和治理。</p>
+<li><p>  明确 SOAP 作为远程调用的协议，并据此（WSDL、UDDI 和 WS-*协议）来完成服务发布、发现和治理。</p>
 </li>
-<li><p>利用 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/企业服务总线">企业服务总线</a> 实现子系统之间的通信交互，各服务间在 ESB 调度下无须相互依赖却能相互通信，实现了松耦合，也为实施 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/业务流程管理">业务流程编排</a> 提供基础。</p>
+<li><p>  利用 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E4%BC%81%E4%B8%9A%E6%9C%8D%E5%8A%A1%E6%80%BB%E7%BA%BF">企业服务总线</a> 实现子系统之间的通信交互，各服务间在 ESB 调度下无须相互依赖却能相互通信，实现了松耦合，也为实施 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%B8%9A%E5%8A%A1%E6%B5%81%E7%A8%8B%E7%AE%A1%E7%90%86">业务流程编排</a> 提供基础。</p>
 </li>
-<li><p>使用 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/服务数据对象">服务数据对象</a> 访问和表示数据。</p>
+<li><p>  使用 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9C%8D%E5%8A%A1%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1">服务数据对象</a> 访问和表示数据。</p>
 </li>
-<li><p>使用 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/服务组件架构">服务组件架构 </a>定义服务封装的形式和服务运行的容器。</p>
+<li><p>  使用 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9C%8D%E5%8A%A1%E7%BB%84%E4%BB%B6%E6%9E%B6%E6%9E%84">服务组件架构 </a>定义服务封装的形式和服务运行的容器。</p>
 </li>
-<li><p>…</p>
+<li><p>  …</p>
 </li>
 </ul>
 </li>
-<li>目标是总结出一套自上而下的软件研发方法论，遵循 SOA 的思路解决软件开发过程中的问题：挖掘需求、将需求分解为业务能力、编排已有服务、开发测试部署新的功能等。SOA 还关注研发过程中涉及到的需求、管理、流程和组织，希望使软件开发实现工业化大生产，大幅提升整个社会实施信息化的效率。</li>
+<li><p>  目标是总结出一套自上而下的软件研发方法论，遵循 SOA 的思路解决软件开发过程中的问题：挖掘需求、将需求分解为业务能力、编排已有服务、开发测试部署新的功能等。SOA 还关注研发过程中涉及到的需求、管理、流程和组织，希望使软件开发实现工业化大生产，大幅提升整个社会实施信息化的效率。</p>
+</li>
 </ul>
 <h3 id="缺陷-1"><a href="#缺陷-1" class="headerlink" title="缺陷"></a>缺陷</h3><p>SOAP 协议却被渐渐边缘化，其本质原因：<strong>过于严格的规范定义带来过度的复杂性</strong>。并由构建在 SOAP 基础之上的 ESB、BPM、SCA、SDO 等进一步加剧。过于精密的流程和理论对专业人员要求过高，难以作为具有广泛普适性的软件架构风格来推广。</p>
 <h2 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h2><p>微服务通过多个 <strong>围绕业务能力</strong>（而非特定的技术标准）来构建的小型服务组合构建单个应用，各个服务可以采用异构技术运行在不同的进程之中，之间采取轻量级的通信机制，结合自动化部署机制实现通信与运维。</p>
@@ -556,27 +557,27 @@ height:100vh;
 </blockquote>
 <h2 id="无服务架构"><a href="#无服务架构" class="headerlink" title="无服务架构"></a>无服务架构</h2><p>云计算落地十多年，已实现了相对意义上的服务器的无限性能。无服务（Serverless）以简单为卖点：</p>
 <ul>
-<li><p><strong>后端设施</strong>：指数据库、消息队列、日志、存储等，用于支撑业务逻辑运行、但本身无业务含义的技术组件，后端设施运行在云中，被称为“后端即服务”（Backend as a Service，BaaS）。</p>
+<li><p>  <strong>后端设施</strong>：指数据库、消息队列、日志、存储等，用于支撑业务逻辑运行、但本身无业务含义的技术组件，后端设施运行在云中，被称为“后端即服务”（Backend as a Service，BaaS）。</p>
 </li>
-<li><p><strong>函数</strong>：指业务逻辑代码，这里的“函数“指无服务中的函数运行在云端，不必考虑算力问题和容量规划（由于按量计费，所以还是要考虑的），被称为“函数即服务”（Function as a Service，FaaS）。</p>
+<li><p>  <strong>函数</strong>：指业务逻辑代码，这里的“函数“指无服务中的函数运行在云端，不必考虑算力问题和容量规划（由于按量计费，所以还是要考虑的），被称为“函数即服务”（Function as a Service，FaaS）。</p>
 </li>
 </ul>
 <p>其目标是让开发者只需要纯粹地关注业务，不需要考虑技术组件。后端技术组件不存在：</p>
 <ul>
-<li><p>采购、版权和选型的烦恼（现成、可直接取用）</p>
+<li><p>  采购、版权和选型的烦恼（现成、可直接取用）</p>
 </li>
-<li><p>部署的考虑（完全托管到云端、自动完成）</p>
+<li><p>  部署的考虑（完全托管到云端、自动完成）</p>
 </li>
-<li><p>算力的考虑（有整个数据中心支撑，可认为是无限的）</p>
+<li><p>  算力的考虑（有整个数据中心支撑，可认为是无限的）</p>
 </li>
-<li><p>运维上操心（云计算服务商负责维护系统持续平稳运行）</p>
+<li><p>  运维上操心（云计算服务商负责维护系统持续平稳运行）</p>
 </li>
 </ul>
 <p>无服务架构下开发者不再关心技术层面的细节，然而其具备某些特点使之难以普适：</p>
 <ul>
-<li><p>无服务架构擅长短链接、无状态、适合事件驱动的交互形式，因此适用于不需要交互的离线大规模计算的应用、多数 Web 资讯类网站、小程序、公共 API 服务、移动应用服务端等，可降低开发和运维环节的成本。</p>
+<li><p>  无服务架构擅长短链接、无状态、适合事件驱动的交互形式，因此适用于不需要交互的离线大规模计算的应用、多数 Web 资讯类网站、小程序、公共 API 服务、移动应用服务端等，可降低开发和运维环节的成本。</p>
 </li>
-<li><p>“无限算力”意味着按用量计费以控制消耗算力的规模。函数在有请求时才会运行，不便依赖服务端状态，以及会有冷启动时间，响应的性能不可能太好（尤其 Java 这类启动性能差的应用）。对于具有业务逻辑复杂、依赖服务端状态、响应速度要求较高、需要长链接的应用（比如信息管理系统、网络游戏等），目前是相对不适合的。</p>
+<li><p>  “无限算力”意味着按用量计费以控制消耗算力的规模。函数在有请求时才会运行，不便依赖服务端状态，以及会有冷启动时间，响应的性能不可能太好（尤其 Java 这类启动性能差的应用）。对于具有业务逻辑复杂、依赖服务端状态、响应速度要求较高、需要长链接的应用（比如信息管理系统、网络游戏等），目前是相对不适合的。</p>
 </li>
 </ul>
 <blockquote>
@@ -1720,31 +1721,31 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1836,22 +1837,7 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-</body>
+    </body>
 </html>
 
 
