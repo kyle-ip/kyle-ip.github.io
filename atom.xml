@@ -6,7 +6,7 @@
   <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-08-24T15:00:25.414Z</updated>
+  <updated>2021-08-24T15:17:23.032Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -21,10 +21,10 @@
     <link href="https://yipwinghong.github.io/2021/08/24/DB_mysql-optimization-basic/"/>
     <id>https://yipwinghong.github.io/2021/08/24/DB_mysql-optimization-basic/</id>
     <published>2021-08-24T12:41:00.000Z</published>
-    <updated>2021-08-24T15:00:25.414Z</updated>
+    <updated>2021-08-24T15:17:23.032Z</updated>
     
     
-    <summary type="html">MySQL 优化基础，从 SQL、索引、库表多个层面考虑。</summary>
+    <summary type="html">MySQL 优化基础，从 SQL、索引、库表几个层面考虑。</summary>
     
     
     
@@ -38,11 +38,11 @@
   </entry>
   
   <entry>
-    <title>关于 B-Trees 的更多细节</title>
+    <title>关于 B-Trees 的更多细节（译）</title>
     <link href="https://yipwinghong.github.io/2021/08/22/DB_b-trees-more-than-i-thought-id-want-to-know/"/>
     <id>https://yipwinghong.github.io/2021/08/22/DB_b-trees-more-than-i-thought-id-want-to-know/</id>
     <published>2021-08-22T15:44:56.000Z</published>
-    <updated>2021-08-24T15:06:33.893Z</updated>
+    <updated>2021-08-24T15:17:45.471Z</updated>
     
     
     <summary type="html">原文链接：https://benjamincongdon.me/blog/2021/08/17/B-Trees-More-Than-I-Thought-Id-Want-to-Know/</summary>

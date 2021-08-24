@@ -25,15 +25,15 @@
     <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
-    <meta name="description" content="MySQL 优化基础，从 SQL、索引、库表多个层面考虑。">
+    <meta name="description" content="MySQL 优化基础，从 SQL、索引、库表几个层面考虑。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL 优化基础">
 <meta property="og:url" content="https://yipwinghong.github.io/2021/08/24/DB_mysql-optimization-basic/index.html">
 <meta property="og:site_name" content="Kylo&#39;s Notebook">
-<meta property="og:description" content="MySQL 优化基础，从 SQL、索引、库表多个层面考虑。">
+<meta property="og:description" content="MySQL 优化基础，从 SQL、索引、库表几个层面考虑。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-08-24T12:41:00.000Z">
-<meta property="article:modified_time" content="2021-08-24T15:00:25.414Z">
+<meta property="article:modified_time" content="2021-08-24T15:17:23.032Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="数据库">
@@ -459,8 +459,7 @@ height:100vh;
             <main class="main post-page">
     <article class="article-entry">
         <h1 id="MySQL-优化基础"><a href="#MySQL-优化基础" class="headerlink" title="MySQL 优化基础"></a>MySQL 优化基础</h1><blockquote>
-<p>  虽然本文目的是总结 MySQL 优化常用手段，但还是要把这些写在前面。</p>
-<p>  在软件开发领域，一项重要的原则是要避免过早优化。相比起需求分析、架构设计、标准化等一系列的工作，性能优化的优先级确实比较低。而且在预算宽裕的情况下，更建议优先考虑投入更多资源，而在技术门槛较高的性能优化中迷失。</p>
+<p>  在软件开发领域，一项重要的原则是要避免过早优化。相比起需求分析、架构设计、标准化等一系列的工作，性能优化的优先级确实比较低。而且在预算宽裕的情况下，更建议优先考虑投入更多资源，而非在技术门槛较高的性能优化中迷失。</p>
 <p>  实现性能优化需要使用各种工具，而且要结合具体场景。比较普遍的问题是查询阻塞、慢查询、短连接风暴，QPS 激增等，由于生产问题排查与性能优化分属不同的议题，限于篇幅不在此赘述。</p>
 </blockquote>
 <h2 id="SQL-优化"><a href="#SQL-优化" class="headerlink" title="SQL 优化"></a>SQL 优化</h2><h3 id="减少操作数据量"><a href="#减少操作数据量" class="headerlink" title="减少操作数据量"></a>减少操作数据量</h3><p>由于 MySQL Server 一边读取、一边发送，而非在服务端暂存所有查询结果。如果客户端接收慢，服务端发不出去、数据挤压在 net_buffer，导致事务执行时间变长。</p>
@@ -980,8 +979,8 @@ height:100vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/08/22/DB_b-trees-more-than-i-thought-id-want-to-know/" title= "关于 B-Trees 的更多细节">
-                    <div class="prevTitle">关于 B-Trees 的更多细节</div>
+                <a href= "/2021/08/22/DB_b-trees-more-than-i-thought-id-want-to-know/" title= "关于 B-Trees 的更多细节（译）">
+                    <div class="prevTitle">关于 B-Trees 的更多细节（译）</div>
                 </a>
             
         </li>
@@ -1724,7 +1723,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节</a>
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
         </li>
     
     
@@ -2143,9 +2142,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
@@ -2159,9 +2158,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
