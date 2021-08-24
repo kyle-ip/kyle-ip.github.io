@@ -458,36 +458,36 @@ height:100vh;
         <h1 id="《凤凰架构》阅读笔记（二）：访问远程服务"><a href="#《凤凰架构》阅读笔记（二）：访问远程服务" class="headerlink" title="《凤凰架构》阅读笔记（二）：访问远程服务"></a>《凤凰架构》阅读笔记（二）：访问远程服务</h1><h2 id="远程服务调用"><a href="#远程服务调用" class="headerlink" title="远程服务调用"></a>远程服务调用</h2><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Remote_procedure_call">远程服务调用</a>（Remote Procedure Call，RPC）历史悠久，其初衷是 <strong>让计算机能够跟调用本地方法一样去调用远程方法</strong>。</p>
 <h3 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h3><p>在计算机本地调用方法，至少需要完成以下工作（以 Java 程序为例）：</p>
 <ul>
-<li><p><strong>传递方法参数</strong>：将参数的值或引用地址压栈。</p>
+<li><p>  <strong>传递方法参数</strong>：将参数的值或引用地址压栈。</p>
 </li>
-<li><p><strong>确定方法版本</strong>：由于存在多态和重载，需根据方法签名确定执行版本，即经过静态解析或动态分派找到明确的 <code>Callee</code>。</p>
+<li><p>  <strong>确定方法版本</strong>：由于存在多态和重载，需根据方法签名确定执行版本，即经过静态解析或动态分派找到明确的 <code>Callee</code>。</p>
 </li>
-<li><p><strong>执行被调方法</strong>：从栈中弹出参数的值或引用，以此为输入执行 <code>Callee</code> 内部逻辑。</p>
+<li><p>  <strong>执行被调方法</strong>：从栈中弹出参数的值或引用，以此为输入执行 <code>Callee</code> 内部逻辑。</p>
 </li>
-<li><p><strong>返回执行结果</strong>：将 <code>Callee</code> 执行结果压栈，将程序的指令流恢复到 <code>Call Site</code> 的下一条指令，继续执行。</p>
+<li><p>  <strong>返回执行结果</strong>：将 <code>Callee</code> 执行结果压栈，将程序的指令流恢复到 <code>Call Site</code> 的下一条指令，继续执行。</p>
 </li>
 </ul>
 <p>跨进程调用时存在问题：参数和执行结果传递都依赖于线程独占的栈内存，如果 <code>Caller</code> 和 <code>Callee</code> 属于不同进程就无法完成传递；当  <code>Caller</code> 和 <code>Callee</code> 不是同一语言时，方法版本选择也无法实现。</p>
 <p>考虑 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Inter-process_communication">进程间通信</a>（Inter-Process Communication，IPC），有以下方法实现：</p>
 <p>少量数据传递：</p>
 <ul>
-<li><p><strong>管道</strong>（Pipe）或 <strong>具名管道</strong>（Named Pipe）：用于在进程间传递少量的字符流或字节流。普通管道只用于亲缘关系进程，具名管道则可用于无亲缘关系的两个进程。比如 <code>ps -ef | grep java</code>。只能用于无格式字节流，缓冲区大小受限。</p>
+<li><p>  <strong>管道</strong>（Pipe）或 <strong>具名管道</strong>（Named Pipe）：用于在进程间传递少量的字符流或字节流。普通管道只用于亲缘关系进程，具名管道则可用于无亲缘关系的两个进程。比如 <code>ps -ef | grep java</code>。只能用于无格式字节流，缓冲区大小受限。</p>
 </li>
-<li><p><strong>信号</strong>（Signal）：用于通知目标进程有某种事件发生，可发送给其它进程或自身。比如 <code>kill -9 pid</code> 即向指定 pid 发送 SIGKILL 信号。</p>
+<li><p>  <strong>信号</strong>（Signal）：用于通知目标进程有某种事件发生，可发送给其它进程或自身。比如 <code>kill -9 pid</code> 即向指定 pid 发送 SIGKILL 信号。</p>
 </li>
-<li><p><strong>信号量</strong>（Semaphore）：用于两个进程间同步协作，相当于操作系统提供的特殊变量，程序可在上面进行 <code>wait()</code> 和 <code>notify()</code>操作。</p>
+<li><p>  <strong>信号量</strong>（Semaphore）：用于两个进程间同步协作，相当于操作系统提供的特殊变量，程序可在上面进行 <code>wait()</code> 和 <code>notify() </code>操作。</p>
 </li>
 </ul>
 <p>大量数据传递：</p>
 <ul>
-<li><p><strong>消息队列</strong>（Message Queue）：POSIX 标准中定义了消息队列用于进程间数据量较多的通信。进程向队列添加消息，被赋予读权限的进程可从队列消费消息。实时性相对受限。</p>
+<li><p>  <strong>消息队列</strong>（Message Queue）：POSIX 标准中定义了消息队列用于进程间数据量较多的通信。进程向队列添加消息，被赋予读权限的进程可从队列消费消息。实时性相对受限。</p>
 </li>
-<li><p><strong>共享内存</strong>（Shared Memory）：允许多个进程访问同一块公共内存空间，效率最高。每个进程的内存地址空间默认相互隔离，操作系统提供了让进程主动创建、映射、分离、控制某一块内存的程序接口。当一块内存被多进程共享时，各个进程往往会与其它通信机制结合使用，达到进程间同步互斥的协调操作。</p>
+<li><p>  <strong>共享内存</strong>（Shared Memory）：允许多个进程访问同一块公共内存空间，效率最高。每个进程的内存地址空间默认相互隔离，操作系统提供了让进程主动创建、映射、分离、控制某一块内存的程序接口。当一块内存被多进程共享时，各个进程往往会与其它通信机制结合使用，达到进程间同步互斥的协调操作。</p>
 </li>
 </ul>
 <p>网络数据传递：</p>
 <ul>
-<li><strong>套接字</strong>（Socket）：可用于相同或不同机器之间的进程通信，主流的操作系统都支持。当只用于本机进程间通信时，套接字接口不会经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等操作，只将应用层数据从一个进程拷贝到另一个进程，被称为 IPC Socket 或 UNIX Domain Socket。</li>
+<li>  <strong>套接字</strong>（Socket）：可用于相同或不同机器之间的进程通信，主流的操作系统都支持。当只用于本机进程间通信时，套接字接口不会经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等操作，只将应用层数据从一个进程拷贝到另一个进程，被称为 IPC Socket 或 UNIX Domain Socket。</li>
 </ul>
 <p>Socket 是每个操作系统都提供的标准接口，可把远程方法调用的通信细节隐藏在操作系统底层，使得本地调用与远程调用在编码上一致。</p>
 <p>在网络通信时要考虑各种成本：服务端与客户端的角色、异常处理、线程竞争、数据表示、信息安全、网络利用率和可靠性等问题。透明调用反而增加工作的复杂度（参考 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Fallacies_of_distributed_computing">通过网络进行分布式运算的八宗罪</a>）。</p>
@@ -495,20 +495,20 @@ height:100vh;
 <h3 id="远程服务调用-1"><a href="#远程服务调用-1" class="headerlink" title="远程服务调用"></a>远程服务调用</h3><p>指位于互不重合的内存地址空间中的两个程序，在 <strong>语言层面上</strong> 以 <strong>同步</strong> 的方式使用带宽有限的信道来传输程序控制信息。</p>
 <p>需要考虑和解决三个问题：</p>
 <ul>
-<li><p><strong>如何表示数据</strong>：包括传递给方法的参数，和方法执行后的返回值。远程方法调用需要考虑交互双方各自使用不同程序语言，或在不同硬件指令集、操作系统下数据类型表现不一样（数据宽度、字节序等）的问题。因此需要 <strong>序列化与反序列化</strong>，将交互的数据转换为事先约定好的中立数据流格式再传输，将数据流转换回不同语言中对应的数据类型后使用（比如 gRPC 的 Protocol Buffers）。</p>
+<li><p>  <strong>如何表示数据</strong>：包括传递给方法的参数，和方法执行后的返回值。远程方法调用需要考虑交互双方各自使用不同程序语言，或在不同硬件指令集、操作系统下数据类型表现不一样（数据宽度、字节序等）的问题。因此需要 <strong>序列化与反序列化</strong>，将交互的数据转换为事先约定好的中立数据流格式再传输，将数据流转换回不同语言中对应的数据类型后使用（比如 gRPC 的 Protocol Buffers）。</p>
 </li>
-<li><p><strong>如何传递数据</strong>：指如何通过网络，在两个服务 Endpoint 之间相互操作，交换数据的行为（即 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Wire_protocol">Wire Protocol</a>，一般基于 TCP、UDP 等传输层协议完成），需要考虑异常、超时、安全、认证、授权、事务等问题。比如 Java RMI 的 JRMP、HTTP 的 JSON-RPC 等。</p>
+<li><p>  <strong>如何传递数据</strong>：指如何通过网络，在两个服务 Endpoint 之间相互操作，交换数据的行为（即 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Wire_protocol">Wire Protocol</a>，一般基于 TCP、UDP 等传输层协议完成），需要考虑异常、超时、安全、认证、授权、事务等问题。比如 Java RMI 的 JRMP、HTTP 的 JSON-RPC 等。</p>
 </li>
-<li><p><strong>如何确定方法</strong>：即找到跨语言对应方法的标准，比如 JSON-RPC 的 JSON-WSP、Android 的 AIDL 等。</p>
+<li><p>  <strong>如何确定方法</strong>：即找到跨语言对应方法的标准，比如 JSON-RPC 的 JSON-WSP、Android 的 AIDL 等。</p>
 </li>
 </ul>
 <p>很多协议和框架都是有针对性地解决以上的部分问题：</p>
 <ul>
-<li><p>面向对象：在分布式场景下进行跨进程的面向对象编程，被称为 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Distributed_object">分布式对象</a>。比如 RMI、.NET Remoting。</p>
+<li><p>  面向对象：在分布式场景下进行跨进程的面向对象编程，被称为 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Distributed_object">分布式对象</a>。比如 RMI、.NET Remoting。</p>
 </li>
-<li><p>性能：追求更高的序列化效率（输出结果的容量越小，速度越快，效率越高）和信息密度（使用传输协议的层次越低，信息密度越高）。比如带专有序列化器的 gRPC 和 Thrift，前者基于 HTTP/2（支持多路复用和 Header 压缩），后者直接基于 TCP。</p>
+<li><p>  性能：追求更高的序列化效率（输出结果的容量越小，速度越快，效率越高）和信息密度（使用传输协议的层次越低，信息密度越高）。比如带专有序列化器的 gRPC 和 Thrift，前者基于 HTTP/2（支持多路复用和 Header 压缩），后者直接基于 TCP。</p>
 </li>
-<li><p>简化：牺牲了功能和效率换来协议简单轻便，使接口与格式都更为通用。适用于 Web 浏览器等不会有额外协议支持、额外客户端支持的应用场合，比如 JSON-RPC。</p>
+<li><p>  简化：牺牲了功能和效率换来协议简单轻便，使接口与格式都更为通用。适用于 Web 浏览器等不会有额外协议支持、额外客户端支持的应用场合，比如 JSON-RPC。</p>
 </li>
 </ul>
 <p>近年 RPC 框架有朝更高层次和插件化方向发展的趋势，负责调用和管理远程服务。</p>
@@ -517,79 +517,86 @@ height:100vh;
 <p>REST 只是一种风格，没有规范性和强制性的约束；基于 HTTP，没有（也无法有）分布式对象和高效率上的追求。</p>
 <p>相关概念：</p>
 <ul>
-<li><p><strong>统一接口</strong>：URI 结合 HTTP 协议中提前约定的统一接口（即各种类型的请求方法，GET、HEAD、POST、PUT、DELETE、TRACE、OPTIONS），使服务器对特定的 URI 采取操作，触发相应的表征状态转移。</p>
+<li><p>  <strong>统一接口</strong>：URI 结合 HTTP 协议中提前约定的统一接口（即各种类型的请求方法，GET、HEAD、POST、PUT、DELETE、TRACE、OPTIONS），使服务器对特定的 URI 采取操作，触发相应的表征状态转移。</p>
 </li>
-<li><p><strong>超文本驱动</strong>：取具体内容必然是由用户操作浏览器发送请求、由服务器发出的请求响应信息驱动，而非预置于代码中的（区别于其它客户端软件内置业务逻辑，有专门的控制器驱动状态转移）。</p>
+<li><p>  <strong>超文本驱动</strong>：取具体内容必然是由用户操作浏览器发送请求、由服务器发出的请求响应信息驱动，而非预置于代码中的（区别于其它客户端软件内置业务逻辑，有专门的控制器驱动状态转移）。</p>
 </li>
-<li><p><strong>自描述消息</strong>：资源表征可能存在多种不同形态，在消息中应有明确信息来告知客户端该消息类型和处理方式。比如 HTTP Header 中的 Content-Type。</p>
+<li><p>  <strong>自描述消息</strong>：资源表征可能存在多种不同形态，在消息中应有明确信息来告知客户端该消息类型和处理方式。比如 HTTP Header 中的 Content-Type。</p>
 </li>
 </ul>
 <h3 id="RESTful-的系统"><a href="#RESTful-的系统" class="headerlink" title="RESTful 的系统"></a>RESTful 的系统</h3><p>REST 降低服务接口的学习成本、资源天生具有集合与层次的结构、绑定于 HTTP 协议等。遵循 REST 的系统满足以下原则：</p>
 <ul>
-<li><p><strong>服务端与客户端分离</strong>（Client-Server）：分离用户界面和数据存储各自关注的逻辑，能提高用户界面跨平台可移植性。</p>
+<li><p>  <strong>服务端与客户端分离</strong>（Client-Server）：分离用户界面和数据存储各自关注的逻辑，能提高用户界面跨平台可移植性。</p>
 </li>
-<li><p><strong>无状态</strong>（Stateless）：会话信息由客户端维护，客户端请求包含必要的上下文信息，服务端依据客户端状态执行业务处理逻辑，驱动应用状态变迁。可提升系统可见性、可靠性和可伸缩性（比如分布式计算），但也因此产生了身份认证授权等可信问题，且目前大多数系统都达不到该要求（比如当上下文信息太大）。</p>
+<li><p>  <strong>无状态</strong>（Stateless）：会话信息由客户端维护，客户端请求包含必要的上下文信息，服务端依据客户端状态执行业务处理逻辑，驱动应用状态变迁。可提升系统可见性、可靠性和可伸缩性（比如分布式计算），但也因此产生了身份认证授权等可信问题，且目前大多数系统都达不到该要求（比如当上下文信息太大）。</p>
 </li>
-<li><p><strong>可缓存</strong>（Cacheability）：允许客户端和中间代理将部分服务端的应答缓存，要明确或间接表明是否可缓存、缓存的时间。可减少两端交互、进一步提高性能。</p>
+<li><p>  <strong>可缓存</strong>（Cacheability）：允许客户端和中间代理将部分服务端的应答缓存，要明确或间接表明是否可缓存、缓存的时间。可减少两端交互、进一步提高性能。</p>
 </li>
-<li><p><strong>分层系统</strong>（Layered System）：客户端不需要知道连接的是最终服务器或中间服务器，即可通过负载均衡和共享缓存提高系统可扩展性，也便于缓存、伸缩和安全策略的部署。典型的应用是 CDN。</p>
+<li><p>  <strong>分层系统</strong>（Layered System）：客户端不需要知道连接的是最终服务器或中间服务器，即可通过负载均衡和共享缓存提高系统可扩展性，也便于缓存、伸缩和安全策略的部署。典型的应用是 CDN。</p>
 </li>
-<li><p><strong>统一接口</strong>（Uniform Interface）：设计重点应放在抽象系统该有的资源上。借用 HTTP 协议中固有的命令来完成操作，抽象程度更高，通用程度更好（比如原本的 <code>login</code> 操作抽象为 <code>PUT session</code>）。要合理利用统一接口，建议每次请求中包含资源 ID，并通过 ID 来操作；资源都应该是自描述消息；通过超文本驱动应用状态的转移。</p>
+<li><p>  <strong>统一接口</strong>（Uniform Interface）：设计重点应放在抽象系统该有的资源上。借用 HTTP 协议中固有的命令来完成操作，抽象程度更高，通用程度更好（比如原本的 <code>login</code> 操作抽象为 <code>PUT session</code>）。要合理利用统一接口，建议每次请求中包含资源 ID，并通过 ID 来操作；资源都应该是自描述消息；通过超文本驱动应用状态的转移。</p>
 </li>
-<li><p><strong>按需代码</strong>（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Code_on_demand">Code-On-Demand</a>）：客户端无需事先知道所有来自服务端的信息应该如何处理、如何运行。蕴含具体执行逻辑的代码存放在服务端，当客户端请求后代码才会被传输并在客户端机器中运行，结束后通常也会随即在客户端中被销毁（比如 WebAssembly）。出于必要性和性价比的实际考虑，这条原则是可选的。</p>
+<li><p>  <strong>按需代码</strong>（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Code_on_demand">Code-On-Demand</a>）：客户端无需事先知道所有来自服务端的信息应该如何处理、如何运行。蕴含具体执行逻辑的代码存放在服务端，当客户端请求后代码才会被传输并在客户端机器中运行，结束后通常也会随即在客户端中被销毁（比如 WebAssembly）。出于必要性和性价比的实际考虑，这条原则是可选的。</p>
 </li>
 </ul>
 <h3 id="RMM-成熟度"><a href="#RMM-成熟度" class="headerlink" title="RMM 成熟度"></a>RMM 成熟度</h3><p>即 <a target="_blank" rel="noopener" href="https://martinfowler.com/articles/richardsonMaturityModel.html">Richardson Maturity Model</a>，服务接口 REST 的程度，从低到高：</p>
 <ul>
-<li>第 0 级：完全不 REST。即 RPC 的风格，当需求发生变化或增加时，都要编写额外的方法或改动现有方法的接口。</li>
+<li>  第 0 级：完全不 REST。即 RPC 的风格，当需求发生变化或增加时，都要编写额外的方法或改动现有方法的接口。</li>
 </ul>
 <figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">request</span>:</span><br><span class="line">POST /appointmentService?action=query HTTP/<span class="number">1.1</span></span><br><span class="line">&#123;date: <span class="string">&quot;2020-03-04&quot;</span>, doctor: <span class="string">&quot;mjones&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">response</span>:</span><br><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">[&#123;start:<span class="string">&quot;14:00&quot;</span>, <span class="keyword">end</span>: <span class="string">&quot;14:50&quot;</span>, doctor: <span class="string">&quot;mjones&quot;</span>&#125;,]</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">request</span></span><br><span class="line"><span class="string">POST</span> <span class="string">/appointmentService?action=confirm</span> <span class="string">HTTP/1.1</span></span><br><span class="line">&#123;<span class="attr">appointment:</span> &#123;<span class="attr">date:</span> <span class="string">&quot;2020-03-04&quot;</span>, <span class="string">start:&quot;14:00&quot;</span>, <span class="attr">doctor:</span> <span class="string">&quot;mjones&quot;</span>&#125;, <span class="attr">patient:</span> &#123;<span class="attr">name:</span> <span class="string">icyfenix</span>, <span class="attr">age:</span> <span class="number">30</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="attr">response:</span></span><br><span class="line"><span class="string">HTTP/1.1</span> <span class="number">200</span> <span class="string">OK</span></span><br><span class="line">&#123;<span class="attr">code:</span> <span class="number">0</span>,<span class="attr">message:</span> <span class="string">&quot;Successful confirmation of appointment&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="attr">response:</span></span><br><span class="line"><span class="string">HTTP/1.1</span> <span class="number">200</span> <span class="string">OK</span></span><br><span class="line">&#123;<span class="attr">code:</span> <span class="number">1</span>, <span class="attr">message:</span> <span class="string">&quot;doctor not available&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li><p>第 1 级：引入资源概念。引入了资源，通过资源 ID 作为主要线索与服务交互（理解为服务 Endpoint 是名词而非动词）。虽然已经通过资源 id 与服务进行交互，但存在以下问题：</p>
 <ul>
-<li><p>只处理了查询和预约，要调整时间或删除预约都要提供新的接口。</p>
+<li><p>  只处理了查询和预约，要调整时间或删除预约都要提供新的接口。</p>
 </li>
 <li><p>当处理结果响应超时，只能靠 code、message 做分支判断，对于每套服务都要设计的 code 很难考虑全面，不利于统一处理。</p>
 </li>
-<li><p>没有考虑认证授权等安全方面的内容，如判断用户是否登录、是否 VIP 等。</p>
+<li><p>  没有考虑认证授权等安全方面的内容，如判断用户是否登录、是否 VIP 等。</p>
 </li>
 </ul>
 </li>
 </ul>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">request:</span><br><span class="line">POST /doctors/mjones HTTP/<span class="number">1.1</span></span><br><span class="line">&#123;<span class="built_in">date</span>: <span class="string">&quot;2020-03-04&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">response:</span><br><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">[&#123;<span class="built_in">id</span>: <span class="number">1234</span>, start:<span class="string">&quot;14:00&quot;</span>, <span class="keyword">end</span>: <span class="string">&quot;14:50&quot;</span>, doctor: <span class="string">&quot;mjones&quot;</span>&#125;,]</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">request:</span></span><br><span class="line"><span class="string">POST</span> <span class="string">/schedules/1234</span> <span class="string">HTTP/1.1</span></span><br><span class="line">&#123;<span class="attr">name:</span> <span class="string">icyfenix</span>, <span class="attr">age:</span> <span class="number">30</span>, <span class="string">……</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="attr">response:</span></span><br><span class="line"><span class="string">HTTP/1.1</span> <span class="number">200</span> <span class="string">OK</span></span><br><span class="line">&#123;<span class="attr">code:</span> <span class="number">0</span>, <span class="attr">message:</span> <span class="string">&quot;Successful confirmation of appointment&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li><p>第 2 级。引入统一接口映射到 HTTP 协议方法上。以上三个问题都可以通过引入统一接口解决：</p>
 <ul>
-<li><p>Method 对应资源的 CRUD 操作。</p>
+<li><p>  Method 对应资源的 CRUD 操作。</p>
 </li>
-<li><p>Status Code 可涵盖大多数资源操作可能出现的异常。</p>
+<li><p>  Status Code 可涵盖大多数资源操作可能出现的异常。</p>
 </li>
-<li><p>Header 上携带额外认证、授权信息。</p>
+<li><p>  Header 上携带额外认证、授权信息。</p>
 </li>
 </ul>
 </li>
 </ul>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">reques<span class="variable">t:</span></span><br><span class="line">GET /doctors/mjones/schedule?date=<span class="number">2020</span>-<span class="number">03</span>-<span class="number">04</span>&amp;status=<span class="keyword">open</span> HTTP/<span class="number">1.1</span></span><br><span class="line"></span><br><span class="line">response:</span><br><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">[</span><br><span class="line">    &#123;id: <span class="number">1234</span>, <span class="keyword">star</span><span class="variable">t:</span><span class="string">&quot;14:00&quot;</span>, end: <span class="string">&quot;14:50&quot;</span>, doctor: <span class="string">&quot;mjones&quot;</span>&#125;,</span><br><span class="line">    &#123;id: <span class="number">5678</span>, <span class="keyword">star</span><span class="variable">t:</span><span class="string">&quot;16:00&quot;</span>, end: <span class="string">&quot;16:50&quot;</span>, doctor: <span class="string">&quot;mjones&quot;</span>&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">request:</span><br><span class="line">POST /schedules/1234 HTTP/1.1</span><br><span class="line">&#123;name: icyfenix, age: 30, &#125;</span><br><span class="line"></span><br><span class="line">response:</span><br><span class="line">HTTP/1.1 201 Created</span><br><span class="line"><span class="keyword">Successful </span>confirmation of appointment</span><br><span class="line"></span><br><span class="line">response:</span><br><span class="line">HTTP/1.1 409 Conflict</span><br><span class="line">doctor not available</span><br></pre></td></tr></table></figure>
+
 <ul>
-<li>第 3 级：超媒体控制。除了第一个请求要在浏览器地址栏输入所驱动外，其他请求都能自己描述清楚后续可能发生的状态转移，由超文本自身驱动。在一次查询中返回了各种可能的后续操作：</li>
+<li>  第 3 级：超媒体控制。除了第一个请求要在浏览器地址栏输入所驱动外，其他请求都能自己描述清楚后续可能发生的状态转移，由超文本自身驱动。在一次查询中返回了各种可能的后续操作：</li>
 </ul>
 <figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">request:</span></span><br><span class="line">GET <span class="meta-keyword">/doctors/</span>mjones/schedule?date=<span class="number">2020</span><span class="number">-03</span><span class="number">-04</span><span class="variable">&amp;status</span>=open HTTP/<span class="number">1.1</span></span><br><span class="line"><span class="symbol"></span></span><br><span class="line"><span class="symbol">response:</span></span><br><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> <span class="class">OK</span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    schedules：[</span><br><span class="line">        &#123;</span><br><span class="line"><span class="symbol">            id:</span> <span class="number">1234</span>, start:<span class="string">&quot;14:00&quot;</span>, end: <span class="string">&quot;14:50&quot;</span>, doctor: <span class="string">&quot;mjones&quot;</span>,</span><br><span class="line"><span class="symbol">            links:</span> [</span><br><span class="line">                &#123;rel: <span class="string">&quot;comfirm schedule&quot;</span>, href: <span class="string">&quot;/schedules/1234&quot;</span>&#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">    ], </span><br><span class="line"><span class="symbol">    links:</span> [</span><br><span class="line">        &#123;rel: <span class="string">&quot;doctor info&quot;</span>, href: <span class="string">&quot;/doctors/mjones/info&quot;</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="不足与争议"><a href="#不足与争议" class="headerlink" title="不足与争议"></a>不足与争议</h3><h4 id="只适合做-CRUD"><a href="#只适合做-CRUD" class="headerlink" title="只适合做 CRUD"></a>只适合做 CRUD</h4><p>面向过程、面向对象编程才能处理真正复杂的业务逻辑。</p>
 <p>针对比较抽象的场景难以把 HTTP 映射为资源操作。可以使用自定义方法，比如 Google 推荐的 REST API 风格，<a target="_blank" rel="noopener" href="https://cloud.google.com/apis/design/custom_methods">自定义方法</a>应该放在资源路径末尾，嵌入冒号加自定义动词的后缀：<code>POST /user/user_id/cart/book_id:undelete</code>。</p>
 <h4 id="不适用于要求高性能传输"><a href="#不适用于要求高性能传输" class="headerlink" title="不适用于要求高性能传输"></a>不适用于要求高性能传输</h4><p>REST 依赖于应用层协议，仅将 HTTP 当作传输是不恰当的（SOAP over HTTP 就不好）。</p>
 <p>服务集群的内部节点之间往往需要直接控制传输（如二进制细节、编码形式、报文格式、连接方式等细节），更应该使用 RPC。</p>
 <h4 id="不利于事务支持"><a href="#不利于事务支持" class="headerlink" title="不利于事务支持"></a>不利于事务支持</h4><p>这是分布式本身而非 REST 的问题（尤指 ACID 刚性事务，CAP 不可兼得）。广义上：</p>
 <ul>
-<li><p>当事务指 <strong>通过服务协议或架构，在分布式服务中获得对多个数据同时提交的统一协调能力</strong>（2PC/3PC，比如 <a target="_blank" rel="noopener" href="http://docs.oasis-open.org/ws-tx/wstx-wsat-1.1-spec-errata-os/wstx-wsat-1.1-spec-errata-os.html">WS-AtomicTransaction</a>、<a target="_blank" rel="noopener" href="http://docs.oasis-open.org/ws-tx/wstx-wscoor-1.1-spec-errata-os/wstx-wscoor-1.1-spec-errata-os.html">WS-Coordination</a> 等功能性协议），REST 是不支持的。</p>
+<li><p>  当事务指 <strong>通过服务协议或架构，在分布式服务中获得对多个数据同时提交的统一协调能力</strong>（2PC/3PC，比如 <a target="_blank" rel="noopener" href="http://docs.oasis-open.org/ws-tx/wstx-wsat-1.1-spec-errata-os/wstx-wsat-1.1-spec-errata-os.html">WS-AtomicTransaction</a>、<a target="_blank" rel="noopener" href="http://docs.oasis-open.org/ws-tx/wstx-wscoor-1.1-spec-errata-os/wstx-wscoor-1.1-spec-errata-os.html">WS-Coordination</a> 等功能性协议），REST 是不支持的。</p>
 </li>
-<li><p>当事务指 <strong>希望保障数据的最终一致性</strong>，使用 REST 不会有什么障碍。</p>
+<li><p>  当事务指 <strong>希望保障数据的最终一致性</strong>，使用 REST 不会有什么障碍。</p>
 </li>
 </ul>
 <h4 id="没有传输可靠性支持"><a href="#没有传输可靠性支持" class="headerlink" title="没有传输可靠性支持"></a>没有传输可靠性支持</h4><p>发送 HTTP 请求不一定会有响应，无法确定消息是否发送成功、是否有返回（是否已经服务端处理）。</p>
-<p>因此只能重试。重试的前提是服务具有 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/冪等">幂等性</a>（Idempotency），HTTP 协议的 GET、PUT、DELETE 方法就要求满足这点，至于 POST 方法重复提交，也应该做提示和校验。</p>
+<p>因此只能重试。重试的前提是服务具有 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%86%AA%E7%AD%89">幂等性</a>（Idempotency），HTTP 协议的 GET、PUT、DELETE 方法就要求满足这点，至于 POST 方法重复提交，也应该做提示和校验。</p>
 <h4 id="难以处理部分和批量资源"><a href="#难以处理部分和批量资源" class="headerlink" title="难以处理部分和批量资源"></a>难以处理部分和批量资源</h4><p>比如根据 id 返回用户信息，只能获取整个用户对象、然后丢弃不关心的字段，不能单独请求取某个字段。</p>
 <p>另一方面是需要创建一个任务资源来描述一批资源，或涉及到多个资源变化时甚至要有针对性地创建一种事务资源（比如电商购物下单减库存等一系列操作），每次</p>
 <p>本质是由于 HTTP 协议完全没有对请求资源的结构化描述能力，返回资源的哪些内容、以什么数据类型返回等，都不可能得到协议层面的支持，只能自己在 GET 方法的 Endpoint 上设计参数来实现；而且 HTTP 协议由于本身的无状态性，会相对不适应处理批量和事务场景。</p>
@@ -1792,9 +1799,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
