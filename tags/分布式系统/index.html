@@ -390,6 +390,73 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/01/DistributedSystem_summary/" >
+            
+                <span>分布式系统知识点总结</span>
+        </a>
+        <div class="abstract-content">
+            分布式系统知识点总结协调与同步分布式互斥
+
+
+
+集中式
+分布式
+令牌环
+
+
+
+方法
+引入协调者，对请求排序，最早请求的参与者取得临界资源。
+征求其它参与者同意后使用临界资源。
+参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。
+
+
+优点
+简单，通信高效，易于实现。
+可用性高。
+可用性高，单个参与者通信效率高。
+
+
+缺点
+可用性低，协调者是性能瓶颈（单点）。
+通信成本高，复杂度高。
+当参与者对资源使用频率较低，带来较多无用通信。
+
+
+场景
+协调者可靠性和性能有一定保障。
+临界资源使用频度较低且系统规模较小
+系统规模较小，且每个参与者使用资源频度较高、时间较短。
+
+
+分布式选举
+
+...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "分布式系统">分布式系统</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/07/01/DistributedSystem_gossip-dissemination/" >
             
                 <span>分布式系统模式：Gossip 传播（译）</span>
@@ -1088,9 +1155,30 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 76
+        Total : 79
         </div>
         <!-- search  -->
         
@@ -1103,6 +1191,16 @@
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2021/08/24/DB_mysql-optimization-basic/" >MySQL 优化基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1182,6 +1280,11 @@
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_summary/" >分布式系统知识点总结</a>
         </li>
     
     
@@ -1464,7 +1567,7 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
+            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator/" >Python 装饰器基本用法</a>
         </li>
     
     
@@ -1509,13 +1612,13 @@
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
@@ -1531,9 +1634,9 @@
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1550,6 +1653,8 @@
         <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
@@ -1623,7 +1728,22 @@ jsonContent:
     </div>
     <!-- async load share.js -->
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 

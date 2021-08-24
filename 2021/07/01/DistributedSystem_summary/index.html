@@ -25,23 +25,23 @@
     <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
-    <meta name="description" content="这是一篇旧文，搬运自简书：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;84ae6d657007">
+    <meta name="description" content="分布式系统知识点总结协调与同步分布式互斥    集中式 分布式 令牌环    方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当参与">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python 装饰器基本用法">
-<meta property="og:url" content="https://yipwinghong.github.io/2019/09/13/Python_decorator-basic-usage/index.html">
+<meta property="og:title" content="分布式系统知识点总结">
+<meta property="og:url" content="https://yipwinghong.github.io/2021/07/01/DistributedSystem_summary/index.html">
 <meta property="og:site_name" content="Kylo&#39;s Notebook">
-<meta property="og:description" content="这是一篇旧文，搬运自简书：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;84ae6d657007">
+<meta property="og:description" content="分布式系统知识点总结协调与同步分布式互斥    集中式 分布式 令牌环    方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当参与">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2019-09-13T06:25:00.000Z">
-<meta property="article:modified_time" content="2021-07-18T13:29:36.538Z">
+<meta property="article:published_time" content="2021-07-01T15:05:19.000Z">
+<meta property="article:modified_time" content="2021-08-18T16:08:30.425Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
-<meta property="article:tag" content="Python">
+<meta property="article:tag" content="分布式系统">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>Python 装饰器基本用法 · Kylo&#39;s Notebook</title>
+    <title>分布式系统知识点总结 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -256,7 +256,7 @@
             <a href="/" >Kylo&#39;s Notebook</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">Python 装饰器基本用法</a>
+            <a href="#" class="post-name">分布式系统知识点总结</a>
         </div>
     </div>
     
@@ -299,7 +299,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Python 装饰器基本用法
+            分布式系统知识点总结
             <!-- 404 -->
             
         </h1>
@@ -320,18 +320,18 @@ height:100vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Python">Python</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "分布式系统">分布式系统</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">1.9k</span>Reading time: <span class="post-count reading-time">8 min</span></span>
+                        <span>Word count: <span class="post-count word-count">1.9k</span>Reading time: <span class="post-count reading-time">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2019/09/13</span>
+                    <span class="post-intro-time">2021/07/01</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -455,56 +455,235 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="Python-装饰器基本用法"><a href="#Python-装饰器基本用法" class="headerlink" title="Python 装饰器基本用法"></a>Python 装饰器基本用法</h1><blockquote>
-<p>装饰器是函数闭包最重要的应用，在面试中经常会被问到，这是我参加面试/刷面试题时候遇到的装饰器用法总结。</p>
-</blockquote>
-<h2 id="如何为被装饰函数保存元数据？"><a href="#如何为被装饰函数保存元数据？" class="headerlink" title="如何为被装饰函数保存元数据？"></a>如何为被装饰函数保存元数据？</h2><p><strong>元数据</strong>（MetaData）是关于数据的数据，是用来描述数据信息。</p>
-<p>查看这些元数据的函数是 <code>dir(func)</code>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span>():</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="built_in">dir</span>(func)</span><br></pre></td></tr></table></figure>
-<p>执行结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">&#x27;__annotations__&#x27;</span>, <span class="string">&#x27;__call__&#x27;</span>, <span class="string">&#x27;__class__&#x27;</span>, <span class="string">&#x27;__closure__&#x27;</span>, <span class="string">&#x27;__code__&#x27;</span>, <span class="string">&#x27;__defaults__&#x27;</span>, <span class="string">&#x27;__delattr__&#x27;</span>, <span class="string">&#x27;__dict__&#x27;</span>, <span class="string">&#x27;__dir__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__eq__&#x27;</span>, <span class="string">&#x27;__format__&#x27;</span>, <span class="string">&#x27;__ge__&#x27;</span>, <span class="string">&#x27;__get__&#x27;</span>, <span class="string">&#x27;__getattribute__&#x27;</span>, <span class="string">&#x27;__globals__&#x27;</span>, <span class="string">&#x27;__gt__&#x27;</span>, <span class="string">&#x27;__hash__&#x27;</span>, <span class="string">&#x27;__init__&#x27;</span>, <span class="string">&#x27;__kwdefaults__&#x27;</span>, <span class="string">&#x27;__le__&#x27;</span>, <span class="string">&#x27;__lt__&#x27;</span>, <span class="string">&#x27;__module__&#x27;</span>, <span class="string">&#x27;__name__&#x27;</span>, <span class="string">&#x27;__ne__&#x27;</span>, <span class="string">&#x27;__new__&#x27;</span>, <span class="string">&#x27;__qualname__&#x27;</span>, <span class="string">&#x27;__reduce__&#x27;</span>, <span class="string">&#x27;__reduce_ex__&#x27;</span>, <span class="string">&#x27;__repr__&#x27;</span>, <span class="string">&#x27;__setattr__&#x27;</span>, <span class="string">&#x27;__sizeof__&#x27;</span>, <span class="string">&#x27;__str__&#x27;</span>, <span class="string">&#x27;__subclasshook__&#x27;</span>]</span><br></pre></td></tr></table></figure>
-<p>很显然元数据的数量与函数的复杂程度无关。<br>其中有几个重要的元数据：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span>(<span class="params">a, b=<span class="number">1</span>, c=[]</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;test function&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(a, b, c)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># __name__      test</span></span><br><span class="line"><span class="comment"># __doc__       test function</span></span><br><span class="line"><span class="comment"># __defaults__  (1, [])，尽量不要使用可变类型为参数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取函数内部变量</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span>():</span></span><br><span class="line">    a = <span class="number">3</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">lambda</span> k: a**k</span><br><span class="line"></span><br><span class="line">g = f()</span><br><span class="line"><span class="built_in">print</span>(g.__closure__[<span class="number">0</span>].cell_contents)</span><br><span class="line"><span class="comment"># 输出3，__closure__返回函数中的局部变量列表</span></span><br></pre></td></tr></table></figure>
-
-<p>在使用装饰器的时候，闭包默认不会保存原函数的元数据：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> update_wrapper</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span>(<span class="params">func</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span>(<span class="params">*args, **kwargs</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;wrapper test&quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;decorator test&quot;</span>)</span><br><span class="line">        func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line">    </span><br><span class="line"><span class="meta">@decorator</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;func test&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;func test&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(func.__name__)</span><br><span class="line"><span class="built_in">print</span>(func.__doc__)</span><br></pre></td></tr></table></figure>
-<p>执行结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wrapper</span><br><span class="line">wrapper test</span><br></pre></td></tr></table></figure>
-<p>很显然原函数的 <code>__name__</code> 为 func，<code>__doc__</code> 为 func test，但经过装饰后已经被修改为装饰器内部函数的元数据。</p>
-<p>要使函数被装饰后仍保留原来的元数据可以使用以下两种方法定义装饰器：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span>(<span class="params">func</span>):</span></span><br><span class="line"><span class="meta">    @wraps(<span class="params">func</span>)                     </span><span class="comment"># 方法一</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span>(<span class="params">*args, **kwargs</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;decorator test&quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;wrapper test&quot;</span>)</span><br><span class="line">        func(*args, **kwargs)</span><br><span class="line">    <span class="comment"># update_wrapper(wrapper, func)  # 方法二</span></span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br></pre></td></tr></table></figure>
-<p>两者取其一即可，装饰后重新执行刚才的函数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">func</span><br><span class="line">func test</span><br></pre></td></tr></table></figure>
-
-<h2 id="带参数的装饰器"><a href="#带参数的装饰器" class="headerlink" title="带参数的装饰器"></a>带参数的装饰器</h2><p>除了接收被装饰函数的参数以外，装饰器本身也可以传入参数，下面的例子是利用装饰器参数对被装饰函数接收的参数类型进行判断：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> inspect <span class="keyword">import</span> signature</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">type_assert</span>(<span class="params">*args, **kwargs</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decorator</span>(<span class="params">func</span>):</span></span><br><span class="line">        sig = signature(func)</span><br><span class="line">        <span class="comment"># 提取函数签名：返回参数名与参数类型的有序字典：</span></span><br><span class="line">        <span class="comment"># OrderDict([(&quot;a&quot;, &lt;class &quot;int&quot;&gt;), (&quot;b&quot;, &lt;class &quot;str&quot;&gt;), (&quot;b&quot;, &lt;class &quot;list&quot;&gt;)])</span></span><br><span class="line">        types = sig.bind_partial(*args, **kwargs).arguments</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span>(<span class="params">*args, **kwargs</span>):</span></span><br><span class="line">            arg_dict = sig.bind(*args, **kwargs).arguments</span><br><span class="line">            <span class="comment"># 其中 key 为参数名 (a), value 为参数值(1)，types[key] 为类型(int)</span></span><br><span class="line">            <span class="keyword">for</span> key, value <span class="keyword">in</span> arg_dict.items():     </span><br><span class="line">                <span class="keyword">if</span> key <span class="keyword">in</span> types <span class="keyword">and</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(value, types[key]):</span><br><span class="line">                    <span class="keyword">raise</span> TypeError(<span class="string">&quot;&#x27;&#123;&#125;&#x27; must be &#x27;&#123;&#125;&#x27;&quot;</span>.<span class="built_in">format</span>(key, types[key]))</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> wrapper</span><br><span class="line">    <span class="keyword">return</span> decorator</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@type_assert(<span class="params"><span class="built_in">int</span>, <span class="built_in">str</span>, <span class="built_in">list</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span>(<span class="params">a, b, c</span>):</span></span><br><span class="line">    <span class="built_in">print</span>(a, b, c)</span><br><span class="line">    </span><br><span class="line">f(<span class="number">1</span>, <span class="string">&quot;2&quot;</span>, [<span class="number">3</span>])</span><br><span class="line">f(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-<p>执行结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="number">2</span> [<span class="number">3</span>]</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;E:/Projects/PythonLearning/Notes/decorator.py&quot;</span>, line <span class="number">105</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    f(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">  File <span class="string">&quot;E:/Projects/PythonLearning/Notes/decorator.py&quot;</span>, line <span class="number">94</span>, <span class="keyword">in</span> wrapper</span><br><span class="line">    <span class="keyword">raise</span> TypeError(<span class="string">&quot;&#x27;&#123;&#125;&#x27; must be &#x27;&#123;&#125;&#x27;&quot;</span>.<span class="built_in">format</span>(key, types[key]))</span><br><span class="line">TypeError: <span class="string">&#x27;b&#x27;</span> must be <span class="string">&#x27;&lt;class &#x27;</span>st<span class="string">r&#x27;&gt;&#x27;</span></span><br></pre></td></tr></table></figure>
-<p>在装饰器内部已经对原函数参数执行判断并抛出异常。</p>
-<h2 id="属性可修改的装饰器"><a href="#属性可修改的装饰器" class="headerlink" title="属性可修改的装饰器"></a>属性可修改的装饰器</h2><p>装饰器内部的参数影响装饰效果，可以在装饰器内部定义一个函数用于修改这个参数，这个函数可以看作被装饰函数的内置方法使用。</p>
-<p>下面的例子是定义一个计时装饰器，当被装饰函数运行超过超时时间则输出日志（而这个超时时间是可以动态修改的）：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">timer</span>(<span class="params">timeout</span>):</span></span><br><span class="line">    timeout = [timeout]     <span class="comment"># 必须使用 list 等可变类型，否则无法被 set_timeout 修改</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decorator</span>(<span class="params">func</span>):</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span>(<span class="params">*args, **kwargs</span>):</span></span><br><span class="line">            start = time.time()</span><br><span class="line">            res = func(*args, **kwargs)</span><br><span class="line">            used = time.time() - start</span><br><span class="line">            <span class="comment"># 当运行时间超过 timeout 时会输出日志</span></span><br><span class="line">            <span class="keyword">if</span> used &gt; timeout[<span class="number">0</span>]:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;&#x27;&#123;&#125;&#x27;: &#123;&#125; &gt; &#123;&#125;&quot;</span>.<span class="built_in">format</span>(func.__name__, used, timeout[<span class="number">0</span>]))</span><br><span class="line">            <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 设置超时时间函数：被装饰函数可调用</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">set_timeout</span>(<span class="params">value</span>):</span></span><br><span class="line">            timeout[<span class="number">0</span>] = value</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 把 set_timeout 设置为被装饰函数的方法</span></span><br><span class="line">        wrapper.set_timeout = set_timeout</span><br><span class="line">        <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> decorator</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer(<span class="params"><span class="number">2</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span>():</span></span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">test()                  <span class="comment"># 无输出：runtime(1s) &lt; timeout(2)</span></span><br><span class="line">test.set_timeout(<span class="number">0.5</span>)</span><br><span class="line">test()                  <span class="comment"># 有输出：runtime(1s) &gt; timeout(0.5)</span></span><br></pre></td></tr></table></figure>
-<p>第一次执行时函数运行需要 1 秒，超时时间为 2 秒，所以没有日志输出；</p>
-<p>第二次执行时函数运行同为 1 秒，但超时时间改为 0.5 秒，所以有日志输出。</p>
-<h2 id="类的装饰器"><a href="#类的装饰器" class="headerlink" title="类的装饰器"></a>类的装饰器</h2><p>除了函数以外，类也可以使用装饰器，其中最典型的应用是实现设计模式中的单例模式（同时也是装饰器模式）：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Singleton</span>(<span class="params">cls</span>):</span></span><br><span class="line"></span><br><span class="line">    instances = &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">singleton</span>(<span class="params">*args, **kwars</span>):</span></span><br><span class="line">        <span class="comment"># 第一次实例化时创建一个对象存放在 instances</span></span><br><span class="line">        <span class="comment"># 下次再使用这个类实例化时只从 instances 取用，而不再创建对象</span></span><br><span class="line">        <span class="keyword">if</span> cls <span class="keyword">not</span> <span class="keyword">in</span> instances:</span><br><span class="line">            instances[cls] = cls(*args, **kwars)</span><br><span class="line">        <span class="keyword">return</span> instances[cls]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> singleton</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">s1 = Student(<span class="string">&quot;ywh&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(s1.name)</span><br><span class="line">s2 = Student(<span class="string">&quot;123&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(s2.name)</span><br></pre></td></tr></table></figure>
-<p>执行结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ywh</span><br><span class="line">ywh</span><br></pre></td></tr></table></figure>
-<p>虽然两次创建了 Student 对象，但执行的效果却是同一个 Student 对象，因为根据闭包的特性，函数执行完毕其内部的 instances 字典仍然保留在内存中，所以下次调用 Student 类实例化时会从 instances 取用。</p>
-<h2 id="递归与缓存"><a href="#递归与缓存" class="headerlink" title="递归与缓存"></a>递归与缓存</h2><p>在 Python 中使用程序计算 Fibonacci 数列只需要一行代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibonacci</span>(<span class="params">n</span>):</span></span><br><span class="line">    <span class="keyword">return</span> fibonacci(n-<span class="number">1</span>) + fibonacci(n-<span class="number">2</span>) <span class="keyword">if</span> n &gt; <span class="number">2</span> <span class="keyword">else</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>但这种方式计算效率不是一般的低（我家电脑 i5-6200U + 8G DDR4 计算到 40 项左右就已经很吃力了……），缺点在于求任意一项都需要前面两项的值，充斥着大量的重复计算（例如计算第 5 项需要第 3 和第 4 项，计算第 4 项需要第 2 和第 3 项的值，光是这两步第 3 项就被算了两次了 = =）。</p>
-<p>如果在计算的同时把中间结果保留到缓存中，下次直接从缓存获取就不需要重新计算了，测试：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span>(<span class="params">func</span>):</span></span><br><span class="line">    cache = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span>(<span class="params">*args, **kwargs</span>):</span></span><br><span class="line">        <span class="keyword">if</span> args <span class="keyword">not</span> <span class="keyword">in</span> cache:</span><br><span class="line">            cache[args] = func(*args)</span><br><span class="line">        <span class="keyword">return</span> cache[args]</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="meta">@decorator</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibonacci</span>(<span class="params">n</span>):</span></span><br><span class="line">    <span class="keyword">return</span> fibonacci(n-<span class="number">1</span>) + fibonacci(n-<span class="number">2</span>) <span class="keyword">if</span> n &gt; <span class="number">2</span> <span class="keyword">else</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>之前已经说过因为闭包的特性 cache 里面的元素会一直保存在内存中，所以下次递归的时候就能先尝试从 cache 中取值，这样就能大幅度提高效率了：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@decorator</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f1</span>(<span class="params">n</span>):</span></span><br><span class="line">    <span class="keyword">return</span> f1(n - <span class="number">1</span>) + f1(n - <span class="number">2</span>) <span class="keyword">if</span> n &gt; <span class="number">2</span> <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f2</span>(<span class="params">n</span>):</span></span><br><span class="line">    <span class="keyword">return</span> f2(n - <span class="number">1</span>) + f2(n - <span class="number">2</span>) <span class="keyword">if</span> n &gt; <span class="number">2</span> <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line">start = time.time()</span><br><span class="line">res = f1(<span class="number">40</span>)</span><br><span class="line">time.sleep(<span class="number">0.1</span>)</span><br><span class="line">end = time.time()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;&#123;&#125;, &#123;&#125;s&quot;</span>.<span class="built_in">format</span>(res, end - start))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">start = time.clock()</span><br><span class="line">res = f2(<span class="number">40</span>)</span><br><span class="line">time.sleep(<span class="number">0.1</span>)</span><br><span class="line">end = time.clock()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;&#123;&#125;, &#123;&#125;s&quot;</span>.<span class="built_in">format</span>(res, end - start))</span><br></pre></td></tr></table></figure>
-
-<p>执行结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">102334155</span>, <span class="number">0.10854005813598633</span>s</span><br><span class="line"><span class="number">102334155</span>, <span class="number">39.62842997040642</span>s</span><br></pre></td></tr></table></figure>
-
-<p>装饰器的用法灵活多变（例如还可以把类的实例方法作为装饰器函数，此时在被装饰函数中就可以持有实例对象，便于修改实例的属性、拓展功能），在这里无法一一列出，更多细节和有趣的用法还需要在日常开发中发现和积累。</p>
-<p>以上。</p>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+        <h1 id="分布式系统知识点总结"><a href="#分布式系统知识点总结" class="headerlink" title="分布式系统知识点总结"></a>分布式系统知识点总结</h1><h2 id="协调与同步"><a href="#协调与同步" class="headerlink" title="协调与同步"></a>协调与同步</h2><h3 id="分布式互斥"><a href="#分布式互斥" class="headerlink" title="分布式互斥"></a>分布式互斥</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>集中式</th>
+<th>分布式</th>
+<th>令牌环</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>方法</td>
+<td>引入协调者，对请求排序，最早请求的参与者取得临界资源。</td>
+<td>征求其它参与者同意后使用临界资源。</td>
+<td>参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>简单，通信高效，易于实现。</td>
+<td>可用性高。</td>
+<td>可用性高，单个参与者通信效率高。</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>可用性低，协调者是性能瓶颈（单点）。</td>
+<td>通信成本高，复杂度高。</td>
+<td>当参与者对资源使用频率较低，带来较多无用通信。</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>协调者可靠性和性能有一定保障。</td>
+<td>临界资源使用频度较低且系统规模较小</td>
+<td>系统规模较小，且每个参与者使用资源频度较高、时间较短。</td>
+</tr>
+</tbody></table>
+<h3 id="分布式选举"><a href="#分布式选举" class="headerlink" title="分布式选举"></a>分布式选举</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>Bully</th>
+<th>Raft</th>
+<th>ZAB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>选举原则</td>
+<td>节点 ID 最大的成为 Leader。</td>
+<td>少数服从多数，票数最多为主。</td>
+<td>倾向于让数据最新或 ID 最大的节点成为主。</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>容易理解，选举速度快，算法复杂度低，易于实现。</td>
+<td>选举速度快，算法复杂度低，易于实现。</td>
+<td>性能高，对系统无特殊要求。</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>信息存储量大（每个节点存储所有节点信息），易频繁换主，不适用于大规模系统。</td>
+<td>要求系统全连接，消息通信量大，不适用于大规模系统。</td>
+<td>选举时间长，复杂度高。</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>小规模系统，比如 MongoDB。</td>
+<td>中小规模系统，比如 Kubernetes。</td>
+<td>大规模系统，比如 ZooKeeper。</td>
+</tr>
+</tbody></table>
+<h3 id="分布式共识"><a href="#分布式共识" class="headerlink" title="分布式共识"></a>分布式共识</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>PoW</th>
+<th>PoS</th>
+<th>DPos</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原理</td>
+<td>以每个节点计算能力竞争记账权，算力越高机会越大。</td>
+<td>由系统权益决定区块记账权，权益越大机会越大。</td>
+<td>持有币则可进行投票，选举出节点作为代表记账。</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>相对公平，有容错机制，完全去中心化，简单易于实现。</td>
+<td>资源消耗低，达成共识周期短，交易服务费低。</td>
+<td>能耗更低，每秒完成交易量高，无垄断，交易服务费低，更安全。</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>不适合私有链或联盟链，共识效率低、每秒完成交易量少，存在阻塞问题，资源浪费严重，交易服务费高。</td>
+<td>每秒完成交易量较低，容易被垄断，无法处理分叉链情况。</td>
+<td>持币者投票积极性不高，故障解决效率低，易出现安全隐患。</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>比特币</td>
+<td>以太坊、点点币</td>
+<td>以太股、EOS</td>
+</tr>
+</tbody></table>
+<h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>2PC</th>
+<th>3PC</th>
+<th>最终一致性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>思想</td>
+<td>事务管理器作为协调者，处理各本地事务的提交或回滚。资源管理器作为参与者。通过投票阶段和提交阶段协调事务操作。</td>
+<td>在 2PC 基础上，分为 CanCommit、PreCommit、DoCommit 三个阶段，引入超时和准备机制。</td>
+<td>将事务以保存在本地文件、数据库或消息队列中的消息或日志异步执行，通过业务规则进行重试。</td>
+</tr>
+<tr>
+<td>特点</td>
+<td>强一致性，同步执行，简单易实现。</td>
+<td>强一致性，同步执行，简单易实现。相对 2PC 而言缓解了阻塞和单点故障问题。</td>
+<td>最终一致性，异步执行，性能高，无阻塞和单点故障问题。</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>同步阻塞，单点故障，数据不一致，性能低。</td>
+<td>数据不一致，性能较低。</td>
+<td>算法复杂度高，实现困难。</td>
+</tr>
+</tbody></table>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>关系型数据库</th>
+<th>Redis</th>
+<th>ZooKeeper</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>实现</td>
+<td>在表上对临界资源做唯一性约束，通过增加记录对某资源上锁，释放时删除（也可以更新实现乐观锁）。</td>
+<td>使用 API setnx，设置锁 ID、当前时间 + 超时时间。</td>
+<td>在持久节点 shared_lock 目录下为每个进程创建临时顺序节点，创建最小编号的节点的进程获得锁，否则等待较小的编号节点释放锁。</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>容易理解、实现。</td>
+<td>性能高，可跨集群部署、无单点故障，易于实现。</td>
+<td>无单点故障，可重入，无死锁，可靠性高。</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>单点故障，性能低，可靠性低。</td>
+<td>锁失效时间控制不稳定，可靠性低，较复杂。</td>
+<td>性能较低，实现复杂。</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>并发量低、性能要求低。</td>
+<td>高并发、性能要求高。</td>
+<td>大部分分布式场景，除非性能要求极高。</td>
+</tr>
+</tbody></table>
+<h2 id="管理与调度"><a href="#管理与调度" class="headerlink" title="管理与调度"></a>管理与调度</h2><h3 id="体系结构"><a href="#体系结构" class="headerlink" title="体系结构"></a>体系结构</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>集中式</th>
+<th>非集中式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>简介</td>
+<td>一或多台中央服务器，存储系统内的所有数据、处理所有业务。中央服务器统一调度资源和任务，多个节点与中央服务器连接，汇报自身信息和执行结果。</td>
+<td>服务执行和数据存储被分散到不同的服务器集群，服务器集群间通过消息传递进行通信和协调。所有服务器地位平等。</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>部署结构简单，中央服务器统一管理任务调度，无需考虑对任务的多节点部署，节点之间无需通信和协作，</td>
+<td>降低了某一个或者某一簇计算机集群的压力，在解决了单点瓶颈和单点故障问题的同时，还提升了系统的并发度，比较适合大规模集群的管理。</td>
+</tr>
+<tr>
+<td>应用</td>
+<td>Borg、Kubernetes、Mesos。</td>
+<td>Akka、Redis、Cassandra。</td>
+</tr>
+</tbody></table>
+<h3 id="调度架构"><a href="#调度架构" class="headerlink" title="调度架构"></a>调度架构</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>单体调度</th>
+<th>两层调度</th>
+<th>共享状态调度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>定义</td>
+<td>集群中只有一个节点运行调度进程，该节点对其它节点有访问权限，可搜集其它节点资源状态信息以便统一管理。根据用户下发的任务对资源的需求，在调度器中进行任务与资源匹配，再指派给其它节点。</td>
+<td>资源的使用状态同时由中央调度器和二层调度器管理。前者负责宏观、大规模资源分配，业务压力较小；后者负责任务与资源匹配，可以有多个、以支持不同任务类型。</td>
+<td>将单体调度器分解为多个调度器，每个调度器都有全局资源状态信息，从而实现最优任务调度。</td>
+</tr>
+<tr>
+<td>特点</td>
+<td>以单个实例的集中式调度器为中心管理资源和调度任务，单体调度器拥有全局资源和全局任务视图，可容易实现对任务的约束并实施全局性调度策略。</td>
+<td>解决了单体调度架构中，中央服务器的单点瓶颈问题，且提升了调度效率，支持多种类型任务。</td>
+<td>分布式结构，共享集群状态，乐观并发调度，类似数据库中的事务操作。可解决单体调度架构中中央服务器的单点瓶颈问题、解决两层调度架构中任务匹配无法达到全局最优的问题。但存在潜在的资源冲突问题，且实现比较复杂。</td>
+</tr>
+<tr>
+<td>应用</td>
+<td>Borg、Kubernetes。</td>
+<td>Mesos、YARN</td>
+<td>Google Omega</td>
+</tr>
+</tbody></table>
+<h2 id="计算模型"><a href="#计算模型" class="headerlink" title="计算模型"></a>计算模型</h2><h3 id="分治"><a href="#分治" class="headerlink" title="分治"></a>分治</h3><p>将复杂且难以计算的大问题，分割成规模较小的、可直接求解的子问题。子问题之间相互独立且与原问题形式相同，通过递归求解子问题，最后将其结果合并得到原问题的解。</p>
+<p>特点：</p>
+<ul>
+<li><p>  规模较大或复杂。</p>
+</li>
+<li><p>  可分解为规模较小、简单的同类问题。</p>
+</li>
+<li><p>  子问题之间相互独立。</p>
+</li>
+<li><p>  子问题的解可合并得到原问题的解。</p>
+</li>
+</ul>
+<h4 id="Map-Reduce"><a href="#Map-Reduce" class="headerlink" title="Map Reduce"></a>Map Reduce</h4><h4 id="Fork-Join"><a href="#Fork-Join" class="headerlink" title="Fork Join"></a>Fork Join</h4><h3 id="流计算"><a href="#流计算" class="headerlink" title="流计算"></a>流计算</h3><h3 id="Actor"><a href="#Actor" class="headerlink" title="Actor"></a>Actor</h3><h3 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h3><h2 id="通信模型"><a href="#通信模型" class="headerlink" title="通信模型"></a>通信模型</h2><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
     
@@ -513,16 +692,16 @@ height:100vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2019/09/19/Python_data-structure/" title= "Python 数据结构应用">
-                    <div class="nextTitle">Python 数据结构应用</div>
+                <a href= "/2021/07/08/Algorithm_shortest-path-problem/" title= "最短路径问题">
+                    <div class="nextTitle">最短路径问题</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2019/08/22/Python_OOP-summary/" title= "Python 类与对象总结">
-                    <div class="prevTitle">Python 类与对象总结</div>
+                <a href= "/2021/07/01/DistributedSystem_gossip-dissemination/" title= "分布式系统模式：Gossip 传播（译）">
+                    <div class="prevTitle">分布式系统模式：Gossip 传播（译）</div>
                 </a>
             
         </li>
@@ -673,7 +852,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E8%A3%85%E9%A5%B0%E5%99%A8%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">Python 装饰器基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%B8%BA%E8%A2%AB%E8%A3%85%E9%A5%B0%E5%87%BD%E6%95%B0%E4%BF%9D%E5%AD%98%E5%85%83%E6%95%B0%E6%8D%AE%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">如何为被装饰函数保存元数据？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="toc-number">1.2.</span> <span class="toc-text">带参数的装饰器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E5%8F%AF%E4%BF%AE%E6%94%B9%E7%9A%84%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text">属性可修改的装饰器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="toc-number">1.4.</span> <span class="toc-text">类的装饰器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E4%B8%8E%E7%BC%93%E5%AD%98"><span class="toc-number">1.5.</span> <span class="toc-text">递归与缓存</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">分布式系统知识点总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%8F%E8%B0%83%E4%B8%8E%E5%90%8C%E6%AD%A5"><span class="toc-number">1.1.</span> <span class="toc-text">协调与同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%92%E6%96%A5"><span class="toc-number">1.1.1.</span> <span class="toc-text">分布式互斥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%80%89%E4%B8%BE"><span class="toc-number">1.1.2.</span> <span class="toc-text">分布式选举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%B1%E8%AF%86"><span class="toc-number">1.1.3.</span> <span class="toc-text">分布式共识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1"><span class="toc-number">1.1.4.</span> <span class="toc-text">分布式事务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="toc-number">1.1.5.</span> <span class="toc-text">分布式锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E4%B8%8E%E8%B0%83%E5%BA%A6"><span class="toc-number">1.2.</span> <span class="toc-text">管理与调度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">体系结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.2.</span> <span class="toc-text">调度架构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">计算模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%B2%BB"><span class="toc-number">1.3.1.</span> <span class="toc-text">分治</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Map-Reduce"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">Map Reduce</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Fork-Join"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">Fork Join</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E8%AE%A1%E7%AE%97"><span class="toc-number">1.3.2.</span> <span class="toc-text">流计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Actor"><span class="toc-number">1.3.3.</span> <span class="toc-text">Actor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="toc-number">1.3.4.</span> <span class="toc-text">流水线</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.4.</span> <span class="toc-text">通信模型</span></a></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1221,9 +1400,30 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 76
+        Total : 79
         </div>
         <!-- search  -->
         
@@ -1236,6 +1436,16 @@ top:100vh;
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2021/08/24/DB_mysql-optimization-basic/" >MySQL 优化基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1315,6 +1525,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_summary/" >分布式系统知识点总结</a>
         </li>
     
     
@@ -1597,7 +1812,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator-basic-usage/" >Python 装饰器基本用法</a>
+            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator/" >Python 装饰器基本用法</a>
         </li>
     
     
@@ -1642,13 +1857,13 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
@@ -1664,9 +1879,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
@@ -1683,6 +1898,8 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
     
         <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
     
@@ -1758,7 +1975,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 
