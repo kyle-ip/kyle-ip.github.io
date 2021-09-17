@@ -25,17 +25,23 @@
     <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Kylo&#39;s Notebook">
-<meta property="og:url" content="https://yipwinghong.github.io/archives/page/5/index.html">
+    <meta name="description" content="《DDIA》阅读笔记（十）：批处理系统">
+<meta property="og:type" content="website">
+<meta property="og:title" content="《DDIA》阅读笔记（十）：批处理系统">
+<meta property="og:url" content="https://yipwinghong.github.io/DDIA_note-14.html">
 <meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:description" content="《DDIA》阅读笔记（十）：批处理系统">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-08-27T13:27:36.000Z">
+<meta property="article:modified_time" content="2021-08-28T09:44:53.970Z">
 <meta property="article:author" content="Kylo Yip">
+<meta property="article:tag" content="设计">
+<meta property="article:tag" content="技术">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>Kylo&#39;s Notebook</title>
+    <title>《DDIA》阅读笔记（十）：批处理系统 · Kylo&#39;s Notebook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -382,48 +388,101 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/05/20/Vue_user-guide-1/" >
-            
-                <span>Vue 学习笔记（1）</span>
-        </a>
-        <div class="abstract-content">
-            与 jQuery 对比，生命周期，文本插值、表达式，过滤器，计算属性。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Vue">Vue</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "前端">前端</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="《DDIA》阅读笔记（十）：批处理系统"><a href="#《DDIA》阅读笔记（十）：批处理系统" class="headerlink" title="《DDIA》阅读笔记（十）：批处理系统"></a>《DDIA》阅读笔记（十）：批处理系统</h1><p>本章结构如下：</p>
+<blockquote class="pullquote mindmap mindmap-md"><ul>
+<li>批处理系统<ul>
+<li>UNIX 工具<ul>
+<li>简单日志分析</li>
+<li>UNIX 设计哲学</li>
+</ul>
+</li>
+<li>MapReduce 与分布式文件系统<ul>
+<li>MapReduce 作业</li>
+<li>Reduce 端的 join 与分组</li>
+<li>Map 端的 join</li>
+<li>批处理工作流的输出</li>
+<li>对比 Hadoop 与分布式数据库</li>
+</ul>
+</li>
+<li>超越 MapReduce<ul>
+<li>中间过程实体化</li>
+<li>图与迭代处理</li>
+<li>高级 API 和语言</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+
+<p>存储与处理数据的系统按照高层次分类可以分为两大类：</p>
+<ul>
+<li><p>记录系统：即真实数据系统，每条记录在系统中只表示一次（规范化），多套系统间数据有差异，则以记录系统为准。</p>
+</li>
+<li><p>派生数据系统：从其他系统已有数据进行转换或处理的结果，丢失后可从原始数据源重建。典型的例子是缓存、非规范化数值、索引、物化视图。</p>
+</li>
+</ul>
+<p>Web、REST API 的“请求-响应”模式不是构建系统的唯一途径，三种类型的系统：</p>
+<ul>
+<li><p>在线系统，衡量指标为响应时间和可用性。</p>
+</li>
+<li><p>批处理系统（离线）：衡量指标为吞吐量。</p>
+</li>
+<li><p>流处理系统（近实时系统）：衡量指标为延迟。</p>
+</li>
+</ul>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
     
-    <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/page/4/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><span class="page-number current">5</span>
-    </nav>
+    
+     
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -1070,37 +1129,9 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 81
+        Total : 77
         </div>
         <!-- search  -->
         
@@ -1122,21 +1153,6 @@
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-16/" >《DDIA》阅读笔记（十二）：数据系统的未来</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-15/" >《DDIA》阅读笔记（十一）：流处理系统</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-14/" >《DDIA》阅读笔记（十）：批处理系统</a>
         </li>
     
     
@@ -1370,11 +1386,6 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2020/12/19/DDIA_note-4/" >《DDIA》阅读笔记（四）：数据编码与演化</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2020/12/13/DDIA_note-3/" >《DDIA》阅读笔记（三）：数据存储与检索</a>
         </li>
     
@@ -1395,7 +1406,7 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2020/10/04/JVM_prod-analysis-cmd/" >Java 应用常用调试分析方法总结</a>
+            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2020/10/04/Java_prod-analysis-cmd/" >Java 应用常用调试分析方法总结</a>
         </li>
     
     
@@ -1415,7 +1426,7 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/JVM_java-memory-area/" >Java 内存区域</a>
+            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/Java_memory-area/" >Java 内存区域</a>
         </li>
     
     
@@ -1460,17 +1471,17 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2020/02/03/JVM_jstat-monitor-analysis/" >JVM jstat 监控分析</a>
+            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2020/02/03/Java_jstat-monitor-analysis/" >JVM jstat 监控分析</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/JVM_GC-log-analysis/" >JVM GC 日志分析</a>
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/Java_GC-log-analysis/" >JVM GC 日志分析</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2020/01/01/JVM_mindmap/" >Java 虚拟机与并发编程</a>
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2020/01/01/Java_JVM_mindmap/" >Java 虚拟机与并发编程</a>
         </li>
     
     
@@ -1556,11 +1567,11 @@
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
