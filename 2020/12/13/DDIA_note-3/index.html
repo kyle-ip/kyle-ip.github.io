@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E4%BD%8D%E5%9B%BE%E7%BC%96%E7%A0%81%E5%8E%8B%E7%BC%A9.jpg">
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93.jpg">
 <meta property="article:published_time" content="2020-12-13T14:30:45.000Z">
-<meta property="article:modified_time" content="2021-08-18T10:08:23.061Z">
+<meta property="article:modified_time" content="2021-09-23T15:56:50.515Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="设计">
@@ -332,7 +332,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">6.7k</span>Reading time: <span class="post-count reading-time">22 min</span></span>
+                        <span>Word count: <span class="post-count word-count">6.6k</span>Reading time: <span class="post-count reading-time">22 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -579,7 +579,8 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
-<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>即额外的、用于辅助查找的元数据。每次写入数据都需要同步更新，任何类型的索引都会降低写速度，因此要在 <strong>加速查询</strong> 与 <strong>避免降低写入速度</strong> 之间权衡。</p>
+
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>即额外的、用于辅助查找的元数据。每次写入数据都需要同步更新，因此会降低写速度，需要在 <strong>加速查询</strong> 与 <strong>避免降低写入速度</strong> 之间权衡。</p>
 <p>对于 OLTP 系统，主流的存储引擎：</p>
 <ul>
 <li><p>日志结构：只允许追加式更新文件和删除过时文件，不修改己写入的文件。比如 BitCask、SSTables、LSM-tree、LevelDB、Cassandra、HBase、Lucene 等。关键思想是系统地将随机写入转为顺序写入，由于硬盘驱动器和 SSD 的性能特性，可以实现更高的写入吞吐量。</p>
@@ -588,83 +589,79 @@ height:100vh;
 </li>
 </ul>
 <h3 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h3><p>Riak 的默认存储引擎 Bitcask。</p>
-<h4 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h4><p>写入：以严格的先后顺序追加到日志中，通常是单线程。相比起修改原记录：</p>
+<h4 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h4><p>写入：通常以单线程按顺序追加到日志中。</p>
 <ul>
-<li><p>追加和分段合并是顺序写，通常比随机写入快（特别是旋转式磁盘）。</p>
+<li><p>追加和分段合并是顺序写，通常比随机写入快（特别是机械磁盘）。</p>
 </li>
 <li><p>段文件追加或不可变，并发控制和崩溃恢复更简单。</p>
 </li>
 <li><p>合并旧段可避免数据文件碎片化。</p>
 </li>
 </ul>
-<p>读取：数据文件段是追加且不可变的，所以可被多线程读取，但也因此区间访问效率较低。</p>
-<p>删除：在数据文件中为键值追加墓碑标记，在合并段时发现标记则丢弃该键所有值。</p>
+<p>读取：数据段是追加且不可变，可被多线程读取，但区间访问效率较低。</p>
+<p>删除：在文件中为键值追加墓碑标记，在合并段时发现标记则丢弃该键所有值。</p>
 <h4 id="偏移量"><a href="#偏移量" class="headerlink" title="偏移量"></a>偏移量</h4><p>假设采用追加式文件存储数据，索引策略为保存内存中的哈希表：</p>
 <ul>
-<li><p>键映射到文件中特定的字节偏移量，以便找到值的位置。只需一次磁盘寻址就可将值加载到内存（结合缓存则无需磁盘 I/O）。</p>
+<li><p>键映射到文件中特定的字节偏移量，以便找到值的位置。一次磁盘寻址即可将值加载到内存，再结合缓存则无需磁盘 I/O。</p>
 </li>
-<li><p>在文件中追加新的键值对时，还要更新 hash map 来反映刚写入的数据偏移量（包括插入新的键和更新已有的）。</p>
+<li><p>在文件中追加新键值对时，要更新 hash map 反映刚写入的数据偏移量（插入新的或更新已有键的值）。</p>
 </li>
 </ul>
 <p>适用于键值频繁更新、但没有太多不同的 key（内存有限）的场景。</p>
-<h4 id="压缩合并"><a href="#压缩合并" class="headerlink" title="压缩合并"></a>压缩合并</h4><p>格式：文件写入为二进制格式，更快更简单，以字节为单位记录字符串长度，后续跟上无需转义的原始字符串。</p>
-<p>压缩：为节省磁盘空间，可把日志分解成等大的段，文件达到一定大小即关闭，开启新段写入。在此基础上可对段进行压缩（丢弃日志中重复的键，只保留最近更新）。</p>
-<p>合并：可在压缩同时将多个段合并写入新文件，而合并和压缩可在后台线程执行，运行时用旧段文件继续处理读写请求。合并完成后将读取请求切到新段上，再安全删除旧段。</p>
-<h4 id="崩溃恢复"><a href="#崩溃恢复" class="headerlink" title="崩溃恢复"></a>崩溃恢复</h4><p>数据库重新启动，内存中的 hash map 将丢失。Bitcask 将段的 hash map 快照存储在磁盘上，更快地加载到内存中，而无需从头到尾扫描整个文件、重新记录偏移量，以此加快恢复速度，并通过校验值发现损坏部分并丢弃。</p>
-<h3 id="LSM-Tree"><a href="#LSM-Tree" class="headerlink" title="LSM-Tree"></a>LSM-Tree</h3><p>只追加、基于合并和压缩排序文件原理的存储引擎。</p>
-<p><strong>SSTable</strong>：存储的键值对的按键排序，成为排序字符串表。在压缩过程，保证每个键在每个合并的段文件中只出现一次。</p>
+<h4 id="压缩合并"><a href="#压缩合并" class="headerlink" title="压缩合并"></a>压缩合并</h4><p>格式：文件以二进制格式写入，更快更简单；以字节为单位记录字符串长度，后续跟上无需转义的原始字符串。</p>
+<p>压缩：为节省磁盘空间，把日志分解成等大的段，文件达到一定大小即关闭、开启新段。再可对段进行压缩，丢弃日志中重复的键，只保留最近更新。</p>
+<p>合并：后台线程在压缩时将多个段合并写入新文件，此时用旧段文件处理读写请求。合并完成后将读取请求切到新段上再删除旧段。</p>
+<h4 id="崩溃恢复"><a href="#崩溃恢复" class="headerlink" title="崩溃恢复"></a>崩溃恢复</h4><p>由于数据库重启内存 hash map 会丢失，Bitcask 将段 hash map 快照存储在磁盘，更快地加载到内存中，而无需从头到尾扫描整个文件、重新记录偏移量。以此加快恢复速度，再通过校验值发现损坏部分并丢弃。</p>
+<h3 id="LSM-Tree"><a href="#LSM-Tree" class="headerlink" title="LSM-Tree"></a>LSM-Tree</h3><p>按顺序追加以提高吞吐量、基于合并和压缩排序文件的存储引擎。</p>
+<p><strong>SSTable</strong>：键值对按键排序为字符串表，通过压缩保证键在每个合并的段文件中只出现一次。</p>
 <ul>
-<li><p><strong>合并段更简单高效</strong>：（即使文件大于内存）并发读取多个输入段文件，比较每个文件的第一个键，按顺序把最小的键取出到文件，即产生新的按键排序的合并段文件。当多个段包含相同的键时，保留最新段的值并丢弃旧段中的值。</p>
-</li>
-<li><p>在文件中查找特定的键时，<strong>无需在内存中保存所有键的索引</strong>，只需要一个可稀疏的内存索引来记录键的偏移。</p>
-</li>
-<li><p>顺序写入，高吞吐量。</p>
-</li>
+<li><strong>合并段更简单高效</strong>：并发读取多个输入段文件，比较每个文件的第一个键，按顺序把最小的键取出到文件，即产生新的按键排序的合并段文件。当多个段包含相同的键时，保留最新段的值并丢弃旧段中的值。</li>
+<li>在文件中查找特定的键时，<strong>无需在内存中保存所有键的索引</strong>，只需要一个可稀疏的内存索引来记录键的偏移。</li>
 </ul>
 <p>应用实例：</p>
 <ul>
-<li><p>LevelDB 和 RocksDB，主要用于嵌入到其他应用程序的键值存储引擎库。类似的存储引擎还被用于 Cassandra 和 HBase。</p>
+<li><p>LevelDB 和 RocksDB，嵌入应用程序的键值存储引擎库。类似的存储引擎还被用于 Cassandra 和 HBase。</p>
 </li>
 <li><p>Elasticsearch 和 Solr 的全文索引存储引擎 Lucene。</p>
 </li>
 </ul>
-<h4 id="SSTables"><a href="#SSTables" class="headerlink" title="SSTables"></a>SSTables</h4><p>采用树结构维护索引，涉及以下操作：</p>
+<h4 id="SSTables"><a href="#SSTables" class="headerlink" title="SSTables"></a>SSTables</h4><p>采用树结构维护索引：</p>
 <ul>
 <li><p>处理写：</p>
 <ul>
-<li><p>将数据添加到内存的平衡树（即内存表）中。</p>
+<li><p>  将数据添加到内存的平衡树（即内存表）中。</p>
 </li>
-<li><p>当内存表大于某阈值（数 MB），将其写入 SSTable 文件（通过树维护按键排序的键值对，可高效写入）。</p>
+<li><p>  通过树维护按键排序的键值对，当内存表大于某阈值（数 MB）则将其写入 SSTable 文件。</p>
 </li>
 <li><p>在写磁盘同时可处理对新内存表的写入。</p>
 </li>
 </ul>
 </li>
-<li><p>处理读：先在内存表查找键值，然后在最新的磁盘段文件，再在次新的磁盘段文件，以此类推直到找到目标或为空。</p>
+<li><p>  处理读：先在内存表查找键值，然后在最新的磁盘段文件，再在次新的磁盘段文件，以此类推。</p>
 </li>
-<li><p>合并和压缩：后台进程周期性执行段合并与压缩，并丢弃已被覆盖或删除的值。</p>
+<li><p>  合并和压缩：后台进程周期性执行段合并与压缩，并丢弃已被覆盖或删除的值。</p>
 </li>
-<li><p>崩溃恢复：由于数据库崩溃时在内存表但尚未写入磁盘的数据会丢失。可在磁盘上保留日志，每次写入时追加到该日志（无需排序），用于崩溃后恢复内存表。每当将内存表写入 SSTable 时，日志即可丢弃。</p>
+<li><p>  崩溃恢复：由于数据库崩溃时在内存表但尚未写入磁盘的数据会丢失。可在磁盘上保留日志，每次写入时追加到该日志（无需排序），用于崩溃后恢复内存表。每当将内存表写入 SSTable 时，日志即可丢弃。</p>
 </li>
 </ul>
-<p>通常采用以下策略优化性能：</p>
+<p>性能优化：</p>
 <ul>
-<li><p><strong>布隆过滤器</strong>：查找某个不存在的键可能很慢：先检查内存表，将段一直回溯访问到最旧的段文件（可能涉及多次磁盘读）。引入布隆过滤器可近似计算集合的内容，快速判断集合中存在/不存在的键，节省不必要的磁盘 I/O。</p>
+<li><p>  <strong>布隆过滤器</strong>：查找不存在的键可能很慢：先检查内存表，再回溯访问到最旧的段文件，将涉及多次磁盘读。引入布隆过滤器可快速判断集合中存在/不存在的键，节省磁盘 I/O。</p>
 </li>
-<li><p><strong>压缩合并策略</strong>：压缩和合并的顺序和时机。</p>
+<li><p>  <strong>压缩合并策略</strong>：压缩和合并的顺序和时机。</p>
 </li>
-<li><p>大小分级：较新和较小的 SSTables 被连续合并到较旧和较大的 SSTables（比如 HBase 和 Cassandra）。</p>
+<li><p>大小分级：连续将较新和较小的 SSTables 合并到较旧和较大的 SSTables（比如 HBase 和 Cassandra）。</p>
 </li>
-<li><p>分层压缩：键的范围分裂成更小的 SSTables，旧数据被移动到单独的层级，压缩可逐步进行并节省磁盘空间（比如 Cassandra）。</p>
+<li><p>分层压缩：键的范围分裂成更小的 SSTables，旧数据被移动到单独的层级，可逐步压缩并节省磁盘空间（比如 Cassandra）。</p>
 </li>
 </ul>
-<h3 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B-Tree"></a>B-Tree</h3><p>B-tree 保留按键排序的键值对，可以实现高效的键值查询和区间查询。</p>
-<p>B-tree 是几乎所有关系数据库中的标准索引实现，许多非关系型数据库也经常使用。</p>
-<h4 id="分页设计"><a href="#分页设计" class="headerlink" title="分页设计"></a>分页设计</h4><p>区别于 SSTable 和哈希索引将日志结构索引将数据库分解为可变大小的段（数 MB或更大）。B-tree：</p>
+<h3 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B-Tree"></a>B-Tree</h3><p>B-tree 保留按键排序的键值对，可实现高效的键值查询和区间查询。</p>
+<p>几乎所有关系数据库中的标准索引实现，许多非关系型数据库也经常使用。</p>
+<h4 id="分页设计"><a href="#分页设计" class="headerlink" title="分页设计"></a>分页设计</h4><p>SSTable 和哈希索引将数据库分解为大小可变的段（数 MB或更大），而 B-tree：</p>
 <ul>
 <li><p>将数据库分解成固定大小的块或页（传统 4KB，有时更大）作为内部读写的最小单元，设计上更接近底层硬件，比如磁盘也是按固定大小的块排列。</p>
 </li>
-<li><p>页面包含多个连续区间内的键以及对子页的引用（可用地址标识，类似指针指向磁盘地址），相邻引用之间的键指示这些范围的边界，以某一页作为根，构成树形结构。</p>
+<li><p>页面包含多个连续区间内的键和对子页的引用（可用地址标识，类似指针指向磁盘地址），相邻引用之间的键指示这些范围的边界，以某一页作为根，构成树形结构。</p>
 </li>
 <li><p>页所包含的子页引用数量称为 <strong>分支因子</strong>，取决于存储页面引用和范围边界所需的空间总量（通常几百个）。</p>
 </li>
@@ -676,8 +673,7 @@ height:100vh;
 <p>插入操作：要添加新键，则需要找到其范围包含新键的页，并将其添加到该页。如果页中没有足够的可用空间来容纳新键则将其分裂为两个半满的页，并且父页也需要更新以包含分裂之后的新的键范围。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/B%20Tree%20%E5%88%86%E8%A3%82.jpg" alt="B Tree 分裂"></p>
 <p>更新操作：搜索包含目标键的叶子页，更改该页的值并将页写回到磁盘（对该页的任何引用仍然有效）。</p>
-<h4 id="LSM-Tree-与-B-Tree-对比"><a href="#LSM-Tree-与-B-Tree-对比" class="headerlink" title="LSM-Tree 与 B-Tree 对比"></a>LSM-Tree 与 B-Tree 对比</h4><div class="table-container">
-<table>
+<h4 id="LSM-Tree-与-B-Tree-对比"><a href="#LSM-Tree-与-B-Tree-对比" class="headerlink" title="LSM-Tree 与 B-Tree 对比"></a>LSM-Tree 与 B-Tree 对比</h4><table>
 <thead>
 <tr>
 <th></th>
@@ -685,8 +681,7 @@ height:100vh;
 <th>B-Tree</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>写入吞吐量</td>
 <td>写放大较低，其顺序写入紧凑的 SSTable 文件，不必重写树中的多个页。而且顺序写比随机写快得多。</td>
 <td>写入时需要写预写日志和树的页（可能还会分裂）。即使该页中只有几个字节更改，也必须承受写整个页的开销。<br />一些存储引擎甚至覆盖相同的页两次，以避免在故障时出现部分更新的页。</td>
@@ -726,9 +721,7 @@ height:100vh;
 <td>效率较低</td>
 <td>支持</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <blockquote>
 <p>  写放大：在数据库内一次数据库写入请求导致的多次磁盘写的情况称为写放大。</p>
 <p>  对于固态硬盘而言。由于擦写覆盖次数有限，需要关注写放大指标。固态硬盘固件内部使用日志结构化算法，将随机写转换为底层存储芯片上的顺序写，存储引擎写入模式的影响不明显。但如果能以更紧凑的方式表示数据，即可在有限的 I/O 带宽中支持更多的读写请求。</p>
@@ -746,21 +739,22 @@ height:100vh;
 <ul>
 <li><p>堆文件：对其他地方存储的行的引用（行的具体位置），不以特定的顺序存储，可以是追加或记录删除行，以便用新数据覆盖。</p>
 <ul>
-<li><p>当存在多个二级索引时可以避免复制数据：每个索引只引用堆文件中的位置信息，实际数据仍保存在一个位置。</p>
+<li><p>  当存在多个二级索引时可以避免复制数据：每个索引只引用堆文件中的位置信息，实际数据仍保存在一个位置。</p>
 </li>
 <li><p>当更新值时只要新值字节数不大于旧值，就可以直接覆盖，否则可能需要移动数据以得到足够大的空间。</p>
 </li>
-<li><p>所有索引都需要更新，以指向新的堆位置，或在旧堆位置保留一个间接指针。</p>
+<li><p>  所有索引都需要更新，以指向新的堆位置，或在旧堆位置保留一个间接指针。</p>
 </li>
 </ul>
 </li>
-<li><p>聚簇索引：从索引到堆文件的额外跳转在读取时有较大性能损失，因此可将索引行直接存储在索引中，被称为聚簇索引。<strong>聚簇索引</strong> 在索引中直接保存行数据，<strong>非聚簇索引</strong> 仅存储索引中数据的引用，一种折中设计称为 <strong>覆盖索引</strong> 或 包含列的索引，在索引中保存表的列值，可支持只通过索引即可响应的简单查询（被称索引覆盖了查询，可避免回表）。</p>
+<li><p>  聚簇索引：从索引到堆文件的额外跳转在读取时有较大性能损失，因此可将索引行直接存储在索引中，被称为聚簇索引。<strong>聚簇索引</strong> 在索引中直接保存行数据，<strong>非聚簇索引</strong> 仅存储索引中数据的引用，一种折中设计称为 <strong>覆盖索引</strong> 或 包含列的索引，在索引中保存表的列值，可支持只通过索引即可响应的简单查询（被称索引覆盖了查询，可避免回表）。</p>
 </li>
 </ul>
 <h4 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h4><p>以上索引只将一个键映射到一个值，如果需要同时查询表的多个列，则需要多列索引。</p>
 <p>常用于一次查询多列，比如地理空间数据的经度和纬度，要求同时满足在某个经度和纬度范围内的数据。</p>
 <p><strong>级联索引</strong>：通过将一列追加到另一列，将几个字段组合成一个键（索引的定义指定字段连接的顺序）。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> restaurants</span><br><span class="line"><span class="keyword">WHERE</span> latitude <span class="operator">&gt;</span> <span class="number">51.4946</span> <span class="keyword">AND</span> latitude <span class="operator">&lt;</span> <span class="number">51.5079</span></span><br><span class="line"><span class="keyword">AND</span> longitude <span class="operator">&gt;</span> <span class="number">-0.1162</span> <span class="keyword">AND</span> longitude <span class="operator">&lt;</span> <span class="number">-0.1004</span>;</span><br></pre></td></tr></table></figure>
+
 <p>多维索引：使用空格填充曲线将二维位置转换为单个数字，再使用常规的 B-tree 索引。</p>
 <h4 id="全文搜索和模糊索引"><a href="#全文搜索和模糊索引" class="headerlink" title="全文搜索和模糊索引"></a>全文搜索和模糊索引</h4><p>为了处理文档或查询中的拼写错误，搜索引擎（如 Lucene）可在某个编辑距离内搜索文本。</p>
 <p>Lucene 对词典使用类似 SSTable 的结构，由内存索引告知查询要找到键需要排序文件中的哪个偏移量。</p>
@@ -784,7 +778,6 @@ height:100vh;
 </li>
 </ul>
 <h2 id="事务处理与分析处理"><a href="#事务处理与分析处理" class="headerlink" title="事务处理与分析处理"></a>事务处理与分析处理</h2><p>数据系统分为两大类：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -793,8 +786,7 @@ height:100vh;
 <th>分析系统（OLAP）</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>读特征</td>
 <td>基于键，每次查询返回少量的记录</td>
 <td>对大量记录进行汇总</td>
@@ -819,9 +811,7 @@ height:100vh;
 <td>GB 到 TB</td>
 <td>TB 到 PB</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <h3 id="事务处理系统（OLTP）"><a href="#事务处理系统（OLTP）" class="headerlink" title="事务处理系统（OLTP）"></a>事务处理系统（OLTP）</h3><p>基于某种键查询记录，而存储引擎使用索引来查找所请求键的数据，磁盘寻道时间往往是瓶颈。</p>
 <p>不建议在 OLTP 数据库上直接运行临时分析查询，需要扫描大量数据集，可能会损害并发执行事务的性能。</p>
 <h4 id="日志结构"><a href="#日志结构" class="headerlink" title="日志结构"></a>日志结构</h4><p>以追加式更新文件和删除过时文件，不会修改己写入的文件。系统地将磁盘上随机访问写入转为顺序写入，由于硬盘驱动器和SSD的性能特性，可以实现更高的写入吞吐量。</p>
@@ -1610,9 +1600,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 78
         </div>
         <!-- search  -->
         
@@ -1634,6 +1631,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-15/" >《DDIA》阅读笔记（十一）：流处理系统</a>
         </li>
     
     
@@ -2154,7 +2156,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 

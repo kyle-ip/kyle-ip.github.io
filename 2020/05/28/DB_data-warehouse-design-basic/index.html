@@ -33,7 +33,7 @@
 <meta property="og:description" content="这是一篇旧文，搬运自简书：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;84ae6d657007">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-05-28T08:32:11.000Z">
-<meta property="article:modified_time" content="2021-09-21T06:10:09.349Z">
+<meta property="article:modified_time" content="2021-09-26T11:05:49.209Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="大数据">
@@ -455,42 +455,41 @@ height:100vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="数据仓库设计基础"><a href="#数据仓库设计基础" class="headerlink" title="数据仓库设计基础"></a>数据仓库设计基础</h1><h2 id="数据仓库与业务系统库"><a href="#数据仓库与业务系统库" class="headerlink" title="数据仓库与业务系统库"></a>数据仓库与业务系统库</h2><p>业务系统库</p>
+        <h1 id="数据仓库设计基础"><a href="#数据仓库设计基础" class="headerlink" title="数据仓库设计基础"></a>数据仓库设计基础</h1><h2 id="数据仓库与业务系统库"><a href="#数据仓库与业务系统库" class="headerlink" title="数据仓库与业务系统库"></a>数据仓库与业务系统库</h2><p>基于业务系统库（OLTP）完成数据分析需求：</p>
 <ul>
-<li><p>安全性：统计分析与业务分离</p>
+<li><p>安全性：统计分析应与业务分离。</p>
 </li>
-<li><p>变更频繁：重写分析系统、重新测试</p>
+<li><p>变更频繁：重写分析系统、重新测试。</p>
 </li>
-<li><p>难以建立和维护源于多个业务系统的报表</p>
+<li><p>难以建立和维护源于多个业务系统的报表。</p>
 </li>
-<li><p>不同的数据源数据格式不统一</p>
+<li><p>不同的数据源数据格式不统一。</p>
 </li>
-<li><p>业务数据库为事务处理性能优化，不适合查询分析</p>
+<li><p>业务数据库为事务处理性能优化，不适合分析查询。</p>
 </li>
-<li><p>统计分析影响业务系统性能</p>
+<li><p>统计分析影响业务系统性能。</p>
 </li>
 </ul>
-<p>数据仓库</p>
+<p>使用数据仓库（OLAP）：</p>
 <ul>
-<li><p>面向主题（业务类型：如机器，用户，歌曲，营收）</p>
+<li><p>面向主题，即业务类型：如机器，用户，歌曲，营收。</p>
 </li>
-<li><p>集成（从多数据源抽取数据后按一致、无歧义的格式写入数据仓库）</p>
+<li><p>集成：从多数据源抽取数据后按一致、无歧义的格式写入数据仓库。</p>
 </li>
-<li><p>随时间变化（存放历史数据，保留快照）</p>
+<li><p>随时间变化：存放历史数据，保留快照。</p>
 </li>
-<li><p>非易失（写入数据仓库后不再修改删除）</p>
+<li><p>非易失：写入数据仓库后不再修改删除。</p>
 </li>
-<li><p>粒度（数据装载的时间周期，日增量、日全量、日汇总、月全量等，粒度越低数据量越大，保留信息越多）</p>
+<li><p>粒度：数据装载的时间周期（日/月/周，增量/全量/汇总等），粒度越小数据量越大，保留信息越多。</p>
 </li>
 </ul>
 <h3 id="传统数据仓库"><a href="#传统数据仓库" class="headerlink" title="传统数据仓库"></a>传统数据仓库</h3><ul>
-<li><p>失信的 SLA：数据处理时间越来越长</p>
+<li><p>失信的 SLA：随着数据规模变大，处理时间越来越长。</p>
+<p>  难堪重负：ETL 处理与用户查询竞争资源，体验变差。</p>
 </li>
-<li><p>不堪重负的数据仓库：ETL处理与用户查询竞争资源，体验变差</p>
+<li><p>查询成本高昂：为了节约成本把数据归档，却难以查询时间窗口以外的数据。</p>
 </li>
-<li><p>高昂的成本：节约成本把数据归档后难以查询时间窗口以外的数据</p>
-</li>
-<li><p>缺乏灵活性：需求变更模式改动大，结构化数据与其他数据源难以关联</p>
+<li><p>缺乏灵活性：每当需求变更，数据库模式改动大；而且结构化数据与其他数据源难以关联。</p>
 </li>
 </ul>
 <h3 id="Hadoop-的优势"><a href="#Hadoop-的优势" class="headerlink" title="Hadoop 的优势"></a>Hadoop 的优势</h3><ul>
@@ -504,24 +503,24 @@ height:100vh;
 </li>
 <li><p>灵活的模式演进，半结构化、非结构化数据处理。</p>
 </li>
-<li><p>可通过Oozie等工作流管理工具协调调度。</p>
+<li><p>可通过 Oozie 等工作流管理工具协调调度。</p>
 </li>
 </ul>
 <p>Sqoop（操作型数据源系统）、Flume/Kafka（日志等）-&gt; HDFS -&gt; Hive/Impala/Spark/HBase &lt;-&gt; Sqoop（EDW）&lt;-&gt; 分析工具</p>
 <h2 id="数据仓库相关术语"><a href="#数据仓库相关术语" class="headerlink" title="数据仓库相关术语"></a>数据仓库相关术语</h2><p><strong>模型</strong>：</p>
 <ul>
-<li><p>维度模型：事实表 + 维表（星型模型）。</p>
+<li><p>维度模型：事实表 + 维度表（星型模型）。</p>
 </li>
 <li><p>规范化模型：遵循关系型数据库三大范式。</p>
 </li>
 </ul>
-<p><strong>粒度</strong>：事实表粒度大小（一条记录代表什么），应尽可能细小。</p>
-<p><strong>可加性</strong>：字段是否可以直接相加（指标），计数或者求平均值（维度）。</p>
-<p><strong>事实表</strong>：拥有一或多个外键（参考维表，如订单表的城市 id），主键为一系列外键的组合（唯一标识一条记录）。</p>
-<p><strong>聚合事实表</strong>：为了加速查询而构建的事实表聚合（如每天订单平均金额）。</p>
-<p><strong>维表</strong>：各种查询约束（如省份城市表），及报表标签源头。</p>
-<p><strong>日历维度</strong>：附加在大多数的事实表和一些维表上。</p>
-<p><strong>缓慢变化的维度</strong>：把已存在的旧值修改为新的值（机器基本信息表），要么使用新值添加一条新的记录，并将其标记为当前值，将旧的标记为废弃（机器基本信息历史表）。</p>
+<p><strong>粒度</strong>：事实表粒度（一条记录表示的内容）应尽可能细小。</p>
+<p><strong>可加性</strong>：字段是否可以直接相加（指标），是否可计数或求平均值（维度）。</p>
+<p><strong>事实表</strong>：一或多个外键（参考维表，如订单表的城市 id），主键为外键的组合（标识唯一一条记录）。</p>
+<p><strong>聚合事实表</strong>：为提高查询效率而构建的聚合（如每天订单平均金额）。</p>
+<p><strong>维表</strong>：各种查询约束（如省份城市表）以及报表标签源头。</p>
+<p><strong>日历维度</strong>：附加在大多数事实表和一些维表上。</p>
+<p><strong>缓慢变化的维度</strong>：把已存在的旧值修改为新的值（机器基本信息表），可使用新值添加一条新记录，并将其标记为当前值，将旧记录标记为废弃（机器基本信息历史表）。</p>
 <h2 id="关系数据模型"><a href="#关系数据模型" class="headerlink" title="关系数据模型"></a>关系数据模型</h2><p>关系数据模型具备以下优势：</p>
 <ul>
 <li><p>非冗余性</p>
@@ -557,13 +556,13 @@ height:100vh;
 </li>
 </ul>
 <h3 id="完整性约束"><a href="#完整性约束" class="headerlink" title="完整性约束"></a>完整性约束</h3><ul>
-<li><p>实体完整性（主键不为空）。</p>
+<li><p>实体完整性：主键不为空。</p>
 </li>
-<li><p>参照完整性（外键值与主表某些记录的候选键值相同，或外键值全为空，即无关联）。</p>
+<li><p>参照完整性：外键与主表某记录的候选键值相同，或外键全为空（即无关联）。</p>
 </li>
 </ul>
 <p>业务规则：包括属性域和完整性规则（check）。</p>
-<h3 id="关系数据库语言（SQL）："><a href="#关系数据库语言（SQL）：" class="headerlink" title="关系数据库语言（SQL）："></a>关系数据库语言（SQL）：</h3><ul>
+<h3 id="关系数据库语言（SQL）"><a href="#关系数据库语言（SQL）" class="headerlink" title="关系数据库语言（SQL）"></a>关系数据库语言（SQL）</h3><ul>
 <li><p>DDL（数据定义语言）：create，alter，drop，truncate，comment，rename</p>
 </li>
 <li><p>DML（数据操纵语言）：select，insert，update，delete，merge，call，explain，lock</p>
@@ -573,228 +572,201 @@ height:100vh;
 <li><p>TCL（事务控制语言）：commit，rollback，savepoint，set transaction</p>
 </li>
 </ul>
-<h3 id="规范化"><a href="#规范化" class="headerlink" title="规范化"></a>规范化</h3><p>规范化可以减少数据冗余度、提高更新效率，但联表过多降低查询性能。</p>
+<h3 id="规范化"><a href="#规范化" class="headerlink" title="规范化"></a>规范化</h3><p>减少数据冗余度、提高更新效率，但由于联表过多降低查询性能。</p>
 <h4 id="1NF"><a href="#1NF" class="headerlink" title="1NF"></a>1NF</h4><p>原子性列，即属性不可再分。</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
-<th style="text-align:center">id</th>
-<th style="text-align:center">name</th>
-<th style="text-align:center">mobile</th>
-<th style="text-align:center">dept_no</th>
-<th style="text-align:center">dept_name</th>
-<th style="text-align:center">province</th>
-<th style="text-align:center">city</th>
-<th style="text-align:center">zip</th>
+<th align="center">id</th>
+<th align="center">name</th>
+<th align="center">mobile</th>
+<th align="center">dept_no</th>
+<th align="center">dept_name</th>
+<th align="center">province</th>
+<th align="center">city</th>
+<th align="center">zip</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">张三</td>
-<td style="text-align:center">13800138000<br>13800138001</td>
-<td style="text-align:center">d1</td>
-<td style="text-align:center">部门1</td>
-<td style="text-align:center">广东</td>
-<td style="text-align:center">广州</td>
-<td style="text-align:center">110</td>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">张三</td>
+<td align="center">13800138000<br>13800138001</td>
+<td align="center">d1</td>
+<td align="center">部门1</td>
+<td align="center">广东</td>
+<td align="center">广州</td>
+<td align="center">110</td>
 </tr>
 <tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">李四</td>
-<td style="text-align:center">13800138002</td>
-<td style="text-align:center">d2</td>
-<td style="text-align:center">部门2</td>
-<td style="text-align:center">北京</td>
-<td style="text-align:center">北京</td>
-<td style="text-align:center">111</td>
+<td align="center">2</td>
+<td align="center">李四</td>
+<td align="center">13800138002</td>
+<td align="center">d2</td>
+<td align="center">部门2</td>
+<td align="center">北京</td>
+<td align="center">北京</td>
+<td align="center">111</td>
 </tr>
-</tbody>
-</table>
-</div>
-<p>mobile 列可存放多个号码，应该拆分：</p>
-<div class="table-container">
+</tbody></table>
+<p>mobile 列可存放多个号码，拆分：</p>
 <table>
 <thead>
 <tr>
-<th style="text-align:center">id</th>
-<th style="text-align:center">name</th>
-<th style="text-align:center">mobile</th>
-<th style="text-align:center">dept_no</th>
-<th style="text-align:center">dept_name</th>
-<th style="text-align:center">province</th>
-<th style="text-align:center">city</th>
-<th style="text-align:center">zip</th>
+<th align="center">id</th>
+<th align="center">name</th>
+<th align="center">mobile</th>
+<th align="center">dept_no</th>
+<th align="center">dept_name</th>
+<th align="center">province</th>
+<th align="center">city</th>
+<th align="center">zip</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">张三</td>
-<td style="text-align:center">13800138000</td>
-<td style="text-align:center">d1</td>
-<td style="text-align:center">部门1</td>
-<td style="text-align:center">广东</td>
-<td style="text-align:center">广州</td>
-<td style="text-align:center">110</td>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">张三</td>
+<td align="center">13800138000</td>
+<td align="center">d1</td>
+<td align="center">部门1</td>
+<td align="center">广东</td>
+<td align="center">广州</td>
+<td align="center">110</td>
 </tr>
 <tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">张三</td>
-<td style="text-align:center">13800138001</td>
-<td style="text-align:center">d1</td>
-<td style="text-align:center">部门1</td>
-<td style="text-align:center">广东</td>
-<td style="text-align:center">广州</td>
-<td style="text-align:center">110</td>
+<td align="center">1</td>
+<td align="center">张三</td>
+<td align="center">13800138001</td>
+<td align="center">d1</td>
+<td align="center">部门1</td>
+<td align="center">广东</td>
+<td align="center">广州</td>
+<td align="center">110</td>
 </tr>
 <tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">李四</td>
-<td style="text-align:center">13800138002</td>
-<td style="text-align:center">d2</td>
-<td style="text-align:center">部门2</td>
-<td style="text-align:center">北京</td>
-<td style="text-align:center">北京</td>
-<td style="text-align:center">111</td>
+<td align="center">2</td>
+<td align="center">李四</td>
+<td align="center">13800138002</td>
+<td align="center">d2</td>
+<td align="center">部门2</td>
+<td align="center">北京</td>
+<td align="center">北京</td>
+<td align="center">111</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <h4 id="2NF"><a href="#2NF" class="headerlink" title="2NF"></a>2NF</h4><p>在满足 1NF 条件下消除部分依赖，即每个非主属性完全函数依赖于键码。</p>
-<p>上表中候选键 {id, name, dept_no}，dept_name 依赖 dept_no、name 依赖 id，因此应该把表拆分为如下三个表：</p>
+<p>上表中候选键 {id, name, dept_no}，dept_name 依赖 dept_no、name 依赖 id。拆分为如下三个表：</p>
 <p>部门表：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
-<th style="text-align:center">dept_no</th>
-<th style="text-align:center">dept_name</th>
+<th align="center">dept_no</th>
+<th align="center">dept_name</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">d1</td>
-<td style="text-align:center">部门 1</td>
+<tbody><tr>
+<td align="center">d1</td>
+<td align="center">部门 1</td>
 </tr>
 <tr>
-<td style="text-align:center">d2</td>
-<td style="text-align:center">部门 2</td>
+<td align="center">d2</td>
+<td align="center">部门 2</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <p>员工 - 部门表：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
-<th style="text-align:center">id</th>
-<th style="text-align:center">dept_no</th>
+<th align="center">id</th>
+<th align="center">dept_no</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">d1</td>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">d1</td>
 </tr>
 <tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">d2</td>
+<td align="center">2</td>
+<td align="center">d2</td>
 </tr>
-</tbody>
-</table>
-</div>
-<p>员工 - 号码表：</p>
-<div class="table-container">
+</tbody></table>
+<p>员工表：</p>
 <table>
 <thead>
 <tr>
-<th style="text-align:center">id</th>
-<th style="text-align:center">mobile</th>
-<th style="text-align:center">province</th>
-<th style="text-align:center">city</th>
-<th style="text-align:center">zip</th>
+<th align="center">id</th>
+<th align="center">mobile</th>
+<th align="center">province</th>
+<th align="center">city</th>
+<th align="center">zip</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">13800138000</td>
-<td style="text-align:center">广东</td>
-<td style="text-align:center">广州</td>
-<td style="text-align:center">110</td>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">13800138000</td>
+<td align="center">广东</td>
+<td align="center">广州</td>
+<td align="center">110</td>
 </tr>
 <tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">13800138002</td>
-<td style="text-align:center">北京</td>
-<td style="text-align:center">北京</td>
-<td style="text-align:center">111</td>
+<td align="center">2</td>
+<td align="center">13800138002</td>
+<td align="center">北京</td>
+<td align="center">北京</td>
+<td align="center">111</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <h4 id="3NF"><a href="#3NF" class="headerlink" title="3NF"></a>3NF</h4><p>在满足 2NF 条件下消除传递依赖，即非主属性不传递函数依赖于键码。</p>
 <p>上面的员工表中 province、city 依赖 zip，而 zip 依赖 id 即为传递依赖，应把表再拆分成员工表和地区表。</p>
 <p>员工表：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
-<th style="text-align:center">id</th>
-<th style="text-align:center">mobile</th>
-<th style="text-align:center">zip</th>
+<th align="center">id</th>
+<th align="center">mobile</th>
+<th align="center">zip</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">13800138000</td>
-<td style="text-align:center">110</td>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">13800138000</td>
+<td align="center">110</td>
 </tr>
 <tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">13800138002</td>
-<td style="text-align:center">111</td>
+<td align="center">2</td>
+<td align="center">13800138002</td>
+<td align="center">111</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <p>地区表：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
-<th style="text-align:center">zip</th>
-<th style="text-align:center">province</th>
-<th style="text-align:center">city</th>
+<th align="center">zip</th>
+<th align="center">province</th>
+<th align="center">city</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">110</td>
-<td style="text-align:center">广东</td>
-<td style="text-align:center">广州</td>
+<tbody><tr>
+<td align="center">110</td>
+<td align="center">广东</td>
+<td align="center">广州</td>
 </tr>
 <tr>
-<td style="text-align:center">111</td>
-<td style="text-align:center">北京</td>
-<td style="text-align:center">北京</td>
+<td align="center">111</td>
+<td align="center">北京</td>
+<td align="center">北京</td>
 </tr>
-</tbody>
-</table>
-</div>
-<h2 id="维度数据模型"><a href="#维度数据模型" class="headerlink" title="维度数据模型"></a>维度数据模型</h2><p>维度数据模型重点关注这些概念来构建：事实表、维度表（规范化级别低于关系模型）和数据粒度，具备以下优势：</p>
+</tbody></table>
+<h2 id="维度数据模型"><a href="#维度数据模型" class="headerlink" title="维度数据模型"></a>维度数据模型</h2><p>维度数据模型重点关注事实表、维度表（规范化级别低于关系模型）和数据粒度三个概念构建，具备以下优势：</p>
 <ul>
 <li><p>易理解</p>
 </li>
-<li><p>高性能（非规范化，如原来有订单明细表和订单表，可以从订单明细状态中提取出订单状态维度表、再把订单表和订单明细表整合到一起）</p>
+<li><p>高性能</p>
 </li>
 <li><p>可扩展</p>
 </li>
 </ul>
+<p>其中高性能源于非规范化，比如订单明细表和订单表，可从订单明细状态中提取出订单状态维度表、再把订单表和订单明细表整合到一起。</p>
 <h3 id="构建流程"><a href="#构建流程" class="headerlink" title="构建流程"></a>构建流程</h3><ul>
 <li><p>选择业务流程（UML）</p>
 </li>
@@ -805,20 +777,19 @@ height:100vh;
 <li><p>确认事实（金额/数量）</p>
 </li>
 </ul>
-<h3 id="维度规范化"><a href="#维度规范化" class="headerlink" title="维度规范化"></a>维度规范化</h3><p>把一个维度映射成多个维度表（“维度 - 子维度”连接，如地址表拆分为“省份表 - 城市表 - 区域表”）。</p>
-<p>其中需要避免规范化处理的情况：</p>
+<h3 id="维度规范化"><a href="#维度规范化" class="headerlink" title="维度规范化"></a>维度规范化</h3><p>把一个维度映射成多个维度表，即维度 - 子维度”连接。比如地址表拆分为“省份表 - 城市表 - 区域表”。</p>
+<p>但以下情况需要避免规范化处理：</p>
 <ul>
-<li><p>增加表数量使结构复杂。</p>
+<li><p>增加表数量会使结构复杂。</p>
 </li>
 <li><p>多表连接使查询复杂。</p>
 </li>
 <li><p>不适合使用位图索引。</p>
 </li>
-<li><p>降低查询性能。</p>
+<li><p>明显降低查询性能。</p>
 </li>
 </ul>
-<h3 id="星型模型"><a href="#星型模型" class="headerlink" title="星型模型"></a>星型模型</h3><p>以事实表为中心，多个维度表与事实表相连。    </p>
-<p>其中事实表包括：</p>
+<h3 id="星型模型"><a href="#星型模型" class="headerlink" title="星型模型"></a>星型模型</h3><p>以事实表为中心，多个维度表与事实表相连。其中事实表包括：</p>
 <ul>
 <li><p>事务事实表（如销售行为）</p>
 </li>
@@ -829,42 +800,43 @@ height:100vh;
 </ul>
 <p>其具备以下特点：</p>
 <ul>
-<li><p>简化查询（简化业务报表逻辑，提升查询性能）。</p>
+<li><p>简化查询：简化业务报表逻辑，提升查询性能。</p>
 </li>
 <li><p>快速聚合，便于向 OLAP 提供数据。</p>
 </li>
-<li><p>不能保证数据完整性（通过批处理和实时处理抵消）。</p>
+<li><p>不能保证数据完整性，应通过批处理和实时处理抵消。</p>
 </li>
 <li><p>分析需求不灵活。</p>
 </li>
 </ul>
-<h3 id="雪花模型"><a href="#雪花模型" class="headerlink" title="雪花模型"></a>雪花模型</h3><p>对星型模型的维度表再作规范化处理（如把机器的门店维度表拆分成门店表和门店地址表）。</p>
-<p>这种做法比星型模型节省存储空间，但同时会降低查询性能。</p>
+<h3 id="雪花模型"><a href="#雪花模型" class="headerlink" title="雪花模型"></a>雪花模型</h3><p>对星型模型维度表作规范化处理，比如把机器的门店维度表拆分成门店表和门店地址表。</p>
+<p>能比星型模型节省存储空间，但同时会降低查询性能。</p>
 <p>也可结合使用星型模型与雪花模型（底层使用雪花模型，配置视图模拟星型模型）。</p>
 <h2 id="Data-Vault-模型"><a href="#Data-Vault-模型" class="headerlink" title="Data Vault 模型"></a>Data Vault 模型</h2><p>Data Vault 模型具备以下特点：</p>
 <ul>
-<li><p>基于时间存储</p>
+<li><p>基于时间存储。</p>
 </li>
-<li><p>依赖越少越好</p>
+<li><p>依赖越少越好。</p>
 </li>
-<li><p>与源系统越独立越好</p>
+<li><p>与源系统越独立越好。</p>
 </li>
-<li><p>适应源系统的数据变化、支持扩展</p>
+<li><p>适应源系统的数据变化、支持扩展。</p>
 </li>
-<li><p>ETL 作业可反复执行</p>
+<li><p>ETL 作业可反复执行。</p>
 </li>
-<li><p>数据可追踪</p>
+<li><p>数据可追踪。</p>
 </li>
 </ul>
-<p>由于存放原始数据（所有时间所有数据），不遵照任何业务规则，不同数据源的数据冲突时可存放多个版本数据。</p>
-<p>其中数据解析延迟到“数据集市”阶段：即存放单一主题（财务、销售部门等）、数据仓库/事务系统的少量数据源的粗粒度数据（汇总数据），只保留一段时间范围内（如数月），通常使用星型模型、雪花模型，存放的是 ETL 的输出数据。</p>
+<p>由于存放原始数据（所有时间所有数据），不遵照任何业务规则，不同数据源的数据冲突时可保留多个版本数据。</p>
+<p>其中数据解析延迟到数据集市阶段：存放单一主题（财务、销售部门等）、数据仓库/事务系统的少量数据源的粗粒度数据（汇总数据），且只保留一段时间范围内（如数月）。</p>
+<p>通常使用星型模型、雪花模型，存放 ETL 的输出数据。</p>
 <h3 id="中心表、链接表与附属表"><a href="#中心表、链接表与附属表" class="headerlink" title="中心表、链接表与附属表"></a>中心表、链接表与附属表</h3><p>由中心表（HUB）、链接表（Link）、附属表（Satelite）组成，综合了 3NF 和星型模型的优势。</p>
 <ul>
 <li><p>中心表（如用户、机器、订单表等）：主键（系统生成的代理键）、业务主键（如用户 id，机器 id，可能用于多个系统，但只保留一份）、装载时间、数据源。</p>
 </li>
 <li><p>链接表（中心表之间的链接关系，如订单-用户关联表）：主键、外键、装载时间、数据源。</p>
 </li>
-<li><p>附属表（中心表和链接表的附属信息，如订单详情表）：主键、外键、装载时间、失效时间、数据源、属性xxx。</p>
+<li><p>附属表（中心表和链接表的附属信息，如订单详情表）：主键、外键、装载时间、失效时间、数据源、属性 xxx。</p>
 </li>
 </ul>
 <h3 id="构建流程-1"><a href="#构建流程-1" class="headerlink" title="构建流程"></a>构建流程</h3><ul>
@@ -894,7 +866,7 @@ height:100vh;
 <li><p>管理维护</p>
 </li>
 </ul>
-<p>可以根据业务形态，考虑以下技术选型。</p>
+<p>可根据业务形态考虑技术选型。</p>
 <h3 id="数据建模与存储"><a href="#数据建模与存储" class="headerlink" title="数据建模与存储"></a>数据建模与存储</h3><p><strong>选择存储引擎：</strong>：取决于数据访问方式。</p>
 <ul>
 <li><p>HDFS：从 OLTP 系统提取数据，批量处理（整个时间周期数据、批处理效率更高）后加载到数据仓库，或者全表扫描。</p>
@@ -902,23 +874,24 @@ height:100vh;
 <li><p>HBase：随机访问，即席查询；</p>
 </li>
 </ul>
-<p><strong>反范式设计</strong>：为分析提速（Hadoop 不适合进行多次关联操作，尤其是较大的事实表关联较小的维表：比如处理时订单表应直接写入机器信息而非 id，避免查询时机器信息表再与订单表关联），也避免维护多个数据集的繁琐，缺点是：带来数据冗余，数据采集流水线变得繁琐，数据更新困难。</p>
-<p><strong>数据更新</strong>：HDFS 不支持原地更新，而且即使加上处理逻辑原地更新后也无法追踪更新流水记录。</p>
-<p><strong>事实表</strong>：根据更新时间取日增量每天同步追加（如订单收益取生成时间，订单退款取更新时间同步到事实表，即可计算净收益同时追踪变化，如有需要还可以另外维护一个订单全量表记录订单最新状态信息）。</p>
-<p>历史表：根据更新时间取日全量每天同步（完整的用户表，同时最新的一份可以作为状态表）。</p>
+<p><strong>反范式设计</strong>：为分析提速，也避免维护多个数据集的繁琐。缺点：带来数据冗余，数据采集流水线变得繁琐，数据更新困难。尤其是 Hadoop 不适合进行多次关联操作，尤其是较大的事实表关联较小的维表：比如处理时订单表应直接写入机器信息而非 id，避免查询时机器信息表再与订单表关联。</p>
+<p><strong>数据更新</strong>：HDFS 不支持原地更新，且加上处理逻辑原地更新后也无法追踪更新的流水记录。</p>
+<p><strong>事实表</strong>：根据更新时间取日增量每天同步追加。比如订单收益取生成时间，订单退款取更新时间同步到事实表，即可计算净收益并追踪变化，如有需要还可以另外维护订单全量表记录订单最新状态信息。</p>
+<p><strong>历史表</strong>：根据更新时间取日全量每天同步。比如完整的用户表，其最新的一份可作为状态表。</p>
 <p><strong>存储格式及压缩算法</strong></p>
 <ul>
 <li><p>Avro：行式存储，支持模式演进，不需要根据 OLTP 修改 ETL 操作（适合追加）。</p>
 </li>
 <li><p>Parquet：列式存储，性能强大（涉及多个维表的事实表较宽，查询和聚合操作只涉及小部分列），压缩支持好。</p>
 </li>
-<li><p>不推荐 CSV（出于性能、压缩和模式管理考虑，CSV 访问时还需要数据解析）<br>  压缩算法推荐使用 Snappy</p>
+<li><p>不推荐 CSV（出于性能、压缩和模式管理考虑，CSV 访问时还需要数据解析）</p>
 </li>
 </ul>
-<p><strong>分区方式</strong>：取决于数据访问方式，目的是跳过不必要的数据；按时间周期分区分区平均大小为 HDFS 数据块的若干倍（典型值为每天数据 1GB 则按天分区，较多则按小时，较少则按周或月）。</p>
-<h3 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h3><p><strong>OLTP导出</strong>：Sqoop，Informatica，Pentaho，Kettle<br>对象：数据几乎不变的表（一次性导入），数据频繁更新的小表（日全量），数据频繁更新且无法每天全量提取的大表（日增量，周/月全量）。</p>
-<p><strong>数据整合</strong>：Sqoop 导出时执行关联（可以仅插入、仅更新和混合，但只支持简单的条件，而且关联操作会给 OLTP 带来压力；Sqoop 同时支持元数据服务，可记录上次执行状态，下次执行时可以使用保证获取更新的记录）。</p>
-<p>导出到 HDFS 后再作关联（Spark、Hive）。</p>
+<p>压缩算法推荐使用 Snappy。</p>
+<p><strong>分区方式</strong>：取决于数据量和访问方式，目的是跳过不必要的数据。按时间周期分区，分区平均大小为 HDFS 数据块的若干倍（典型值为每天数据 1GB 则按天分区，较多则按小时，较少则按周或月）。</p>
+<h3 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h3><p><strong>OLTP导出</strong>：目标是数据几乎不变的表（一次性导入），数据频繁更新的小表（日全量），数据频繁更新、无法每天全量提取的大表（日增量，周/月全量）。可使用 Sqoop，Informatica，Pentaho，Kettle。</p>
+<p><strong>数据整合</strong>：Sqoop 导出时执行关联。可仅插入、仅更新和混合，但只支持简单的条件，而且关联操作会给 OLTP 带来压力；同时支持元数据服务，可记录上次执行状态，下次执行时可获取更新的记录。</p>
+<p>建议导出到 HDFS 后再用 Spark、Hive 等工具关联。</p>
 <h3 id="数据处理与访问"><a href="#数据处理与访问" class="headerlink" title="数据处理与访问"></a>数据处理与访问</h3><p><strong>分区</strong>：</p>
 <ul>
 <li><p>对已存在表分区（从旧表读取数据，并将数据加载到新创建的、带分区的表的正确分区中）。</p>
@@ -930,9 +903,10 @@ height:100vh;
 </ul>
 <p><strong>合并、更新</strong>：除了记录事实表，还要维护已有信息表（缓慢变化的维表等），可以全量导入，也可以从已有信息读出、追加修改后再重新写入，并更新元数据（如果有的话）。</p>
 <p><strong>提高更新效率</strong>：只针对分区修改、添加 Hadoop 节点、改用 HBase（如果更新频繁的话，但也会渐慢查询速度）。</p>
-<h3 id="数据聚合"><a href="#数据聚合" class="headerlink" title="数据聚合"></a>数据聚合</h3><p>Hadoop 支持在关系型数据库中执行很耗资源的聚合操作（求和、计数、平均，天然高度并行），使用 Hive、Spark、Impala，聚合后的数据集通过Sqoop导出到关系型数据库，可再接入 BI 工具继续处理。</p>
+<h3 id="数据聚合"><a href="#数据聚合" class="headerlink" title="数据聚合"></a>数据聚合</h3><p>在关系型数据库中执行聚合操作非常耗资源，比如求和、计数、平均等。而 Hadoop 天然高度并行，因此支持且更擅长聚合操作。</p>
+<p>还能使用 Hive、Spark、Impala 等工具，把聚合后的数据集通过 Sqoop 导入关系型数据库，可再接入 BI 工具继续处理。</p>
 <h3 id="数据导出"><a href="#数据导出" class="headerlink" title="数据导出"></a>数据导出</h3><ul>
-<li><p>将数据保留在 Hadoop 中，使用 Impala （更低延迟）、Hive 和集成的 BI 工具进行查询。</p>
+<li><p>将数据保留在 Hadoop 中，使用 Impala（更低延迟）、Hive 和集成的 BI 工具查询。</p>
 </li>
 <li><p>与关系型数据库集成：Informatica、Pentaho，Sqoop + Oracle 连接器 。</p>
 </li>
@@ -1124,7 +1098,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">数据仓库设计基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E4%B8%8E%E4%B8%9A%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%BA%93"><span class="toc-number">1.1.</span> <span class="toc-text">数据仓库与业务系统库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">1.1.1.</span> <span class="toc-text">传统数据仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hadoop-%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">1.1.2.</span> <span class="toc-text">Hadoop 的优势</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD"><span class="toc-number">1.2.</span> <span class="toc-text">数据仓库相关术语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">关系数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.1.</span> <span class="toc-text">数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E6%80%A7%E7%BA%A6%E6%9D%9F"><span class="toc-number">1.3.2.</span> <span class="toc-text">完整性约束</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%AD%E8%A8%80%EF%BC%88SQL%EF%BC%89%EF%BC%9A"><span class="toc-number">1.3.3.</span> <span class="toc-text">关系数据库语言（SQL）：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E8%8C%83%E5%8C%96"><span class="toc-number">1.3.4.</span> <span class="toc-text">规范化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1NF"><span class="toc-number">1.3.4.1.</span> <span class="toc-text">1NF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2NF"><span class="toc-number">1.3.4.2.</span> <span class="toc-text">2NF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3NF"><span class="toc-number">1.3.4.3.</span> <span class="toc-text">3NF</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%B4%E5%BA%A6%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.4.</span> <span class="toc-text">维度数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.1.</span> <span class="toc-text">构建流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%B4%E5%BA%A6%E8%A7%84%E8%8C%83%E5%8C%96"><span class="toc-number">1.4.2.</span> <span class="toc-text">维度规范化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.4.3.</span> <span class="toc-text">星型模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%AA%E8%8A%B1%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.4.4.</span> <span class="toc-text">雪花模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Data-Vault-%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.5.</span> <span class="toc-text">Data Vault 模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E5%BF%83%E8%A1%A8%E3%80%81%E9%93%BE%E6%8E%A5%E8%A1%A8%E4%B8%8E%E9%99%84%E5%B1%9E%E8%A1%A8"><span class="toc-number">1.5.1.</span> <span class="toc-text">中心表、链接表与附属表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B-1"><span class="toc-number">1.5.2.</span> <span class="toc-text">构建流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%9E%B6%E6%9E%84"><span class="toc-number">1.6.</span> <span class="toc-text">数据仓库架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1%E4%B8%8E%E5%AD%98%E5%82%A8"><span class="toc-number">1.6.1.</span> <span class="toc-text">数据建模与存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86"><span class="toc-number">1.6.2.</span> <span class="toc-text">数据采集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%B8%8E%E8%AE%BF%E9%97%AE"><span class="toc-number">1.6.3.</span> <span class="toc-text">数据处理与访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%81%9A%E5%90%88"><span class="toc-number">1.6.4.</span> <span class="toc-text">数据聚合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA"><span class="toc-number">1.6.5.</span> <span class="toc-text">数据导出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="toc-number">1.6.6.</span> <span class="toc-text">流程调度</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">数据仓库设计基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E4%B8%8E%E4%B8%9A%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%BA%93"><span class="toc-number">1.1.</span> <span class="toc-text">数据仓库与业务系统库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">1.1.1.</span> <span class="toc-text">传统数据仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hadoop-%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">1.1.2.</span> <span class="toc-text">Hadoop 的优势</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD"><span class="toc-number">1.2.</span> <span class="toc-text">数据仓库相关术语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">关系数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.1.</span> <span class="toc-text">数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E6%80%A7%E7%BA%A6%E6%9D%9F"><span class="toc-number">1.3.2.</span> <span class="toc-text">完整性约束</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%AD%E8%A8%80%EF%BC%88SQL%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">关系数据库语言（SQL）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E8%8C%83%E5%8C%96"><span class="toc-number">1.3.4.</span> <span class="toc-text">规范化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1NF"><span class="toc-number">1.3.4.1.</span> <span class="toc-text">1NF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2NF"><span class="toc-number">1.3.4.2.</span> <span class="toc-text">2NF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3NF"><span class="toc-number">1.3.4.3.</span> <span class="toc-text">3NF</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%B4%E5%BA%A6%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.4.</span> <span class="toc-text">维度数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.1.</span> <span class="toc-text">构建流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%B4%E5%BA%A6%E8%A7%84%E8%8C%83%E5%8C%96"><span class="toc-number">1.4.2.</span> <span class="toc-text">维度规范化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.4.3.</span> <span class="toc-text">星型模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%AA%E8%8A%B1%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.4.4.</span> <span class="toc-text">雪花模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Data-Vault-%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.5.</span> <span class="toc-text">Data Vault 模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E5%BF%83%E8%A1%A8%E3%80%81%E9%93%BE%E6%8E%A5%E8%A1%A8%E4%B8%8E%E9%99%84%E5%B1%9E%E8%A1%A8"><span class="toc-number">1.5.1.</span> <span class="toc-text">中心表、链接表与附属表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B-1"><span class="toc-number">1.5.2.</span> <span class="toc-text">构建流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%9E%B6%E6%9E%84"><span class="toc-number">1.6.</span> <span class="toc-text">数据仓库架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1%E4%B8%8E%E5%AD%98%E5%82%A8"><span class="toc-number">1.6.1.</span> <span class="toc-text">数据建模与存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86"><span class="toc-number">1.6.2.</span> <span class="toc-text">数据采集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%B8%8E%E8%AE%BF%E9%97%AE"><span class="toc-number">1.6.3.</span> <span class="toc-text">数据处理与访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%81%9A%E5%90%88"><span class="toc-number">1.6.4.</span> <span class="toc-text">数据聚合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA"><span class="toc-number">1.6.5.</span> <span class="toc-text">数据导出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="toc-number">1.6.6.</span> <span class="toc-text">流程调度</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1679,9 +1653,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 78
         </div>
         <!-- search  -->
         
@@ -1703,6 +1684,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-15/" >《DDIA》阅读笔记（十一）：流处理系统</a>
         </li>
     
     
@@ -2223,7 +2209,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 

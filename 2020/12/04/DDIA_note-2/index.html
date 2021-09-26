@@ -33,7 +33,7 @@
 <meta property="og:description" content="《DDIA》阅读笔记（二）：数据模型与查询语言">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-12-04T09:03:11.000Z">
-<meta property="article:modified_time" content="2021-08-17T15:03:17.277Z">
+<meta property="article:modified_time" content="2021-09-23T15:01:13.911Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="设计">
@@ -326,7 +326,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2.4k</span>Reading time: <span class="post-count reading-time">8 min</span></span>
+                        <span>Word count: <span class="post-count word-count">2.3k</span>Reading time: <span class="post-count reading-time">7 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -507,6 +507,7 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
 <p>关于数据模型：</p>
 <ul>
 <li><p>复杂的应用程序可能会有更多的中间层，每层通过提供简洁的数据模型隐藏下层复杂性。抽象机制使得不同的人群可高效协作。</p>
@@ -514,8 +515,8 @@ height:100vh;
 <li><p>有许多不同类型的数据模型，都分别有其最佳实践。即使不关心内部机制，精通一种数据模型需要很大功夫。由于对其上的软件应用有巨大影响，需要慎重选择合适的数据模型。</p>
 </li>
 </ul>
-<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><h3 id="关系模型：严格关联"><a href="#关系模型：严格关联" class="headerlink" title="关系模型：严格关联"></a>关系模型：严格关联</h3><p>数据被组织成关系（Repations），在 SQL 中被称为表（Table），每个关系都是元组（Tuples）或无序集合（行），其实现为关系数据库管理系统（RDBMS）和 SQL。</p>
-<h4 id="数据访问"><a href="#数据访问" class="headerlink" title="数据访问"></a>数据访问</h4><p>定义所有数据</p>
+<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><h3 id="关系模型：严格关联"><a href="#关系模型：严格关联" class="headerlink" title="关系模型：严格关联"></a>关系模型：严格关联</h3><p>数据被组织成关系（Repations），在 SQL 中为表（Table），每个关系是元组（Tuples）或无序集合（行），其实现为关系数据库管理系统（RDBMS）和 SQL。</p>
+<h4 id="数据访问"><a href="#数据访问" class="headerlink" title="数据访问"></a>数据访问</h4><p>定义所有数据：</p>
 <ul>
 <li><p>固定格式：关系（表）是元组（行）的集合，没有复杂的嵌套结构和访问路径，可读取表中任何行，支持任意条件查询。</p>
 </li>
@@ -529,12 +530,12 @@ height:100vh;
 </li>
 </ul>
 <h4 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h4><ul>
-<li><p>数据存储在关系表中，应用层代码中的对象与表、行和列的数据库模型之间需要笨拙的转换层。模型之间的脱离被称为 <strong>阻抗失谐</strong>。使用 ORM 可减少转换层所需的样板代码，但不能完全隐藏两个模型之间的差异。</p>
+<li><p>数据存储在关系表中，应用层代码中的对象与表、行和列的数据库模型之间需要笨拙的转换层。模型之间脱离被称为 <strong>阻抗失谐</strong>。使用 ORM 可减少转换层的样板代码，但不能完全隐藏两个模型之间的差异。</p>
 </li>
-<li><p>遵顼严格的 <strong>写时模式</strong>，在数据量大时模式更改、数据更新速度缓慢且可能需要停机。此时可借鉴文档数据库的做法：采用 <strong>读时填充</strong>，即设置字段为 NULL，在读取时再填充值。</p>
+<li><p>遵顼严格的 <strong>写时模式</strong>，在数据量大时模式更改、数据更新速度缓慢，甚至可能需要停机。可借鉴文档数据库：采用 <strong>读时填充</strong>，设置字段为 NULL、在读取时填充值。</p>
 </li>
 </ul>
-<h4 id="多对一关系"><a href="#多对一关系" class="headerlink" title="多对一关系"></a>多对一关系</h4><p>将诸如地址、行业等定义为 id（设计为字典表），在填写时供用户选择而非输入，好处在于：</p>
+<h4 id="多对一关系"><a href="#多对一关系" class="headerlink" title="多对一关系"></a>多对一关系</h4><p>将诸如地址、行业等定义为 id（设计为字典表），在填写时供用户选择而非输入：</p>
 <ul>
 <li><p>保持样式和输入值一致</p>
 </li>
@@ -547,9 +548,9 @@ height:100vh;
 <li><p>搜索支持</p>
 </li>
 </ul>
-<p><strong>多对一</strong> 关系（多人生活于某个地区、从事某一行业）使用关系模型比文档模型更合适：</p>
+<p><strong>多对一</strong> 关系（多人生活于某个地区、从事某一行业）使用关系模型更合适：</p>
 <ul>
-<li><p>相关项由唯一标识符引用（外键，在文档模型中被称为文档引用），可在查询时通过联结操作或相关后续查询来解析。</p>
+<li><p>相关项由唯一标识符引用（外键，在文档模型中为文档引用），可在查询时通过联结或相关后续查询来解析。</p>
 </li>
 <li><p>如数据库不支持联结，必须在应用代码中对数据库进行多次查询后再模拟联结（从持久层转移到应用层）。</p>
 </li>
@@ -557,7 +558,7 @@ height:100vh;
 </li>
 </ul>
 <h4 id="多对多关系"><a href="#多对多关系" class="headerlink" title="多对多关系"></a>多对多关系</h4><p>更建议使用图模型。</p>
-<h3 id="非关系模型"><a href="#非关系模型" class="headerlink" title="非关系模型"></a>非关系模型</h3><p>主要指 NoSQL，其提供新的数据模型以及内置的复制和分区等手段改进传统关系模型。</p>
+<h3 id="非关系模型"><a href="#非关系模型" class="headerlink" title="非关系模型"></a>非关系模型</h3><p>主要指 NoSQL，其提供数据模型、复制和分区等手段改进传统关系模型。</p>
 <ul>
 <li><p>更好的扩展性需求。</p>
 </li>
@@ -565,20 +566,18 @@ height:100vh;
 </li>
 <li><p>满足特定需求的查询操作。</p>
 </li>
-<li><p>更少限制、更具动态和表达力的数据模型（不会对存储的数据强加模式）。</p>
+<li><p>更少限制、更具动态和表达力的数据模型（不对数据强加模式）。</p>
 </li>
 </ul>
-<div class="table-container">
 <table>
 <thead>
 <tr>
 <th>非关系模型</th>
-<th>解决问题（相对于关系模型）</th>
+<th>解决关系模型的问题</th>
 <th>代表实现</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>键值数据库</td>
 <td>无法存储数据结构。</td>
 <td>Redis</td>
@@ -590,7 +589,7 @@ height:100vh;
 </tr>
 <tr>
 <td>列式数据库</td>
-<td>大数据场景下的 I/O 性能差。</td>
+<td>大数据场景下部分访问 I/O 性能差。</td>
 <td>HBase</td>
 </tr>
 <tr>
@@ -598,17 +597,15 @@ height:100vh;
 <td>全文搜索性能差。</td>
 <td>Elasticsearch</td>
 </tr>
-</tbody>
-</table>
-</div>
-<p>有时也会结合关系型存储一起使用，被称为 <strong>混合持久化</strong>。</p>
-<h4 id="文档模型：弱关联"><a href="#文档模型：弱关联" class="headerlink" title="文档模型：弱关联"></a>文档模型：弱关联</h4><p>特点是模式灵活性， 由于局部性而带来较好性能，且更接近应用程序所使用的数据结构。</p>
+</tbody></table>
+<p>有时也结合关系模型，称为 <strong>混合持久化</strong>。</p>
+<h4 id="文档模型：弱关联"><a href="#文档模型：弱关联" class="headerlink" title="文档模型：弱关联"></a>文档模型：弱关联</h4><p>模式灵活性， 由于局部性带来较好性能，更接近应用程序使用的数据结构。</p>
 <p>尤其适合处理自包含文档，且文档与其他文档之间关联很少。</p>
 <h5 id="灵活性"><a href="#灵活性" class="headerlink" title="灵活性"></a>灵活性</h5><p>实现层次模型：在父记录中保存嵌套记录，而非存储在单独的表中。</p>
 <ul>
 <li><p><strong>读时模式</strong>：在读数据的代码中采用某种隐形模式（而非数据库强制执行，类似运行时类型检查），适用于大量异构或动态结构的数据存储。解决 <strong>写时模式</strong> 在更改 schema 时面临的速度慢和停机的问题（尤其在数据量大时）。</p>
 </li>
-<li><p>非关联树状结构容易表达 <strong>一对多</strong> 关系（不需要联结，或只需要弱连结），比如一名用户身兼多个职位、拥有多段工作经历等。在读取时一次性加载整棵树，无需像关系模型般把结构分解为多个表（笨重而复杂）。</p>
+<li><p>非关联树状结构容易表达不需要联结或只需要弱连结的 <strong>一对多</strong> 关系（一名用户身兼多个职位、拥有多段工作经历）等。在读取时一次性加载整棵树，无需像关系模型般把结构分解为多个笨重而复杂的表。</p>
 </li>
 </ul>
 <h5 id="局限性-1"><a href="#局限性-1" class="headerlink" title="局限性"></a>局限性</h5><ul>
@@ -616,16 +613,16 @@ height:100vh;
 </li>
 <li><p>在表示 <strong>多对一</strong> 和 <strong>多对多</strong> 关系时，与关系模型一样，相关项由外键或文档引用引用。可在查询时通过联结操作或相关后续查询来解析（文档数据库并未遵循 CODASYL 标准）。</p>
 </li>
-<li><p>处理多对多关系时可通过反规范化减少联结需求，应用代码需做额外工作保持数据一致性，实现更复杂且比基于数据库的联结更慢。</p>
+<li><p>处理多对多关系时可通过反规范化减少联结需求，应用代码需做额外工作保持数据一致性，实现更复杂且比基于数据库联结更慢。</p>
 </li>
 </ul>
 <h5 id="数据局部性"><a href="#数据局部性" class="headerlink" title="数据局部性"></a>数据局部性</h5><p>文档通常存储为 JSON、 XML 或其二进制变体（如 MongoDB 的 BSON）编码的连续字符串：</p>
 <ul>
 <li><p>存储局部性具有性能优势（关系模型数据划分在多个表，需要多次基于索引查找、更多的磁盘 I/O）。</p>
 </li>
-<li><p>仅适用 <strong>同时访问文档大部分内容</strong> 的场景。如只访问其中一小部分则比较浪费。</p>
+<li><p>仅适用 <strong>同时访问文档大部分内容</strong> 的场景，如只访问其中一小部分则比较浪费。</p>
 </li>
-<li><p>更新时通常重写整个文档，只有修改量不改变源文档大小时，原地覆盖更新才更有效。建议文档尽量小且避免写入时扩增文档大小。</p>
+<li><p>更新时重写整个文档，只有修改量不改变源文档大小时，原地覆盖更新才更有效。建议文档尽量小且避免写入时扩增文档大小。</p>
 </li>
 </ul>
 <h4 id="图模型：复杂关联"><a href="#图模型：复杂关联" class="headerlink" title="图模型：复杂关联"></a>图模型：复杂关联</h4><p>图模型目标用例是所有数据都可能会互相关联，适用于数据关联比较复杂的场景（比如 Page Rank）。</p>
@@ -665,7 +662,7 @@ height:100vh;
 </li>
 <li><p>Datalog</p>
 </li>
-<li><p>SQL：在关系数据库中，通常会预先知道查询中需要哪些 join 操作。而对于图查询，在找到要查找的顶点之前可能需要遍历数量未知的边，join 操作数量并不是预先确定的。因此在图模型中使用 SQL 会非常繁琐。</p>
+<li><p>SQL：在关系数据库中，通常会预先知道查询中需要哪些 join 操作。而对于图查询，在找到要查找的顶点之前可能需要遍历数量未知的边，join 操作数量并不是预先确定的，使用 SQL 会非常繁琐。</p>
 </li>
 </ul>
 <p>命令式：Gremlin</p>
@@ -1393,9 +1390,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 78
         </div>
         <!-- search  -->
         
@@ -1417,6 +1421,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-15/" >《DDIA》阅读笔记（十一）：流处理系统</a>
         </li>
     
     
@@ -1937,7 +1946,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 

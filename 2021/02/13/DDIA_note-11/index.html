@@ -488,6 +488,7 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
 <p>为了构建容错系统，最好先建立一套通用的抽象机制和与之对应的技术保证，这样只需实现一次，其上的各种应用程序都可以安全地信赖底层的保证。</p>
 <p>共识：即所有的节点就某一项提议达成一致。通过实现正确得共识算法，可以避免发生脑裂等问题。</p>
 <p>一致性保证：</p>
@@ -1325,9 +1326,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 78
         </div>
         <!-- search  -->
         
@@ -1349,6 +1357,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-15/" >《DDIA》阅读笔记（十一）：流处理系统</a>
         </li>
     
     
@@ -1869,7 +1882,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 

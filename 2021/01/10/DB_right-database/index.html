@@ -481,11 +481,11 @@ height:100vh;
 <p>不一致问题的最佳解决方案是在应用本身解决。比如在 API 服务中，应该提供处理读取数据返回多个版本结果这种一致性问题的功能。合并数据，选择其一覆盖其他，或创建一个新的数据对象都是可行的方案，并且对于每种类型的数据，采取何种方式解决都是可以手动选择的。</p>
 <h2 id="混合式解决方案"><a href="#混合式解决方案" class="headerlink" title="混合式解决方案"></a>混合式解决方案</h2><p>可能希望将单状态节点、CP 集群和 AP 集群合并在一起来支持不同类型的数据存储。如果因为 CAP 理论的限制需求变得复杂，那么混合式解决方案可以帮助开发者权衡取舍。这是可供参考的解决方案：</p>
 <ul>
-<li><p>单节点，非集群存储，快照备份，从节点：Redis</p>
+<li><p>  单节点，非集群存储，快照备份，从节点：Redis</p>
 </li>
-<li><p>数据一致，分区容忍，读多写少：PostgreSQL</p>
+<li><p>  数据一致，分区容忍，读多写少：PostgreSQL</p>
 </li>
-<li><p>高可用，分区容忍，水平扩展：Riak</p>
+<li><p>  高可用，分区容忍，水平扩展：Riak</p>
 </li>
 </ul>
 <p>不要局限于某种特定的技术，而选择最佳的工具来完成需求。</p>
@@ -1213,9 +1213,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 78
         </div>
         <!-- search  -->
         
@@ -1237,6 +1244,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-15/" >《DDIA》阅读笔记（十一）：流处理系统</a>
         </li>
     
     
@@ -1757,7 +1769,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 

@@ -396,7 +396,7 @@
         <blockquote>
 <p>原文链接：<a target="_blank" rel="noopener" href="https://www.infoworld.com/article/3616188/what-is-an-api-gateway-api-simplicity-and-stability.html">https://www.infoworld.com/article/3616188/what-is-an-api-gateway-api-simplicity-and-stability.html</a></p>
 </blockquote>
-<h1 id="什么是-API-网关？API-的简单性和稳定性"><a href="#什么是-API-网关？API-的简单性和稳定性" class="headerlink" title="什么是 API 网关？API 的简单性和稳定性"></a>什么是 API 网关？API 的简单性和稳定性</h1><p>在 <a href="[What are microservices? Your next software architecture | InfoWorld](https://www.infoworld.com/article/3445043/what-are-microservices-your-next-software-architecture.html">微服务</a>) 架构中，随着服务及其接口的激增，API 网关应运而生。其核心目的是简化和稳定对客户端暴露的接口。除此之外，由于 API 网关在架构中的独特位置，可在其上实现多种附加功能，例如监视，日志，安全，负载均衡和流控。</p>
+<h1 id="什么是-API-网关？API-的简单性和稳定性"><a href="#什么是-API-网关？API-的简单性和稳定性" class="headerlink" title="什么是 API 网关？API 的简单性和稳定性"></a>什么是 API 网关？API 的简单性和稳定性</h1><p>在 [微服务](<a target="_blank" rel="noopener" href="https://www.infoworld.com/article/3445043/what-are-microservices-your-next-software-architecture.html">What are microservices? Your next software architecture | InfoWorld</a>) 架构中，随着服务及其接口的激增，API 网关应运而生。其核心目的是简化和稳定对客户端暴露的接口。除此之外，由于 API 网关在架构中的独特位置，可在其上实现多种附加功能，例如监视，日志，安全，负载均衡和流控。</p>
 <p> <a target="_blank" rel="noopener" href="https://www.infoworld.com/article/3614210/the-decline-of-heroku.html">The decline of Heroku | InfoWorld</a></p>
 <p>API网关类似于外观设计模式，但却适用于网络级别。在两种情况下，其目的都是提供一种简化的外观，以隐藏系统的复杂性。</p>
 <p><img src="https://images.idgesg.net/images/article/2021/04/api-gateway-100885662-orig.jpg" alt="简单的 API 网关"></p>
@@ -1117,9 +1117,16 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 78
         </div>
         <!-- search  -->
         
@@ -1141,6 +1148,11 @@
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-15/" >《DDIA》阅读笔记（十一）：流处理系统</a>
         </li>
     
     
@@ -1659,7 +1671,22 @@ jsonContent:
     </div>
     <!-- async load share.js -->
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 

@@ -34,7 +34,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1-%E6%95%B0%E6%8D%AE%E7%B3%BB%E7%BB%9F.png">
 <meta property="article:published_time" content="2020-12-02T13:23:21.000Z">
-<meta property="article:modified_time" content="2021-08-17T14:04:14.345Z">
+<meta property="article:modified_time" content="2021-09-23T14:22:18.522Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="设计">
@@ -518,9 +518,10 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
-<p>由于应用系统需求广泛，单个组件往往无法满足所有数据处理与存储需求。需要将任务分解，每个组件负责高效完成其中一部分，多个组件依靠应用层代码驱动有机衔接起来。</p>
+
+<p>应用系统需求广泛，单个组件往往无法满足所有数据处理与存储需求。需将任务分解，每个组件负责高效完成其中一部分，多个组件依靠应用层代码驱动有机衔接起来。</p>
 <p>数据系统包括数据库、高速缓存、索引、流式处理、批处理等不同访问方式的系统。</p>
-<p>区别于计算密集型应用（compute intensive），对于数据密集型应用（data intensiive）而言 CPU 处理能力不是第一限制性因素，关键在于 <strong>数据量</strong>、<strong>数据复杂度</strong> 和 <strong>数据快速多变性</strong>。</p>
+<p>区别于计算密集型应用（compute intensive），数据密集型应用（data intensiive）的 CPU 处理能力不是第一限制性因素，关键在于 <strong>数据量</strong>、<strong>数据复杂度</strong> 和 <strong>数据快速多变性</strong>。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E6%95%B0%E6%8D%AE%E5%AF%86%E9%9B%86%E5%9E%8B%E5%BA%94%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1-%E6%95%B0%E6%8D%AE%E7%B3%BB%E7%BB%9F.png" alt="数据系统"></p>
 <p>人们对软件系统的期望：</p>
 <ul>
@@ -540,7 +541,7 @@ height:100vh;
 <li><p><strong>故障与失效</strong>：分别指组件与系统整体的层面。</p>
 </li>
 </ul>
-<p>要确保系统可靠性通常需要克服三方面的故障。</p>
+<p>要确保系统可靠性通常需要克服以下障碍。</p>
 <h3 id="硬件故障"><a href="#硬件故障" class="headerlink" title="硬件故障"></a>硬件故障</h3><ul>
 <li><p>添加冗余减少系统故障率：磁盘配置 RAID；服务器配备双电源，热插拔 CPU；数据中心添加备用电源、发电机等。</p>
 </li>
@@ -551,7 +552,7 @@ height:100vh;
 <h3 id="人为失误"><a href="#人为失误" class="headerlink" title="人为失误"></a>人为失误</h3><ul>
 <li><p>以最小出错的方式来设计系统。</p>
 </li>
-<li><p>分离最容易出错的地方、容易引发故障的接口（提供功能齐全、非生产用的沙箱环境）。</p>
+<li><p>分离最容易出错的地方、容易引发故障的接口；提供功能齐全、非生产用的沙箱环境。</p>
 </li>
 <li><p>充分的测试：单元测试，集成测试，系统测试，自动化测试（覆盖边界条件）。</p>
 </li>
@@ -564,7 +565,7 @@ height:100vh;
 </ul>
 <h2 id="可扩展性（Scalability）"><a href="#可扩展性（Scalability）" class="headerlink" title="可扩展性（Scalability）"></a>可扩展性（Scalability）</h2><p>可扩展性即当负载参数（数据量、流量或复杂性）增加时，系统应以合理的方式来匹配增长，保持良好性能。</p>
 <h3 id="描述负载"><a href="#描述负载" class="headerlink" title="描述负载"></a>描述负载</h3><p>负载参数选择取决于系统体系结构（Web 服务：每秒请求处理次数；数据库：写入比例；聊天室：同时活动用户数量；缓存：命中率），可能是平均值或峰值等。</p>
-<h3 id="描述性能"><a href="#描述性能" class="headerlink" title="描述性能"></a>描述性能</h3><p>负载增加，需要考虑如果系统资源不变、性能会发生什么变化。或者保持性能不变，需要增加多少资源。</p>
+<h3 id="描述性能"><a href="#描述性能" class="headerlink" title="描述性能"></a>描述性能</h3><p>负载增加，考虑如果系统资源不变性能会发生什么变化；或保持性能不变需要增加的资源。</p>
 <ul>
 <li><p>批处理系统：吞吐量（单位时间内可处理记录条数、指定数据集上运行作业所需时间）。</p>
 </li>
@@ -572,20 +573,19 @@ height:100vh;
 </li>
 <li><p>SLO（服务质量目标）和 SLA（服务质量协议）：百分位数，比如 p95 即 95% 分位数为 200ms，要求 95% 的请求快于 200ms，允许 5% 的请求需要更长时间。</p>
 </li>
-<li><p>后台服务：如一次完整的服务包含多次请求调用，由于长尾效应，关注高百分位数尤为重要（最终用户仍然需要等待最慢的调用完成；即使只有很小百分比的请求缓慢，如果用户频发触发这种调用，最终总体变慢的概率就会增加）。</p>
+<li><p>后台服务：如一次服务请求包含多次调用，由于长尾效应，关注高百分位数尤为重要（最终用户需要等待最慢的调用完成；即使只有很小百分比的请求缓慢，用户频发触发这种调用，最终总体变慢的概率就会增加）。</p>
 </li>
 </ul>
 <h3 id="系统扩展"><a href="#系统扩展" class="headerlink" title="系统扩展"></a>系统扩展</h3><p>超大规模系统往往针对特定应用而高度定制，难以设计出通用架构。</p>
-<p>背后取舍因素包括数据读取量、写入量 、待存储的数据量、数据的复杂程度、响应时间要求、访问模式等，或者上述因素的叠加，再加上其他更复杂的问题。</p>
+<p>背后取舍因素包括数据读取量、写入量 、待存储的数据量、数据的复杂程度、响应时间要求、访问模式等，或者上述因素的叠加再加上更复杂的问题。</p>
 <p>但可扩展架构通常都是从通用模块逐步构建而来，背后往往有规律可循。</p>
 <h4 id="自动与手动"><a href="#自动与手动" class="headerlink" title="自动与手动"></a>自动与手动</h4><p>某些系统具有弹性特征，它可以自动检测负载增加，然后自动添加更多计算资源，而其他系统则是手动扩展（人工分析性能表现决定添加更多计算）。</p>
 <p>如负载高度不可预测，则自动弹性系统会更加高效。手动方式则可以减少执行期间的意外情况。</p>
 <h4 id="水平与垂直"><a href="#水平与垂直" class="headerlink" title="水平与垂直"></a>水平与垂直</h4><p>在垂直扩展（升级为更强大的机器）和水平扩展（将负载分布到多台机器）之间做取舍。在多台机器上分配负载也被称为 <strong>无共享体系结构</strong>。</p>
 <p>在单台机器上运行的系统通常更简单，而高端机器比较昂贵，且扩展水平有限，最终还是无法避免水平扩展。</p>
 <p>通常要做出取舍：使用几个强悍的服务器仍可以比大量的小型虚拟机来得更简单、便宜。</p>
-<h4 id="有状态与无状态"><a href="#有状态与无状态" class="headerlink" title="有状态与无状态"></a>有状态与无状态</h4><p>把无状态服务分布然后扩展至多台机器相对比较容易，而有状态服务从单个节点扩展到分布式多机环境的复杂性会大大增加。</p>
-<p>通常做法是将数据库运行在一个节点上（垂直扩展），直到高扩展性或高可用性的要求迫使不得不做水平扩展。</p>
-<h2 id="可维护性（Maintainability）"><a href="#可维护性（Maintainability）" class="headerlink" title="可维护性（Maintainability）"></a>可维护性（Maintainability）</h2><p>随着时间推移，许多新的人员参与到系统开发和运维以维护现有功能或适配新场景等，系统都应高效运转。</p>
+<h4 id="有状态与无状态"><a href="#有状态与无状态" class="headerlink" title="有状态与无状态"></a>有状态与无状态</h4><p>把无状态服务扩展至多台机器相对容易，而有状态服务从单个节点扩展到分布式多机环境的复杂性会大大增加。通常做法是将数据库运行在一个节点上（垂直扩展），直到高扩展性或高可用性的要求迫使不得不做水平扩展。</p>
+<h2 id="可维护性（Maintainability）"><a href="#可维护性（Maintainability）" class="headerlink" title="可维护性（Maintainability）"></a>可维护性（Maintainability）</h2><p>随着时间推移，新人员参与到系统开发和运维以维护现有功能或适配新场景等，系统都应高效运转。</p>
 <p>系统的可维护性，即可运维性、简单性和可演化性。</p>
 <h3 id="可运维性"><a href="#可运维性" class="headerlink" title="可运维性"></a>可运维性</h3><p>方便运营团队保持系统平稳运行，数据系统设计：</p>
 <ul>
@@ -1350,9 +1350,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 78
         </div>
         <!-- search  -->
         
@@ -1374,6 +1381,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-15/" >《DDIA》阅读笔记（十一）：流处理系统</a>
         </li>
     
     
@@ -1894,7 +1906,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 

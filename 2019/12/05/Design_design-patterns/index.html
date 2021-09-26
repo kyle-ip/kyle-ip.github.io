@@ -33,7 +33,7 @@
 <meta property="og:description" content="常用设计模式及其应用实例...">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2019-12-05T13:21:21.000Z">
-<meta property="article:modified_time" content="2021-07-18T13:29:36.491Z">
+<meta property="article:modified_time" content="2021-09-22T13:32:55.421Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="设计">
@@ -326,7 +326,7 @@ height:100vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">1.2k</span>Reading time: <span class="post-count reading-time">4 min</span></span>
+                        <span>Word count: <span class="post-count word-count">1k</span>Reading time: <span class="post-count reading-time">3 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -515,85 +515,80 @@ height:100vh;
 <li><p>空对象模式（Null）</p>
 </li>
 </ul>
-<h2 id="六大设计原则"><a href="#六大设计原则" class="headerlink" title="六大设计原则"></a>六大设计原则</h2><h3 id="单一职责原则（Single-Responsibility-Principle）"><a href="#单一职责原则（Single-Responsibility-Principle）" class="headerlink" title="单一职责原则（Single Responsibility Principle）"></a>单一职责原则（Single Responsibility Principle）</h3><p>一个类只负责一项职责/操作的原则，目的在于：</p>
+<h2 id="六大设计原则"><a href="#六大设计原则" class="headerlink" title="六大设计原则"></a>六大设计原则</h2><h3 id="单一职责原则（Single-Responsibility-Principle）"><a href="#单一职责原则（Single-Responsibility-Principle）" class="headerlink" title="单一职责原则（Single Responsibility Principle）"></a>单一职责原则（Single Responsibility Principle）</h3><p>一个类或接口只负责一项职责/操作，目的在于：</p>
 <ul>
-<li><p>降低类的复杂度；</p>
+<li><p>降低复杂度。</p>
 </li>
-<li><p>提高类的可读性、系统的可维护性；</p>
+<li><p>提高可读性、可维护性。</p>
 </li>
-<li><p>降低变更引起的风险</p>
+<li><p>降低变更引起的风险。</p>
 </li>
 </ul>
-<p>如果一个类负责多个职责，其中一项发生变化就要修改整个类，可能会导致其他职责运行错误，对于一个类只应该有一个引起它变化的原因。</p>
-<h3 id="里氏替换原则（Liskov-Substitution-Principle）"><a href="#里氏替换原则（Liskov-Substitution-Principle）" class="headerlink" title="里氏替换原则（Liskov Substitution Principle）"></a>里氏替换原则（Liskov Substitution Principle）</h3><p>引用基类的地方必须能透明地使用其子类的对象（使用基类进行定义，运行时使用子类对象），需要注意：</p>
+<p>如果一个类负责多个职责，其中一项发生变化就要修改整个类，可能会导致其他职责运行错误。对于一个类，引起它变化的原因只应该只有一个。</p>
+<h3 id="里氏替换原则（Liskov-Substitution-Principle）"><a href="#里氏替换原则（Liskov-Substitution-Principle）" class="headerlink" title="里氏替换原则（Liskov Substitution Principle）"></a>里氏替换原则（Liskov Substitution Principle）</h3><p>引用基类的地方必须能透明地使用其子类的对象（使用基类定义，运行时使用子类对象）：</p>
 <ul>
-<li><p>子类可以实现父类的抽象方法，但不能覆盖父类的非抽象方法；</p>
+<li><p>子类可实现父类抽象方法，但不能覆盖父类非抽象方法。</p>
 </li>
-<li><p>子类中可以增加自己特有的方法；</p>
+<li><p>子类中可扩增自己特有的方法。</p>
 </li>
-<li><p>子类的方法重载父类的方法时，输入参数要比父类方法的输入参数更宽松。</p>
+<li><p>子类方法重载父类方法时，入参要比父类方法入参更宽松。</p>
 </li>
 </ul>
 <h3 id="依赖倒置原则（Dependence-Inversion-Principle）"><a href="#依赖倒置原则（Dependence-Inversion-Principle）" class="headerlink" title="依赖倒置原则（Dependence Inversion Principle）"></a>依赖倒置原则（Dependence Inversion Principle）</h3><ul>
-<li><p>抽象不应该依赖于细节，细节应当依赖于抽象（即针对接口而非实现编程）；</p>
+<li><p>抽象不应依赖细节，细节应依赖抽象（针对接口而非实现编程）。</p>
 </li>
-<li><p>在程序代码中传递参数时或在关联关系中，尽量引用层次高的抽象层类；</p>
+<li><p>传递参数或在关联关系中，尽量引用层次高的抽象层类。</p>
 </li>
 </ul>
-<p>所谓高层次的抽象层类即使用接口和抽象类进行变量类型声明、参数类型声明、方法返回类型声明，以及数据类型的转换等，需要注意：</p>
+<p>即使用接口和抽象类进行变量类型声明、参数类型声明、方法返回类型声明，以及数据类型的转换等，需要注意：</p>
 <ul>
-<li><p>每个类尽量都有接口或抽象类，或者抽象类和接口两者都具备；</p>
+<li><p>每个类尽量都有接口或抽象类，或两者都具备。</p>
 </li>
-<li><p>变量的表名类型尽量是接口或者抽象类；</p>
+<li><p>变量的表名类型尽量是接口或者抽象类。</p>
 </li>
-<li><p>尽量不要覆写基类的方法；</p>
+<li><p>尽量不要覆写基类的方法。</p>
 </li>
 <li><p>结合里氏替换原则使用。</p>
 </li>
 </ul>
 <h3 id="接口隔离原则（Interface-Segregation-Principle）"><a href="#接口隔离原则（Interface-Segregation-Principle）" class="headerlink" title="接口隔离原则（Interface Segregation Principle）"></a>接口隔离原则（Interface Segregation Principle）</h3><ul>
-<li><p>客户端不应该依赖它不需要的接口，一个类对另一个类的依赖应该建立在最小的接口上；</p>
+<li><p>客户端不应依赖它不需要的接口，一个类对另一个类的依赖建立在最小的接口上。</p>
 </li>
-<li><p>当一个接口太大时，我们需要将它分割成一些更细小的接口（承担相对独立的角色），使用该接口的客户端仅需知道与之相关的方法即可；</p>
+<li><p>当接口太大时，需要将它分割成更细小的接口（承担相对独立的角色），使用该接口的客户端仅需知道与之相关的方法。</p>
 </li>
-<li><p>单一职责原则要求的是类和接口职责单一，注重的是职责，这是业务逻辑上的划分；</p>
-</li>
-<li><p>接口隔离原则要求控制接口的粒度：</p>
+<li><p>要求控制接口的粒度：</p>
 <ul>
-<li>接口不能太小，如果太小会导致系统中接口泛滥，不利于维护；</li>
-<li>接口不能太大，太大的接口将违背接口隔离原则，灵活性较差，使用起来很不方便。</li>
+<li>接口太小会导致系统中接口泛滥，不利于维护。</li>
+<li>接口太大将违背接口隔离原则，灵活性较差，使用起来很不方便。</li>
 </ul>
 </li>
 </ul>
 <h3 id="迪米特原则（Law-of-Demeter）"><a href="#迪米特原则（Law-of-Demeter）" class="headerlink" title="迪米特原则（Law of Demeter）"></a>迪米特原则（Law of Demeter）</h3><ul>
-<li><p>一个对象应该对其他对象有最少的了解；</p>
+<li><p>对象应该对其他对象有最少的了解。</p>
 </li>
-<li><p>一个类应该对自己需要耦合或调用的类知道得最少，尽量减少对象之间的交互；</p>
+<li><p>类应对耦合或调用的类知道得最少，尽量减少对象之间的交互。</p>
 </li>
-<li><p>如果两个对象之间不必彼此直接通信，那么这两个对象就不应当发生任何直接的相互作用；</p>
+<li><p>如两个对象之间不必彼此直接通信，这两个对象就不应当发生任何直接的相互作用。</p>
 </li>
-<li><p>如果其中的一个对象需要调用另一个对象的某一个方法的话，可以通过第三者转发这个调用；</p>
+<li><p>如果其中的一个对象需要调用另一个对象的某个方法，可通过第三者转发该调用。</p>
 </li>
 <li><p>在代理模式和外观模式中都有体现这个原则。</p>
 </li>
 </ul>
 <h3 id="开闭原则（Open-Closed-Principle）"><a href="#开闭原则（Open-Closed-Principle）" class="headerlink" title="开闭原则（Open Closed Principle）"></a>开闭原则（Open Closed Principle）</h3><ul>
-<li><p>一个软件实体应该通过扩展来实现变化（对扩展开放），而不是通过修改已有的代码来实现变化（对修改关闭）；</p>
+<li><p>软件实体应通过扩展（对扩展开放）而非修改已有的代码来实现变化（对修改关闭）。</p>
 </li>
-<li><p>设计一个软件系统模块（类，方法）的时候，应该在不修改原有的模块（修改关闭）的基础上扩展其功能（扩展开放）；</p>
+<li><p>设计软件系统模块（类，方法）时，应在不修改原有的模块（修改关闭）的基础上扩展其功能（扩展开放）。</p>
 </li>
 <li><p>优势在于软件系统可复用，并且易于维护：</p>
 <ul>
-<li><p>稳定性：扩展功能不修改原来的代码，这可以让软件系统在变化中保持稳定。</p>
-</li>
-<li><p>扩展性：对扩展开放，通过扩展提供新的或改变原有的功能，让软件系统具有灵活的可扩展性。</p>
-</li>
+<li>稳定性：扩展功能不修改原来的代码，这可以让软件系统在变化中保持稳定。</li>
+<li>扩展性：对扩展开放，通过扩展提供新的或改变原有的功能，让软件系统具有灵活的可扩展性。</li>
 </ul>
 </li>
 </ul>
 <iframe id="embed_dom" name="embed_dom" frameborder="0" style="width:100%;height:100vh;margin:0;padding:0;display:block" src="https://www.processon.com/embed/5ca5b7d1e4b0cfb7342817bc"></iframe>
 
-<p>以上。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -1318,9 +1313,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 78
         </div>
         <!-- search  -->
         
@@ -1342,6 +1344,11 @@ top:100vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-15/" >《DDIA》阅读笔记（十一）：流处理系统</a>
         </li>
     
     
@@ -1862,7 +1869,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 
