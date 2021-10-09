@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-cpu-monitoring.assets/b0c67a7196f5ca4cc58f14f959a364ca.png">
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/OS_linux-cpu-monitoring.assets/7a445960a4bc0a58a02e1bc75648aa17.png">
 <meta property="article:published_time" content="2021-04-10T11:50:33.000Z">
-<meta property="article:modified_time" content="2021-07-19T15:45:52.902Z">
+<meta property="article:modified_time" content="2021-10-09T06:57:19.957Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="Linux">
@@ -543,7 +543,7 @@ height:100vh;
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep &#x27;CONFIG_HZ=&#x27; /boot/config-$(uname -r)</span><br><span class="line"><span class="meta">#</span><span class="bash"> CONFIG_HZ=250</span></span><br></pre></td></tr></table></figure>
 
 <p>对于用户态进程，则参考用户态节拍率 <code>USER_HZ</code>（一般固定为 100）。</p>
-<h3 id="CPU-统计信息"><a href="#CPU-统计信息" class="headerlink" title="CPU 统计信息"></a>CPU 统计信息</h3><p>通过 <code>/proc</code> 虚拟文件系统可以查看用户空间系统内部状态的信息，比如 CPU：</p>
+<h3 id="统计信息"><a href="#统计信息" class="headerlink" title="统计信息"></a>统计信息</h3><p>通过 <code>/proc</code> 虚拟文件系统可以查看用户空间系统内部状态的信息，比如 CPU：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/stat | grep ^cpu</span><br><span class="line"><span class="meta">#</span><span class="bash"> cat /proc/[pid]/<span class="built_in">stat</span> 则取特定进程的数据。</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> cpu  280580 7407 286084 172900810 83602 0 583 0 0 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> cpu0 144745 4181 176701 86423902 52076 0 301 0 0 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> cpu1 135834 3226 109383 86476907 31525 0 282 0 0 0</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
@@ -636,7 +636,7 @@ height:100vh;
 <h2 id="上下文（Context）"><a href="#上下文（Context）" class="headerlink" title="上下文（Context）"></a>上下文（Context）</h2><p>上下文切换发生在进程竞争 CPU 时，即使此时进程没有运行，也会占用 CPU 负载。</p>
 <p>CPU 时间片轮转分配给多任务，每个任务从何处加载、运行，依赖于事先保存在系统内核的上下文。在切换时新的任务上下文被加载到这些寄存器和程序计数器，再跳转到程序计数器所指的新位置来运行，因此上下文切换主要是更新 CPU 寄存器的值。</p>
 <p>根据不同的场景，CPU 上下文切换分为进程上下文切换、线程上下文切换和中断上下文切换。</p>
-<h3 id="进程上下文切换"><a href="#进程上下文切换" class="headerlink" title="进程上下文切换"></a>进程上下文切换</h3><p>按照特权等级，进程的运行空间分为 <strong>内核空间</strong> 和 <strong>用户空间</strong>，对应着图中 Ring 0 和 Ring 3。进程在内核空间运行时称为 <strong>内核态</strong>，在用户空间运行时称为 <strong>用户态</strong>。</p>
+<h3 id="进程上下文切换"><a href="#进程上下文切换" class="headerlink" title="进程上下文切换"></a>进程上下文切换</h3><p>进程是资源的基本单位。按照特权等级，进程的运行空间分为 <strong>内核空间</strong> 和 <strong>用户空间</strong>，对应着图中 Ring 0 和 Ring 3。进程在内核空间运行时称为 <strong>内核态</strong>，在用户空间运行时称为 <strong>用户态</strong>。</p>
 <figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+----------Ring3----- 应用</span><br><span class="line">|<span class="string"> +--------Ring2----- 设备驱动</span></span><br><span class="line"><span class="string"></span>|<span class="string"> </span>|<span class="string"> +------Ring1----- 设备驱动</span></span><br><span class="line"><span class="string"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> +----Ring0----- 内核</span></span><br><span class="line"><span class="string"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|</span><br></pre></td></tr></table></figure>
 
 <p>从用户态到内核态的转变，需要通过 <strong>系统调用</strong> 完成。系统调用是为 <strong>特权模式切换</strong> 而不是上下文切换，在一次系统调用中会发生两次 CPU 上下文切换：先保存起来 CPU 寄存器里原来用户态的指令位置。CPU 寄存器更新为内核态指令的新位置，最后跳转到内核态运行内核任务。而系统调用结束后，CPU 寄存器恢复原来保存的用户态，然后再切换到用户空间继续运行进程。</p>
@@ -646,9 +646,9 @@ height:100vh;
 <p>  进程由内核来管理调度，进程切换只能发生在内核态。所以进程的上下文不仅包括虚拟内存、栈、全局变量等用户空间的资源，还包括了内核堆栈、寄存器等内核空间的状态。</p>
 <p>  进程的上下文切换比系统调用时多了一步：先保存该进程的 <strong>虚拟内存、栈</strong> 等，再保存当前进程的 <strong>内核状态</strong> 和 <strong>CPU 寄存器</strong>；而加载了下一进程的内核态后，还需要 <strong>刷新进程的虚拟内存和用户栈</strong>。</p>
 </blockquote>
-<h4 id="切换的成本"><a href="#切换的成本" class="headerlink" title="切换的成本"></a>切换的成本</h4><p>每次上下文切换都需要几十纳秒到数微秒的 CPU 时间（<a target="_blank" rel="noopener" href="https://blog.tsunanet.net/2010/11/how-long-does-it-take-to-make-context.html">Tsuna’s blog: How long does it take to make a context switch? (tsunanet.net)</a>）。特别是在进程上下文切换次数较多的情况下，容易导致 CPU 将大量时间耗费在寄存器、内核栈以及虚拟内存等资源的保存和恢复上，大大缩短了真正运行进程的时间，导致平均负载升高。</p>
+<h4 id="切换成本"><a href="#切换成本" class="headerlink" title="切换成本"></a>切换成本</h4><p>每次上下文切换都需要几十纳秒到数微秒的 CPU 时间（<a target="_blank" rel="noopener" href="https://blog.tsunanet.net/2010/11/how-long-does-it-take-to-make-context.html">Tsuna’s blog: How long does it take to make a context switch?</a>）。特别是在进程上下文切换次数较多的情况下，容易导致 CPU 将大量时间耗费在寄存器、内核栈以及虚拟内存等资源的保存和恢复上，大大缩短了真正运行进程的时间，导致平均负载升高。</p>
 <p>Linux 通过 <strong>TLB（Translation Lookaside Buffer）</strong>管理虚拟内存到物理内存的映射关系。当虚拟内存更新后 TLB 也需要刷新，进程的内存访问随之变慢。在多处理器系统上缓存被多个处理器共享，刷新缓存还会影响共享缓存的其他处理器的进程。</p>
-<h4 id="切换的时机"><a href="#切换的时机" class="headerlink" title="切换的时机"></a>切换的时机</h4><p>在进程调度时才需要切换上下文。Linux 为每个 CPU 都维护一个就绪队列，将活跃进程（Running or Runnable）按照优先级和等待 CPU 的时间排序，再选择优先级最高和等待 CPU 时间最长的进程来运行，比如：</p>
+<h4 id="切换时机"><a href="#切换时机" class="headerlink" title="切换时机"></a>切换时机</h4><p>在进程调度时才需要切换上下文。Linux 为每个 CPU 都维护一个就绪队列，将活跃进程（Running or Runnable）按照优先级和等待 CPU 的时间排序，再选择优先级最高和等待 CPU 时间最长的进程来运行，比如：</p>
 <ul>
 <li><p>  进程执行完终止了，使用的 CPU 释放，此时再从就绪队列取出新进程运行。</p>
 </li>
@@ -661,7 +661,7 @@ height:100vh;
 <li><p>  有时为了保证高优先级进程的运行，当前进程会被挂起，由高优先级进程来运行。</p>
 </li>
 </ul>
-<h3 id="线程上下文切换"><a href="#线程上下文切换" class="headerlink" title="线程上下文切换"></a>线程上下文切换</h3><p>进程是拥有资源的基本单位，线程是调度的基本单位：</p>
+<h3 id="线程上下文切换"><a href="#线程上下文切换" class="headerlink" title="线程上下文切换"></a>线程上下文切换</h3><p>线程是调度的基本单位：</p>
 <ul>
 <li><p>  当进程只有一个线程时，进程就等于线程。</p>
 </li>
@@ -831,7 +831,8 @@ height:100vh;
 <h2 id="缓存命中率"><a href="#缓存命中率" class="headerlink" title="缓存命中率"></a>缓存命中率</h2><p>CPU 采用多级缓存用于匹配与内存速度的差距：</p>
 <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+---------------------+</span></span><br><span class="line"><span class="section">|      L3 Cache       |</span></span><br><span class="line"><span class="section">+----------+----------+</span></span><br><span class="line"><span class="section">| L2 Cache | L2 Cache |</span></span><br><span class="line"><span class="section">+----------+----------+</span></span><br><span class="line"><span class="section">| L1 Cache | L1 Cache |</span></span><br><span class="line"><span class="section">+----------+----------+</span></span><br><span class="line"><span class="section">|  Core 0  |  Core 1  |</span></span><br><span class="line"><span class="section">+----------+----------+</span></span><br></pre></td></tr></table></figure>
 
-<p>其中 L1 Cache、L2 Cache 在单核中，L3 则用在多核中。从 L1 到 L3，大小依次增大、性能依次降低。其命中率可衡量 CPU 缓存复用情况，命中率越高性能越好。</p>
+<p>其中 L1 Cache、L2 Cache 在单核中，L3 则用在多核中。从 L1 到 L3，大小依次增大、性能依次降低（通过 <code>cat /sys/devices/sytem/cpu/cpu0/cache/index0/size</code>）。</p>
+<p>其命中率可衡量 CPU 缓存复用情况，命中率越高性能越好。</p>
 <h2 id="优化总结"><a href="#优化总结" class="headerlink" title="优化总结"></a>优化总结</h2><p>要对系统 CPU 进行优化，可从应用和系统两个层面考虑了。其中系统优化：</p>
 <ul>
 <li><p>  <strong>CPU 绑定</strong>：把进程绑定到一或多个 CPU 上，可提高 CPU 缓存的命中率，减少跨 CPU 调度带来的上下文切换问题。</p>
@@ -1033,7 +1034,7 @@ top:100vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux-CPU-%E5%8E%9F%E7%90%86%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">Linux CPU 原理与分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B3%E5%9D%87%E8%B4%9F%E8%BD%BD%EF%BC%88Load-Average%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">平均负载（Load Average）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7%EF%BC%9F"><span class="toc-number">1.1.1.</span> <span class="toc-text">如何监控？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95"><span class="toc-number">1.1.2.</span> <span class="toc-text">压力测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%8E%87%EF%BC%88Usage%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">使用率（Usage）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E6%8B%8D%E7%8E%87"><span class="toc-number">1.2.1.</span> <span class="toc-text">节拍率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CPU-%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF"><span class="toc-number">1.2.2.</span> <span class="toc-text">CPU 统计信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7%EF%BC%9F-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">如何监控？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5"><span class="toc-number">1.2.4.</span> <span class="toc-text">问题排查</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%88Context%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">上下文（Context）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="toc-number">1.3.1.</span> <span class="toc-text">进程上下文切换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E7%9A%84%E6%88%90%E6%9C%AC"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">切换的成本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E7%9A%84%E6%97%B6%E6%9C%BA"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">切换的时机</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="toc-number">1.3.2.</span> <span class="toc-text">线程上下文切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="toc-number">1.3.3.</span> <span class="toc-text">中断上下文切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95-1"><span class="toc-number">1.3.4.</span> <span class="toc-text">压力测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7%EF%BC%9F-2"><span class="toc-number">1.3.5.</span> <span class="toc-text">如何监控？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5-1"><span class="toc-number">1.3.6.</span> <span class="toc-text">问题排查</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">异常进程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iowait-%E5%88%86%E6%9E%90"><span class="toc-number">1.4.1.</span> <span class="toc-text">iowait 分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.4.2.</span> <span class="toc-text">处理僵尸进程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%B8%AD%E6%96%AD"><span class="toc-number">1.5.</span> <span class="toc-text">软中断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">1.5.1.</span> <span class="toc-text">问题分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E5%91%BD%E4%B8%AD%E7%8E%87"><span class="toc-number">1.6.</span> <span class="toc-text">缓存命中率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93"><span class="toc-number">1.7.</span> <span class="toc-text">优化总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.8.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux-CPU-%E5%8E%9F%E7%90%86%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">Linux CPU 原理与分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B3%E5%9D%87%E8%B4%9F%E8%BD%BD%EF%BC%88Load-Average%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">平均负载（Load Average）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7%EF%BC%9F"><span class="toc-number">1.1.1.</span> <span class="toc-text">如何监控？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95"><span class="toc-number">1.1.2.</span> <span class="toc-text">压力测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%8E%87%EF%BC%88Usage%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">使用率（Usage）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E6%8B%8D%E7%8E%87"><span class="toc-number">1.2.1.</span> <span class="toc-text">节拍率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF"><span class="toc-number">1.2.2.</span> <span class="toc-text">统计信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7%EF%BC%9F-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">如何监控？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5"><span class="toc-number">1.2.4.</span> <span class="toc-text">问题排查</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%88Context%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">上下文（Context）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="toc-number">1.3.1.</span> <span class="toc-text">进程上下文切换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E6%88%90%E6%9C%AC"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">切换成本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E6%97%B6%E6%9C%BA"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">切换时机</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="toc-number">1.3.2.</span> <span class="toc-text">线程上下文切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="toc-number">1.3.3.</span> <span class="toc-text">中断上下文切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95-1"><span class="toc-number">1.3.4.</span> <span class="toc-text">压力测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7%EF%BC%9F-2"><span class="toc-number">1.3.5.</span> <span class="toc-text">如何监控？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5-1"><span class="toc-number">1.3.6.</span> <span class="toc-text">问题排查</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">异常进程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iowait-%E5%88%86%E6%9E%90"><span class="toc-number">1.4.1.</span> <span class="toc-text">iowait 分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.4.2.</span> <span class="toc-text">处理僵尸进程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%B8%AD%E6%96%AD"><span class="toc-number">1.5.</span> <span class="toc-text">软中断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">1.5.1.</span> <span class="toc-text">问题分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E5%91%BD%E4%B8%AD%E7%8E%87"><span class="toc-number">1.6.</span> <span class="toc-text">缓存命中率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93"><span class="toc-number">1.7.</span> <span class="toc-text">优化总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.8.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -2036,17 +2037,17 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
@@ -2060,19 +2061,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
-        <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
-        <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
         <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+        <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
+    
+        <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
