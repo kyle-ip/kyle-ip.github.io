@@ -33,7 +33,7 @@
 <meta property="og:description" content="大数据平台：数据血缘功能设计。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-10-10T09:23:21.000Z">
-<meta property="article:modified_time" content="2021-10-10T09:09:01.540Z">
+<meta property="article:modified_time" content="2021-10-10T09:13:33.728Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="设计">
@@ -488,6 +488,8 @@ height:100vh;
 </li>
 <li><p>  ETL 作业路径较短（一般几步以内的转换即可得到目标资源），离线数据处理执行时间长。</p>
 </li>
+<li><p>  ……</p>
+</li>
 </ul>
 <p>期望数据血缘图可达到的效果：</p>
 <ul>
@@ -569,7 +571,7 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> V;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> E;</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;Integer, Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v, w)) &#123;</span><br><span class="line">            <span class="keyword">return</span> adj[v].get(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">&quot;No edge %d-%d&quot;</span>, v, w));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> adj[v].containsKey(w);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedGraph</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> V;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> E;</span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;Integer, Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hasEdge(v, w)) &#123;</span><br><span class="line">            <span class="keyword">return</span> adj[v].get(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">&quot;No edge %d-%d&quot;</span>, v, w));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasEdge</span><span class="params">(<span class="keyword">int</span> v, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> adj[v].containsKey(w);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="执行计划选优"><a href="#执行计划选优" class="headerlink" title="执行计划选优"></a>执行计划选优</h3><p>由调度系统任务执行输出日志中整理数据、并通过接口提供给数据血缘服务。</p>
 <p>默认血缘图中资源转换的权值计算规则为任务成功执行时间的平均值：执行时间越长、权值越大，边选择优先级越低。</p>
@@ -1800,9 +1802,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1920,7 +1922,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 
