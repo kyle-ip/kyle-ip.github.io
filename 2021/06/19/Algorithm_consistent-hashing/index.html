@@ -462,7 +462,7 @@ height:100vh;
         <blockquote>
 <p>原文链接：<a target="_blank" rel="noopener" href="http://tom-e-white.com/2007/11/consistent-hashing.html">Consistent Hashing</a></p>
 </blockquote>
-<h1 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h1><p>一致性哈希的需求源自于缓存服务器集群，比如 Web 缓存，一套由 <code>n</code> 台缓存服务器组成的集群，实现负载均衡最常用的做法是把对象 o 存放在序号为 <code>hash(o) mod n</code> 的服务器上。</p>
+<h1 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h1><p>一致性哈希的需求源自于缓存服务器集群，比如 Web 缓存，一套由 <code>n</code> 台缓存服务器组成的集群，实现负载均衡最常用的做法是把对象 o 存放在序号为 <code>hash(o) mod n</code> 的服务器上。</p>
 <p>这种策略效果良好，但如果出于某种原因需要从集群中增加或删除服务器，会导致所有的对象 hash 值都被重新计算到新的地址上，其结果可能会很严重：就像缓存瞬间消失了，原本有缓存的服务器瞬间就被请求淹没。</p>
 <p>因此需要使用一致性哈希来规避由于缓存失效、服务器承接大量请求的问题。</p>
 <h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>从细节上来看，哈希函数是把对象及其缓存映射到一个数字范围上。</p>
@@ -482,7 +482,6 @@ height:100vh;
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>以下是基于 Java 的简单实现，用于完整呈现这种策略。</p>
 <p>为了使一致性哈希更高效，hash 函数的混淆效果很重要。<code>Object</code> 的 <code>hashCode</code> 方法的多数实现都不能起到良好的混淆效果，比如它们通常会产生数量有限的小整型值。因此使用一个允许自定义 hash 函数的 <code>HashFunction</code> 接口（此处建议使用 MD5 散列）。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsistentHash</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> HashFunction hashFunction;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> numberOfReplicas;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> SortedMap&lt;Integer, T&gt; circle = <span class="keyword">new</span> TreeMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConsistentHash</span><span class="params">(HashFunction hashFunction, <span class="keyword">int</span> numberOfReplicas, Collection&lt;T&gt; nodes)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.hashFunction = hashFunction;</span><br><span class="line">        <span class="keyword">this</span>.numberOfReplicas = numberOfReplicas;</span><br><span class="line">        <span class="keyword">for</span> (T node : nodes) &#123;</span><br><span class="line">            add(node);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(T node)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numberOfReplicas; i++) &#123;</span><br><span class="line">            circle.put(hashFunction.hash(node.toString() + i), node);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(T node)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numberOfReplicas; i++) &#123;</span><br><span class="line">            circle.remove(hashFunction.hash(node.toString() + i));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (circle.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> hash = hashFunction.hash(key.toString());</span><br><span class="line">        <span class="keyword">if</span> (!circle.containsKey(hash)) &#123;</span><br><span class="line">            SortedMap&lt;Integer, T&gt; tailMap = circle.tailMap(hash);</span><br><span class="line">            hash = tailMap.isEmpty() ? circle.firstKey() : tailMap.firstKey();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> circle.get(hash);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>圆圈用一个有序的整型 Map 表示（TreeMap，红黑树实现），代表了缓存的哈希值（此处为泛型 T）。</p>
 <p>创建 <code>ConsistentHash</code> 时，每个节点都会多次添加到表示圆圈的 Map 中（次数由 <code>numberOfReplicas</code> 字段控制）。每个副本的位置由对节点名称和数字后缀的 hash 值决定，并将该节点存储在 Map 中。</p>
 <p>要找到对象的节点（<code>get</code> 方法），应使用该对象的 hash 值在 Map 中查找。在大多数情况下都不会有节点存储在此 hash 值上（因为即使包括副本，hash 值范围通常比节点数大得多），因此在 Map 的尾部查找第一个 key 即可找到下一个节点。如果 Map 的尾部为空，则可以获取第一个 key 来环绕圆圈。</p>
@@ -1666,19 +1665,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
-        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
@@ -1780,22 +1779,7 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-</body>
+    </body>
 </html>
 
 

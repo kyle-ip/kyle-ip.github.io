@@ -469,11 +469,11 @@ height:100vh;
 <h1 id="关于-B-Trees-的更多细节"><a href="#关于-B-Trees-的更多细节" class="headerlink" title="关于 B-Trees 的更多细节"></a>关于 B-Trees 的更多细节</h1><h2 id="磁盘引起的约束"><a href="#磁盘引起的约束" class="headerlink" title="磁盘引起的约束"></a>磁盘引起的约束</h2><p>当试图在磁盘上存储大量的键值对时，也希望以一种简单的方法实现读取，并且希望能轻松查询特定键或键范围。</p>
 <p>而一旦需要考虑磁盘 I/O，就会遇到一些在内存结构中不常见的限制：</p>
 <ul>
-<li><p>  无法将整个数据集放入内存：需要对数据进行布局，以便仅将结构的一个子集加载到内存中来遍历结构。</p>
+<li><p>无法将整个数据集放入内存：需要对数据进行布局，以便仅将结构的一个子集加载到内存中来遍历结构。</p>
 </li>
-<li><p>  与内存访问（通常是整个页面与单个字节）相比，（从驱动中读写数据的）最小存储单元很大：应尽量将可能被一起访问的数据放在同一位置。</p>
+<li><p>与内存访问（通常是整个页面与单个字节）相比，（从驱动中读写数据的）最小存储单元很大：应尽量将可能被一起访问的数据放在同一位置。</p>
 </li>
-<li><p>  磁盘 I/O 比在内存中查找要慢得多：应尽可能减少磁盘访问次数。</p>
+<li><p>磁盘 I/O 比在内存中查找要慢得多：应尽可能减少磁盘访问次数。</p>
 </li>
 </ul>
 <p>Petrov 通过一个例子说明将键/值存储在二叉搜索树（BST）中、并将该 BST 存储在磁盘上的简单方法：</p>
@@ -496,20 +496,20 @@ height:100vh;
 <p>这种布局的好处是可存储大小可变的数据，单元格大小可变，而且无需移动该数据以对其进行逻辑重新排序。重新排序指针数组中指针的位置即可。 由于指针很小，并且位于页面开头的位置，移动指针操作成本很低。 因此只要偏移指针是按键的顺序排列，键在实际页面中存储的位置不重要，这意味着还可以在删除/插入数据时释放和重用单元格（例如 SQLite 使用 freelist 实现管理）</p>
 <h2 id="B-Trees-查询"><a href="#B-Trees-查询" class="headerlink" title="B-Trees 查询"></a>B-Trees 查询</h2><p>B-Trees 查找算法非常简单：</p>
 <ul>
-<li><p>  从根节点开始。</p>
+<li><p>从根节点开始。</p>
 </li>
-<li><p>  检查当前节点中的分隔键，以找到逻辑上包含待查找的搜索键的子节点。</p>
+<li><p>检查当前节点中的分隔键，以找到逻辑上包含待查找的搜索键的子节点。</p>
 </li>
-<li><p>  基于上一步骤的逻辑递归遍历树。</p>
+<li><p>基于上一步骤的逻辑递归遍历树。</p>
 </li>
-<li><p>  但找到一个包含正在搜索的键的叶节点即完成操作；如果发现搜索关键字的叶节点不存在（例如该范围没有叶节点），或者叶节点不包含关键字，则返回不存在。</p>
+<li><p>但找到一个包含正在搜索的键的叶节点即完成操作；如果发现搜索关键字的叶节点不存在（例如该范围没有叶节点），或者叶节点不包含关键字，则返回不存在。</p>
 </li>
 </ul>
 <p>第 2 步掩盖了一些与存储大量数据的更高阶树有关的有趣的细节。</p>
 <ul>
-<li><p>  在遍历树的大多数实现中，会对节点内的键执行二分搜索，因此键在节点内按顺序存储很重要。 </p>
+<li><p>在遍历树的大多数实现中，会对节点内的键执行二分搜索，因此键在节点内按顺序存储很重要。 </p>
 </li>
-<li><p>  叶节点实际存储数据，分隔键只是充当节点之间的分区，其无需存放完整的值。只要分隔键准确地表示每个子节点负责的键范围之间的分区，就可以是包含该分区属性的任何值。使用实际的数据库键作为分区键只是一种便捷方法。</p>
+<li><p>叶节点实际存储数据，分隔键只是充当节点之间的分区，其无需存放完整的值。只要分隔键准确地表示每个子节点负责的键范围之间的分区，就可以是包含该分区属性的任何值。使用实际的数据库键作为分区键只是一种便捷方法。</p>
 </li>
 </ul>
 <h2 id="分隔键截断"><a href="#分隔键截断" class="headerlink" title="分隔键截断"></a>分隔键截断</h2><p>利用以上描述的特性，可以决定更好的分区键来提高 B-Trees 存储效率：</p>
@@ -518,10 +518,8 @@ height:100vh;
 </blockquote>
 <p>为了说明这一点，假设正在尝试存储以下键：</p>
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0xAAAAAA</span></span><br><span class="line"><span class="number">0xBBBBBB</span></span><br><span class="line"><span class="number">0xCCCCCC</span></span><br><span class="line"><span class="number">0xDDDDDD</span></span><br><span class="line"><span class="number">0xEEEEEE</span></span><br><span class="line"><span class="number">0xFFFFFF</span></span><br></pre></td></tr></table></figure>
-
 <p>插入算法决定将以上的键存储在 2 个树节点中：</p>
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># Node <span class="number">1</span></span><br><span class="line"><span class="number">0xAAAAAA</span></span><br><span class="line"><span class="number">0xBBBBBB</span></span><br><span class="line"><span class="number">0xCCCCCC</span></span><br><span class="line"></span><br><span class="line"># Node <span class="number">2</span></span><br><span class="line"><span class="number">0xDDDDDD</span></span><br><span class="line"><span class="number">0xEEEEEE</span></span><br><span class="line"><span class="number">0xFFFFFF</span></span><br></pre></td></tr></table></figure>
-
 <p>考虑节点 1 和节点 2 的父节点应如何选择它们之间的分隔键。最简单是使用 0xDDDDDD，小于 0xDDDDDD 的所有内容都在节点 1 中，大于或等于 0xDDDDDD 的内容都在节点 2 中。但这样做 0xCCCCCC 和 0xDDDDDD 之间间距会很大。可以使用更细粒度的分隔符，并保持正确的分区。例如以前缀键 0xD* 作为分隔符，这样可以提供同样多的信息，但存储的字节更少。</p>
 <p>在真实的数据库系统中键可能非常大（SQLite 默认最大键为 1MB）。键前缀截断也是一种常见做法，可在后缀截断的节点中节省更多空间：</p>
 <blockquote>
@@ -531,7 +529,6 @@ height:100vh;
 <p>在这种情况下，一些 B-Trees 实现转向溢出页。存储引擎为溢出数据分配新页面，并更新第一页的 header 以标识溢出。可以简单认为只需在溢出的页中分配额外单元格，并视为有更多的单元格空间。而大多数数据库操作都在键范围内，快速访问键前缀可能比访问整个键更重要。</p>
 <p>因此，实际拆分键会更有效：将前缀存储在原始页面中，并将其余部分添加到溢出页：</p>
 <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Very long key:</span><br><span class="line">AAABBBCCCDDDEEEFFFGGGHHH</span><br><span class="line"></span><br><span class="line"><span class="section">| Stored in primary page | Stored in overflow page |</span></span><br><span class="line"><span class="section">----------------------------------------------------</span></span><br><span class="line">| AAABBBCC               | CDDDEEEFFFGGGHHH        |</span><br></pre></td></tr></table></figure>
-
 <p>这样在检查键是否存在或执行范围查询时，则更有可能无需查阅溢出页：在许多情况下，键前缀足以响应查询。</p>
 <h2 id="兄弟指针"><a href="#兄弟指针" class="headerlink" title="兄弟指针"></a>兄弟指针</h2><p>最后一个有趣的优化是额外的记录：</p>
 <blockquote>
@@ -547,13 +544,13 @@ height:100vh;
 <p>从 K8 移动到 K9 是通过一个兄弟指针，而不是在树上向上和向下遍历六跳。因此当查询一系列值时，额外的兄弟指针记录可防止很多不必要的回溯。</p>
 <h2 id="B-Trees-变体"><a href="#B-Trees-变体" class="headerlink" title="B-Trees 变体"></a>B-Trees 变体</h2><p>最后，除了主要讨论 B⁺-Trees 之外，还有其它 B-Trees 的变体和优化可在某些情况下发挥作用：</p>
 <ul>
-<li><p>  像 WiredTiger 和 Lazy-Adaptive Tree 这样的 Lazy B-Trees 可通过缓冲写入来提高性能。</p>
+<li><p>像 WiredTiger 和 Lazy-Adaptive Tree 这样的 Lazy B-Trees 可通过缓冲写入来提高性能。</p>
 </li>
-<li><p>  FD-Trees 是一种以对 SSD 物理特性更友好的方式构建 B-Trees 数据。</p>
+<li><p>FD-Trees 是一种以对 SSD 物理特性更友好的方式构建 B-Trees 数据。</p>
 </li>
-<li><p>  Bw-Trees 为高并发和内存中的树访问提供了进一步的优化。</p>
+<li><p>Bw-Trees 为高并发和内存中的树访问提供了进一步的优化。</p>
 </li>
-<li><p>  …</p>
+<li><p>…</p>
 </li>
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果对以上内容感兴趣，再次强烈建议通读《数据库系统内幕》。作为抽象数学概念（B⁺-Tree）和具体实现（SQLite）的数据结构之间存在显着差异，对具体实现的优化不会改善数据结构的大 O 特性，但会对数据库性能和可用性产生重大的现实影响。</p>
@@ -1737,19 +1734,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
-        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
@@ -1851,22 +1848,7 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-</body>
+    </body>
 </html>
 
 
