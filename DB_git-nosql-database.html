@@ -409,18 +409,20 @@
 <p>而实际上使用 Git 可以跟踪任何类型的内容，例如创建一个基于 Git 的 NoSQL 数据库。</p>
 <p>官方手册说它“愚蠢”的原因是 Git 不对用户存储的内容做任何假设，底层的 Git 模型是相当基本的。本文打算探讨将 Git 用作 NoSQL 数据库（键值存储）的可能性，即可以将文件系统用作数据存储，然后使用 <code>git add</code> 和 <code>git commit</code> 来保存文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> saving a document</span> </span><br><span class="line">echo &#x27;&#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth&quot;&#125;&#x27; &gt; 1.json </span><br><span class="line">git add 1.json </span><br><span class="line">git commit -m &quot;added a file&quot; </span><br><span class="line"><span class="meta">#</span><span class="bash"> reading a document</span> </span><br><span class="line">git show master:1.json =&gt; &#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth&quot;&#125;</span><br></pre></td></tr></table></figure>
+
 <p> 这样做效果很好，但现在这种做法是把文件系统作为数据库：路径是键，值是存储在其中的任何东西，其中有几个弊端：</p>
 <ul>
-<li>需要把所有的数据写到磁盘上，然后才能把它们保存到 Git 中。</li>
-<li>需要多次保存数据。</li>
-<li>文件存储没有被重复利用，失去 Git 提供的自动删除重复数据的优势。</li>
-<li>如果想同时在多个分支上工作，需要切换、创建多个目录。</li>
+<li>  需要把所有的数据写到磁盘上，然后才能把它们保存到 Git 中。</li>
+<li>  需要多次保存数据。</li>
+<li>  文件存储没有被重复利用，失去 Git 提供的自动删除重复数据的优势。</li>
+<li>  如果想同时在多个分支上工作，需要切换、创建多个目录。</li>
 </ul>
 <p>目标是得到一个裸仓库，其中没有任何文件存在于文件系统中，而只存在于 Git 数据库中。</p>
 <p>以下是 Git 的数据模型及其工作的管道命令。</p>
 <h2 id="作为-NoSql-数据库的-Git-1"><a href="#作为-NoSql-数据库的-Git-1" class="headerlink" title="作为 NoSql 数据库的 Git"></a>作为 NoSql 数据库的 Git</h2><p>Git 是一个内容可寻址的文件系统，这意味着它是一个简单的键值存储。每当向它插入内容，就会得到一个密钥，以便以后检索插入的内容。</p>
 <p>创建内容：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">Initialize a repository</span> </span><br><span class="line">mkdir MyRepo </span><br><span class="line">cd MyRepo git init </span><br><span class="line"><span class="meta">#</span><span class="bash"> Save some content</span> </span><br><span class="line">echo &#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth&quot;&#125; | git hash-object -w --stdin da95f8264a0ffe3df10e94eed6371ea83aee9a4d</span><br></pre></td></tr></table></figure>
+
 <p>hash-object 是一个 git plumbing 命令，用于接收内容、将其存储在数据库中，并返回密钥。</p>
 <blockquote>
 <p>  -w 选项指定存储内容，否则只会计算哈希值。</p>
@@ -429,54 +431,64 @@
 <p>该密钥是对内容执行 sha-1 加密生成的，如果运行上述命令，可以看到它返回完全相同的 sha-1 加密串。</p>
 <p>对于写入数据库的内容，执行以下命令可以把它读回来。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git cat-file -p da95f8264a0ffe3df10e94eed6371ea83aee9a4d </span><br><span class="line">&#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth&quot;&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="Git-Blobs"><a href="#Git-Blobs" class="headerlink" title="Git Blobs"></a>Git Blobs</h3><p>现在有一个键值存储，其中有一个对象，即 blob。</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image.png" alt=""></p>
+<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image.png"></p>
 <p>唯一的问题是无法对其进行更新，因为是以密钥为键，更新内容后密钥将会更改。这意味着对于文件的每个版本，都必须记住一个不同的密钥。</p>
 <p>而目标应该是指定自己的密钥，并使用该密钥来跟踪版本。</p>
 <h3 id="Git-Trees"><a href="#Git-Trees" class="headerlink" title="Git Trees"></a>Git Trees</h3><p>树解决了两个问题：</p>
 <ul>
-<li>需要记住对象的哈希值及其版本。 </li>
-<li>存储文件组。 </li>
+<li>  需要记住对象的哈希值及其版本。 </li>
+<li>  存储文件组。 </li>
 </ul>
 <p>可以把树看作文件系统中的一个目录，要创建树必须遵循两个步骤：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Create and populate a staging area</span> </span><br><span class="line">git update-index --add --cacheinfo 100644 da95f8264a0ffe3df10e94eed6371ea83aee9a4d 1.json </span><br><span class="line"><span class="meta">#</span><span class="bash"> write the tree</span> </span><br><span class="line">git write-tree d6916d3e27baa9ef2742c2ba09696f22e41011a1</span><br></pre></td></tr></table></figure>
+
 <p>这会返回一个 sha 加密串，可用于读取该树。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git cat-file -p d6916d3e27baa9ef2742c2ba09696f22e41011a1 100644 blob </span><br><span class="line">da95f8264a0ffe3df10e94eed6371ea83aee9a4d 1.json</span><br></pre></td></tr></table></figure>
+
 <p>此时对象数据库状态如下：</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-6.png" alt=""></p>
+<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-6.png"></p>
 <p>要修改文件可遵循相同的步骤：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Add a blob</span> </span><br><span class="line">echo &#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth truyers&quot;&#125; | git hash-object -w --stdin 42d0d209ecf70a96666f5a4c8ed97f3fd2b75dda </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Create and populate a staging area</span> </span><br><span class="line">git update-index --add --cacheinfo 100644 42d0d209ecf70a96666f5a4c8ed97f3fd2b75dda 1.json </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Write the tree</span> </span><br><span class="line">git write-tree 2c59068b29c38db26eda42def74b7142de392212</span><br></pre></td></tr></table></figure>
+
 <p> 此时面临以下情况：</p>
 <p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-15.png" alt="Git Object Database: tree and blob"></p>
 <p>现在两棵树代表文件的两个状态，但这没有起到什么作用，仍然需要记住这些树的 sha-1 值来获取内容。</p>
 <h3 id="Git-Commits"><a href="#Git-Commits" class="headerlink" title="Git Commits"></a>Git Commits</h3><p>一个提交包含 5 个关键信息。</p>
 <ul>
-<li>作者</li>
-<li>创建日期</li>
-<li>创建原因（消息）</li>
-<li>它指向的单个树对象</li>
-<li>一个或多个先前的提交（目前仅考虑仅具有一个父提交的提交，具有多个父提交的提交是合并提交）。 </li>
+<li>  作者</li>
+<li>  创建日期</li>
+<li>  创建原因（消息）</li>
+<li>  它指向的单个树对象</li>
+<li>  一个或多个先前的提交（目前仅考虑仅具有一个父提交的提交，具有多个父提交的提交是合并提交）。 </li>
 </ul>
 <p>要提交上述的树：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Commit the first tree (without a parent)</span> </span><br><span class="line">echo &quot;commit 1st version&quot; | git commit-tree d6916d3 05c1cec5685bbb84e806886dba0de5e2f120ab2a </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Commit the second tree with the first commit as a parent</span> </span><br><span class="line">echo &quot;Commit 2nd version&quot; | git commit-tree 2c59068 -p 05c1cec5 </span><br><span class="line">9918e46dfc4241f0782265285970a7c16bf499e4</span><br></pre></td></tr></table></figure>
+
 <p>这将进入以下状态：</p>
 <p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-16.png" alt="Git Object Database: commit, tree and blob"></p>
 <p>现在已经为文件建立了一个完整的历史记录，可以用任何 git 客户端打开该仓库，可见 1.json 是如何被正确追踪的。</p>
 <p>为了证明这一点，运行 git log 有以下输出：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git log --stat 9918e46 9918e46dfc4241f0782265285970a7c16bf499e4 &quot;Commit 2nd version&quot;</span><br><span class="line">1.json | 1 + 1 file changed, 1 insertions(+) </span><br><span class="line">05c1cec5685bbb84e806886dba0de5e2f120ab2a &quot;Commit 1st version&quot; 1.json | 1 + 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
+
 <p>并获得最后一个提交的文件内容。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git show 9918e46:1.json </span><br><span class="line">&#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth truyers&quot;&#125;</span><br></pre></td></tr></table></figure>
+
 <p>但这样还是没有达到目的，因为必须记住上次提交的哈希值。</p>
 <p>到现在为止创建的所有对象都是 Git 对象数据库的一部分，该数据库的一个特点是它只存储不可变的对象。一旦写入一个 blob、一棵树或一个提交，就不能在不改变键的情况下修改它，并且不能删除它们（至少不能直接删除，git gc 命令会删除悬空的对象）。</p>
 <h3 id="Git-References"><a href="#Git-References" class="headerlink" title="Git References"></a>Git References</h3><p>另一个层次是 Git 引用。引用不是对象数据库的一部分，而是引用数据库的一部分，而且它是可变的。引用有不同的类型，如分支、标签和远程，它们在本质上是相似的，只是有一些小的区别。</p>
 <p>到目前为止只考虑分支，一个分支是一个指向提交的指针。要创建分支，可以把提交的哈希值写到文件系统中：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 05c1cec5685bbb84e806886dba0de5e2f120ab2a &gt; .git/refs/heads/master</span><br></pre></td></tr></table></figure>
+
 <p>现在有一个主干分支，其指向第一次提交。为了移动这个分支，可执行以下命令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git update-ref refs/heads/master 9918e46</span><br></pre></td></tr></table></figure>
+
 <p>状态可见下图：</p>
-<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-17.png" alt=""></p>
+<p><img src="https://www.kenneth-truyers.net/content/images/2016/10/image_thumb-17.png"></p>
 <p>现在可以读取文件的当前状态： </p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git show master:1.json </span><br><span class="line">&#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;kenneth truyers&quot;&#125;</span><br></pre></td></tr></table></figure>
+
 <p>只要把分支指针移到最新的提交上，即使添加了新版本的文件和后续的树和提交，上面的命令也可以工作。</p>
 <p>对于一个简单的键值存储，以上这些内容都相当复杂。然而可以将这些东西抽象化，使客户端应用程序只需要指定分支和一个键（将在另一篇文章中再来讨论这个问题）。</p>
 <p>现在讨论将 Git 用作 NoSQL 数据库的潜在优势和缺点。</p>
@@ -493,24 +505,26 @@
 <h2 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h2><p>Git 可作为一个完全的版本系统。有了版本控制，也就有了（永远）不必删除数据的优势。</p>
 <p>在 SQL 数据库中有这样的例子：</p>
 <figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id | <span class="type">name</span> | <span class="type">deleted</span> <span class="number">1</span> | <span class="type">kenneth</span> | <span class="type">1</span></span><br></pre></td></tr></table></figure>
+
 <p>一般这样的简单记录即可保存数据（但通常不是），数据本身可能依赖于其他数据（无论实现细节上它们是否为外键），当要还原数据时很可能无法孤立地进行操作。而使用 Git 只需将分支指向另一个提交即可回到数据库级别（而不是记录级别）的正确状态。</p>
 <p>另一种做法：</p>
 <figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id | <span class="type">street</span> | <span class="type">lastUpdate</span> <span class="number">1</span> | <span class="type">town</span> rd | <span class="type">20161012</span></span><br></pre></td></tr></table></figure>
+
 <p> 这种做法将更少机会用到：已知该数据已被更新，却没有待更新的内容以及更新前的状态信息。 每当更新数据时，实际上就是在删除数据并插入新数据，旧数据将永远丢失。 </p>
 <p>使用 Git 可以在任何文件上运行 git log 查看更改的内容、对象，时间和原因。 </p>
 <h2 id="Git-工具"><a href="#Git-工具" class="headerlink" title="Git 工具"></a>Git 工具</h2><p>Git 拥有丰富的工具集，可用于检索和处理数据。虽然大多数记录都集中在代码上，但并不意味着不能用它们来处理其他数据。</p>
 <p>基本的 Git 命令：</p>
 <ul>
-<li>使用 git diff 查找两个提交/ 分支/ 标签/ 的变化差异。</li>
-<li>使用 git bisect 找出由于数据变化而停止工作的情况。</li>
-<li>使用 git hooks 获取自动变更通知，建立全文索引，更新缓存，发布数据，…</li>
-<li>还原、分支、合并，…</li>
+<li>  使用 git diff 查找两个提交/ 分支/ 标签/ 的变化差异。</li>
+<li>  使用 git bisect 找出由于数据变化而停止工作的情况。</li>
+<li>  使用 git hooks 获取自动变更通知，建立全文索引，更新缓存，发布数据，…</li>
+<li>  还原、分支、合并，…</li>
 </ul>
 <p>还有一些外部工具：</p>
 <ul>
-<li>使用 Git 客户端实现数据可视化以便浏览 。</li>
-<li>使用 pull requests 在合并之前检查数据更改。</li>
-<li>Gitinspector：Git 存储库的统计分析。</li>
+<li>  使用 Git 客户端实现数据可视化以便浏览 。</li>
+<li>  使用 pull requests 在合并之前检查数据更改。</li>
+<li>  Gitinspector：Git 存储库的统计分析。</li>
 </ul>
 <h2 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h2><p>由于它是一个键值存储，Git 具备一般 NoSQL 存储的优势：比如无模式的数据库，可以存储任何内容，它甚至不一定是 JSON。</p>
 <h2 id="连接性"><a href="#连接性" class="headerlink" title="连接性"></a>连接性</h2><p>Git 可以在分区网络中工作，可以将所有内容放在 USB 存储上，在不连接网络时保存数据，然后在重新联机时推送并合并。这在开发代码时的常用做法相同。在某些场景中这可以节省时间。</p>
@@ -520,6 +534,7 @@
 <p>此外备份仅仅是执行 Git 推送，而可以推送到任何地方，GitHub、BitBucket 或自我托管的 Git 服务器。</p>
 <p>复制也同样简单，使用 git 钩子设置一个触发器，在每次提交后运行 Git 推送，比如：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git remote add replica git@replica.server.com:app.git </span><br><span class="line">cat .git/hooks/post-commit </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span> </span><br><span class="line">git push replica</span><br></pre></td></tr></table></figure>
+
 <p>上述是 Git 作为数据库的优点，然而还有以下缺点。</p>
 <h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><p>只支持按键查询，唯一的好处是可以将数据在目录中组织，这样就可以轻易地通过前缀获得内容。任何其他的查询都是不支持的，除非执行完整的递归搜索。</p>
 <p>唯一的做法是建立专门用于查询的索引。如果不需要过时，可以按调度计划维护索引，或者可以在提交发生后立即使用 git hook 更新索引。 </p>
@@ -1661,15 +1676,15 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
@@ -1685,9 +1700,9 @@
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
