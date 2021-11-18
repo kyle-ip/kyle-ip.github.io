@@ -461,22 +461,16 @@ height:100vh;
 </blockquote>
 <h1 id="Arthas-Cheat-Sheet"><a href="#Arthas-Cheat-Sheet" class="headerlink" title="Arthas Cheat Sheet"></a>Arthas Cheat Sheet</h1><h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>下载 Arthas 启动程序，选择监控的 Java 进程：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://arthas.aliyun.com/arthas-boot.jar</span><br><span class="line">java -jar arthas-boot.jar</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
-
 <p>基本命令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">help                # 帮助信息</span><br><span class="line"><span class="meta">#</span><span class="bash"> cmd -h</span></span><br><span class="line"></span><br><span class="line">keymap              # 快捷键</span><br><span class="line"></span><br><span class="line">dashboard           # 监控面板（q/Ctrl+C 退出）</span><br><span class="line"></span><br><span class="line">jvm                 # JVM 详细信息</span><br><span class="line"></span><br><span class="line">thread 1            # 线程 1 的栈信息</span><br><span class="line"><span class="meta">#</span><span class="bash"> thread 1 | grep <span class="string">&#x27;main(&#x27;</span>    线程 1 的 main class</span></span><br><span class="line"></span><br><span class="line">sc -d * MathGame    # 已加载的类</span><br><span class="line"></span><br><span class="line">jad demo.MathGame   # 反编译（包名.类名）</span><br><span class="line"></span><br><span class="line">watch demo.MathGame primeFactors returnObj    # 函数的参数/返回值/异常信息。</span><br><span class="line"></span><br><span class="line">history             # 历史命令</span><br><span class="line"></span><br><span class="line">exot/stop           # 退出当前 Session / Arthas</span><br></pre></td></tr></table></figure>
-
 <p>要监控 Spring Boot 程序，可指定目标 ip、Java 进程。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java -jar arthas-boot.jar --target-ip 0.0.0.0</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
-
 <p>各种变量</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sysprop             # System Properties</span><br><span class="line"><span class="meta">#</span><span class="bash"> sysprop java.version</span>    </span><br><span class="line"><span class="meta">#</span><span class="bash"> sysprop | grep java.version    指定单个 key</span></span><br><span class="line">sysprop key value   # 设置新的值</span><br><span class="line"></span><br><span class="line">sysenv              # 环境变量</span><br></pre></td></tr></table></figure>
-
 <p>类和方法</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sc javax.servlet.Filter    # 已加载的类（如果是接口，则查看所有实现类）</span><br><span class="line"><span class="meta">#</span><span class="bash"> sc -d *Filter    类的详细信息</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"></span><br><span class="line">sm java.math.RoundingMode  # 类的方法、属性等</span><br><span class="line"><span class="meta">#</span><span class="bash"> sm -d java.math.RoundingMode</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sm java.math.RoundingMode &lt;init&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>反编译</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jad com.example.demo.arthas.user.UserController    </span><br><span class="line"><span class="meta">#</span><span class="bash"> --source-only    只打印源码</span> </span><br></pre></td></tr></table></figure>
-
 <p>动态执行：</p>
 <ul>
 <li><p><a target="_blank" rel="noopener" href="https://commons.apache.org/proper/commons-ognl/language-guide.html">OGNL 表达式</a></p>
@@ -485,54 +479,36 @@ height:100vh;
 </li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ognl &#x27;@java.lang.System@out.println(&quot;hello ognl&quot;)&#x27;    # 在被监控进程中执行代码</span><br><span class="line"></span><br><span class="line">sc -d com.example.demo.arthas.user.UserController | grep classLoaderHash    # 查找 UserController 的 ClassLoader（查找其 hashcode）</span><br><span class="line">ognl -c 1be6f5c3 @com.example.demo.arthas.user.UserController@logger</span><br><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader  @org.springframework.boot.SpringApplication@logger</span><br><span class="line"></span><br><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader [-x 2] @com.example.demo.arthas.user.UserController@logger    # 查看静态字段</span><br><span class="line"></span><br><span class="line">ognl &#x27;#value1=@System@getProperty(&quot;java.home&quot;), #value2=@System@getProperty(&quot;java.runtime.name&quot;), &#123;#value1, #value2&#125;&#x27;    # 执行多行表达式，赋值给临时变量，返回一个 List</span><br></pre></td></tr></table></figure>
-
 <h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><h3 id="排查函数调用异常"><a href="#排查函数调用异常" class="headerlink" title="排查函数调用异常"></a>排查函数调用异常</h3><p>调用接口返回 500 错误：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:61000/user/0</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">&quot;timestamp&quot;</span>:<span class="number">1550223186170</span>,<span class="attr">&quot;status&quot;</span>:<span class="number">500</span>,<span class="attr">&quot;error&quot;</span>:<span class="string">&quot;Internal Server Error&quot;</span>,<span class="attr">&quot;exception&quot;</span>:<span class="string">&quot;java.lang.IllegalArgumentException&quot;</span>,<span class="attr">&quot;message&quot;</span>:<span class="string">&quot;id &lt; 1&quot;</span>,<span class="attr">&quot;path&quot;</span>:<span class="string">&quot;/user/0&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
-
 <p>该接口相关的 <code>Controller</code> 是 <code>UserController</code>，使用 Arthas 启动监控（参考 <a target="_blank" rel="noopener" href="https://arthas.aliyun.com/doc/advice-class.html">返回值表达式</a>）：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">watch com.example.demo.arthas.user.UserController * &#x27;&#123;params, throwExp&#125;&#x27;    </span><br><span class="line"><span class="meta">#</span><span class="bash"> 类名 方法名 返回值表达式（OGNL，支持 loader, clazz, method, target, params, returnObj, throwExp, isBefore, isThrow, isReturn）</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 只捕获抛出异常时的请求</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> watch com.example.demo.arthas.user.UserController * <span class="string">&quot;&#123;params[0],throwExp&#125;&quot;</span> -e</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 按照耗时进行过滤</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> watch com.example.demo.arthas.user.UserController * <span class="string">&#x27;&#123;params, returnObj&#125;&#x27;</span> <span class="string">&#x27;#cost&gt;200&#x27;</span></span></span><br></pre></td></tr></table></figure>
-
 <p>再次请求接口，在 Arthas 窗口有异常信息打印：</p>
 <figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Affect(<span class="keyword">class</span> count: <span class="number">1</span> , <span class="function"><span class="keyword">method</span> <span class="title">count</span>:</span> <span class="number">2</span>) cost <span class="keyword">in</span> <span class="number">53</span> ms, listenerId: <span class="number">3</span></span><br><span class="line"><span class="function"><span class="keyword">method</span>=<span class="title">com</span>.<span class="title">example</span>.<span class="title">demo</span>.<span class="title">arthas</span>.<span class="title">user</span>.<span class="title">UserController</span>.<span class="title">findUserById</span> <span class="title">location</span>=<span class="title">AtExceptionExit</span></span></span><br><span class="line"><span class="function"><span class="title">ts</span>=2021-03-06 20:</span><span class="number">41</span>:<span class="number">43</span>; [cost=<span class="number">0.402354</span>ms] <span class="keyword">result</span>=@ArrayList[</span><br><span class="line">    @Integer[<span class="number">0</span>],</span><br><span class="line">    @IllegalArgumentException[java.lang.IllegalArgumentException: id &lt; <span class="number">1</span>],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
 <h3 id="热更新代码"><a href="#热更新代码" class="headerlink" title="热更新代码"></a>热更新代码</h3><p>接上，对于上述报错的 <code>UserController</code>，使用 Arthas 反编译，输出到 <code>/tmp/UserController.java</code>：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jad --source-only com.example.demo.arthas.user.UserController &gt; /tmp/UserController.java</span><br></pre></td></tr></table></figure>
-
 <p>查找 <code>UserController</code> 的 ClassLoader：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc -d *UserController | grep classLoaderHash</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">classLoaderHash   19469ea2</span><br><span class="line"><span class="meta">#</span><span class="bash"> 可见是 LaunchedURLClassLoader@1be6f5c3 加载 UserController</span></span><br></pre></td></tr></table></figure>
-
 <p>修改 <code>/tmp/UserController.java</code> 使之满足条件不再抛出 <code>IllegalArgumentException</code>。</p>
 <p>编译修改好的 <code>UserController</code>：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mc --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader /tmp/UserController.java -d /tmp</span><br><span class="line"><span class="meta">#</span><span class="bash"> 或 mc -c 19469ea2 /tmp/UserController.java -d /tmp</span></span><br></pre></td></tr></table></figure>
-
 <p>重新加载编译好的 <code>UserController.class</code>：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redefine /tmp/com/example/demo/arthas/user/UserController.class</span><br></pre></td></tr></table></figure>
-
 <p>再次请求接口，可见已正常返回：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:61000/user/0</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;id&quot;:0,&quot;name&quot;:&quot;name0&quot;&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="设置日志级别"><a href="#设置日志级别" class="headerlink" title="设置日志级别"></a>设置日志级别</h3><p>查找 ClassLoader：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc -d com.example.demo.arthas.user.UserController | grep classLoaderHash</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">classLoaderHash</span>   <span class="number">1</span>be<span class="number">6</span>f<span class="number">5</span>c<span class="number">3</span></span><br></pre></td></tr></table></figure>
-
 <p>获取 logger：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader &#x27;@com.example.demo.arthas.user.UserController@logger&#x27;</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@Logger</span>[</span><br><span class="line">    serialVersionUID=<span class="variable">@Long</span>[<span class="number">5454405123156820674</span>],</span><br><span class="line">    FQCN=<span class="variable">@String</span>[ch.qos.logback.classic.Logger],</span><br><span class="line">    name=<span class="variable">@String</span>[com.example.demo.arthas.user.UserController],</span><br><span class="line">    level=null,</span><br><span class="line">    effectiveLevelInt=<span class="variable">@Integer</span>[<span class="number">20000</span>],</span><br><span class="line">    parent=<span class="variable">@Logger</span>[Logger[com.example.demo.arthas.user]],</span><br><span class="line">    childrenList=null,</span><br><span class="line">    aai=null,</span><br><span class="line">    additive=<span class="variable">@Boolean</span>[true],</span><br><span class="line">    loggerContext=<span class="variable">@LoggerContext</span>[ch.qos.logback.classic.LoggerContext[default]],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
 <p>可见实际使用的日志模块是 logback，level 为 null（最终 level 是从root logger里来的）。单独设置 UserController 的 logger level 为 DEBUG：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader &#x27;@com.example.demo.arthas.user.UserController@logger.setLevel(@ch.qos.logback.classic.Level@DEBUG)&#x27;</span><br></pre></td></tr></table></figure>
-
 <p>修改全局 logger lever：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader &#x27;@org.slf4j.LoggerFactory@getLogger(&quot;root&quot;).setLevel(@ch.qos.logback.classic.Level@DEBUG)&#x27;</span><br></pre></td></tr></table></figure>
-
 <h2 id="应用案例"><a href="#应用案例" class="headerlink" title="应用案例"></a>应用案例</h2><ul>
 <li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-ognl-update-logger-level-cn">动态更新应用 Logger Level</a></p>
 </li>
@@ -562,9 +538,9 @@ height:100vh;
 </li>
 <li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-boot-details-cn">arthas-boot 支持的参数</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/alibaba/arthas/issues?q=label:user-case">用户案例</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/alibaba/arthas/issues?q=label%3Auser-case">用户案例</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzU2MTY2MjE4OQ==&action=getalbum&album_id=1430941903897460741&scene=173&from_msgid=2247483693&from_itemidx=1&count=3#wechat_redirect">…</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzU2MTY2MjE4OQ==&amp;action=getalbum&amp;album_id=1430941903897460741&amp;scene=173&amp;from_msgid=2247483693&amp;from_itemidx=1&amp;count=3#wechat_redirect">…</a></p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -1735,9 +1711,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     

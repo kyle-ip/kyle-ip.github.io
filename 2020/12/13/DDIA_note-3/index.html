@@ -579,7 +579,6 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
-
 <h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>即额外的、用于辅助查找的元数据。每次写入数据都需要同步更新，因此会降低写速度，需要在 <strong>加速查询</strong> 与 <strong>避免降低写入速度</strong> 之间权衡。</p>
 <p>对于 OLTP 系统，主流的存储引擎：</p>
 <ul>
@@ -629,26 +628,26 @@ height:100vh;
 <ul>
 <li><p>处理写：</p>
 <ul>
-<li><p>  将数据添加到内存的平衡树（即内存表）中。</p>
+<li><p>将数据添加到内存的平衡树（即内存表）中。</p>
 </li>
-<li><p>  通过树维护按键排序的键值对，当内存表大于某阈值（数 MB）则将其写入 SSTable 文件。</p>
+<li><p>通过树维护按键排序的键值对，当内存表大于某阈值（数 MB）则将其写入 SSTable 文件。</p>
 </li>
 <li><p>在写磁盘同时可处理对新内存表的写入。</p>
 </li>
 </ul>
 </li>
-<li><p>  处理读：先在内存表查找键值，然后在最新的磁盘段文件，再在次新的磁盘段文件，以此类推。</p>
+<li><p>处理读：先在内存表查找键值，然后在最新的磁盘段文件，再在次新的磁盘段文件，以此类推。</p>
 </li>
-<li><p>  合并和压缩：后台进程周期性执行段合并与压缩，并丢弃已被覆盖或删除的值。</p>
+<li><p>合并和压缩：后台进程周期性执行段合并与压缩，并丢弃已被覆盖或删除的值。</p>
 </li>
-<li><p>  崩溃恢复：由于数据库崩溃时在内存表但尚未写入磁盘的数据会丢失。可在磁盘上保留日志，每次写入时追加到该日志（无需排序），用于崩溃后恢复内存表。每当将内存表写入 SSTable 时，日志即可丢弃。</p>
+<li><p>崩溃恢复：由于数据库崩溃时在内存表但尚未写入磁盘的数据会丢失。可在磁盘上保留日志，每次写入时追加到该日志（无需排序），用于崩溃后恢复内存表。每当将内存表写入 SSTable 时，日志即可丢弃。</p>
 </li>
 </ul>
 <p>性能优化：</p>
 <ul>
-<li><p>  <strong>布隆过滤器</strong>：查找不存在的键可能很慢：先检查内存表，再回溯访问到最旧的段文件，将涉及多次磁盘读。引入布隆过滤器可快速判断集合中存在/不存在的键，节省磁盘 I/O。</p>
+<li><p><strong>布隆过滤器</strong>：查找不存在的键可能很慢：先检查内存表，再回溯访问到最旧的段文件，将涉及多次磁盘读。引入布隆过滤器可快速判断集合中存在/不存在的键，节省磁盘 I/O。</p>
 </li>
-<li><p>  <strong>压缩合并策略</strong>：压缩和合并的顺序和时机。</p>
+<li><p><strong>压缩合并策略</strong>：压缩和合并的顺序和时机。</p>
 </li>
 <li><p>大小分级：连续将较新和较小的 SSTables 合并到较旧和较大的 SSTables（比如 HBase 和 Cassandra）。</p>
 </li>
@@ -673,7 +672,8 @@ height:100vh;
 <p>插入操作：要添加新键，则需要找到其范围包含新键的页，并将其添加到该页。如果页中没有足够的可用空间来容纳新键则将其分裂为两个半满的页，并且父页也需要更新以包含分裂之后的新的键范围。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/B%20Tree%20%E5%88%86%E8%A3%82.jpg" alt="B Tree 分裂"></p>
 <p>更新操作：搜索包含目标键的叶子页，更改该页的值并将页写回到磁盘（对该页的任何引用仍然有效）。</p>
-<h4 id="LSM-Tree-与-B-Tree-对比"><a href="#LSM-Tree-与-B-Tree-对比" class="headerlink" title="LSM-Tree 与 B-Tree 对比"></a>LSM-Tree 与 B-Tree 对比</h4><table>
+<h4 id="LSM-Tree-与-B-Tree-对比"><a href="#LSM-Tree-与-B-Tree-对比" class="headerlink" title="LSM-Tree 与 B-Tree 对比"></a>LSM-Tree 与 B-Tree 对比</h4><div class="table-container">
+<table>
 <thead>
 <tr>
 <th></th>
@@ -681,7 +681,8 @@ height:100vh;
 <th>B-Tree</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>写入吞吐量</td>
 <td>写放大较低，其顺序写入紧凑的 SSTable 文件，不必重写树中的多个页。而且顺序写比随机写快得多。</td>
 <td>写入时需要写预写日志和树的页（可能还会分裂）。即使该页中只有几个字节更改，也必须承受写整个页的开销。<br />一些存储引擎甚至覆盖相同的页两次，以避免在故障时出现部分更新的页。</td>
@@ -721,7 +722,9 @@ height:100vh;
 <td>效率较低</td>
 <td>支持</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <blockquote>
 <p>  写放大：在数据库内一次数据库写入请求导致的多次磁盘写的情况称为写放大。</p>
 <p>  对于固态硬盘而言。由于擦写覆盖次数有限，需要关注写放大指标。固态硬盘固件内部使用日志结构化算法，将随机写转换为底层存储芯片上的顺序写，存储引擎写入模式的影响不明显。但如果能以更紧凑的方式表示数据，即可在有限的 I/O 带宽中支持更多的读写请求。</p>
@@ -739,22 +742,21 @@ height:100vh;
 <ul>
 <li><p>堆文件：对其他地方存储的行的引用（行的具体位置），不以特定的顺序存储，可以是追加或记录删除行，以便用新数据覆盖。</p>
 <ul>
-<li><p>  当存在多个二级索引时可以避免复制数据：每个索引只引用堆文件中的位置信息，实际数据仍保存在一个位置。</p>
+<li><p>当存在多个二级索引时可以避免复制数据：每个索引只引用堆文件中的位置信息，实际数据仍保存在一个位置。</p>
 </li>
 <li><p>当更新值时只要新值字节数不大于旧值，就可以直接覆盖，否则可能需要移动数据以得到足够大的空间。</p>
 </li>
-<li><p>  所有索引都需要更新，以指向新的堆位置，或在旧堆位置保留一个间接指针。</p>
+<li><p>所有索引都需要更新，以指向新的堆位置，或在旧堆位置保留一个间接指针。</p>
 </li>
 </ul>
 </li>
-<li><p>  聚簇索引：从索引到堆文件的额外跳转在读取时有较大性能损失，因此可将索引行直接存储在索引中，被称为聚簇索引。<strong>聚簇索引</strong> 在索引中直接保存行数据，<strong>非聚簇索引</strong> 仅存储索引中数据的引用，一种折中设计称为 <strong>覆盖索引</strong> 或 包含列的索引，在索引中保存表的列值，可支持只通过索引即可响应的简单查询（被称索引覆盖了查询，可避免回表）。</p>
+<li><p>聚簇索引：从索引到堆文件的额外跳转在读取时有较大性能损失，因此可将索引行直接存储在索引中，被称为聚簇索引。<strong>聚簇索引</strong> 在索引中直接保存行数据，<strong>非聚簇索引</strong> 仅存储索引中数据的引用，一种折中设计称为 <strong>覆盖索引</strong> 或 包含列的索引，在索引中保存表的列值，可支持只通过索引即可响应的简单查询（被称索引覆盖了查询，可避免回表）。</p>
 </li>
 </ul>
 <h4 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h4><p>以上索引只将一个键映射到一个值，如果需要同时查询表的多个列，则需要多列索引。</p>
 <p>常用于一次查询多列，比如地理空间数据的经度和纬度，要求同时满足在某个经度和纬度范围内的数据。</p>
 <p><strong>级联索引</strong>：通过将一列追加到另一列，将几个字段组合成一个键（索引的定义指定字段连接的顺序）。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> restaurants</span><br><span class="line"><span class="keyword">WHERE</span> latitude <span class="operator">&gt;</span> <span class="number">51.4946</span> <span class="keyword">AND</span> latitude <span class="operator">&lt;</span> <span class="number">51.5079</span></span><br><span class="line"><span class="keyword">AND</span> longitude <span class="operator">&gt;</span> <span class="number">-0.1162</span> <span class="keyword">AND</span> longitude <span class="operator">&lt;</span> <span class="number">-0.1004</span>;</span><br></pre></td></tr></table></figure>
-
 <p>多维索引：使用空格填充曲线将二维位置转换为单个数字，再使用常规的 B-tree 索引。</p>
 <h4 id="全文搜索和模糊索引"><a href="#全文搜索和模糊索引" class="headerlink" title="全文搜索和模糊索引"></a>全文搜索和模糊索引</h4><p>为了处理文档或查询中的拼写错误，搜索引擎（如 Lucene）可在某个编辑距离内搜索文本。</p>
 <p>Lucene 对词典使用类似 SSTable 的结构，由内存索引告知查询要找到键需要排序文件中的哪个偏移量。</p>
@@ -778,6 +780,7 @@ height:100vh;
 </li>
 </ul>
 <h2 id="事务处理与分析处理"><a href="#事务处理与分析处理" class="headerlink" title="事务处理与分析处理"></a>事务处理与分析处理</h2><p>数据系统分为两大类：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -786,7 +789,8 @@ height:100vh;
 <th>分析系统（OLAP）</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>读特征</td>
 <td>基于键，每次查询返回少量的记录</td>
 <td>对大量记录进行汇总</td>
@@ -811,7 +815,9 @@ height:100vh;
 <td>GB 到 TB</td>
 <td>TB 到 PB</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h3 id="事务处理系统（OLTP）"><a href="#事务处理系统（OLTP）" class="headerlink" title="事务处理系统（OLTP）"></a>事务处理系统（OLTP）</h3><p>基于某种键查询记录，而存储引擎使用索引来查找所请求键的数据，磁盘寻道时间往往是瓶颈。</p>
 <p>不建议在 OLTP 数据库上直接运行临时分析查询，需要扫描大量数据集，可能会损害并发执行事务的性能。</p>
 <h4 id="日志结构"><a href="#日志结构" class="headerlink" title="日志结构"></a>日志结构</h4><p>以追加式更新文件和删除过时文件，不会修改己写入的文件。系统地将磁盘上随机访问写入转为顺序写入，由于硬盘驱动器和SSD的性能特性，可以实现更高的写入吞吐量。</p>
@@ -2044,9 +2050,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
