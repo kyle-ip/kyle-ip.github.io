@@ -416,6 +416,7 @@
 </li>
 </ul>
 </blockquote>
+
 <p>存储与处理数据的系统按照高层次分类可以分为两大类：</p>
 <ul>
 <li><p>记录系统：即真实数据系统，每条记录在系统中只表示一次（规范化），多套系统间数据有差异，则以记录系统为准。</p>
@@ -434,17 +435,21 @@
 </ul>
 <h2 id="UNIX-工具"><a href="#UNIX-工具" class="headerlink" title="UNIX 工具"></a>UNIX 工具</h2><p>以管道结合常用的 UNIX 命令完成数据处理，优点是简洁，以 Nginx 日志为例：</p>
 <figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">216.58</span>.<span class="number">210.78</span> - - [<span class="number">27</span>/Feb/<span class="number">2015</span>:<span class="number">17</span>:<span class="number">55</span>:<span class="number">11</span> +<span class="number">0000</span>] <span class="string">&quot;GET /css/typography.css HTTP/1.1&quot;</span> </span><br><span class="line"><span class="number">200</span> <span class="number">3377</span> <span class="string">&quot;http://martin.kleppmann.com/&quot;</span> <span class="string">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) </span></span><br><span class="line">AppleWebKit/<span class="number">537.36</span> (KHTML, like Gecko) Chrome/<span class="number">40.0</span>.<span class="number">2214.115</span> Safari/<span class="number">537.36</span><span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat /var/log/nginx/access.log | #1</span><br><span class="line">    awk &#x27;&#123;print $7&#125;&#x27; | #2 以空格为分隔符，输出第七列。</span><br><span class="line">    sort             | #3 按字母排序。</span><br><span class="line">    uniq -c          | #4 过滤重复的行。</span><br><span class="line">    sort -r -n       | #5 按每行起始处的数字排倒序（URL 请求次数）。</span><br><span class="line">    head -n 5          #6 输出前五行。</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">4189</span> /favicon.ico</span><br><span class="line"><span class="number">3631</span> <span class="regexp">/2013/</span><span class="number">05</span><span class="regexp">/24/im</span>proving-security-of-ssh-<span class="keyword">private</span>-keys.html</span><br><span class="line"><span class="number">2124</span> <span class="regexp">/2012/</span><span class="number">12</span><span class="regexp">/05/</span>schema-evolution-in-avro-protocol-buffers-thrift.html</span><br><span class="line"><span class="number">1369</span> /</span><br><span class="line"> <span class="number">915</span> <span class="regexp">/css/</span>typography.css</span><br></pre></td></tr></table></figure>
+
 <p>除此之外，还可以使用 Python、Ruby 编写脚本，优点是可读性强。以 Ruby 为例：</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">counts = Hash.new(<span class="number">0</span>)         <span class="comment"># 1</span></span><br><span class="line">File.open(<span class="string">&#x27;/var/log/nginx/access.log&#x27;</span>) <span class="keyword">do</span> <span class="params">|file|</span> </span><br><span class="line">    file.each <span class="keyword">do</span> <span class="params">|line|</span></span><br><span class="line">        url = line.split[<span class="number">6</span>]  <span class="comment"># 2</span></span><br><span class="line">        counts[url] += <span class="number">1</span>     <span class="comment"># 3</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">top5 = counts.map&#123;<span class="params">|url, count|</span> [count, url] &#125;.sort.reverse[<span class="number">0</span>...<span class="number">5</span>] <span class="comment"># 4</span></span><br><span class="line">top5.each&#123;<span class="params">|count, url|</span> puts <span class="string">&quot;<span class="subst">#&#123;count&#125;</span> <span class="subst">#&#123;url&#125;</span>&quot;</span> &#125;    </span><br></pre></td></tr></table></figure>
+
 <p>在执行方式上两者有很大的区别，Unix 管道依赖于对整个 URL 列表的排序，而 Ruby 脚本则使用哈希表将每个URL映射到其出现的次数。工作集足够小时前者表现良好，而由于 Unix 的 sort 程序支持外部排序、以及利用多个 CPU 核并行排序，可支持更大的工作集（瓶颈是磁盘 I/O）。</p>
 <h3 id="Unix-哲学"><a href="#Unix-哲学" class="headerlink" title="Unix 哲学"></a>Unix 哲学</h3><p>简而言之，就是：</p>
 <ul>
-<li>程序保持单一职责，而非不断添加功能使程序复杂化。</li>
-<li>尽量使每个程序的输出成为另一个程序的输入，避免使用严格的列数据或二进制输入格式，不支持交互式输入。</li>
-<li>设计和构建软件应尽早试用，笨拙的部分应抛弃并重建。</li>
-<li>优先使用工具减轻编码任务。</li>
+<li>  程序保持单一职责，而非不断添加功能使程序复杂化。</li>
+<li>  尽量使每个程序的输出成为另一个程序的输入，避免使用严格的列数据或二进制输入格式，不支持交互式输入。</li>
+<li>  设计和构建软件应尽早试用，笨拙的部分应抛弃并重建。</li>
+<li>  优先使用工具减轻编码任务。</li>
 </ul>
 <h4 id="统一接口"><a href="#统一接口" class="headerlink" title="统一接口"></a>统一接口</h4><h4 id="逻辑与布线相分离"><a href="#逻辑与布线相分离" class="headerlink" title="逻辑与布线相分离"></a>逻辑与布线相分离</h4><h4 id="透明度和实验"><a href="#透明度和实验" class="headerlink" title="透明度和实验"></a>透明度和实验</h4><h2 id="MapReduce-与分布式文件系统"><a href="#MapReduce-与分布式文件系统" class="headerlink" title="MapReduce 与分布式文件系统"></a>MapReduce 与分布式文件系统</h2><h2 id="超越-MapReduce"><a href="#超越-MapReduce" class="headerlink" title="超越 MapReduce"></a>超越 MapReduce</h2><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
@@ -1622,9 +1627,9 @@
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
