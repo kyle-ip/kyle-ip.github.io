@@ -507,7 +507,6 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
-
 <p>关于数据模型：</p>
 <ul>
 <li><p>复杂的应用程序可能会有更多的中间层，每层通过提供简洁的数据模型隐藏下层复杂性。抽象机制使得不同的人群可高效协作。</p>
@@ -569,6 +568,7 @@ height:100vh;
 <li><p>更少限制、更具动态和表达力的数据模型（不对数据强加模式）。</p>
 </li>
 </ul>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -577,7 +577,8 @@ height:100vh;
 <th>代表实现</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>键值数据库</td>
 <td>无法存储数据结构。</td>
 <td>Redis</td>
@@ -597,7 +598,9 @@ height:100vh;
 <td>全文搜索性能差。</td>
 <td>Elasticsearch</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>有时也结合关系模型，称为 <strong>混合持久化</strong>。</p>
 <h4 id="文档模型：弱关联"><a href="#文档模型：弱关联" class="headerlink" title="文档模型：弱关联"></a>文档模型：弱关联</h4><p>模式灵活性， 由于局部性带来较好性能，更接近应用程序使用的数据结构。</p>
 <p>尤其适合处理自包含文档，且文档与其他文档之间关联很少。</p>
@@ -1390,30 +1393,9 @@ top:100vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 80
+        Total : 77
         </div>
         <!-- search  -->
         
@@ -1827,22 +1809,7 @@ top:100vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2019/05/30/Vue_user-guide-4/" >Vue 学习笔记：前端路由、请求发送和状态管理</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/24</span><a class="archive-post-title" href= "/2019/05/24/Vue_user-guide-3/" >Vue 学习笔记：组件</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/23</span><a class="archive-post-title" href= "/2019/05/23/Vue_user-guide-2/" >Vue 学习笔记（2）</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Vue_user-guide-1/" >Vue 学习笔记（1）</a>
+            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Vue_user-guide/" >Vue 学习笔记</a>
         </li>
     
     </div>
@@ -1856,9 +1823,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
@@ -1874,19 +1841,15 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
         <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
-        <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
-    
-        <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
@@ -1897,6 +1860,10 @@ top:100vh;
         <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
     
         <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+    
+        <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
+    
+        <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
