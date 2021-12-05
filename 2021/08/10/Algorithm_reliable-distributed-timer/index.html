@@ -478,9 +478,9 @@ height:100vh;
 <h1 id="可靠的分布式计时器"><a href="#可靠的分布式计时器" class="headerlink" title="可靠的分布式计时器"></a>可靠的分布式计时器</h1><h2 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h2><p>实现计时器的算法有红黑树、最小堆和时间轮等，其中最有效、最常用的算法是时间轮，因此备受关注。</p>
 <p>基于时间轮的计时器建模，分为两个内部操作：</p>
 <ul>
-<li><p><strong>单位计数</strong>：类似时钟的每个“滴答”。 如果设置计时器的粒度是 T 个时间单位（比如 1s），则每 T 个时间单位就会发生一次单位计数。这会检查是否存在未完成、已过期的计时器，是则把它删除并调用过期处理。</p>
+<li><p>  <strong>单位计数</strong>：类似时钟的每个“滴答”。 如果设置计时器的粒度是 T 个时间单位（比如 1s），则每 T 个时间单位就会发生一次单位计数。这会检查是否存在未完成、已过期的计时器，是则把它删除并调用过期处理。</p>
 </li>
-<li><p><strong>到期处理</strong>：调用用户提供的回调函数（或其他用户请求操作，取决于模型设计）。 </p>
+<li><p>  <strong>到期处理</strong>：调用用户提供的回调函数（或其他用户请求操作，取决于模型设计）。 </p>
 </li>
 </ul>
 <h3 id="简单时间轮"><a href="#简单时间轮" class="headerlink" title="简单时间轮"></a>简单时间轮</h3><p>即维护一个大的定时轮，其中有 8 个槽位，每个槽位挂载即将到期的任务。假设每个槽位表示 1s，则当前槽位就是 slot1，如果要添加一个需要 2s 后触发的任务，则这个任务就会被插入到 slot3 中。</p>
@@ -493,7 +493,7 @@ height:100vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103357.png" alt="img"></p>
 <p>单位计数的时间复杂度为 O(1) - O(n)。</p>
 <h2 id="单位计数"><a href="#单位计数" class="headerlink" title="单位计数"></a>单位计数</h2><p>介绍完时间轮算法，回到设计可靠的分布式计时器的话题，其中决定如何存储计时器任务至关重要。需要权衡实现复杂度和时间、空间，因此选择散列时间轮算法。</p>
-<h3 id="插入任务"><a href="#插入任务" class="headerlink" title="插入任务"></a>插入任务</h3><p>使用 TableKV 实现散列时间轮算法：假设有 10m 个桶，当前时间为 2021:08:05 11:17:33 +08=（UNIX 时间戳：1628176653）。有一个任务将在 10s 后触发（<code>`start_time = 1628176653 + 10</code>，或 <code>start_time = 1628176653 + 10 + 100000000</code> 即 100000010s 后），这些任务都将存储到桶 <code>start_time % 1006060030</code> 中。</p>
+<h3 id="插入任务"><a href="#插入任务" class="headerlink" title="插入任务"></a>插入任务</h3><p>使用 TableKV 实现散列时间轮算法：假设有 10m 个桶，当前时间为 2021:08:05 11:17:33 +08=（UNIX 时间戳：1628176653）。有一个任务将在 10s 后触发（``start_time = 1628176653 + 10<code>，或 </code>start_time = 1628176653 + 10 + 100000000<code>即 100000010s 后），这些任务都将存储到桶</code>start_time % 1006060030` 中。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195209.png" alt="img"></p>
 <h3 id="取出任务"><a href="#取出任务" class="headerlink" title="取出任务"></a>取出任务</h3><p>随着时间到了 2021:08:05 11:17:43 +08（UNIX 时间戳：1628176663），需要通过计算桶号来从槽位中取出任务：<code>current_timestamp(1628176663) % 100000000 = 2817663</code> 定位桶号，在桶 28176663 中找到满足 <code>start_time &lt;= current_timestamp</code> 的任务，即为所有预期的到期任务。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195227.png" alt="img"></p>
@@ -504,13 +504,13 @@ height:100vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806114120.png" alt="img"></p>
 <p>步骤如下：</p>
 <ul>
-<li><p>所有机器获取带版本的全局时间戳（tA）。</p>
+<li><p>  所有机器获取带版本的全局时间戳（tA）。</p>
 </li>
-<li><p>所有机器都增加时间戳（tB）和更新版本（乐观锁，只有一台机器会成功）。</p>
+<li><p>  所有机器都增加时间戳（tB）和更新版本（乐观锁，只有一台机器会成功）。</p>
 </li>
-<li><p>获得互斥锁的机器被授权去取 tA 的过期任务，其他没有获得互斥锁的机器被挂起等待 1s。</p>
+<li><p>  获得互斥锁的机器被授权去取 tA 的过期任务，其他没有获得互斥锁的机器被挂起等待 1s。</p>
 </li>
-<li><p>基于 tB 循环回到步骤 1。 </p>
+<li><p>  基于 tB 循环回到步骤 1。 </p>
 </li>
 </ul>
 <p>可以将不断获取锁和获取到期数据的功能封装在一个 scheduler  组件中。 </p>
@@ -535,28 +535,28 @@ height:100vh;
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195302.png" alt="img"></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>综上所述，计时器的整体架构如下：</p>
 <ul>
-<li><p>添加附带指定元信息和任务信息的计时器任务。</p>
+<li><p>  添加附带指定元信息和任务信息的计时器任务。</p>
 </li>
-<li><p>通过散列时间轮算法将任务插入到桶中（状态设置为 pending）。</p>
+<li><p>  通过散列时间轮算法将任务插入到桶中（状态设置为 pending）。</p>
 </li>
-<li><p>时间同步调度器尝试获取锁并获取全局当前时间。</p>
+<li><p>  时间同步调度器尝试获取锁并获取全局当前时间。</p>
 </li>
-<li><p>取锁调度器获取预期的到期任务数据。</p>
+<li><p>  取锁调度器获取预期的到期任务数据。</p>
 </li>
-<li><p>使用线程池将任务数据作为消息发布到消息队列，将任务状态设置为 delivered。</p>
+<li><p>  使用线程池将任务数据作为消息发布到消息队列，将任务状态设置为 delivered。</p>
 </li>
-<li><p>消息订阅者从消息队列拉取消息。</p>
+<li><p>  消息订阅者从消息队列拉取消息。</p>
 </li>
-<li><p>向回调服务发送 RPC 请求，并设置任务状态为 success 或 fail。</p>
+<li><p>  向回调服务发送 RPC 请求，并设置任务状态为 success 或 fail。</p>
 </li>
-<li><p>如有必要则执行重试。</p>
+<li><p>  如有必要则执行重试。</p>
 </li>
 </ul>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806202140.png" alt="img"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><p><a target="_blank" rel="noopener" href="http://www.cs.columbia.edu/~nahum/w6998/papers/ton97-timing-wheels.pdf">Hashed And Hierarchical Timing Wheels: Efficient Data Structures For Implementing A Timer Facility</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="http://www.cs.columbia.edu/~nahum/w6998/papers/ton97-timing-wheels.pdf">Hashed And Hierarchical Timing Wheels: Efficient Data Structures For Implementing A Timer Facility</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.acolyer.org/2015/11/23/hashed-and-hierarchical-timing-wheels/">Hashed and Hierarchical Timing Wheels: Data Structures for the Efficient Implementation of a Timer Facility</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://blog.acolyer.org/2015/11/23/hashed-and-hierarchical-timing-wheels/">Hashed and Hierarchical Timing Wheels: Data Structures for the Efficient Implementation of a Timer Facility</a></p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -1743,17 +1743,17 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
@@ -1771,11 +1771,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
         <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
+    
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
     
