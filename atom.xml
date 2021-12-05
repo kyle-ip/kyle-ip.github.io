@@ -6,7 +6,7 @@
   <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-11-11T07:35:13.676Z</updated>
+  <updated>2021-12-05T03:05:40.999Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>A tour of Go</title>
+    <link href="https://yipwinghong.github.io/2021/12/05/Go_a-tour-of-go/"/>
+    <id>https://yipwinghong.github.io/2021/12/05/Go_a-tour-of-go/</id>
+    <published>2021-12-05T02:40:09.000Z</published>
+    <updated>2021-12-05T03:05:40.999Z</updated>
+    
+    
+    <summary type="html">A tour of Go 是 Go 官方提供的快速入门教程，本文把该教程的文本内容整理成单页，并调整部分章节结构，以便读者快速查阅。</summary>
+    
+    
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+    <category term="Go" scheme="https://yipwinghong.github.io/tags/Go/"/>
+    
+  </entry>
   
   <entry>
     <title>数据血缘功能设计</title>
@@ -385,25 +404,6 @@
     
     
     <summary type="html">这次还是有权图哈~</summary>
-    
-    
-    
-    
-    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-    <category term="算法" scheme="https://yipwinghong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>最小生成树问题</title>
-    <link href="https://yipwinghong.github.io/2021/07/08/Algorithm_minimum_spanning_tree_problem/"/>
-    <id>https://yipwinghong.github.io/2021/07/08/Algorithm_minimum_spanning_tree_problem/</id>
-    <published>2021-07-08T12:10:14.000Z</published>
-    <updated>2021-08-11T14:54:25.154Z</updated>
-    
-    
-    <summary type="html">有权图的另一类经典问题。</summary>
     
     
     
