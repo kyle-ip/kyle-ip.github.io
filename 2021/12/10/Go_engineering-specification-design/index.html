@@ -1,0 +1,2108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Kylo Yip">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Kylo Yip">
+	
+	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="/live2d-widget/autoload.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
+	
+    
+    <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
+    
+    <meta name="description" content="">
+    <meta name="description" content="关于 Go 工程化与企业级应用开发的总结，持续更新中。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 工程化规范设计">
+<meta property="og:url" content="https://yipwinghong.github.io/2021/12/10/Go_engineering-specification-design/index.html">
+<meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:description" content="关于 Go 工程化与企业级应用开发的总结，持续更新中。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/61b4d5da6c8327b738e9657c6c144000.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/1699f5c1933cfe72803dfb038152fc48.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/da69572c5605556b8144eb4ee281c4cb.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/89c618a7415c0c38b09d86d7f882a427.png">
+<meta property="og:image" content="https://static001.geekbang.org/resource/image/35/a7/3509bd169ce285f59fbcfa6ebea75aa7.png?wh=2513*1078">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/5f5a79a5d2bde029d4de9d98026ef3f2.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/5503ce60f7c2ae5d7628222a4d87cc07.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/1c0b08a1c9032c87c35b85de6ca6820b.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/fa611f83053afd77cf3ddf83561ba1d9.png">
+<meta property="og:image" content="https://static001.geekbang.org/resource/image/63/ea/63419f767c61c9580861b59445b90fea.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/94e521c6eb884096ea107fc4c36f30a3.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/ddb314275ba1bab28413221bc56ac80f.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/90ca527c2863fe642f9ab3d5b90fe980.png">
+<meta property="article:published_time" content="2021-12-09T17:42:39.000Z">
+<meta property="article:modified_time" content="2021-12-09T17:17:22.276Z">
+<meta property="article:author" content="Kylo Yip">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/61b4d5da6c8327b738e9657c6c144000.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>Go 工程化规范设计 · Kylo&#39;s Notebook</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu header-sidebar-menu-rounded">
+        
+            
+            <i class="fas fa-bars"></i>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>Kylo's Notebook</a>
+    <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >Kylo&#39;s Notebook</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">Go 工程化规范设计</a>
+        </div>
+    </div>
+    
+</header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top back-top-rounded">
+        
+            
+            <i class="fas fa-chevron-up"></i>
+            
+        </div>
+    </div>
+</footer>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:100vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(https://api.ixiaowai.cn/mcapi/mcapi.php)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Go 工程化规范设计
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "技术">技术</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">6.4k</span>Reading time: <span class="post-count reading-time">25 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/12/10</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Go-工程化规范设计（持续更新）"><a href="#Go-工程化规范设计（持续更新）" class="headerlink" title="Go 工程化规范设计（持续更新）"></a>Go 工程化规范设计（持续更新）</h1><blockquote>
+<p>  主要参考极客时间《Go 语言项目开发实战》规范设计。</p>
+</blockquote>
+<p>首先理解工程化规范包括的两方面：</p>
+<ul>
+<li><p>  非编码类规范：开源规范，文档规范，版本规范，Git 规范，发布规范，…</p>
+</li>
+<li><p>  编码类规范：目录规范，代码规范，接口规范，日志规范，错误码规范，…</p>
+</li>
+</ul>
+<h2 id="开源规范"><a href="#开源规范" class="headerlink" title="开源规范"></a>开源规范</h2><p>主流的开源许可证：</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/61b4d5da6c8327b738e9657c6c144000.png" alt="img"></p>
+<p>开源项目应遵循：</p>
+<ul>
+<li><p>  高单元覆盖率。可确保第三方开发者在开发完代码后，能很方便地对整个项目做详细的单元测试，也能保证提交代码的质量。</p>
+</li>
+<li><p>  要确保整个代码库和提交记录中，不能出现内部 IP、内部域名、密码、密钥这类信息。否则会造成敏感信息外漏，可能会对内部业务造成安全隐患。</p>
+</li>
+<li><p>  当开源项目被其他开发者提交 pull request、issue、comment 时要及时处理，可确保项目不断被更新，也可以激发其他开发者贡献代码的积极性。</p>
+</li>
+<li><p>  持续地更新功能和修复 Bug。对于已经结项、不维护的开源项目，需要及时地对项目进行归档，并在项目描述中加以说明。</p>
+</li>
+<li><p>  …</p>
+</li>
+</ul>
+<h2 id="文档规范"><a href="#文档规范" class="headerlink" title="文档规范"></a>文档规范</h2><h3 id="README-文档"><a href="#README-文档" class="headerlink" title="README 文档"></a>README 文档</h3><p>README.md 文档是项目的门面，用于介绍项目的功能、安装、部署、使用。</p>
+<p>建议使用 <a target="_blank" rel="noopener" href="https://readme.so/">readme.so</a> 生成。</p>
+<h3 id="项目文档"><a href="#项目文档" class="headerlink" title="项目文档"></a>项目文档</h3><p>要求易读和可快速定位目标内容，可提供中文与英文版本：</p>
+<ul>
+<li><p>  开发文档：描述项目开发流程，包括如何搭建开发环境、构建二进制文件、测试、部署等。</p>
+</li>
+<li><p>  用户文档：软件的使用文档，对象一般是软件的使用者，内容可根据需要添加。比如，可以包括 API 文档、SDK 文档、安装文档、功能介绍文档、最佳实践、操作指南、常见问题等。</p>
+</li>
+</ul>
+<p>参考目录结构：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">docs</span><br><span class="line">├── devel                            # 开发文档，可以提前规划好，英文版文档和中文版文档</span><br><span class="line">│   ├── en-US/                       # 英文版文档，可以根据需要组织文件结构</span><br><span class="line">│   └── zh-CN                        # 中文版文档，可以根据需要组织文件结构</span><br><span class="line">│       └── development.md           # 开发手册，可以说明如何编译、构建、运行项目</span><br><span class="line">├── guide                            # 用户文档</span><br><span class="line">│   ├── en-US/                       # 英文版文档，可以根据需要组织文件结构</span><br><span class="line">│   └── zh-CN                        # 中文版文档，可以根据需要组织文件结构</span><br><span class="line">│       ├── api/                     # API 文档</span><br><span class="line">│       ├── best-practice            # 最佳实践，存放一些比较重要的实践文章</span><br><span class="line">│       │   └── authorization.md</span><br><span class="line">│       ├── faq                      # 常见问题</span><br><span class="line">│       │   ├── iam-apiserver</span><br><span class="line">│       │   └── installation</span><br><span class="line">│       ├── installation             # 安装文档</span><br><span class="line">│       │   └── installation.md</span><br><span class="line">│       ├── introduction/            # 产品介绍文档</span><br><span class="line">│       ├── operation-guide          # 操作指南，里面可以根据 RESTful 资源再划分为更细的子目录，用来存放系统核心/全部功能的操作手册</span><br><span class="line">│       │   ├── policy.md</span><br><span class="line">│       │   ├── secret.md</span><br><span class="line">│       │   └── user.md</span><br><span class="line">│       ├── quickstart               # 快速入门</span><br><span class="line">│       │   └── quickstart.md</span><br><span class="line">│       ├── README.md                # 用户文档入口文件</span><br><span class="line">│       └── sdk                      # SDK 文档</span><br><span class="line">│           └── golang.md</span><br><span class="line">└── images                           # 图片存放目录</span><br><span class="line">    └── 部署架构v1.png</span><br></pre></td></tr></table></figure>
+
+<h3 id="API-文档"><a href="#API-文档" class="headerlink" title="API 文档"></a>API 文档</h3><p>一般由后端开发人员编写、解耦前后端开发，描述组件提供的 API 以及调用方法。</p>
+<p>可以编写 Word/Markdown 格式文档、借助工具编写（填充内容）、通过注释生成（如 Swagger）等。</p>
+<p>规范的 API 文档，通常需要包含完整的 API 接口介绍文档（接口描述、请求方法、请求参数、输出参数和请求示例）、API 接口变更历史文档、通用说明、数据结构说明、错误码描述和 API 接口使用文档。</p>
+<ul>
+<li><p>  README.md ：API 接口介绍文档，会分类介绍 IAM 支持的 API 接口，并会存放相关 API 接口文档的链接，方便开发者查看。</p>
+</li>
+<li><p>  CHANGELOG.md ：API 接口文档变更历史，方便进行历史回溯，也可以使调用者决定是否进行功能更新和版本更新。</p>
+</li>
+<li><p>  generic.md ：用来说明通用的请求参数、返回参数、认证方法和请求方法等。</p>
+</li>
+<li><p>  struct.md ：用来列出接口文档中使用的数据结构。这些数据结构可能被多个 API 接口使用，会在 user.md、secret.md、policy.md 文件中被引用。</p>
+</li>
+<li><p>  user.md 、 secret.md 、 policy.md ：API 接口文档，相同 REST 资源的接口会存放在一个文件中，以 REST 资源名命名文档名。</p>
+</li>
+<li><p>  error_code.md ：错误码描述，通过程序自动生成。</p>
+</li>
+</ul>
+<p>其中接口描述：</p>
+<ul>
+<li><p>  接口描述：描述接口实现的功能。</p>
+</li>
+<li><p>  请求方法：接口的请求方法，格式为 HTTP 方法 请求路径，例如 POST /v1/users。在 <strong>通用说明</strong> 中的 <strong>请求方法</strong> 部分，会说明接口的请求协议和请求地址。</p>
+</li>
+<li><p>  输入参数：接口的输入字段，分为 Header 参数、Query 参数、Body 参数、Path 参数。每个字段通过：<strong>参数名称</strong>、<strong>必选</strong>、<strong>类型</strong> 和 <strong>描述</strong> 4 个属性来描述。如果参数有限制或者默认值，可在描述部分注明。</p>
+</li>
+<li><p>  输出参数：接口返回字段，每个字段通过 <strong>参数名称</strong>、<strong>类型</strong> 和 <strong>描述</strong> 3 个属性来描述。</p>
+</li>
+<li><p>  请求示例：一个真实的 API 接口请求和返回示例。</p>
+</li>
+</ul>
+<h2 id="版本规范"><a href="#版本规范" class="headerlink" title="版本规范"></a>版本规范</h2><p>一般使用 <strong>语义化版本规范</strong>（SemVer，Semantic Versioning），即 <code>主版本号.次版本号.修订号</code>（X.Y.Z）。</p>
+<p>其中 X、Y 和 Z 为非负的整数，且禁止在数字前方补零。</p>
+<p>也有先行版本号与编译版本号 <code>v1.2.3-aplha.1+001</code>：即把先行版本号（Pre-release）和版本编译元数据，作为延伸加到了主版本号.次版本号.修订号的后面：<code>X.Y.Z[-先行版本号][+版本编译元数据]</code>。</p>
+<ul>
+<li><p>主版本号（MAJOR）：不兼容的 API 修改。</p>
+<ul>
+<li>  必须在有任何不兼容的修改被加入公共 API 时递增。其中可以包括次版本号及修订级别的改变。每当主版本号递增时，次版本号和修订号必须归零。</li>
+<li>  主版本号为零（0.y.z）的软件处于开发初始阶段，由于一切都可能随时被改变，不应该被视为稳定版。<code>1.0.0</code> 被界定为第一个稳定版本，之后的所有版本号更新都基于该版本修改。</li>
+</ul>
+</li>
+<li><p>  次版本号（MINOR）：向下兼容的功能性新增及修改。一般偶数为稳定版本，奇数为开发版本。在任何公共 API 功能被标记为弃用时也必须递增，当有改进时也可以递增。其中可以包括修订级别的改变。每当次版本号递增时，修订号必须归零。</p>
+</li>
+<li><p>  修订号（PATCH）：向下兼容的问题修正，即 bug 修复。</p>
+</li>
+<li><p>  先行版本号：该版本不稳定，可能存在兼容性问题。</p>
+</li>
+<li><p>  编译版本号：编译器在编译过程中自动生成，开发者只定义其格式、不进行人为控制。</p>
+</li>
+</ul>
+<p>使用建议：</p>
+<ul>
+<li><p>  使用 0.1.0 作为首个开发版本号，在后续每次发行时递增次版本号。</p>
+</li>
+<li><p>  稳定版本并第一次对外发布时版本号可定为 1.0.0。</p>
+</li>
+<li><p>严格按照 Angular commit message 规范提交代码时：</p>
+<ul>
+<li>  fix 类型的 commit 可将修订号 +1。</li>
+<li>  feat 类型的 commit 可将次版本号 +1。</li>
+<li>  带 BREAKING CHANGE 的 commit 可将主版本号 +1。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Git-规范"><a href="#Git-规范" class="headerlink" title="Git 规范"></a>Git 规范</h2><h3 id="Commit-规范"><a href="#Commit-规范" class="headerlink" title="Commit 规范"></a>Commit 规范</h3><p>常见的开源社区 Commit Message 规范：</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/1699f5c1933cfe72803dfb038152fc48.png" alt="img"></p>
+<p>以 Angular 规范实现的语义化提交规范为例：</p>
+<ul>
+<li><p>  语义化：Commit Message 被归为有意义的类型用来说明本次 commit 的类型。</p>
+</li>
+<li><p>  规范化：Commit Message 遵循预先定义好的规范，比如格式固定、都属于某个类型，可被开发者和工具识别。</p>
+</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/da69572c5605556b8144eb4ee281c4cb.png" alt="img"></p>
+<p>基本格式：</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;type&gt;[<span class="keyword">optional</span> scope]: &lt;description&gt;</span><br><span class="line"><span class="comment">// 空行</span></span><br><span class="line">[<span class="keyword">optional</span> body]</span><br><span class="line"><span class="comment">// 空行</span></span><br><span class="line">[<span class="keyword">optional</span> footer(s)]</span><br></pre></td></tr></table></figure>
+
+<p>建议使用 <code>git commit</code> 时不要使用 <code>-m</code> 选项，而 <code>-a</code> 进入交互界面编辑 Commit Message。</p>
+<h4 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h4><p>只有一行，包括：type（必选）、scope（可选）和 subject（必选）。</p>
+<p>type 分为：</p>
+<ul>
+<li><p>  Development：一般是项目管理类的变更，不会影响最终用户和生产环境的代码，比如 CI 流程、构建方式等的修改。通常可以免测发布。</p>
+</li>
+<li><p>  Production：会影响最终的用户和生产环境的代码。一定要慎重并在提交前做好充分的测试。</p>
+</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/89c618a7415c0c38b09d86d7f882a427.png" alt="img"></p>
+<img src="https://static001.geekbang.org/resource/image/35/a7/3509bd169ce285f59fbcfa6ebea75aa7.png?wh=2513*1078" alt="img" style="zoom:67%;" />
+
+<p>scope 用于说明 commit 影响范围，必须是名词，因项目而异。</p>
+<ul>
+<li><p>  在项目初期可以设置粒度较大的 scope（如按组件名或功能设置），后续项目有变动或有新功能时可以再用追加的方式添加新的 scope。</p>
+</li>
+<li><p>  不适合设置太具体的值。会导致项目有太多的 scope 难以维护，开发者也难以确定 commit 所属的 scope 导致错放，反而失去分类的意义。</p>
+</li>
+</ul>
+<p>subject 是 commit 的简短描述，用于明确指出 commit 执行的操作，以动词开头（小写）、使用现在时，不加句号。</p>
+<h4 id="Body"><a href="#Body" class="headerlink" title="Body"></a>Body</h4><p>可以分成多行，格式较自由。应以动词开头、使用现在时。</p>
+<p>必须包括修改的动机、跟上一版本相比的改动点。</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The <span class="keyword">body</span> <span class="keyword">is</span> mandatory <span class="keyword">for</span> <span class="keyword">all</span> commits except <span class="keyword">for</span> those <span class="keyword">of</span> scope <span class="string">&quot;docs&quot;</span>. <span class="keyword">When</span> the <span class="keyword">body</span> <span class="keyword">is</span> required it must be <span class="keyword">at</span> least <span class="number">20</span> characters long.</span><br></pre></td></tr></table></figure>
+
+<h4 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h4><p>根据需要选择，一般格式：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BREAKING CHANGE: &lt;breaking change summary&gt;</span><br><span class="line"><span class="regexp">//</span> 空行</span><br><span class="line">&lt;breaking change description + migration instructions&gt;</span><br><span class="line"><span class="regexp">//</span> 空行</span><br><span class="line"><span class="regexp">//</span> 空行</span><br><span class="line">Fixes <span class="comment">#&lt;issue number&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可说明本次 commit 导致的后果。</p>
+<p><strong>不兼容的改动</strong>：如当前代码跟上一个版本不兼容，需要在 Footer 部分，以 BREAKING CHANG: 开头，后面跟上不兼容改动的摘要。Footer 的其他部分需要说明变动的描述、变动的理由和迁移方法：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attr">BREAKING CHANGE:</span> <span class="string">isolate</span> <span class="string">scope</span> <span class="string">bindings</span> <span class="string">definition</span> <span class="string">has</span> <span class="string">changed</span> <span class="string">and</span></span><br><span class="line">    <span class="string">the</span> <span class="string">inject</span> <span class="string">option</span> <span class="string">for</span> <span class="string">the</span> <span class="string">directive</span> <span class="string">controller</span> <span class="string">injection</span> <span class="string">was</span> <span class="string">removed.</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">To migrate the code follow the example below:</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">Before:</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">scope:</span> &#123;</span><br><span class="line">      <span class="attr">myAttr:</span> <span class="string">&#x27;attribute&#x27;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attr">After:</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">scope:</span> &#123;</span><br><span class="line">      <span class="attr">myAttr:</span> <span class="string">&#x27;@&#x27;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="string">The</span> <span class="string">removed</span> <span class="string">`inject`</span> <span class="string">wasn&#x27;t</span> <span class="string">generaly</span> <span class="string">useful</span> <span class="string">for</span> <span class="string">directives</span> <span class="string">so</span> <span class="string">there</span> <span class="string">should</span> <span class="string">be</span> <span class="literal">no</span> <span class="string">code</span> <span class="string">using</span> <span class="string">it.</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关闭的 Issue 列表</strong>：关闭的 Bug 需要在 Footer 部分新建一行，并以 Closes 开头列出，例如：<code>Closes #123</code>。如果关闭多个 Issue，可以列出：<code>Closes #123, #432, #886</code>。</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Change pause <span class="built_in">version</span> <span class="built_in">value</span> <span class="built_in">to</span> <span class="keyword">a</span> <span class="built_in">constant</span> <span class="keyword">for</span> image</span><br><span class="line">   </span><br><span class="line">   Closes <span class="comment">#1137</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Revert-Commit"><a href="#Revert-Commit" class="headerlink" title="Revert Commit"></a>Revert Commit</h4><p>如果当前 commit 还原了先前的 commit，则应以 revert: 开头，后跟还原的 commit 的 Header。而且，在 Body 中必须写成 <code>This reverts commit &lt;hash&gt;</code> ，其中 hash 是要还原的 commit 的 SHA 标识。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">revert</span>: feat(iam-apiserver): add &#x27;Host&#x27; option</span><br><span class="line"></span><br><span class="line"><span class="attribute">This</span> reverts commit <span class="number">079360</span>c<span class="number">7</span>cfc<span class="number">830</span>ea<span class="number">8</span>a<span class="number">6</span>e<span class="number">13</span>f<span class="number">4</span>c<span class="number">8</span>b<span class="number">8114</span>febc<span class="number">9</span>b<span class="number">48</span>a.</span><br></pre></td></tr></table></figure>
+
+<h4 id="管理-Commit"><a href="#管理-Commit" class="headerlink" title="管理 Commit"></a>管理 Commit</h4><p>一般在对项目进行修改，通过测试（修复 bug、完成 feature）立即 commit；或约定一个提交的周期，减少本地代码丢失造成的代码丢失量。</p>
+<p>要避免 commit 太多，可以在合并代码或提交 PR 时使用 <code>git rebase -i</code> 合并之前所有提交：建议把新的 commit 合并到主干时只保留 2~3 个 commit 记录。</p>
+<p>使用 <code>git rebase -i commitId</code> 进入交互界面，可列出该 commitId 之后的所有 commit。其支持的操作（默认是 pick）：</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/5f5a79a5d2bde029d4de9d98026ef3f2.png" alt="img"></p>
+<p>其中 squash 和 fixup 可用于合并 commit（注意是处理 commitId 和 HEAD 之间的 commit，开区间）。比如临时切换到 feature 分支进行开发：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">git log --oneline</span><br><span class="line"><span class="meta">#</span><span class="bash"> 7157e9e docs(docs): append <span class="built_in">test</span> line <span class="string">&#x27;update3&#x27;</span> to README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 5a26aa2 docs(docs): append <span class="built_in">test</span> line <span class="string">&#x27;update2&#x27;</span> to README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 55892fa docs(docs): append <span class="built_in">test</span> line <span class="string">&#x27;update1&#x27;</span> to README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 89651d4 docs(doc): add README.md</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ========== feature/user 开发... ==========</span></span><br><span class="line"></span><br><span class="line">git log --oneline</span><br><span class="line"><span class="meta">#</span><span class="bash"> 4ee51d6 docs(user): update user/README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 176ba5d docs(user): update user/README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 5e829f8 docs(user): add README.md <span class="keyword">for</span> user</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> f40929f feat(user): add delete user <span class="keyword">function</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> fc70a21 feat(user): add create user <span class="keyword">function</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 以上是切换到 feature/user 分支进行开发后提交的 commit。</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 7157e9e docs(docs): append <span class="built_in">test</span> line <span class="string">&#x27;update3&#x27;</span> to README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 5a26aa2 docs(docs): append <span class="built_in">test</span> line <span class="string">&#x27;update2&#x27;</span> to README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 55892fa docs(docs): append <span class="built_in">test</span> line <span class="string">&#x27;update1&#x27;</span> to README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 89651d4 docs(doc): add README.md</span></span><br></pre></td></tr></table></figure>
+
+<p>在 feature 分支上的 5 个 commit 要在合并到 master 分支前进行精简，可选取切换 feature 分支前的最后一个 commit 进行 rebase（比如 squash 操作）。最终 pick 前的四个 commit 都会被删除。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">git rebase -i 7157e9e</span><br><span class="line"><span class="meta">#</span><span class="bash"> pick 4ee51d6 docs(user): update user/README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> s 176ba5d docs(user): update user/README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> s 5e829f8 docs(user): add README.md <span class="keyword">for</span> user</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> s f40929f feat(user): add delete user <span class="keyword">function</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> s fc70a21 feat(user): add create user <span class="keyword">function</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Rebase 7157e9e..4ee51d6 onto 7157e9e (5 commands(s))</span></span><br><span class="line"></span><br><span class="line">git log --oneline</span><br><span class="line"><span class="meta">#</span><span class="bash"> d6b17e0 feat(user): add user module with all <span class="keyword">function</span> implements</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 7157e9e docs(docs): append <span class="built_in">test</span> line <span class="string">&#x27;update3&#x27;</span> to README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 5a26aa2 docs(docs): append <span class="built_in">test</span> line <span class="string">&#x27;update2&#x27;</span> to README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 55892fa docs(docs): append <span class="built_in">test</span> line <span class="string">&#x27;update1&#x27;</span> to README.md</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 89651d4 docs(doc): add README.md</span></span><br></pre></td></tr></table></figure>
+
+<p>除此之外，如果有太多 commit 需要合并，可以先撤销过去的 commit，再创建一个新的（需要重新整理 Commit Message）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD~3</span><br><span class="line">git add .</span><br><span class="line">git commit -am &quot;feat(user): add user resource&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改-Commit"><a href="#修改-Commit" class="headerlink" title="修改 Commit"></a>修改 Commit</h4><p>修改最近提交的 commit：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git log --oneline</span><br><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+
+<p>修改某次 commit：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rebase -i previousCommitId</span><br></pre></td></tr></table></figure>
+
+<p>第二种会导致父 commit 之后所有 commit 的 commitId。且如果当前分支有未 commit 的代码，必须 <code>git stash</code> 将工作状态暂存，修改完成后再进行 <code>git stash pop</code> 恢复。</p>
+<h3 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h3><p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/5503ce60f7c2ae5d7628222a4d87cc07.png" alt="img"></p>
+<h4 id="集中式"><a href="#集中式" class="headerlink" title="集中式"></a>集中式</h4><p>所有开发者直接在 master 分支上工作。</p>
+<p>不同开发人员的提交日志混杂，难以定位问题。如果同时开发多个功能，不同功能同时往 master 分支合并，代码之间也会相互影响，从而产生代码冲突。代码管理较混乱，容易出问题。</p>
+<p>适合用在团队人数少、开发不频繁、不需要同时维护多个版本的小项目中。</p>
+<h4 id="功能分支"><a href="#功能分支" class="headerlink" title="功能分支"></a>功能分支</h4><p>在开发新功能时基于 master 分支新建一个功能分支，在功能分支上进行开发，完成之后合并到 master 分支。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 新建功能分支</span></span><br><span class="line">git checkout -b feature/rate-limiting</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开发工作提交到功能分支</span></span><br><span class="line">git add limit.go</span><br><span class="line">git commit -m &quot;add rate limiting&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将本地功能分支代码 push 到远程仓库</span></span><br><span class="line">git push origin feature/rate-limiting</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 在远程仓库上创建 PR，CR 后 Merge 即可</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/1c0b08a1c9032c87c35b85de6ca6820b.png" alt="img"></p>
+<p>不同功能在不同的分支进行，在最后一步合并到 master 分支，可避免不同功能之间的相互影响，可使提交历史看起来更加简洁。</p>
+<p>合并到 master 分支时需提交 PR（pull request）：此前可把分支代码提供给团队其他开发人员进行 CR（Code Review），还可以在 PR 页面讨论代码。通过 CR 可确保合并到 master 的代码健壮；通过 PR 讨论，可使开发者充分参与到代码的讨论中、提高代码的质量，并提供了代码变更的历史回顾途径。</p>
+<blockquote>
+<p>  Merge PR 有三种方法：</p>
+<ul>
+<li><p>  Create a merge commit：即 git merge –no-ff，feature 分支上所有的 commit 都会加到 master 分支上，并且会生成一个 merge commit。推荐的做法。</p>
+</li>
+<li><p>  Squash and merge：即 git merge –squash，该 pull request 上的所有 commit 都合并成一个 commit ，然后加到 master 分支上，原来 commit 历史丢失。</p>
+</li>
+<li><p>  Rebase and merge：即 git rebase。将 pull request 上的所有提交历史按照原有顺序依次添加到 master 分支的头部（HEAD），不熟悉 Git 工作流时不建议使用。</p>
+</li>
+</ul>
+</blockquote>
+<p>缺点是无法给分支分配明确目的，不利于团队配合。适用在开发团队相对固定、规模较小的项目中。</p>
+<h4 id="Git-Flow（推荐）"><a href="#Git-Flow（推荐）" class="headerlink" title="Git Flow（推荐）"></a>Git Flow（推荐）</h4><p>常用于非开源项目。共有以下类型的分支：</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/fa611f83053afd77cf3ddf83561ba1d9.png" alt="img"></p>
+<p>示例场景：</p>
+<ul>
+<li><p>  当前版本为：0.9.0。</p>
+</li>
+<li><p>  需要新开发一个功能。</p>
+</li>
+<li><p>  同时线上代码有 Bug 需要紧急修复。</p>
+</li>
+</ul>
+<p>基本流程：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1. 创建要给常驻分支</span></span><br><span class="line">git checkout -b develop master</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2. 基于 develop 分支，新建一个功能分支：feature/hello-world。</span></span><br><span class="line">git checkout -b feature/hello-world develop</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3. feature/hello-world 分支上开发</span></span><br><span class="line">echo &quot;feature1&quot; &gt;&gt; test.txt </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 4. 开发过程中需要先紧急修复线上代码的 bug</span></span><br><span class="line">git stash                                         # 临时保存修改至堆栈区</span><br><span class="line">git checkout -b hotfix/error master               # 从 master 建立 hotfix 分支</span><br><span class="line">echo &quot;hotfix&quot; &gt;&gt; test.txt                         # 修复 bug</span><br><span class="line">git commit -a -m &#x27;fix print message error bug&#x27;    # 提交修复</span><br><span class="line">git checkout develop                              # 切换到 develop 分支</span><br><span class="line">git merge --no-ff hotfix/error                    # 把 hotfix 分支合并到 develop 分支</span><br><span class="line">git checkout master                               # 切换到 master 分支</span><br><span class="line">git merge --no-ff hotfix/error                    # 把 hotfix 分支合并到 master</span><br><span class="line">git tag -a v0.9.1 -m &quot;fix log bug&quot;                # 在 master 分支打上 tag</span><br><span class="line">scp test root@target:/opt/                        # 编译并部署代码</span><br><span class="line">git branch -d hotfix/error                        # 修复完成后删除 hotfix/xxx 分支</span><br><span class="line">git checkout feature/hello-world                  # 切换到 feature 分支下</span><br><span class="line">git merge --no-ff develop                         # develop 有更新，需要同步更新下</span><br><span class="line">git stash pop                                     # 恢复到修复前的工作状态</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 5. 继续开发</span></span><br><span class="line">echo &quot;feature2&quot; &gt;&gt; test.txt </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 6. 提交代码到 feature/hello-world 分支</span></span><br><span class="line">git commit -a -m &quot;print &#x27;hello world&#x27;&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 7. 在 feature/hello-world 分支上做 code review</span></span><br><span class="line">git push origin feature/print-hello-world         # 提交到远程仓库</span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建 PR、指定 Reviewers 进行 CR</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 8. CR 过后，由代码仓库 Matainer 将功能分支合并到 develop 分支</span></span><br><span class="line">git checkout develop</span><br><span class="line">git merge --no-ff feature/hello-world</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 9. 基于 develop 分支创建 release 分支，测试代码</span></span><br><span class="line">git checkout -b release/1.0.0 develop</span><br><span class="line">cat test.txt </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 10. 如果测试失败，直接在 release/1.0.0 分支修改代码，完成后提交并编译部署</span></span><br><span class="line">git commit -a -m &quot;fix bug&quot;</span><br><span class="line">scp test root@target:/opt/</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 11. 测试通过后，将 release/1.0.0 分支合并到 master 分支和 develop 分支</span></span><br><span class="line">git checkout develop</span><br><span class="line">git merge --no-ff release/1.0.0</span><br><span class="line">git checkout master</span><br><span class="line">git merge --no-ff release/1.0.0</span><br><span class="line">git tag -a v1.0.0 -m &quot;add print hello world&quot; # master 分支打 tag</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 12. 删除 feature/hello-world 分支，也可以选择性删除 release/1.0.0 分支</span></span><br><span class="line">git branch -d feature/hello-world</span><br><span class="line"><span class="meta">#</span><span class="bash"> git branch -d release/1.0.0</span></span><br></pre></td></tr></table></figure>
+
+<p>虽然上手有一定难度，但其每个分支分工明确，可最大程度减少它们之间的相互影响。可创建多个分支，所以可以并行开发多个功能。</p>
+<p>和功能分支工作流一样，它也可以添加 code review，保障代码质量。</p>
+<h4 id="Forking（推荐）"><a href="#Forking（推荐）" class="headerlink" title="Forking（推荐）"></a>Forking（推荐）</h4><p>常用于开源项目，开发者有衍生出自己的衍生版的需求，或开发者不固定、可能是任意一个能访问到项目的开发者。</p>
+<p>其中 fork 操作是在个人远程仓库新建一份目标远程仓库的副本。</p>
+<img src="https://static001.geekbang.org/resource/image/63/ea/63419f767c61c9580861b59445b90fea.png" alt="img" style="zoom:67%;" />
+
+<p>基本流程：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1. 在远程仓库上 fork 仓库：</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 比如 https://github.com/marmotedu/gitflow-demo =&gt; https://github.com/colin404fork/gitflow-demo</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2. <span class="built_in">clone</span> 到本地</span></span><br><span class="line">git clone https://github.com/colin404fork/gitflow-demo</span><br><span class="line">cd gitflow-demo</span><br><span class="line">git remote add upstream https://github.com/marmotedu/gitflow-demo</span><br><span class="line">git remote set-url --push upstream no_push # 不要 push 到 upstream master</span><br><span class="line">git remote -v # 查看远程分支</span><br><span class="line"><span class="meta">#</span><span class="bash"> origin  https://github.com/colin404fork/gitflow-demo (fetch)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> origin  https://github.com/colin404fork/gitflow-demo (push)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> upstream  https://github.com/marmotedu/gitflow-demo (fetch)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> upstream  https://github.com/marmotedu/gitflow-demo (push)</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3. 创建功能分支</span></span><br><span class="line">git fetch upstream                       # 同步本地仓库的 master 分支为最新状态（与 upstream master 分支一致）</span><br><span class="line">git checkout master</span><br><span class="line">git rebase upstream/master</span><br><span class="line">git checkout -b feature/add-function     # 创建功能分支</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 4. 提交 commit</span></span><br><span class="line">git fetch upstream                       # commit 前需要再次同步 feature 跟 upstream/master</span><br><span class="line">git rebase upstream/master</span><br><span class="line">git add xxx</span><br><span class="line">git status</span><br><span class="line">git commit</span><br><span class="line">git rebase -i origin/master              # 合并多个、保留较少的 commit</span><br><span class="line"><span class="meta">#</span><span class="bash"> git reset HEAD~5</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git add .</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git commit -am <span class="string">&quot;Here&#x27;s the bug fix that closes #28&quot;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git push --force</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 5. push 功能分支到个人远程仓库</span></span><br><span class="line">git push -f origin feature/add-function</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 6. 创建 PR，请求 Reviewers review、合并到 master</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建 pull request 时，base 通常选择目标远程仓库的 master 分支。</span></span><br></pre></td></tr></table></figure>
+
+<p>项目远程仓库和开发者远程仓库完全独立，开发者通过提交 PR 给远程仓库贡献代码，项目维护者选择性地接受任何开发者的提交。可以避免授予开发者项目远程仓库的权限，从而提高项目远程仓库的安全性，使得任意开发者都可参与项目的开发。</p>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/94e521c6eb884096ea107fc4c36f30a3.png" alt="img" style="zoom:67%;" />
+
+<p>参考 IAM 项目：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line">├── api                     # 当前项目对外提供的各种不同类型的 API 接口定义文件</span><br><span class="line">│   ├── openapi</span><br><span class="line">|   ├── protobuf-spec</span><br><span class="line">|   ├── thrift-spec</span><br><span class="line">|   ├── http-spec</span><br><span class="line">│   └── swagger</span><br><span class="line">|       ├── docs/</span><br><span class="line">|       ├── README.md</span><br><span class="line">│       └── swagger.yaml</span><br><span class="line">├── assets                  # 项目的其他资源 (图片、CSS、JavaScript 等）</span><br><span class="line">├── build                   # 安装包和持续集成相关的文件</span><br><span class="line">│   ├── ci                  # CI（travis，circle，drone）的配置文件和脚本</span><br><span class="line">│   ├── docker              # 子项目各个组件的 Dockerfile 文件</span><br><span class="line">│   │   ├── iam-apiserver</span><br><span class="line">│   │   ├── iam-authz-server</span><br><span class="line">│   │   └── iam-pump</span><br><span class="line">│   └── package              # 容器（Docker）、系统（deb, rpm, pkg）的包配置和脚本</span><br><span class="line">├── CHANGELOG                # 更新记录，方便了解当前版本的更新内容或者历史更新内容</span><br><span class="line">|                            #     可结合 Angular 规范 和 git-chglog 来自动生成</span><br><span class="line">├── cmd 					 # 统一存放组件 main 函数所在目录，不存放过多代码</span><br><span class="line">|   |                        #     其下的目录名与可执行文件名一致 </span><br><span class="line">│   ├── iam-apiserver</span><br><span class="line">│   │   └── apiserver.go</span><br><span class="line">│   ├── iam-authz-server</span><br><span class="line">│   │   └── authzserver.go</span><br><span class="line">│   ├── iamctl</span><br><span class="line">│   │   └── iamctl.go</span><br><span class="line">│   └── iam-pump</span><br><span class="line">│       └── pump.go</span><br><span class="line">├── configs                  # 配置文件模板或默认配置，不携带敏感信息（占位符替代）</span><br><span class="line">├── CONTRIBUTING.md          # 说明如何贡献代码，如何开源协同等</span><br><span class="line">|                            #     用于规范协同流程、降低第三方开发者贡献代码的难度</span><br><span class="line">├── deploy                   # Iaas、PaaS 系统和容器编排部署配置和模板</span><br><span class="line">├── docs                     # 设计文档、开发文档和用户文档等（除了 godoc 生成的文档）</span><br><span class="line">│   ├── devel                # 开发文档、hack 文档等</span><br><span class="line">│   │   ├── en-US</span><br><span class="line">│   │   └── zh-CN</span><br><span class="line">│   ├── guide                # 用户手册，安装、quickstart、产品文档等</span><br><span class="line">│   │   ├── en-US</span><br><span class="line">│   │   └── zh-CN</span><br><span class="line">│   ├── images               # 图片文件</span><br><span class="line">│   └── README.md</span><br><span class="line">├── examples                 # 应用程序或者公共包的示例代码</span><br><span class="line">├── githooks</span><br><span class="line">├── go.mod</span><br><span class="line">├── go.sum</span><br><span class="line">├── init                     # 初始化系统（systemd，upstart，sysv）、进程管理配置文件（runit，supervisord）</span><br><span class="line">├── internal                 # 私有应用和库代码，在被尝试引入时编译会报错</span><br><span class="line">│   ├── apiserver            # 应用目录，包含应用程序实现代码。</span><br><span class="line">│   │   ├── api</span><br><span class="line">│   │   │   └── v1           # HTTP API 具体实现，实现请求解包、参数校验、业务逻辑处理、返回。</span><br><span class="line">|   |   |       |            #     业务逻辑较轻，复杂的建议放到 /internal/apiserver/service 下</span><br><span class="line">│   │   │       └── user</span><br><span class="line">│   │   ├── apiserver.go</span><br><span class="line">│   │   ├── options</span><br><span class="line">│   │   ├── service</span><br><span class="line">│   │   ├── store            # 与数据库交互、持久化代码</span><br><span class="line">│   │   │   ├── mysql</span><br><span class="line">│   │   │   └── fake</span><br><span class="line">│   │   └── testing</span><br><span class="line">│   ├── iamctl               # 客户端工具</span><br><span class="line">│   │   ├── cmd</span><br><span class="line">│   │   │   ├── completion</span><br><span class="line">│   │   │   └── user</span><br><span class="line">│   │   └── util</span><br><span class="line">│   └── pkg                  # 项目内可共享，项目外不共享的包</span><br><span class="line">|       |                    #     准备对外开发时再转存到 /pkg</span><br><span class="line">│       ├── code             # 项目业务 Code 码</span><br><span class="line">│       ├── options</span><br><span class="line">│       ├── server</span><br><span class="line">│       ├── util</span><br><span class="line">|       ├── middleware       # HTTP 请求处理链</span><br><span class="line">│       └── validation       # 通用的验证函数</span><br><span class="line">├── LICENSE                  # 版权文件，可以是私有或开源</span><br><span class="line">├── Makefile                 # 执行静态代码检查、单元测试、编译等功能</span><br><span class="line">|                            #     gen -&gt; format -&gt; lint -&gt; test -&gt; build</span><br><span class="line">├── _output                  # 编译输出的二进制文件</span><br><span class="line">│   └── platforms</span><br><span class="line">│       └── linux</span><br><span class="line">│           └── amd64</span><br><span class="line">├── pkg                      # 可被外部应用使用的代码（import），需要慎重</span><br><span class="line">│   └── util</span><br><span class="line">│       └── genutil</span><br><span class="line">├── README.md                # 项目介绍、功能、快速安装和使用指引、详细文档链接、开发指引等</span><br><span class="line">├── scripts                  # 脚本文件，实现构建、安装、分析等不同功能</span><br><span class="line">│   ├── lib                  # 执行自动化任务 shell 的脚本，发布、更新文档、生成代码等</span><br><span class="line">|   |   ├── util.sh</span><br><span class="line">|   |   └── logging.sh</span><br><span class="line">|   ├── install              # 复杂的自动化部署脚本</span><br><span class="line">│   └── make-rules           # 实现 /Makefile 文件中的各个功能</span><br><span class="line">├── test                     # 其他外部测试应用和测试数据</span><br><span class="line">│   └── data                 # 需要 Go 忽略该目录中的内容时使用</span><br><span class="line">├── third_party              # 外部帮助工具，分支代码或其他第三方应用，比如 Swagger</span><br><span class="line">│   └── forked               #     fork 并作改动的第三方包，便于与 upstream 同步</span><br><span class="line">├── tools                    # 项目的支持工具。可导入来自 /pkg 和 /internal 的代码</span><br><span class="line">├── vendor                   # 项目依赖，可通过 go mod vendor 创建</span><br><span class="line">|                            #     对于 Go 库不要提交 vendor 依赖包</span><br><span class="line">├── website                  # 如不使用 GitHub 页面，可在此放置项目网站相关的数据</span><br><span class="line">└── web 					 # 前端代码，主要是静态资源，服务端模板和单页应用（SPAs）</span><br></pre></td></tr></table></figure>
+
+<p>小型项目：</p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tms</span><br><span class="line">├── <span class="built_in">cmd</span></span><br><span class="line">├── internal</span><br><span class="line">├── pkg</span><br><span class="line">└── README.<span class="built_in">md</span></span><br></pre></td></tr></table></figure>
+
+<p>对于空目录，可创建 <code>.keep</code> 文件保留目录结构。</p>
+<h2 id="编码规范"><a href="#编码规范" class="headerlink" title="编码规范"></a>编码规范</h2><p>具体见参考链接提供的文档。</p>
+<p>可从以下几个方面考虑：</p>
+<ul>
+<li><p>  代码结构：目录结构，按功能拆分模块。</p>
+</li>
+<li><p>  代码规范：编码规范，最佳实践。</p>
+</li>
+<li><p>  代码质量：编写可测试代码，高单元测试率，代码审查。</p>
+</li>
+<li><p>  编程哲学：面向接口编程，面向对象编程。</p>
+</li>
+<li><p>  软件设计方法：设计模式，SOLID 原则。</p>
+</li>
+</ul>
+<h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><p>最常用的几种：</p>
+<ul>
+<li><p>  创建型：单例，简单工厂，抽象工厂，工厂方法。</p>
+</li>
+<li><p>  结构型：策略，模板。</p>
+</li>
+<li><p>  行为型：代理，选项。</p>
+</li>
+</ul>
+<p>具体实现待续。</p>
+<h2 id="研发流程"><a href="#研发流程" class="headerlink" title="研发流程"></a>研发流程</h2><p>待续。</p>
+<!--
+
+
+![img](https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/ab6ac57696c0e90cf82624f78a82333b.png)
+
+<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/ddb314275ba1bab28413221bc56ac80f.png" alt="img" style="zoom:100%;" />
+
+其中设计阶段：
+
+![img](https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/81296e3f9f0f90e77dd771ee4f61b71b-163906708572615.png)
+
+开发阶段：
+
+![img](https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/137a2a20067d1472c9f00c6387a30857-163906712099217.png)
+
+发布阶段：
+
+![img](https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/37yy6e0896daa8f97883631624996388.png)
+
+运营阶段：
+
+![img](https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/e0a4d8ed5f3a6a8a4bc4035e261881b5.png)
+
+角色分工：
+
+![img](https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/40a1e20b153bb3ba1005cea4aefe62d5.png)
+
+软件生命周期：
+
+![img](https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/9a290c28b0c238dd69e24dcc9f5c7ea3.png)
+
+-->
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>工程规范：</p>
+<ul>
+<li><p>  <a target="_blank" rel="noopener" href="https://github.com/marmotedu/geekbang-go/blob/master/%E5%BC%80%E6%BA%90%E8%A7%84%E8%8C%83%E8%AF%A6%E7%BB%86%E5%88%97%E8%A1%A8.md">开源规范详细列表</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://github.com/marmotedu/iam/tree/master/docs/guide/zh-CN/api">IAM API 介绍</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://semver.org/lang/zh-CN/">语义化版本 2.0.0</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://github.com/marmotedu/iam/blob/master/docs/devel/zh-CN/scope.md">IAM commit message scope</a></p>
+</li>
+</ul>
+<p>项目功能：</p>
+<ul>
+<li><p>  <a target="_blank" rel="noopener" href="https://github.com/marmotedu/geekbang-go/blob/master/Go%E9%A1%B9%E7%9B%AE%E9%80%9A%E5%B8%B8%E5%8C%85%E5%90%AB%E7%9A%84%E5%8A%9F%E8%83%BD.md">Go 项目通常包含的功能</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://github.com/marmotedu/geekbang-go/blob/master/Makefile%E5%B8%B8%E8%A7%81%E7%AE%A1%E7%90%86%E5%86%85%E5%AE%B9.md">Makefile 常见管理内容</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.cnblogs.com/wang_yb/p/3990952.html">Makefile 使用总结</a></p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://seisman.github.io/how-to-write-makefile/">跟我一起写 Makefile</a></p>
+</li>
+</ul>
+<p>Git Commit Message 工具：</p>
+<ul>
+<li><p>  commitizen-go：进入交互模式并根据提示生成 Commit Message 后提交。</p>
+</li>
+<li><p>  commit-msg：githooks，在 commit-msg 中指定检查的规则，可根据需要实现脚本。</p>
+</li>
+<li><p>  go-gitlint：检查历史提交的 Commit Message 是否符合 Angular 规范，可将该工具添加在 CI 流程中，确保 Commit Message 合规。</p>
+</li>
+<li><p>  gsemver：语义化版本自动生成工具。</p>
+</li>
+<li><p>  git-chglog：根据 Commit Message 生成 CHANGELOG。</p>
+</li>
+</ul>
+<p>License 文档生成工具：<a target="_blank" rel="noopener" href="https://github.com/marmotedu/addlicense">marmotedu/addlicense</a></p>
+<p>编码规范：<a target="_blank" rel="noopener" href="https://github.com/xxjwxc/uber_go_guide_cn">Uber Go 语言编码规范</a></p>
+<p>静态检查工具：<a target="_blank" rel="noopener" href="https://github.com/golangci/golangci-lint">golangci/golangci-lint</a></p>
+<p>最佳实践：</p>
+<ul>
+<li><p>  <a target="_blank" rel="noopener" href="https://go.dev/doc/effective_go">Effective Go</a>：Golang 官方编写，包含编写 Go 代码的一些建议，可理解为最佳实践。</p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://github.com/golang/go/wiki/CodeReviewComments">Code Review Comments</a>：Golang 官方编写的 Go 最佳实践，作为 Effective Go 的补充。</p>
+</li>
+<li><p>  <a target="_blank" rel="noopener" href="https://rakyll.org/style-packages/">Style guideline for Go packages</a>：包含了如何组织 Go 包、如何命名 Go 包、如何写 Go 包文档的一些建议。</p>
+</li>
+</ul>
+<p>Mock 工具：</p>
+<ul>
+<li><p>  golang/mock：官方提供的 Mock 框架。实现基于 interface 的 Mock 功能，可与 Golang 内置的 testing 包集成，是最常用的 Mock 工具。golang/mock 提供了 mockgen 工具用来生成 interface 对应的 Mock 源文件。</p>
+</li>
+<li><p>  sqlmock：可用于模拟数据库连接，在遇到数据库依赖时可以使用。</p>
+</li>
+<li><p>  httpmock：可用于 Mock HTTP 请求。</p>
+</li>
+<li><p>  bouk/monkey：猴子补丁，可通过替换函数指针的方式来修改任意函数的实现。如果以上不能满足需求，可尝试通过猴子补丁来 Mock 依赖。</p>
+</li>
+</ul>
+<p>其它工具：</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-specification-design.assets/90ca527c2863fe642f9ab3d5b90fe980.png" alt="img"></p>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/10/15/Go_concurrency_primitives/" title= "Go 并发原语">
+                    <div class="prevTitle">Go 并发原语</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+     
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+</main>
+
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:100vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Go-%E5%B7%A5%E7%A8%8B%E5%8C%96%E8%A7%84%E8%8C%83%E8%AE%BE%E8%AE%A1%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Go 工程化规范设计（持续更新）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E8%A7%84%E8%8C%83"><span class="toc-number">1.1.</span> <span class="toc-text">开源规范</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E8%A7%84%E8%8C%83"><span class="toc-number">1.2.</span> <span class="toc-text">文档规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#README-%E6%96%87%E6%A1%A3"><span class="toc-number">1.2.1.</span> <span class="toc-text">README 文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E6%96%87%E6%A1%A3"><span class="toc-number">1.2.2.</span> <span class="toc-text">项目文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#API-%E6%96%87%E6%A1%A3"><span class="toc-number">1.2.3.</span> <span class="toc-text">API 文档</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E8%A7%84%E8%8C%83"><span class="toc-number">1.3.</span> <span class="toc-text">版本规范</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git-%E8%A7%84%E8%8C%83"><span class="toc-number">1.4.</span> <span class="toc-text">Git 规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Commit-%E8%A7%84%E8%8C%83"><span class="toc-number">1.4.1.</span> <span class="toc-text">Commit 规范</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Header"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">Header</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Body"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">Body</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Footer"><span class="toc-number">1.4.1.3.</span> <span class="toc-text">Footer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Revert-Commit"><span class="toc-number">1.4.1.4.</span> <span class="toc-text">Revert Commit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%A1%E7%90%86-Commit"><span class="toc-number">1.4.1.5.</span> <span class="toc-text">管理 Commit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-Commit"><span class="toc-number">1.4.1.6.</span> <span class="toc-text">修改 Commit</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">分支管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9B%86%E4%B8%AD%E5%BC%8F"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">集中式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E5%88%86%E6%94%AF"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">功能分支</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Git-Flow%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">1.4.2.3.</span> <span class="toc-text">Git Flow（推荐）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Forking%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">1.4.2.4.</span> <span class="toc-text">Forking（推荐）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">1.5.</span> <span class="toc-text">目录结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83"><span class="toc-number">1.6.</span> <span class="toc-text">编码规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.6.1.</span> <span class="toc-text">设计模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="toc-number">1.7.</span> <span class="toc-text">研发流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.8.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 78
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/10</span><a class="archive-post-title" href= "/2021/12/10/Go_engineering-specification-design/" >Go 工程化规范设计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2021/10/15/Go_concurrency_primitives/" >Go 并发原语</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2021/10/10/Design_data-lineage/" >数据血缘功能设计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href= "/2021/09/26/2021-09-26_diary/" >迟来的一次复盘</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2021/09/12/DB_mysql-optimization-basic/" >MySQL 性能优化基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2021/08/27/DDIA_note-15/" >《DDIA》阅读笔记（十一）：流处理系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span><a class="archive-post-title" href= "/2021/08/11/Go_microservices_availability_design/" >微服务可用性设计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href= "/2021/08/10/Algorithm_reliable-distributed-timer/" >可靠的分布式计时器（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/04</span><a class="archive-post-title" href= "/2021/08/04/Go_engineering-standard/" >Go 工程化标准实践</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/Go_memory-model/" >Go 内存模型（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span><a class="archive-post-title" href= "/2021/07/28/Go_channel-applications/" >Go Channel 应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2021/07/25/Fenix_build-services/" >《凤凰架构》阅读笔记（五）：服务构建与流量治理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2021/07/23/Fenix_transparent-multilevel-diversion-system/" >《凤凰架构》阅读笔记（四）：透明多级分流系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2021/07/22/Fenix_transaction/" >《凤凰架构》阅读笔记（三）：事务处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span><a class="archive-post-title" href= "/2021/07/21/Fenix_access-remote-service/" >《凤凰架构》阅读笔记（二）：访问远程服务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/Go_error_handling/" >Go 异常处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/Fenix_architecture-evolution/" >《凤凰架构》阅读笔记（一）：软件架构演进</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservices_governance/" >微服务概览与治理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/Algorithm_max-flow-problem/" >最大流问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >分布式系统模式：Gossip 传播（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >分布式系统模式：版本化值（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >一致性哈希（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/13</span><a class="archive-post-title" href= "/2021/06/13/Go_cheat-sheet/" >Go Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/10</span><a class="archive-post-title" href= "/2021/06/10/Go_a-tour-of-go/" >A tour of Go</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/06</span><a class="archive-post-title" href= "/2021/06/06/2021-06-06_diary/" >Weekly Summary (2021-05-31_2021-06-06)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/05</span><a class="archive-post-title" href= "/2021/06/05/2021-06-05_diary/" >基于记忆规律的学习方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2021/05/31/2021-05-31_diary/" >2021 下半年工作学习安排</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >如何用图论解决 Secret Santa 问题？（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span><a class="archive-post-title" href= "/2021/04/28/OS_linux-memory-monitoring/" >Linux 内存原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2021/04/20/OS_linux-io-monitoring/" >Linux I/O 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2021/04/10/OS_linux-cpu-monitoring/" >Linux CPU 原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span><a class="archive-post-title" href= "/2021/04/05/OS_linux-network-monitoring/" >Linux 网络原理与分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_system_initialization/" >Linux - 架构与系统初始化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >Java 程序员的 C++（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2021/02/24/DDIA_note-13/" >《DDIA》阅读笔记（九）：一致性与共识（共识问题）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2021/02/21/2021-02-21_diary/" >近期工作学习规划</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2021/02/19/DDIA_note-12/" >《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2021/02/13/DDIA_note-11/" >《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span><a class="archive-post-title" href= "/2021/02/06/DDIA_note-10/" >《DDIA》阅读笔记（八）：分布式系统的挑战</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2021/01/27/DDIA_note-9/" >《DDIA》阅读笔记（七）：事务</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2021/01/22/DDIA_note-8/" >《DDIA》阅读笔记（六）：数据分区</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-7/" >《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2021/01/20/DDIA_note-6/" >《DDIA》阅读笔记（五）：数据复制（多主节点）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >选择合适的数据库（译）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2021/01/09/DDIA_note-5/" >《DDIA》阅读笔记（五）：数据复制（单主节点）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2021/01/01/DB_tree-table-design-summary/" >树形表结构设计总结</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2020/12/13/DDIA_note-3/" >《DDIA》阅读笔记（三）：数据存储与检索</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span><a class="archive-post-title" href= "/2020/12/04/DDIA_note-2/" >《DDIA》阅读笔记（二）：数据模型与查询语言</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2020/12/02/DDIA_note-1/" >《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2020/10/08/Maven_external_dependencies_management/" >Maven 打包依赖外置</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2020/10/04/Java_prod-analysis-cmd/" >Java 应用常用调试分析方法总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_cheat-sheet/" >Kafka Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2020/08/09/Arthas_cheat-sheet/" >Arthas Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2020/07/12/Java_override-and-bridge-method/" >Java 多态、重写与桥接方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/Java_memory-area/" >Java 内存区域</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/28</span><a class="archive-post-title" href= "/2020/05/28/DB_data-warehouse-design-basic/" >数据仓库设计基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span><a class="archive-post-title" href= "/2020/04/08/2020-04-08_diary/" >关于使用思维导图做笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span><a class="archive-post-title" href= "/2020/03/28/Algorithm_leetcode-high-frequency-problems/" >LeetCode 高频面试题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/06</span><a class="archive-post-title" href= "/2020/03/06/InfoSecty_personal-infomation-security-guide/" >個人信息安全保護指南</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2020/02/22/2020-02-22_diary/" >免费 JetBrains 全家桶</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/16</span><a class="archive-post-title" href= "/2020/02/16/Nginx_cheat-sheet/" >Nginx Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_cheat-sheet/" >Git Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_cheat-sheet/" >Docker & K8S Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2020/02/03/Java_jstat-monitor-analysis/" >JVM jstat 监控分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/Java_GC-log-analysis/" >JVM GC 日志分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2020/01/01/Java_JVM_mindmap/" >Java 虚拟机与并发编程</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span><a class="archive-post-title" href= "/2019/12/05/Design_design-patterns/" >设计模式与设计原则</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2019/10/04/Python_async-programming/" >Python 异步编程总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2019/09/19/Python_data-structure/" >Python 数据结构应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator/" >Python 装饰器基本用法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2019/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2019/06/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2019/06/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Vue_user-guide/" >Vue 学习笔记</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
+    
+        <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
+    
+        <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《数据密集型应用系统设计》阅读笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="《凤凰架构》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《凤凰架构》阅读笔记</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Kylo Yip"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
+
+

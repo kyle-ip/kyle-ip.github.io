@@ -33,7 +33,7 @@
 <meta property="og:description" content="这是一篇旧文，搬运自简书：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;c8ab939556e8">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2019-06-02T02:06:17.000Z">
-<meta property="article:modified_time" content="2021-07-18T13:29:36.522Z">
+<meta property="article:modified_time" content="2021-12-09T17:18:48.612Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="JavaScript">
@@ -487,7 +487,6 @@ height:100vh;
 
 <h2 id="装饰器（Decorator）"><a href="#装饰器（Decorator）" class="headerlink" title="装饰器（Decorator）"></a>装饰器（Decorator）</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用装饰器函数扩展类的功能</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> readonly = <span class="function"><span class="keyword">function</span> (<span class="params">target, name, descriptor</span>) </span>&#123;</span><br><span class="line">        descriptor.writable = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> descriptor</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">        @readonly</span><br><span class="line">        <span class="function"><span class="title">time</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;2017-03-11&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> test = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// test.time=function()&#123;</span></span><br><span class="line">    <span class="comment">//   console.log(&#x27;reset time&#x27;);</span></span><br><span class="line">    <span class="comment">// &#125;;</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(test.time());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> typename = <span class="function"><span class="keyword">function</span> (<span class="params">target, name, descriptor</span>) </span>&#123;</span><br><span class="line">        target.myname = <span class="string">&#x27;hello&#x27;</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    @typename</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;类修饰符&#x27;</span>, Test.myname);</span><br><span class="line">    <span class="comment">// 第三方库修饰器的js库：core-decorators; npm install core-decorators</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模拟埋点系统</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> log = <span class="function">(<span class="params">type</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">target, name, descriptor</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">let</span> src_method = descriptor.value;</span><br><span class="line">            descriptor.value = <span class="function">(<span class="params">...arg</span>) =&gt;</span>  &#123;</span><br><span class="line">                src_method.apply(target, arg);</span><br><span class="line">                <span class="built_in">console</span>.info(<span class="string">`log <span class="subst">$&#123;type&#125;</span>`</span>);            <span class="comment">// 模拟埋点</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">AD</span> </span>&#123;</span><br><span class="line">        @log(<span class="string">&#x27;show&#x27;</span>)</span><br><span class="line">        <span class="function"><span class="title">show</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.info(<span class="string">&#x27;show&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @log(<span class="string">&#x27;click&#x27;</span>)</span><br><span class="line">        <span class="function"><span class="title">click</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.info(<span class="string">&#x27;click&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> ad = <span class="keyword">new</span> AD();</span><br><span class="line">    ad.show();</span><br><span class="line">    ad.click();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>以上。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -1212,9 +1211,16 @@ top:100vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 78
         </div>
         <!-- search  -->
         
@@ -1227,6 +1233,11 @@ top:100vh;
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/10</span><a class="archive-post-title" href= "/2021/12/10/Go_engineering-specification-design/" >Go 工程化规范设计</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1646,9 +1657,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
@@ -1664,11 +1675,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
         <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
-    
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
@@ -1756,7 +1767,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
 
 
