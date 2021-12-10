@@ -481,11 +481,11 @@ height:100vh;
 <p>不一致问题的最佳解决方案是在应用本身解决。比如在 API 服务中，应该提供处理读取数据返回多个版本结果这种一致性问题的功能。合并数据，选择其一覆盖其他，或创建一个新的数据对象都是可行的方案，并且对于每种类型的数据，采取何种方式解决都是可以手动选择的。</p>
 <h2 id="混合式解决方案"><a href="#混合式解决方案" class="headerlink" title="混合式解决方案"></a>混合式解决方案</h2><p>可能希望将单状态节点、CP 集群和 AP 集群合并在一起来支持不同类型的数据存储。如果因为 CAP 理论的限制需求变得复杂，那么混合式解决方案可以帮助开发者权衡取舍。这是可供参考的解决方案：</p>
 <ul>
-<li><p>单节点，非集群存储，快照备份，从节点：Redis</p>
+<li><p>  单节点，非集群存储，快照备份，从节点：Redis</p>
 </li>
-<li><p>数据一致，分区容忍，读多写少：PostgreSQL</p>
+<li><p>  数据一致，分区容忍，读多写少：PostgreSQL</p>
 </li>
-<li><p>高可用，分区容忍，水平扩展：Riak</p>
+<li><p>  高可用，分区容忍，水平扩展：Riak</p>
 </li>
 </ul>
 <p>不要局限于某种特定的技术，而选择最佳的工具来完成需求。</p>
@@ -1657,17 +1657,17 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
-        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     

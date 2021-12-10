@@ -457,8 +457,7 @@ height:100vh;
     <article class="article-entry">
         <h1 id="《DDIA》阅读笔记（九）：一致性与共识（顺序保证）"><a href="#《DDIA》阅读笔记（九）：一致性与共识（顺序保证）" class="headerlink" title="《DDIA》阅读笔记（九）：一致性与共识（顺序保证）"></a>《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</h1><p>本章结构如下：</p>
 <blockquote class="pullquote mindmap mindmap-md"><ul>
-<li><p>一致性与共识</p>
-<ul>
+<li>一致性与共识<ul>
 <li>顺序保证<ul>
 <li>顺序与因果关系<ul>
 <li>因果顺序并非全序</li>
@@ -488,6 +487,9 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
+
+
 <p>主从复制系统中，主节点主要是确定复制日志中的写入顺序，使从节点遵从相同顺序执行写入。如果没有主节点，则可能由于并发操作引发冲突。</p>
 <p>可串行化是确保事务的执行结果与按照某种顺序方式执行一致。实现方式可以是严格顺序执行，或者允许并发但需要相应的冲突解决方案，如加锁或“冲突-中止”。</p>
 <p>分布式系统的时间戳与时钟试图将顺序引入到无序的操作世界，例如确定两个写操作的先后顺序。</p>
@@ -1760,17 +1762,17 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
-        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
