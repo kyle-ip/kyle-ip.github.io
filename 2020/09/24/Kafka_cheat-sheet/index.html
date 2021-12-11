@@ -539,6 +539,7 @@ height:100vh;
 <p>Kafka 使用 ZooKeeper 保存集群 Broker 和主题的元数据信息、消费者元数据及分区偏移量，实现服务协调。</p>
 <p>ZooKeeper 集群使用一致性协议，建议部署奇数个节点，确保大多数节点可用。</p>
 <h2 id="常用脚本"><a href="#常用脚本" class="headerlink" title="常用脚本"></a>常用脚本</h2><p>Kafka 部署包中提供了数十个脚本（Windows 的 bat 和 Linux 的 Shell），直接运行会提示基本用法，比较常用的有：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -547,7 +548,8 @@ height:100vh;
 <th>描述</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1</td>
 <td>connect-standalone<br />connect-distributed</td>
 <td>Kafka Connect 组件的启动脚本，分别为单节点 Standalone 模式和多节点 Distributed 模式。</td>
@@ -647,72 +649,53 @@ height:100vh;
 <td>trogdor</td>
 <td>Kafka 的测试框架，用于执行各种基准测试和负载测试。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h3 id="生产消息"><a href="#生产消息" class="headerlink" title="生产消息"></a>生产消息</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-producer.sh --broker-list kafka-host:port --topic test-topic --request-required-acks -1 --producer-property compression.type=lz4</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定生产者参数 acks 为 -1，同时启用了 LZ4 的压缩算法。</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="消费消息"><a href="#消费消息" class="headerlink" title="消费消息"></a>消费消息</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-consumer.sh --bootstrap-server kafka-host:port --topic test-topic --group test-group --from-beginning --consumer-property enable.auto.commit=false </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> --group 指定消费者组，否则每次运行 Console Consumer，都会自动生成一个新的消费者组来消费（console-consumer）</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> --from-beginning 等同于将 Consumer 端参数 auto.offset.reset 设置成 earliest，否则默认为 latest</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="测试生产者性能"><a href="#测试生产者性能" class="headerlink" title="测试生产者性能"></a>测试生产者性能</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-producer-perf-test.sh --topic test-topic --num-records 10000000 --throughput -1 --record-size 1024 --producer-props bootstrap.servers=kafka-host:port acks=-1 linger.ms=2000 compression.type=lz4</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 向指定主题发送了 1 千万条消息，每条消息大小是 1KB，还可以设置压缩算法、延时时间等</span></span><br></pre></td></tr></table></figure>
-
 <p>输出测试生产者的吞吐量 (MB/s)、消息发送延时以及各种分位数下的延时。</p>
 <p>通常会关注 99th 分位（604ms），表明测试生产者生产的消息中，有 99% 消息的延时都在 604ms 以内，可作为 SLA 参考。</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">2175479</span> records sent, <span class="number">435095</span>.<span class="number">8</span> records/sec (<span class="number">424</span>.<span class="number">90</span> MB/sec), <span class="number">131</span>.<span class="number">1</span> ms avg latency, <span class="number">681</span>.<span class="number">0</span> ms max latency.</span><br><span class="line"><span class="attribute">4190124</span> records sent, <span class="number">838024</span>.<span class="number">8</span> records/sec (<span class="number">818</span>.<span class="number">38</span> MB/sec), <span class="number">4</span>.<span class="number">4</span> ms avg latency, <span class="number">73</span>.<span class="number">0</span> ms max latency.</span><br><span class="line"><span class="attribute">10000000</span> records sent, <span class="number">737463</span>.<span class="number">126844</span> records/sec (<span class="number">720</span>.<span class="number">18</span> MB/sec), <span class="number">31</span>.<span class="number">81</span> ms avg latency, <span class="number">681</span>.<span class="number">00</span> ms max latency, <span class="number">4</span> ms <span class="number">50</span>th, <span class="number">126</span> ms <span class="number">95</span>th, <span class="number">604</span> ms <span class="number">99</span>th, <span class="number">672</span> ms <span class="number">99</span>.<span class="number">9</span>th.</span><br></pre></td></tr></table></figure>
-
 <h3 id="测试消费者性能"><a href="#测试消费者性能" class="headerlink" title="测试消费者性能"></a>测试消费者性能</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-perf-test.sh --broker-list kafka-host:port --messages 10000000 --topic test-topic</span><br></pre></td></tr></table></figure>
-
 <p>输出消费者的吞吐量数据（1723MB/s，但没有不同分位数下的分布情况）。</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">start</span>.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec, rebalance.time.ms, fetch.time.ms, fetch.MB.sec, fetch.nMsg.sec</span><br><span class="line"><span class="attribute">2019</span>-<span class="number">06</span>-<span class="number">26</span> <span class="number">15</span>:<span class="number">24</span>:<span class="number">18</span>:<span class="number">138</span>, <span class="number">2019</span>-<span class="number">06</span>-<span class="number">26</span> <span class="number">15</span>:<span class="number">24</span>:<span class="number">23</span>:<span class="number">805</span>, <span class="number">9765</span>.<span class="number">6202</span>, <span class="number">1723</span>.<span class="number">2434</span>, <span class="number">10000000</span>, <span class="number">1764602</span>.<span class="number">0822</span>, <span class="number">16</span>, <span class="number">5651</span>, <span class="number">1728</span>.<span class="number">1225</span>, <span class="number">1769598</span>.<span class="number">3012</span></span><br></pre></td></tr></table></figure>
-
-
 <h3 id="查看主题消息总数"><a href="#查看主题消息总数" class="headerlink" title="查看主题消息总数"></a>查看主题消息总数</h3><p>Kafka 自带命令没有提供这种功能，可以使用 Kafka 工具类 GetOffsetShell ：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list kafka-host:port --time -2 --topic test-topic</span><br><span class="line"><span class="meta">#</span><span class="bash"> test-topic:0:0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> test-topic:1:0</span></span><br><span class="line"></span><br><span class="line">bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list kafka-host:port --time -1 --topic test-topic</span><br><span class="line"><span class="meta">#</span><span class="bash"> test-topic:0:5500000</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> test-topic:1:5500000</span></span><br></pre></td></tr></table></figure>
-
 <p>计算出给定主题特定分区当前的最早位移和最新位移，将两者的差值累加起来，就能得到该主题当前总的消息数（5500000 + 5500000 == 11000000）</p>
 <h3 id="查看消息文件数据"><a href="#查看消息文件数据" class="headerlink" title="查看消息文件数据"></a>查看消息文件数据</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-dump-log.sh --files ../data_dir/kafka_1/test-topic-1/00000000000000000000.log --deep-iteration</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 加上 --deep-iteration 可查看每条具体消息</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 加上 --print-data-log 可查看消息里面的实际数据</span></span><br></pre></td></tr></table></figure>
-
 <p>输出消息批次（RecordBatch）或消息集合（MessageSet）的元数据信息（创建时间、使用的压缩算法、CRC 校验值等）。</p>
 <figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Dumping ../data_dir/kafka_1/test-topic-1/00000000000000000000.log</span><br><span class="line">Starting offset: 0</span><br><span class="line">baseOffset:<span class="number"> 0 </span>lastOffset:<span class="number"> 14 </span>count:<span class="number"> 15 </span>baseSequence: -1 lastSequence: -1 producerId: -1 producerEpoch: -1 partitionLeaderEpoch:<span class="number"> 0 </span>isTransactional: false isControl: false position:<span class="number"> 0 </span>CreateTime:<span class="number"> 1561597044933 </span>size:<span class="number"> 1237 </span>magic:<span class="number"> 2 </span>compresscodec: LZ4 crc:<span class="number"> 646766737 </span>isvalid: true</span><br><span class="line">| offset:<span class="number"> 0 </span>CreateTime:<span class="number"> 1561597044911 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 1 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 2 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 3 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 4 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 5 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 6 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 7 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 8 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 9 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 10 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 11 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 12 </span>CreateTime:<span class="number"> 1561597044932 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 13 </span>CreateTime:<span class="number"> 1561597044933 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">| offset:<span class="number"> 14 </span>CreateTime:<span class="number"> 1561597044933 </span>keysize: -1 valuesize:<span class="number"> 1024 </span>sequence: -1 headerKeys: []</span><br><span class="line">baseOffset:<span class="number"> 15 </span>lastOffset:<span class="number"> 29 </span>count:<span class="number"> 15 </span>baseSequence: -1 lastSequence: -1 producerId: -1 producerEpoch: -1 partitionLeaderEpoch:<span class="number"> 0 </span>isTransactional: false isControl: false position:<span class="number"> 1237 </span>CreateTime:<span class="number"> 1561597044934 </span>size:<span class="number"> 1237 </span>magic:<span class="number"> 2 </span>compresscodec: LZ4 crc:<span class="number"> 3751986433 </span>isvalid: true</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-
 <h3 id="查看消费者组消息位移"><a href="#查看消费者组消息位移" class="headerlink" title="查看消费者组消息位移"></a>查看消费者组消息位移</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumr-groups.sh --bootstrap-server kafka-host:port --describe --group test-group</span><br></pre></td></tr></table></figure>
-
 <p>其中输出的 CURRENT-OFFSET 表示该消费者当前消费的最新位移，LOG-END-OFFSET 表示对应分区最新生产消息的位移，LAG 列是两者的差值。</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">TOPIC</span>		PARTITION	CURRENT-OFFSET	LOG-END-OFFSET	LAG			CONSUMER-ID											HOST		CLIENT-ID</span><br><span class="line"><span class="attribute">test</span>-topic	<span class="number">0</span>			<span class="number">1112985</span>			<span class="number">5000000</span>			<span class="number">3887015</span>		consumer-<span class="number">1</span>-d<span class="number">2</span>a<span class="number">5</span>e<span class="number">537</span>-aec<span class="number">5</span>-<span class="number">4659</span>-a<span class="number">084</span>-<span class="number">33174</span>e<span class="number">1</span>b<span class="number">3</span>c<span class="number">48</span>		/<span class="number">127.0.0.1</span>	consumer-<span class="number">1</span></span><br><span class="line"><span class="attribute">test</span>-topic	<span class="number">0</span>			<span class="number">1095015</span>			<span class="number">5000000</span>			<span class="number">3904985</span>		consumer-<span class="number">1</span>-d<span class="number">2</span>a<span class="number">5</span>e<span class="number">537</span>-aec<span class="number">5</span>-<span class="number">4659</span>-a<span class="number">084</span>-<span class="number">33174</span>e<span class="number">1</span>b<span class="number">3</span>c<span class="number">48</span>		/<span class="number">127.0.0.1</span>	consumer-<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="主题创建"><a href="#主题创建" class="headerlink" title="主题创建"></a>主题创建</h3><p>指定分区、副本个数和主题名称</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --bootstrap-server broker_host:port --create --topic my_topic_name  --partitions 1 --replication-factor 1</span><br></pre></td></tr></table></figure>
-
 <p>Kafka 2.2 版本开始，社区推荐用 <code>--bootstrap-server</code> 参数替换 <code>--zookeeper</code> 参数（详见官方文档： <a target="_blank" rel="noopener" href="http://kafka.apache.org/22/documentation.html">http://kafka.apache.org/22/documentation.html</a> ）： </p>
 <blockquote>
 <p> The <code>bin/kafka-topics.sh</code> command line tool is now able to connect directly to brokers with <code>--bootstrap-server</code> instead of zookeeper. The old <code>--zookeeper</code> option is still available for now. Please read <a target="_blank" rel="noopener" href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-377%3A+TopicCommand+to+use+AdminClient">KIP-377</a> for more information. </p>
 </blockquote>
 <ul>
-<li><p>使用 <code>--zookeeper</code> 会绕过 Kafka 的安全体系：即使为 Kafka 集群设置了安全认证，限制了主题的创建，如果使用 –zookeeper 的命令依然能不受约束成功创建任意主题。</p>
+<li><p>使用 <code>--zookeeper</code> 会绕过 Kafka 的安全体系：即使为 Kafka 集群设置了安全认证，限制了主题的创建，如果使用 —zookeeper 的命令依然能不受约束成功创建任意主题。</p>
 </li>
 <li><p>使用 <code>--bootstrap-server</code> 与集群进行交互，逐渐成为使用 Kafka 标准做法，不必同时维护 ZooKeeper 和 Broker 的连接信息。</p>
 </li>
 </ul>
 <h3 id="主题查询"><a href="#主题查询" class="headerlink" title="主题查询"></a>主题查询</h3><p>注意用户只能查看自己可见的 Kafka 主题。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --bootstrap-server broker_host:port --list</span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>--zookeeper</code> 会绕过 Kafka 的安全体系，默认返回集群中所有的主题详细数据。</p>
 <h3 id="修改分区"><a href="#修改分区" class="headerlink" title="修改分区"></a>修改分区</h3><p>只能增加数量，否则抛出 <code>InvalidPartitionsException</code> 异常。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --bootstrap-server broker_host:port --alter --topic &lt;topic_name&gt; --partitions &lt;新分区数&gt;</span><br></pre></td></tr></table></figure>
-
 <h3 id="修改主题级别参数"><a href="#修改主题级别参数" class="headerlink" title="修改主题级别参数"></a>修改主题级别参数</h3><p>注意必须使用 <code>--zookeeper</code> 参数</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --zookeeper zookeeper_host:port --entity-type topics --entity-name &lt;topic_name&gt; --alter --add-config max.message.bytes=10485760</span><br></pre></td></tr></table></figure>
-
 <h3 id="修改主题限速"><a href="#修改主题限速" class="headerlink" title="修改主题限速"></a>修改主题限速</h3><p>即设置 Leader 副本和 Follower 副本使用的带宽。</p>
 <p>先设置 Broker 端参数 <code>leader.replication.throttled.rate</code>  和  <code>follower.replication.throttled.rate</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --zookeeper zookeeper_host:port --alter --add-config &#x27;leader.replication.throttled.rate=104857600,follower.replication.throttled.rate=104857600&#x27; --entity-type brokers --entity-name 0</span><br></pre></td></tr></table></figure>
-
 <p>为该主题设置要限速的副本</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --zookeeper zookeeper_host:port --alter --add-config &#x27;leader.replication.throttled.replicas=*,follower.replication.throttled.replicas=*&#x27; --entity-type topics --entity-name test</span><br></pre></td></tr></table></figure>
-
 <h3 id="删除主题"><a href="#删除主题" class="headerlink" title="删除主题"></a>删除主题</h3><p>注意删除是异步操作，返回的是“已删除”的状态标记。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --bootstrap-server broker_host:port --delete  --topic &lt;topic_name&gt;</span><br></pre></td></tr></table></figure>
-
-
-
 <h2 id="常见错误排查"><a href="#常见错误排查" class="headerlink" title="常见错误排查"></a>常见错误排查</h2><h3 id="主题删除失效"><a href="#主题删除失效" class="headerlink" title="主题删除失效"></a>主题删除失效</h3><p>由于删除是异步操作，有可能删除不成功，最常见的原因：</p>
 <ul>
 <li><p>副本所在的 Broker 宕机：重启 Broker 后自动恢复</p>
@@ -757,20 +740,15 @@ height:100vh;
 </ul>
 <p>Kafka 将动态 Broker 参数保存在 ZooKeeper 的 <code>/config</code> 路径中（都是持久化节点）：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/config</span><br><span class="line">	changes		<span class="comment"># changes 实时监测动态参数变更，不保存参数值</span></span><br><span class="line">	topics		<span class="comment"># 主题级别参数</span></span><br><span class="line">	users		<span class="comment"># 动态调整客户端配额（Quota）</span></span><br><span class="line">	clients			<span class="comment"># 即限制连入集群的客户端的吞吐量或者是限定使用的 CPU 资源</span></span><br><span class="line">    /brokers</span><br><span class="line">    	&lt;default&gt;	<span class="comment"># cluster-wide 范围的动态参数</span></span><br><span class="line">        broker.<span class="built_in">id</span>	<span class="comment"># 特定 Broker 的 per-broker 范围参数（可能存在多个）</span></span><br></pre></td></tr></table></figure>
-
 <p>配置的优先级为：per-broker 参数 &gt; cluster-wide 参数 &gt; static 参数 &gt; Kafka 默认值。</p>
 <h3 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置"></a>参数配置</h3><p>使用 Kafka 自带的 kafka-configs 脚本，以配置 cluster-wide 范围参数为例：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-default --alter --add-config unclean.leader.election.enable=true</span><br><span class="line"><span class="meta">#</span><span class="bash"> unclean.leader.election.enable</span></span><br></pre></td></tr></table></figure>
-
 <p>要设置 cluster-wide 范围的动态参数，即在集群层面设置全局值，需要显式指定 <code>entity-default</code>，检查配置是否成功：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-default --describe</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 有以下输出，表示成功地在全局层面上设置该参数值为 <span class="literal">true</span>（其中 sensitive=<span class="literal">false</span> 表明要调整的参数不是敏感数据）：</span></span><br><span class="line">Default config for brokers in the cluster are:</span><br><span class="line">  unclean.leader.election.enable=true sensitive=false synonyms=&#123;DYNAMIC_DEFAULT_BROKER_CONFIG:unclean.leader.election.enable=true&#125;</span><br></pre></td></tr></table></figure>
-
 <p>如要设置 per-broker 范围（ID 为 1 的 Broker）参数，则执行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-name 1 --alter --add-config unclean.leader.election.enable=false</span><br></pre></td></tr></table></figure>
-
 <p>检查配置是否成功：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-name 1 --describe</span><br><span class="line"></span><br><span class="line">Configs for broker 1 are:</span><br><span class="line">  unclean.leader.election.enable=false sensitive=false synonyms=&#123;DYNAMIC_BROKER_CONFIG:unclean.leader.election.enable=false, DYNAMIC_DEFAULT_BROKER_CONFIG:unclean.leader.election.enable=true, DEFAULT_CONFIG:unclean.leader.election.enable=false&#125;</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li><p>在 Broker 1 层面上，该参数被设置成了 false，表明配置成功；</p>
 </li>
@@ -779,8 +757,8 @@ height:100vh;
 </ul>
 <p>最后需要分别从 Broker 和全局层面删除配置：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除cluster-wide范围参数</span></span><br><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-default --alter --delete-config unclean.leader.election.enable</span><br><span class="line">Completed updating default config for brokers in the cluster,</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除per-broker范围参数</span></span><br><span class="line">bin/kafka-configs.sh --bootstrap-server kafka-host:port --entity-type brokers --entity-name 1 --alter --delete-config unclean.leader.election.enable</span><br><span class="line">Completed updating config for broker: 1.</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看cluster-wide范围参数</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> bin/kafka-configs.sh --bootstrap-server kafka-host:port  --entity-type brokers --entity-default --describe</span></span><br><span class="line">Default config for brokers in the cluster are:</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看Broker 1上的动态参数配置</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> bin/kafka-configs.sh --bootstrap-server kafka-host:port  --entity-type brokers --entity-name 1 --describe</span></span><br><span class="line">Configs for broker 1 are:</span><br></pre></td></tr></table></figure>
-
-<h3 id="常用参数"><a href="#常用参数" class="headerlink" title="常用参数"></a>常用参数</h3><table>
+<h3 id="常用参数"><a href="#常用参数" class="headerlink" title="常用参数"></a>常用参数</h3><div class="table-container">
+<table>
 <thead>
 <tr>
 <th>序号</th>
@@ -788,7 +766,8 @@ height:100vh;
 <th>备注</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1</td>
 <td>log.retention.ms</td>
 <td>由于不可能完美地预估所有业务的消息留存时长，修改日志留存时间是一个比较高频的操作。可以设置对应的主题级别或在全局层面上动态变更参数。</td>
@@ -808,7 +787,9 @@ height:100vh;
 <td>num.replica.fetchers</td>
 <td>Follower 副本拉取速度慢常见的做法是增加该参数值，确保有充足的线程可以执行 Follower 副本向 Leader 副本的拉取。使用动态参数，则不需要重启 Broker 就能立即在 Follower 端生效。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <blockquote>
 <p>与其他传统消息中间件不同，Kafka 是基于日志结构（log-based）的消息引擎，消费者在消费消息时，只是从磁盘文件上读取数据，因此消费者不会删除消息数据。而且由于消息的位移是由消费者控制的，因此可以通过修改位移的值，重复消费历史数据（replayable）。</p>
 </blockquote>
@@ -836,47 +817,33 @@ height:100vh;
 <p>如将位移调回到 15 分钟前，可以指定为：PT0H15M0S。</p>
 <h3 id="消费者-API"><a href="#消费者-API" class="headerlink" title="消费者 API"></a>消费者 API</h3><p>可以通过消费者 API 重设位移，其中 Java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 除了 Earliest 和 Latest 以外，其余都使用 seek </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 只能重设一个分区</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seek</span><span class="params">(TopicPartition partition, <span class="keyword">long</span> offset)</span></span>;	</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seek</span><span class="params">(TopicPartition partition, OffsetAndMetadata offsetAndMetadata)</span></span>;	</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可重设多个分区</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seekToBeginning</span><span class="params">(Collection&lt;TopicPartition&gt; partitions)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">seekToEnd</span><span class="params">(Collection&lt;TopicPartition&gt; partitions)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>基本实现（注意调用带长整型的 poll 方法，而不要调用 <code>consumer.poll(Duration.ofSecond(0))</code>）：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Properties consumerProperties = <span class="keyword">new</span> Properties();</span><br><span class="line"><span class="comment">// 必须禁止自动提交位移</span></span><br><span class="line">consumerProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, <span class="keyword">false</span>);</span><br><span class="line">consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, <span class="string">&quot;earliest&quot;</span>);</span><br><span class="line"><span class="comment">// ...（省略其他消费者配置）</span></span><br></pre></td></tr></table></figure>
-
 <p>Earliest 策略（Latest 同理）</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 需要一次性构造主题的所有分区对象</span></span><br><span class="line">String topic = <span class="string">&quot;test&quot;</span>;  <span class="comment">// 要重设位移的Kafka主题 </span></span><br><span class="line"><span class="keyword">try</span> (<span class="keyword">final</span> KafkaConsumer&lt;String, String&gt; consumer = </span><br><span class="line">    <span class="keyword">new</span> KafkaConsumer&lt;&gt;(consumerProperties)) &#123;</span><br><span class="line">         consumer.subscribe(Collections.singleton(topic));</span><br><span class="line">         consumer.poll(<span class="number">0</span>);</span><br><span class="line">         consumer.seekToBeginning(</span><br><span class="line">    consumer.partitionsFor(topic).stream().map(partitionInfo -&gt;         </span><br><span class="line">        <span class="keyword">new</span> TopicPartition(topic, partitionInfo.partition()))</span><br><span class="line">            .collect(Collectors.toList()));</span><br><span class="line">    <span class="comment">// 如果是 Latest 则为 seekToEnd</span></span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-
 <p>Current 策略</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 借助 KafkaConsumer 的 committed 方法获取当前提交的最新位移</span></span><br><span class="line">consumer.partitionsFor(topic).stream().map(info -&gt; </span><br><span class="line">    <span class="comment">// 获取给定主题的所有分区，然后依次获取对应分区上的已提交位移，最后通过 seek 方法重设位移到已提交位移处</span></span><br><span class="line">    <span class="keyword">new</span> TopicPartition(topic, info.partition()))</span><br><span class="line">        .forEach(tp -&gt; &#123;</span><br><span class="line">            <span class="keyword">long</span> committedOffset = consumer.committed(tp).offset();</span><br><span class="line">             consumer.seek(tp, committedOffset);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <p>Specified-Offset 策略</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> targetOffset = <span class="number">1234L</span>;</span><br><span class="line"><span class="keyword">for</span> (PartitionInfo info : consumer.partitionsFor(topic)) &#123;</span><br><span class="line">    TopicPartition tp = <span class="keyword">new</span> TopicPartition(topic, info.partition());</span><br><span class="line">    consumer.seek(tp, targetOffset);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>Shift-By-N 策略（向前跳 123 条消息）</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (PartitionInfo info : consumer.partitionsFor(topic)) &#123;</span><br><span class="line">    TopicPartition tp = <span class="keyword">new</span> TopicPartition(topic, info.partition());</span><br><span class="line">    <span class="keyword">long</span> targetOffset = consumer.committed(tp).offset() + <span class="number">123L</span>; </span><br><span class="line">    consumer.seek(tp, targetOffset);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>DateTime 策略</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 重设位移到 2019 年 6 月 20 日晚上 8 点</span></span><br><span class="line"><span class="keyword">long</span> ts = LocalDateTime.of(<span class="number">2019</span>, <span class="number">6</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">0</span>).toInstant(ZoneOffset.ofHours(<span class="number">8</span>)).toEpochMilli();</span><br><span class="line">Map&lt;TopicPartition, Long&gt; timeToSearch = consumer.partitionsFor(topic).stream().map(info -&gt; </span><br><span class="line">    <span class="keyword">new</span> TopicPartition(topic, info.partition()))</span><br><span class="line">        .collect(Collectors.toMap(Function.identity(), tp -&gt; ts));</span><br><span class="line"><span class="keyword">for</span> (Map.Entry&lt;TopicPartition, OffsetAndTimestamp&gt; entry :  consumer.offsetsForTimes(timeToSearch).entrySet()) &#123;</span><br><span class="line">    consumer.seek(entry.getKey(), entry.getValue().offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>Duration 策略</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将位移调回 30 分钟前</span></span><br><span class="line">Map&lt;TopicPartition, Long&gt; timeToSearch = consumer.partitionsFor(topic).stream()</span><br><span class="line">    .map(info -&gt; <span class="keyword">new</span> TopicPartition(topic, info.partition()))</span><br><span class="line">    .collect(Collectors.toMap(Function.identity(), tp -&gt; System.currentTimeMillis() - <span class="number">30</span> * <span class="number">1000</span>  * <span class="number">60</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (Map.Entry&lt;TopicPartition, OffsetAndTimestamp&gt; entry : </span><br><span class="line">    consumer.offsetsForTimes(timeToSearch).entrySet()) &#123;</span><br><span class="line">    consumer.seek(entry.getKey(), entry.getValue().offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="命令行脚本"><a href="#命令行脚本" class="headerlink" title="命令行脚本"></a>命令行脚本</h3><p>对于 Kafka 0.11 及以上的版本，可以使用 kafka-consumer-groups 脚本设置位移。</p>
 <p>Earliest 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --all-topics --to-latest --execute</span><br></pre></td></tr></table></figure>
-
 <p>Latest 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --all-topics --to-earliest –execute</span><br></pre></td></tr></table></figure>
-
 <p>Current 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --all-topics --to-current --execute</span><br></pre></td></tr></table></figure>
-
 <p>Specified-Offset 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --shift-by &lt;offset_N&gt; --execute</span><br></pre></td></tr></table></figure>
-
 <p>Shift-By-N 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --shift-by &lt;offset_N&gt; --execute</span><br></pre></td></tr></table></figure>
-
 <p>Duration 策略</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server kafka-host:port --group test-group --reset-offsets --by-duration PT0H30M0S --execute</span><br></pre></td></tr></table></figure>
-
 <h2 id="生产部署"><a href="#生产部署" class="headerlink" title="生产部署"></a>生产部署</h2><p>最近需要规划一套 Kafka 集群，由于之前一直没有做过生产环境的资源评估，想尝试整理出一份技术方案，希望可以为后续的项目提供参考。</p>
 <h3 id="需求描述"><a href="#需求描述" class="headerlink" title="需求描述"></a>需求描述</h3><p>基本需求如下（非真实数据）：</p>
 <ul>
@@ -891,7 +858,7 @@ height:100vh;
 <h4 id="磁盘规划"><a href="#磁盘规划" class="headerlink" title="磁盘规划"></a>磁盘规划</h4><p>无随机访问需求（Kafka 日志系统采用顺序访问），且软件层面的多副本机制可弥补磁盘易损坏的缺陷，可采用 HDD 机械硬盘 + RAID 0 的组合。</p>
 <p>单个节点磁盘容量规划如下：</p>
 <ul>
-<li><p>新增消息数：加载平均值 1,000 条 /s，60 * 60 * 24 * 1000 约 1 千万条。</p>
+<li><p>新增消息数：加载平均值 1,000 条 /s，60 <em> 60 </em> 24 * 1000 约 1 千万条。</p>
 </li>
 <li><p>新增消息大小：预计每条消息 2KB，即每天消息总大小为 10,000,000 条 * 2KB / 1000 / 1000 约 20GB。</p>
 </li>
@@ -911,7 +878,7 @@ height:100vh;
 </li>
 <li><p>平均带宽：按最大值 1/4-1/3 保守换算（其余预留），即单个节点平均可使用  175-240 Mbps。</p>
 </li>
-<li><p>数据量：传输数据需要按峰值算，5,000 条 /s * 2KB * 8bit = 80Mbps，80Mbps / 175Mbps = 1 台。</p>
+<li><p>数据量：传输数据需要按峰值算，5,000 条 /s <em> 2KB </em> 8bit = 80Mbps，80Mbps / 175Mbps = 1 台。</p>
 </li>
 <li><p>备份数：3 个副本，1 台 * 3 = 3 台。</p>
 </li>
@@ -2077,9 +2044,9 @@ top:100vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -2091,19 +2058,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     

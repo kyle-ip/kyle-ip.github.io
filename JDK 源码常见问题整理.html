@@ -25,12 +25,12 @@
     <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
-    <meta name="description" content="JDK 源码常见问题整理集合类ArrayList   基于动态数组实现，创建时初始指定容量，可自动扩容。   支持随机访问（实现了 RandomAccess 接口），size、isEmpty、get、set 都是常数时间开销。   结构修改（增删元素）、扩容操作涉及大量元素复制，开销较大（O(n)）。   可使用 Collections#synchronizedList 增强为线程安全。   快速">
+    <meta name="description" content="JDK 源码常见问题整理集合类ArrayList 基于动态数组实现，创建时初始指定容量，可自动扩容。 支持随机访问（实现了 RandomAccess 接口），size、isEmpty、get、set 都是常数时间开销。 结构修改（增删元素）、扩容操作涉及大量元素复制，开销较大（O(n)）。 可使用 Collections#synchronizedList 增强为线程安全。 快速失败，遍历迭代过程中">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kylo&#39;s Notebook">
 <meta property="og:url" content="https://yipwinghong.github.io/JDK%20%E6%BA%90%E7%A0%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86.html">
 <meta property="og:site_name" content="Kylo&#39;s Notebook">
-<meta property="og:description" content="JDK 源码常见问题整理集合类ArrayList   基于动态数组实现，创建时初始指定容量，可自动扩容。   支持随机访问（实现了 RandomAccess 接口），size、isEmpty、get、set 都是常数时间开销。   结构修改（增删元素）、扩容操作涉及大量元素复制，开销较大（O(n)）。   可使用 Collections#synchronizedList 增强为线程安全。   快速">
+<meta property="og:description" content="JDK 源码常见问题整理集合类ArrayList 基于动态数组实现，创建时初始指定容量，可自动扩容。 支持随机访问（实现了 RandomAccess 接口），size、isEmpty、get、set 都是常数时间开销。 结构修改（增删元素）、扩容操作涉及大量元素复制，开销较大（O(n)）。 可使用 Collections#synchronizedList 增强为线程安全。 快速失败，遍历迭代过程中">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-10-09T02:21:11.141Z">
 <meta property="article:modified_time" content="2021-10-09T02:21:11.132Z">
@@ -389,11 +389,11 @@
             <main class="main post-page">
     <article class="article-entry">
         <h1 id="JDK-源码常见问题整理"><a href="#JDK-源码常见问题整理" class="headerlink" title="JDK 源码常见问题整理"></a>JDK 源码常见问题整理</h1><h2 id="集合类"><a href="#集合类" class="headerlink" title="集合类"></a>集合类</h2><h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><ul>
-<li>  基于动态数组实现，创建时初始指定容量，可自动扩容。</li>
-<li>  支持随机访问（实现了 <code>RandomAccess</code> 接口），size、isEmpty、get、set 都是常数时间开销。</li>
-<li>  结构修改（增删元素）、扩容操作涉及大量元素复制，开销较大（O(n)）。</li>
-<li>  可使用 <code>Collections#synchronizedList</code> 增强为线程安全。</li>
-<li>  快速失败，遍历迭代过程中结构被修改会抛出异常。</li>
+<li>基于动态数组实现，创建时初始指定容量，可自动扩容。</li>
+<li>支持随机访问（实现了 <code>RandomAccess</code> 接口），size、isEmpty、get、set 都是常数时间开销。</li>
+<li>结构修改（增删元素）、扩容操作涉及大量元素复制，开销较大（O(n)）。</li>
+<li>可使用 <code>Collections#synchronizedList</code> 增强为线程安全。</li>
+<li>快速失败，遍历迭代过程中结构被修改会抛出异常。</li>
 </ul>
 <h4 id="快速失败机制"><a href="#快速失败机制" class="headerlink" title="快速失败机制"></a>快速失败机制</h4><p>以迭代器的方式访问列表过程中对列表进行结构修改（通过迭代器 remove 和 add 方法除外），会快速抛出 ConcurrentModificationException。</p>
 <p>但快速失败行为在非同步的并发修改下无法得到保证，只能尽最大努力抛出异常，无法依赖此机制验证程序正确性，仅用于检测错误。</p>
@@ -401,22 +401,22 @@
 <h4 id="默认初始容量"><a href="#默认初始容量" class="headerlink" title="默认初始容量"></a>默认初始容量</h4><p>ArrayList 的容量是内部数组缓冲区 <code>transient Object[] elementData</code> 的长度。</p>
 <p>添加第一个元素时，任何具有 <code>elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA</code> 的空 ArrayList都将扩展为 <code>DEFAULT_CAPACITY = 10</code>。</p>
 <ul>
-<li><p>  对于无参构造方法，直接指定为 <code>Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = &#123;&#125;</code>。</p>
+<li><p>对于无参构造方法，直接指定为 <code>Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = &#123;&#125;</code>。</p>
 </li>
-<li><p>  对于有参构造方法，则根据传入的初始容量判断，小于 0 抛出异常，大于等于 0 则设置为对应的容量。</p>
+<li><p>对于有参构造方法，则根据传入的初始容量判断，小于 0 抛出异常，大于等于 0 则设置为对应的容量。</p>
 </li>
 </ul>
 <h4 id="扩容机制"><a href="#扩容机制" class="headerlink" title="扩容机制"></a>扩容机制</h4><p>添加元素的 API：添加到数组末尾和按 index 添加。但在执行前都会先执行 <code>ensureCapacityInternal</code> 确保容量足够。</p>
 <p>当访问的下标 +1 超出内部数组长度（ <code>index + 1 - elementData.length &gt; 0</code>）时，即会触发 <code>grow</code> 扩容。</p>
 <ul>
-<li>  新的容量为旧容量的 1.5 倍，即 <code>oldCapacity + (oldCapacity &gt;&gt; 1)</code>。</li>
-<li>  确定大小后创建新数组，并使用本地方法 <code>System.arraycopy</code> 把原数组的元素复制到新数组。</li>
+<li>新的容量为旧容量的 1.5 倍，即 <code>oldCapacity + (oldCapacity &gt;&gt; 1)</code>。</li>
+<li>确定大小后创建新数组，并使用本地方法 <code>System.arraycopy</code> 把原数组的元素复制到新数组。</li>
 </ul>
 <p>如果数组比较大，涉及大量的复制操作，效率较低（删除元素同理）。</p>
 <h3 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h3><ul>
-<li>  基于 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/xingele0917/p/3696593.html">双向链表</a> 实现，只能顺序访问（随机访问时从表头或尾开始访问）。</li>
-<li>  可以用作栈、队列和双向队列。</li>
-<li>  可使用 <code>Collections#synchronizedList</code> 增强为线程安全。</li>
+<li>基于 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/xingele0917/p/3696593.html">双向链表</a> 实现，只能顺序访问（随机访问时从表头或尾开始访问）。</li>
+<li>可以用作栈、队列和双向队列。</li>
+<li>可使用 <code>Collections#synchronizedList</code> 增强为线程安全。</li>
 </ul>
 <h4 id="双向链表的设计"><a href="#双向链表的设计" class="headerlink" title="双向链表的设计"></a>双向链表的设计</h4><h4 id="如何插入元素"><a href="#如何插入元素" class="headerlink" title="如何插入元素"></a>如何插入元素</h4><h4 id="元素删除策略"><a href="#元素删除策略" class="headerlink" title="元素删除策略"></a>元素删除策略</h4><h4 id="基本使用场景"><a href="#基本使用场景" class="headerlink" title="基本使用场景"></a>基本使用场景</h4><h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><h4 id="结构修改操作"><a href="#结构修改操作" class="headerlink" title="结构修改操作"></a>结构修改操作</h4><h4 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h4><h4 id="红黑树与链表的相互转化"><a href="#红黑树与链表的相互转化" class="headerlink" title="红黑树与链表的相互转化"></a>红黑树与链表的相互转化</h4><h4 id="如何定位元素存放位置"><a href="#如何定位元素存放位置" class="headerlink" title="如何定位元素存放位置"></a>如何定位元素存放位置</h4><h4 id="数组容量的规则"><a href="#数组容量的规则" class="headerlink" title="数组容量的规则"></a>数组容量的规则</h4><h4 id="添加元素的基本流程"><a href="#添加元素的基本流程" class="headerlink" title="添加元素的基本流程"></a>添加元素的基本流程</h4><h4 id="扩容机制、JDK8-作出的优化"><a href="#扩容机制、JDK8-作出的优化" class="headerlink" title="扩容机制、JDK8 作出的优化"></a>扩容机制、JDK8 作出的优化</h4><h4 id="删除元素的基本流程"><a href="#删除元素的基本流程" class="headerlink" title="删除元素的基本流程"></a>删除元素的基本流程</h4><h3 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h3><h4 id="红黑树的基本原理"><a href="#红黑树的基本原理" class="headerlink" title="红黑树的基本原理"></a>红黑树的基本原理</h4><h4 id="红黑树增删元素的情景分析"><a href="#红黑树增删元素的情景分析" class="headerlink" title="红黑树增删元素的情景分析"></a>红黑树增删元素的情景分析</h4><h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><h4 id="节点删除策略"><a href="#节点删除策略" class="headerlink" title="节点删除策略"></a>节点删除策略</h4><h4 id="基本使用场景-1"><a href="#基本使用场景-1" class="headerlink" title="基本使用场景"></a>基本使用场景</h4><h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><h4 id="如何确保元素不重复"><a href="#如何确保元素不重复" class="headerlink" title="如何确保元素不重复"></a>如何确保元素不重复</h4><h3 id="TreeSet"><a href="#TreeSet" class="headerlink" title="TreeSet"></a>TreeSet</h3><h4 id="如何基于-TreeMap-实现"><a href="#如何基于-TreeMap-实现" class="headerlink" title="如何基于 TreeMap 实现"></a>如何基于 TreeMap 实现</h4><h4 id="迭代器方法的实现"><a href="#迭代器方法的实现" class="headerlink" title="迭代器方法的实现"></a>迭代器方法的实现</h4><h3 id="PriorityQueue"><a href="#PriorityQueue" class="headerlink" title="PriorityQueue"></a>PriorityQueue</h3><h4 id="添加元素的过程"><a href="#添加元素的过程" class="headerlink" title="添加元素的过程"></a>添加元素的过程</h4><h4 id="扩容机制-1"><a href="#扩容机制-1" class="headerlink" title="扩容机制"></a>扩容机制</h4><h4 id="删除元素的过程"><a href="#删除元素的过程" class="headerlink" title="删除元素的过程"></a>删除元素的过程</h4><h4 id="基本使用场景-2"><a href="#基本使用场景-2" class="headerlink" title="基本使用场景"></a>基本使用场景</h4><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
@@ -1550,9 +1550,9 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
         <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
+    
+        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1564,19 +1564,19 @@
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
