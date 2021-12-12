@@ -25,12 +25,12 @@
     <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
-    <meta name="description" content="分布式系统知识点总结协调与同步分布式互斥     集中式 分布式 令牌环     方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当">
+    <meta name="description" content="分布式系统知识点总结协调与同步分布式互斥    集中式 分布式 令牌环    方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当参与">
 <meta property="og:type" content="website">
 <meta property="og:title" content="分布式系统知识点总结">
 <meta property="og:url" content="https://yipwinghong.github.io/DistributedSystem_summary.html">
 <meta property="og:site_name" content="Kylo&#39;s Notebook">
-<meta property="og:description" content="分布式系统知识点总结协调与同步分布式互斥     集中式 分布式 令牌环     方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当">
+<meta property="og:description" content="分布式系统知识点总结协调与同步分布式互斥    集中式 分布式 令牌环    方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当参与">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-07-01T15:05:19.000Z">
 <meta property="article:modified_time" content="2021-08-18T16:08:30.425Z">
@@ -390,8 +390,7 @@
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="分布式系统知识点总结"><a href="#分布式系统知识点总结" class="headerlink" title="分布式系统知识点总结"></a>分布式系统知识点总结</h1><h2 id="协调与同步"><a href="#协调与同步" class="headerlink" title="协调与同步"></a>协调与同步</h2><h3 id="分布式互斥"><a href="#分布式互斥" class="headerlink" title="分布式互斥"></a>分布式互斥</h3><div class="table-container">
-<table>
+        <h1 id="分布式系统知识点总结"><a href="#分布式系统知识点总结" class="headerlink" title="分布式系统知识点总结"></a>分布式系统知识点总结</h1><h2 id="协调与同步"><a href="#协调与同步" class="headerlink" title="协调与同步"></a>协调与同步</h2><h3 id="分布式互斥"><a href="#分布式互斥" class="headerlink" title="分布式互斥"></a>分布式互斥</h3><table>
 <thead>
 <tr>
 <th></th>
@@ -400,8 +399,7 @@
 <th>令牌环</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>方法</td>
 <td>引入协调者，对请求排序，最早请求的参与者取得临界资源。</td>
 <td>征求其它参与者同意后使用临界资源。</td>
@@ -425,11 +423,8 @@
 <td>临界资源使用频度较低且系统规模较小</td>
 <td>系统规模较小，且每个参与者使用资源频度较高、时间较短。</td>
 </tr>
-</tbody>
-</table>
-</div>
-<h3 id="分布式选举"><a href="#分布式选举" class="headerlink" title="分布式选举"></a>分布式选举</h3><div class="table-container">
-<table>
+</tbody></table>
+<h3 id="分布式选举"><a href="#分布式选举" class="headerlink" title="分布式选举"></a>分布式选举</h3><table>
 <thead>
 <tr>
 <th></th>
@@ -438,8 +433,7 @@
 <th>ZAB</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>选举原则</td>
 <td>节点 ID 最大的成为 Leader。</td>
 <td>少数服从多数，票数最多为主。</td>
@@ -463,11 +457,8 @@
 <td>中小规模系统，比如 Kubernetes。</td>
 <td>大规模系统，比如 ZooKeeper。</td>
 </tr>
-</tbody>
-</table>
-</div>
-<h3 id="分布式共识"><a href="#分布式共识" class="headerlink" title="分布式共识"></a>分布式共识</h3><div class="table-container">
-<table>
+</tbody></table>
+<h3 id="分布式共识"><a href="#分布式共识" class="headerlink" title="分布式共识"></a>分布式共识</h3><table>
 <thead>
 <tr>
 <th></th>
@@ -476,8 +467,7 @@
 <th>DPos</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>原理</td>
 <td>以每个节点计算能力竞争记账权，算力越高机会越大。</td>
 <td>由系统权益决定区块记账权，权益越大机会越大。</td>
@@ -501,11 +491,8 @@
 <td>以太坊、点点币</td>
 <td>以太股、EOS</td>
 </tr>
-</tbody>
-</table>
-</div>
-<h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><div class="table-container">
-<table>
+</tbody></table>
+<h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><table>
 <thead>
 <tr>
 <th></th>
@@ -514,8 +501,7 @@
 <th>最终一致性</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>思想</td>
 <td>事务管理器作为协调者，处理各本地事务的提交或回滚。资源管理器作为参与者。通过投票阶段和提交阶段协调事务操作。</td>
 <td>在 2PC 基础上，分为 CanCommit、PreCommit、DoCommit 三个阶段，引入超时和准备机制。</td>
@@ -533,11 +519,8 @@
 <td>数据不一致，性能较低。</td>
 <td>算法复杂度高，实现困难。</td>
 </tr>
-</tbody>
-</table>
-</div>
-<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><div class="table-container">
-<table>
+</tbody></table>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><table>
 <thead>
 <tr>
 <th></th>
@@ -546,8 +529,7 @@
 <th>ZooKeeper</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>实现</td>
 <td>在表上对临界资源做唯一性约束，通过增加记录对某资源上锁，释放时删除（也可以更新实现乐观锁）。</td>
 <td>使用 API setnx，设置锁 ID、当前时间 + 超时时间。</td>
@@ -571,11 +553,8 @@
 <td>高并发、性能要求高。</td>
 <td>大部分分布式场景，除非性能要求极高。</td>
 </tr>
-</tbody>
-</table>
-</div>
-<h2 id="管理与调度"><a href="#管理与调度" class="headerlink" title="管理与调度"></a>管理与调度</h2><h3 id="体系结构"><a href="#体系结构" class="headerlink" title="体系结构"></a>体系结构</h3><div class="table-container">
-<table>
+</tbody></table>
+<h2 id="管理与调度"><a href="#管理与调度" class="headerlink" title="管理与调度"></a>管理与调度</h2><h3 id="体系结构"><a href="#体系结构" class="headerlink" title="体系结构"></a>体系结构</h3><table>
 <thead>
 <tr>
 <th></th>
@@ -583,8 +562,7 @@
 <th>非集中式</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>简介</td>
 <td>一或多台中央服务器，存储系统内的所有数据、处理所有业务。中央服务器统一调度资源和任务，多个节点与中央服务器连接，汇报自身信息和执行结果。</td>
 <td>服务执行和数据存储被分散到不同的服务器集群，服务器集群间通过消息传递进行通信和协调。所有服务器地位平等。</td>
@@ -599,11 +577,8 @@
 <td>Borg、Kubernetes、Mesos。</td>
 <td>Akka、Redis、Cassandra。</td>
 </tr>
-</tbody>
-</table>
-</div>
-<h3 id="调度架构"><a href="#调度架构" class="headerlink" title="调度架构"></a>调度架构</h3><div class="table-container">
-<table>
+</tbody></table>
+<h3 id="调度架构"><a href="#调度架构" class="headerlink" title="调度架构"></a>调度架构</h3><table>
 <thead>
 <tr>
 <th></th>
@@ -612,8 +587,7 @@
 <th>共享状态调度</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>定义</td>
 <td>集群中只有一个节点运行调度进程，该节点对其它节点有访问权限，可搜集其它节点资源状态信息以便统一管理。根据用户下发的任务对资源的需求，在调度器中进行任务与资源匹配，再指派给其它节点。</td>
 <td>资源的使用状态同时由中央调度器和二层调度器管理。前者负责宏观、大规模资源分配，业务压力较小；后者负责任务与资源匹配，可以有多个、以支持不同任务类型。</td>
@@ -631,19 +605,17 @@
 <td>Mesos、YARN</td>
 <td>Google Omega</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <h2 id="计算模型"><a href="#计算模型" class="headerlink" title="计算模型"></a>计算模型</h2><h3 id="分治"><a href="#分治" class="headerlink" title="分治"></a>分治</h3><p>将复杂且难以计算的大问题，分割成规模较小的、可直接求解的子问题。子问题之间相互独立且与原问题形式相同，通过递归求解子问题，最后将其结果合并得到原问题的解。</p>
 <p>特点：</p>
 <ul>
-<li><p>规模较大或复杂。</p>
+<li><p>  规模较大或复杂。</p>
 </li>
-<li><p>可分解为规模较小、简单的同类问题。</p>
+<li><p>  可分解为规模较小、简单的同类问题。</p>
 </li>
-<li><p>子问题之间相互独立。</p>
+<li><p>  子问题之间相互独立。</p>
 </li>
-<li><p>子问题的解可合并得到原问题的解。</p>
+<li><p>  子问题的解可合并得到原问题的解。</p>
 </li>
 </ul>
 <h4 id="Map-Reduce"><a href="#Map-Reduce" class="headerlink" title="Map Reduce"></a>Map Reduce</h4><h4 id="Fork-Join"><a href="#Fork-Join" class="headerlink" title="Fork Join"></a>Fork Join</h4><h3 id="流计算"><a href="#流计算" class="headerlink" title="流计算"></a>流计算</h3><h3 id="Actor"><a href="#Actor" class="headerlink" title="Actor"></a>Actor</h3><h3 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h3><h2 id="通信模型"><a href="#通信模型" class="headerlink" title="通信模型"></a>通信模型</h2><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -1784,9 +1756,9 @@
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
@@ -1802,9 +1774,9 @@
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
