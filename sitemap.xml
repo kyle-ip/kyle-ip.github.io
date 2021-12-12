@@ -639,14 +639,14 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/DB_reasons-why-select-star-is-bad-for-sql-performance.html</loc>
+    <loc>https://yipwinghong.github.io/2020-02-15_diary.html</loc>
     
     <lastmod>2021-06-21</lastmod>
     
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/2020-02-15_diary.html</loc>
+    <loc>https://yipwinghong.github.io/DB_reasons-why-select-star-is-bad-for-sql-performance.html</loc>
     
     <lastmod>2021-06-21</lastmod>
     
@@ -690,6 +690,13 @@
   </url>
   
   <url>
+    <loc>https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
+    <lastmod>2021-12-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/tags/Java/</loc>
     <lastmod>2021-12-12</lastmod>
     <changefreq>daily</changefreq>
@@ -698,13 +705,6 @@
   
   <url>
     <loc>https://yipwinghong.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2021-12-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://yipwinghong.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
     <lastmod>2021-12-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -739,13 +739,6 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/Go/</loc>
-    <lastmod>2021-12-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://yipwinghong.github.io/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/</loc>
     <lastmod>2021-12-12</lastmod>
     <changefreq>daily</changefreq>
@@ -753,7 +746,7 @@
   </url>
   
   <url>
-    <loc>https://yipwinghong.github.io/tags/Nginx/</loc>
+    <loc>https://yipwinghong.github.io/tags/Go/</loc>
     <lastmod>2021-12-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -761,6 +754,13 @@
   
   <url>
     <loc>https://yipwinghong.github.io/tags/Maven/</loc>
+    <lastmod>2021-12-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/tags/Nginx/</loc>
     <lastmod>2021-12-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
