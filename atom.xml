@@ -6,7 +6,7 @@
   <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-12-12T10:13:30.070Z</updated>
+  <updated>2021-12-14T15:18:37.200Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://yipwinghong.github.io/2021/12/10/Go_engineering-specification-design/"/>
     <id>https://yipwinghong.github.io/2021/12/10/Go_engineering-specification-design/</id>
     <published>2021-12-09T17:42:39.000Z</published>
-    <updated>2021-12-12T10:13:30.070Z</updated>
+    <updated>2021-12-14T15:18:37.200Z</updated>
     
     
     <summary type="html">关于 Go 工程化与企业级应用开发的总结，持续更新中。</summary>
@@ -59,7 +59,7 @@
     <link href="https://yipwinghong.github.io/2021/10/15/Go_concurrency_primitives/"/>
     <id>https://yipwinghong.github.io/2021/10/15/Go_concurrency_primitives/</id>
     <published>2021-10-15T11:42:39.000Z</published>
-    <updated>2021-12-09T16:58:04.443Z</updated>
+    <updated>2021-12-14T13:36:48.472Z</updated>
     
     
     <summary type="html">Go 标准库（sync）中提供了很多原生支持的并发原语，本文将简单讲解其基本用法。以及从 Go 标准库或第三方库扩展，实现更多复杂功能的并发原语。</summary>
