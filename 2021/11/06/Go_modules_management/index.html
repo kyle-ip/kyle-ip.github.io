@@ -464,80 +464,77 @@ height:100vh;
 </blockquote>
 <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>Go Modules 从 vgo 演变而来，是 Go 1.14 版本后官方建议的 Go 包管理方案，具备以下特点：</p>
 <ul>
-<li><p>  使包的管理更加简单。</p>
+<li><p>使包的管理更加简单。</p>
 </li>
-<li><p>  支持版本管理。</p>
+<li><p>支持版本管理。</p>
 </li>
-<li><p>  允许同一个模块多个版本共存。</p>
+<li><p>允许同一个模块多个版本共存。</p>
 </li>
-<li><p>  可校验依赖包的哈希值，确保包的一致性，增加安全性。</p>
+<li><p>可校验依赖包的哈希值，确保包的一致性，增加安全性。</p>
 </li>
-<li><p>  内置在几乎所有的 go 命令中，包括go get、go build、go install、go run、go test、go list 等。</p>
+<li><p>内置在几乎所有的 go 命令中，包括go get、go build、go install、go run、go test、go list 等。</p>
 </li>
-<li><p>  具有 Global Caching 特性，不同项目的相同模块版本，只会在服务器上缓存一份。</p>
+<li><p>具有 Global Caching 特性，不同项目的相同模块版本，只会在服务器上缓存一份。</p>
 </li>
 </ul>
 <p><strong>包</strong>（Package）是同一目录中编译的 Go 源文件的集合。在一个源文件中定义的函数、类型、变量和常量，对于同一包中的所有其他源文件可见。包括：</p>
 <ul>
-<li><p>  Go 标准包：在 Go 源码目录下随 Go 一起发布。</p>
+<li><p>Go 标准包：在 Go 源码目录下随 Go 一起发布。</p>
 </li>
-<li><p>  第三方包：由第三方提供，比如 github.com。</p>
+<li><p>第三方包：由第三方提供，比如 github.com。</p>
 </li>
-<li><p>  匿名包：只导入而不使用。只使用导入包产生的副作用，即引用包级别的变量、常量、结构体、接口、<code>init()</code> 函数等。</p>
+<li><p>匿名包：只导入而不使用。只使用导入包产生的副作用，即引用包级别的变量、常量、结构体、接口、<code>init()</code> 函数等。</p>
 </li>
-<li><p>  内部包：只用于项目内部，位于项目目录下。</p>
+<li><p>内部包：只用于项目内部，位于项目目录下。</p>
 </li>
 </ul>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="comment">// Go 标准包</span></span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第三方包</span></span><br><span class="line">    <span class="string">&quot;github.com/spf13/pflag&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 匿名包</span></span><br><span class="line">     _ <span class="string">&quot;github.com/jinzhu/gorm/dialects/mysql&quot;</span></span><br><span class="line"></span><br><span class="line">     <span class="comment">// 内部包</span></span><br><span class="line">    <span class="string">&quot;github.com/marmotedu/iam/internal/apiserver&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
 <p><strong>模块</strong>（Module）是存储在文件树中的包的集合，文件树根目录有 go.mod 文件，其定义了模块的名称及其依赖包，每个依赖包都需要指定导入路径和语义化版本（Semantic Versioning），通过导入路径和语义化版本准确地描述一个依赖。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls hello/</span><br><span class="line"><span class="meta">#</span><span class="bash"> go.mod  go.sum  hello.go  hello_test.go  world</span></span><br></pre></td></tr></table></figure>
-
 <p>Go Modules 使用 <code>go mod</code> 命令管理，常用的子命令：</p>
 <ul>
-<li><p>  download：下载 go.mod 文件中记录的所有依赖包。</p>
+<li><p>download：下载 go.mod 文件中记录的所有依赖包。</p>
 </li>
-<li><p>  edit：编辑 go.mod 文件。</p>
+<li><p>edit：编辑 go.mod 文件。</p>
 </li>
-<li><p>  graph：查看依赖结构。</p>
+<li><p>graph：查看依赖结构。</p>
 </li>
-<li><p>  init：把当前目录初始化为模块。</p>
+<li><p>init：把当前目录初始化为模块。</p>
 </li>
-<li><p>  tidy：添加丢失并移除无用的模块。</p>
+<li><p>tidy：添加丢失并移除无用的模块。</p>
 </li>
-<li><p>  vendor：将所有依赖包存到 vendor 目录下。</p>
+<li><p>vendor：将所有依赖包存到 vendor 目录下。</p>
 </li>
-<li><p>  verify：检查当前模块的依赖是否已经存储在本地下载的源代码缓存中、下载后是否有修改。</p>
+<li><p>verify：检查当前模块的依赖是否已经存储在本地下载的源代码缓存中、下载后是否有修改。</p>
 </li>
-<li><p>  why：查看为什么需要依赖某模块。</p>
+<li><p>why：查看为什么需要依赖某模块。</p>
 </li>
 </ul>
 <h2 id="模块下载"><a href="#模块下载" class="headerlink" title="模块下载"></a>模块下载</h2><p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_modules_management.assets/8b92e53cebd4373f8c41fdbe9328ba8d.jpg" alt="img"></p>
 <p>在 Go1.14 中仍然需要确保 Go Modules 特性处在打开状态。通过环境变量 <code>GO111MODULE</code> 开启或关闭（on/off），在 Go1.14 版本中默认值为 auto，即在 <code>$GOPATH/src</code> 下，且没有包含 go.mod 时则关闭 Go Modules，其他情况下都开启 Go Modules。</p>
 <h3 id="通过代理下载"><a href="#通过代理下载" class="headerlink" title="通过代理下载"></a>通过代理下载</h3><p>使用环境变量 <code>GOPROXY</code> 设置 Go 模块代理，比如：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 默认值为 https://proxy.golang.org,direct</span></span><br><span class="line">export GOPROXY=&#x27;https://proxy.golang.org,https://goproxy.cn,direct&#x27;</span><br></pre></td></tr></table></figure>
-
 <ul>
-<li><p>  其中 direct 表示 Go 回源到模块的源地址（比如 GitHub 等) 去抓取 ，当值列表中上一个代理返回 404 或 410，会自动尝试列表中的下一个。遇见 direct 时回源，遇见 EOF 时终止，并抛出类似 invalid version: unknown revision… 的错误。</p>
+<li><p>其中 direct 表示 Go 回源到模块的源地址（比如 GitHub 等) 去抓取 ，当值列表中上一个代理返回 404 或 410，会自动尝试列表中的下一个。遇见 direct 时回源，遇见 EOF 时终止，并抛出类似 invalid version: unknown revision… 的错误。</p>
 </li>
-<li><p>  当 <code>GOPROXY=off</code>，则不尝试从代理服务器下载模块。</p>
+<li><p>当 <code>GOPROXY=off</code>，则不尝试从代理服务器下载模块。</p>
 </li>
-<li><p>  如果需要从私有仓库拉取依赖（从代理服务器访问会报错），则要设置将这些模块添加到环境变量 <code>GOPRIVATE </code> 中（即 <code>GONOPROXY</code> 和 <code>GONOSUMDB</code> 的默认值）。</p>
+<li><p>如果需要从私有仓库拉取依赖（从代理服务器访问会报错），则要设置将这些模块添加到环境变量 <code>GOPRIVATE</code> 中（即 <code>GONOPROXY</code> 和 <code>GONOSUMDB</code> 的默认值）。</p>
 </li>
 </ul>
 <p>使用代理除了解决墙的问题，还有以下优点：</p>
 <ul>
-<li><p>  代理会永久缓存和存储所有的依赖，依赖一经缓存则不可更改。因此不需要再维护 vendor 目录，同时节省空间。</p>
+<li><p>代理会永久缓存和存储所有的依赖，依赖一经缓存则不可更改。因此不需要再维护 vendor 目录，同时节省空间。</p>
 </li>
-<li><p>  依赖永久存在于代理服务器，即使模块从互联网上被删除，也可以通过代理服务器获取。</p>
+<li><p>依赖永久存在于代理服务器，即使模块从互联网上被删除，也可以通过代理服务器获取。</p>
 </li>
-<li><p>  一旦将 Go 模块存储在 Go 代理服务器中就无法覆盖或删除，可保护开发者免受注入相同版本恶意代码带来的攻击。</p>
+<li><p>一旦将 Go 模块存储在 Go 代理服务器中就无法覆盖或删除，可保护开发者免受注入相同版本恶意代码带来的攻击。</p>
 </li>
-<li><p>  通过 HTTP 的方式从代理服务器下载依赖，无需通过 VCS 工具下载。</p>
+<li><p>通过 HTTP 的方式从代理服务器下载依赖，无需通过 VCS 工具下载。</p>
 </li>
-<li><p>  代理通过 HTTP 独立提供源代码（.zip 存档）和 go.mod，下载和构建 Go 模块的速度更快；可以独立获取 go.mod（无需获取整个仓库），解决依赖也更快。</p>
+<li><p>代理通过 HTTP 独立提供源代码（.zip 存档）和 go.mod，下载和构建 Go 模块的速度更快；可以独立获取 go.mod（无需获取整个仓库），解决依赖也更快。</p>
 </li>
-<li><p>  开发者可自己设置 Go 模块代理，以对依赖包有更多的控制，并预防 VCS 停机导致下载失败。</p>
+<li><p>开发者可自己设置 Go 模块代理，以对依赖包有更多的控制，并预防 VCS 停机导致下载失败。</p>
 </li>
 </ul>
 <h3 id="指定版本号下载"><a href="#指定版本号下载" class="headerlink" title="指定版本号下载"></a>指定版本号下载</h3><p>使用 <code>go get &lt;package[@version]&gt;</code> 命令下载模块的指定版本，用法：</p>
@@ -545,59 +542,57 @@ height:100vh;
 <p>使用 <code>go get -u</code> 可更新到 lastest 版本，或 <code>go get -u=patch</code> 更新到最小版本。</p>
 <h3 id="按最小版本下载"><a href="#按最小版本下载" class="headerlink" title="按最小版本下载"></a>按最小版本下载</h3><p>假设模块 A 同时依赖于模块 B 和模块 C，其中模块 B 依赖了模块 D 的 v1.3 版本、模块 C 依赖了模块 D 的 v1.4 版本，由于重复引用的模块 D（v1.3、v1.4），最终选用了 D 的 v1.4 版本。</p>
 <ul>
-<li><p>  语义化版本的控制：因为模块 D 的 v1.3 和 v1.4 版本变更都属于次版本号的变更，v1.4 必须向下兼容 v1.3，因此选择高版本的 v1.4。</p>
+<li><p>语义化版本的控制：因为模块 D 的 v1.3 和 v1.4 版本变更都属于次版本号的变更，v1.4 必须向下兼容 v1.3，因此选择高版本的 v1.4。</p>
 </li>
-<li><p>  模块导入路径的规范：如果主版本号不同，模块导入路径不一样。如果出现不兼容的情况，比如主版本号从 v1 变为 v2，模块的导入路径改变，不会影响 v1 版本。</p>
+<li><p>模块导入路径的规范：如果主版本号不同，模块导入路径不一样。如果出现不兼容的情况，比如主版本号从 v1 变为 v2，模块的导入路径改变，不会影响 v1 版本。</p>
 </li>
 </ul>
 <h3 id="go-mod"><a href="#go-mod" class="headerlink" title="go.mod"></a>go.mod</h3><h4 id="语法描述"><a href="#语法描述" class="headerlink" title="语法描述"></a>语法描述</h4><p>Go Modules 核心文件，包含：</p>
 <ul>
-<li><p>  module：定义当前项目的模块路径。</p>
+<li><p>module：定义当前项目的模块路径。</p>
 </li>
-<li><p>  go：设置预期的 Go 版本，目前起标识作用。</p>
+<li><p>go：设置预期的 Go 版本，目前起标识作用。</p>
 </li>
-<li><p>  require：设置特定的模块版本，格式为 <code>&lt;导入包路径&gt; &lt;版本&gt; [// indirect]</code>。</p>
+<li><p>require：设置特定的模块版本，格式为 <code>&lt;导入包路径&gt; &lt;版本&gt; [// indirect]</code>。</p>
 </li>
-<li><p>  exclude：从使用中排除特定的模块版本，比如当知道模块的某个版本有严重问题。</p>
+<li><p>exclude：从使用中排除特定的模块版本，比如当知道模块的某个版本有严重问题。</p>
 </li>
-<li><p>  replace：将一个模块版本替换为另外一个模块版本，格式为 <code>$module =&gt; $newmodule</code>（在代码中的导入路径仍然为 <code>$module</code>，且不会影响主模块依赖的其它模块）。<code>$newmodule</code> 可以是本地磁盘的相对路径（<code>github.com/gin-gonic/gin =&gt; ./gin</code>）或绝对路径（<code>github.com/gin-gonic/gin =&gt; /home/lk/gin</code>）、网络路径（ <code>golang.org/x/text v0.3.2 =&gt; github.com/golang/text v0.3.2</code>）。</p>
+<li><p>replace：将一个模块版本替换为另外一个模块版本，格式为 <code>$module =&gt; $newmodule</code>（在代码中的导入路径仍然为 <code>$module</code>，且不会影响主模块依赖的其它模块）。<code>$newmodule</code> 可以是本地磁盘的相对路径（<code>github.com/gin-gonic/gin =&gt; ./gin</code>）或绝对路径（<code>github.com/gin-gonic/gin =&gt; /home/lk/gin</code>）、网络路径（ <code>golang.org/x/text v0.3.2 =&gt; github.com/golang/text v0.3.2</code>）。</p>
 </li>
 </ul>
 <p>replace 的应用场景：</p>
 <ul>
-<li><p>  开启 Go Modules 后，缓存依赖包是只读的，在日常开发中可能需要修改依赖包代码进行调试，这时可将依赖包另存到新位置，并在 go.mod 中替换。</p>
+<li><p>开启 Go Modules 后，缓存依赖包是只读的，在日常开发中可能需要修改依赖包代码进行调试，这时可将依赖包另存到新位置，并在 go.mod 中替换。</p>
 </li>
-<li><p>  如果依赖包在 Go 命令运行时无法下载，可通过其他途径下载该依赖包、上传到开发构建机，并在 go.mod 中替换。</p>
+<li><p>如果依赖包在 Go 命令运行时无法下载，可通过其他途径下载该依赖包、上传到开发构建机，并在 go.mod 中替换。</p>
 </li>
-<li><p>  在项目开发初期，A 项目依赖 B 项目的包，但 B 项目因为种种原因没有 push 到仓库，也可以在 go.mod 中把依赖包替换为 B 项目本地磁盘路径。</p>
+<li><p>在项目开发初期，A 项目依赖 B 项目的包，但 B 项目因为种种原因没有 push 到仓库，也可以在 go.mod 中把依赖包替换为 B 项目本地磁盘路径。</p>
 </li>
-<li><p>  在国内访问 <code>golang.org/x</code> 的各个包都需要翻墙，可以在 go.mod 中使用 replace，替换成 GitHub 上对应的库，比如 <code>golang.org/x/text v0.3.0 =&gt; github.com/golang/text v0.3.0</code>。</p>
+<li><p>在国内访问 <code>golang.org/x</code> 的各个包都需要翻墙，可以在 go.mod 中使用 replace，替换成 GitHub 上对应的库，比如 <code>golang.org/x/text v0.3.0 =&gt; github.com/golang/text v0.3.0</code>。</p>
 </li>
 </ul>
 <h4 id="版本号"><a href="#版本号" class="headerlink" title="版本号"></a>版本号</h4><p>Go Modules 要求模块的版本号格式为 <code>v&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code>，当 <code>&lt;major&gt;</code> 版本号大于 1，其版本号要体现在模块名字中（比如模块 <code>github.com/blang/semver</code> 版本号增长到 <code>v3.x.x</code>，则模块名应为 <code>github.com/blang/semver/v3</code>）。</p>
 <p>实际上版本号有多种格式：</p>
 <ul>
-<li><p>  如果模块具有符合语义化版本格式的 tag，会直接展示 tag 的值，比如 <code>github.com/AlekSi/pointer v1.1.0</code>。</p>
+<li><p>如果模块具有符合语义化版本格式的 tag，会直接展示 tag 的值，比如 <code>github.com/AlekSi/pointer v1.1.0</code>。</p>
 </li>
-<li><p>  除了 v0 和 v1 外，主版本号必须显式出现在模块路径的尾部，比如 <code>github.com/appleboy/gin-jwt/v2 v2.6.3</code>。</p>
+<li><p>除了 v0 和 v1 外，主版本号必须显式出现在模块路径的尾部，比如 <code>github.com/appleboy/gin-jwt/v2 v2.6.3</code>。</p>
 </li>
-<li><p>  没有 tag 的模块，Go 命令会选择 master 分支上最新的 commit，并根据 commit 时间和哈希值生成符合语义化版本的版本号，比如 <code>github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535</code>。</p>
+<li><p>没有 tag 的模块，Go 命令会选择 master 分支上最新的 commit，并根据 commit 时间和哈希值生成符合语义化版本的版本号，比如 <code>github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535</code>。</p>
 </li>
-<li><p>  当模块名字跟版本不符合规范，比如模块名字为 <code>github.com/blang/semver</code>，但是版本为 v3.5.0（正常应该是 <code>github.com/blang/semver/v3</code>），go 会在 go.mod 的版本号后加 <code>+incompatible</code> 表示。</p>
+<li><p>当模块名字跟版本不符合规范，比如模块名字为 <code>github.com/blang/semver</code>，但是版本为 v3.5.0（正常应该是 <code>github.com/blang/semver/v3</code>），go 会在 go.mod 的版本号后加 <code>+incompatible</code> 表示。</p>
 </li>
-<li><p>  如果 go.mod 中的包是间接依赖，则会添加 <code>// indirect</code> 注释，比如 <code>github.com/golangci/golangci-lint v1.30.0 // indirect</code>。</p>
-</li>
+<li>如果 go.mod 中的包是间接依赖，则会添加 <code>// indirect</code> 注释，比如 <code>github.com/golangci/golangci-lint v1.30.0 // indirect</code>。</li>
 </ul>
 <p>出现间接依赖时：</p>
 <ul>
-<li><p>  <strong>直接依赖未启用 Go Modules</strong>：如果模块 A 依赖模块 B，模块 B 依赖 B1 和 B2，但是 B 没有 go.mod 文件，则 B1 和 B2 会记录到 A 的 go.mod 文件中，并在最后加上 <code>// indirect</code>。</p>
+<li><p><strong>直接依赖未启用 Go Modules</strong>：如果模块 A 依赖模块 B，模块 B 依赖 B1 和 B2，但是 B 没有 go.mod 文件，则 B1 和 B2 会记录到 A 的 go.mod 文件中，并在最后加上 <code>// indirect</code>。</p>
 </li>
-<li><p>  <strong>直接依赖 go.mod 文件中缺失部分依赖</strong>：如果模块 A 依赖模块 B，模块 B 依赖 B1 和 B2，B 有 go.mod 文件，但是只有 B1 被记录在 B 的 go.mod 文件中，此时 B2 会被记录到 A 的 go.mod 文件中，并在最后加上 <code>// indirect</code>。</p>
+<li><p><strong>直接依赖 go.mod 文件中缺失部分依赖</strong>：如果模块 A 依赖模块 B，模块 B 依赖 B1 和 B2，B 有 go.mod 文件，但是只有 B1 被记录在 B 的 go.mod 文件中，此时 B2 会被记录到 A 的 go.mod 文件中，并在最后加上 <code>// indirect</code>。</p>
 </li>
 </ul>
 <h4 id="修改方法"><a href="#修改方法" class="headerlink" title="修改方法"></a>修改方法</h4><p>建议使用 <code>go mod</code> 子命令修改：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">go mod edit -fmt  # go.mod 格式化</span><br><span class="line">go mod edit -require=golang.org/x/text@v0.3.3  # 添加一个依赖</span><br><span class="line">go mod edit -droprequire=golang.org/x/text # require的反向操作，移除一个依赖</span><br><span class="line">go mod edit -replace=github.com/gin-gonic/gin=/home/colin/gin # 替换模块版本</span><br><span class="line">go mod edit -dropreplace=github.com/gin-gonic/gin # replace的反向操作</span><br><span class="line">go mod edit -exclude=golang.org/x/text@v0.3.1 # 排除一个特定的模块版本</span><br><span class="line">go mod edit -dropexclude=golang.org/x/text@v0.3.1 # exclude的反向操作</span><br></pre></td></tr></table></figure>
-
 <h3 id="go-sum"><a href="#go-sum" class="headerlink" title="go.sum"></a>go.sum</h3><p>Go 根据 go.mod 文件记载的依赖包及其版本下载包源码，为避免下载的/缓存在本地的包被篡改、保证包的一致性，引入了 go.sum 文件记录每个依赖包（间接和直接）的 hash 值。</p>
 <p>go.sum 每行记录由模块名、版本、哈希算法和哈希值组成，如 <code>&lt;module&gt; &lt;version&gt;[/go.mod] &lt;algorithm&gt;:&lt;hash&gt;</code>。每个依赖包包含两条记录，即依赖包所有文件的哈希值和该依赖包 go.mod 的哈希值：在计算依赖树时不必下载完整的依赖包版本，只根据 go.mod 即可计算依赖树，但如果没有 go.mod 则只有一条记录。</p>
 <blockquote>
@@ -606,37 +601,30 @@ height:100vh;
 </blockquote>
 <h2 id="模块管理"><a href="#模块管理" class="headerlink" title="模块管理"></a>模块管理</h2><p>创建一个项目：hello/hello.go</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Hello</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;Hello, world.&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>hello/hello_test.go</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;testing&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestHello</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">  want := <span class="string">&quot;Hello, world.&quot;</span></span><br><span class="line">  <span class="keyword">if</span> got := Hello(); got != want &#123;</span><br><span class="line">    t.Errorf(<span class="string">&quot;Hello() = %q, want %q&quot;</span>, got, want)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="配置Go-Modules"><a href="#配置Go-Modules" class="headerlink" title="配置Go Modules"></a>配置Go Modules</h3><p>在 <code>$HOME/.bashrc</code> 启用 Go Modules 配置：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export GO111MODULE=on</span><br><span class="line">export GOPROXY=https://goproxy.cn,direct</span><br><span class="line"><span class="meta">#</span><span class="bash"> Checksum Database 国内也可能会访问失败</span></span><br><span class="line">export GOSUMDB=off</span><br></pre></td></tr></table></figure>
-
 <h3 id="创建模块"><a href="#创建模块" class="headerlink" title="创建模块"></a>创建模块</h3><p>模块初始化：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go mod init github.com/marmotedu/gopractise-demo/modules/hello</span><br></pre></td></tr></table></figure>
-
 <p>如果不指定模块名称，可根据注释自行推导：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello <span class="comment">// import &quot;github.com/marmotedu/gopractise-demo/modules/hello&quot;</span></span><br></pre></td></tr></table></figure>
-
 <p>如果没有注释且项目位于 <code>GOPATH</code> 下，则模块名称为根目录绝对路径去掉 <code>$GOPATH/src</code> 后的路径名。</p>
 <p>如果要新增子目录创建新 package，则 package 的导入路径自动为模块名/子目录名：<code>github.com/marmotedu/gopractise-demo/modules/hello/</code>。</p>
 <h3 id="增加依赖"><a href="#增加依赖" class="headerlink" title="增加依赖"></a>增加依赖</h3><p>修改源码：hello/hello.go</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;rsc.io/quote&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Hello</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">  <span class="keyword">return</span> quote.Hello()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>执行测试：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">go test</span><br><span class="line"><span class="meta">#</span><span class="bash"> go: finding module <span class="keyword">for</span> package rsc.io/quote</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> go: downloading rsc.io/quote v1.5.2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> go: found rsc.io/quote <span class="keyword">in</span> rsc.io/quote v1.5.2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> go: downloading rsc.io/sampler v1.3.0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> PASS</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ok    github.com/google/addlicense/golang/src/github.com/marmotedu/gopractise-demo/modules/hello  0.003s</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看 go.mod 文件，可见依赖已被添加。</span></span><br><span class="line">cat go.mod</span><br><span class="line"><span class="meta">#</span><span class="bash"> module github.com/marmotedu/gopractise-demo/modules/hello</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> go 1.14</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> require rsc.io/quote v1.5.2</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 再次执行测试：</span></span><br><span class="line">go test</span><br><span class="line"><span class="meta">#</span><span class="bash"> PASS</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ok    github.com/marmotedu/gopractise-demo/modules/hello  0.003s</span></span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>  解析源码时识别到需要导入模块，会在 go.mod 文件中查询该模块的版本，如果有指定版本，就导入指定的版本；否则自动根据模块的导入路径安装模块，并将模块和其最新的版本写入 go.mod 文件中。</p>
 </blockquote>
 <p>执行源码解析相关的命令（test、build、install 等）时加上 <code>-mod</code> 选项：</p>
 <ul>
-<li><p>  readonly：不更新 go.mod，任何可能会导致 go.mod 变更的操作都会失败。通常用来检查 go.mod 文件是否需要更新（CI 或者测试场景）。</p>
+<li><p>readonly：不更新 go.mod，任何可能会导致 go.mod 变更的操作都会失败。通常用来检查 go.mod 文件是否需要更新（CI 或者测试场景）。</p>
 </li>
-<li><p>  vendor：从项目顶层目录下的 vendor（而不是从模块缓存中）中导入包，需要确保 vendor 包完整准确。</p>
+<li><p>vendor：从项目顶层目录下的 vendor（而不是从模块缓存中）中导入包，需要确保 vendor 包完整准确。</p>
 </li>
-<li><p>  mod：从模块缓存中导入包（即使项目根目录下有 vendor 目录）。</p>
+<li><p>mod：从模块缓存中导入包（即使项目根目录下有 vendor 目录）。</p>
 </li>
 </ul>
 <blockquote>
@@ -644,37 +632,27 @@ height:100vh;
 </blockquote>
 <h3 id="查看依赖"><a href="#查看依赖" class="headerlink" title="查看依赖"></a>查看依赖</h3><p>包括直接依赖和间接依赖。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">go list -m all</span><br><span class="line"><span class="meta">#</span><span class="bash"> github.com/marmotedu/gopractise-demo/modules/hello</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> rsc.io/quote v1.5.2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> rsc.io/sampler v1.3.0</span></span><br></pre></td></tr></table></figure>
-
 <p>查看所有可用版本：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go list -m -versions rsc.io/sampler</span><br><span class="line"><span class="meta">#</span><span class="bash"> rsc.io/sampler v1.0.0 v1.2.0 v1.2.1 v1.3.0 v1.3.1 v1.99.99</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="更新依赖"><a href="#更新依赖" class="headerlink" title="更新依赖"></a>更新依赖</h3><p>默认更新到最新版本、且自动更新 go.mod 版本，同时会自动测试。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">go get golang.org/x/text</span><br><span class="line"><span class="meta">#</span><span class="bash"> go: golang.org/x/text upgrade =&gt; v0.3.3</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> $ go <span class="built_in">test</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> PASS</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ok    github.com/marmotedu/gopractise-demo/modules/hello  0.003s</span></span><br></pre></td></tr></table></figure>
-
 <p>其它参数：</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_modules_management.assets/2b80e94c1e91bb18dea9c20695b25bf6.jpg" alt="img"></p>
 <h3 id="添加新的-major-版本依赖"><a href="#添加新的-major-版本依赖" class="headerlink" title="添加新的 major 版本依赖"></a>添加新的 major 版本依赖</h3><p>修改源码：hello/hello.go</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">&quot;rsc.io/quote&quot;</span></span><br><span class="line">  quoteV3 <span class="string">&quot;rsc.io/quote/v3&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Hello</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">  <span class="keyword">return</span> quote.Hello()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Proverb</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">  <span class="keyword">return</span> quoteV3.Concurrency()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>hello_test.go</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestProverb</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">    want := <span class="string">&quot;Concurrency is not parallelism.&quot;</span></span><br><span class="line">    <span class="keyword">if</span> got := Proverb(); got != want &#123;</span><br><span class="line">        t.Errorf(<span class="string">&quot;Proverb() = %q, want %q&quot;</span>, got, want)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>测试触发依赖更新，通过后可见当前模块同时依赖了同一个模块的不同版本：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">go list -m rsc.io/q...</span><br><span class="line"><span class="meta">#</span><span class="bash"> rsc.io/quote v1.5.2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> rsc.io/quote/v3 v3.1.0</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="升级到不兼容的版本"><a href="#升级到不兼容的版本" class="headerlink" title="升级到不兼容的版本"></a>升级到不兼容的版本</h3><p>之前使用 <code>rsc.io/quote v1</code> 版本的 <code>Hello()</code> 函数。按照语义化版本规则，如果升级 major 版本可能面临接口不兼容的问题、需要变更代码。</p>
 <p>查看 rsc.io/quote/v3 函数：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">go doc rsc.io/quote/v3</span><br><span class="line"><span class="meta">#</span><span class="bash"> package quote // import <span class="string">&quot;github.com/google/addlicense/golang/pkg/mod/rsc.io/quote/v3@v3.1.0&quot;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Package quote collects pithy sayings.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> func Concurrency() string</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> func GlassV3() string</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> func GoV3() string</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> func HelloV3() string</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> func OptV3() string</span></span><br></pre></td></tr></table></figure>
-
 <p>由于已统一模块到一个版本，无需再重命名：hello/hello.go</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">&quot;rsc.io/quote/v3&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Hello</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">  <span class="keyword">return</span> quote.HelloV3()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Proverb</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">  <span class="keyword">return</span> quote.Concurrency()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="删除不需要的依赖"><a href="#删除不需要的依赖" class="headerlink" title="删除不需要的依赖"></a>删除不需要的依赖</h3><p>只需要执行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">go mod tidy</span><br><span class="line"></span><br><span class="line">cat go.mod</span><br><span class="line"><span class="meta">#</span><span class="bash"> module github.com/marmotedu/gopractise-demo/modules/hello</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> go 1.14</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> require (</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   golang.org/x/text v0.3.3 // indirect</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   rsc.io/quote/v3 v3.1.0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   rsc.io/sampler v1.3.1 // indirect</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> )</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="使用-vendor"><a href="#使用-vendor" class="headerlink" title="使用 vendor"></a>使用 vendor</h3><p>如果要把所有依赖都保存起来，在 Go 命令执行时不再下载，可以使用 vendor 把当前项目的所有依赖都保存在项目根目录的 vendor 目录下，并创建 vendor/modules.txt 文件记录包和模块的版本信息：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">go mod vendor</span><br><span class="line"></span><br><span class="line">ls</span><br><span class="line"><span class="meta">#</span><span class="bash"> go.mod  go.sum  hello.go  hello_test.go  vendor  world</span></span><br></pre></td></tr></table></figure>
-
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
     <!-- license  -->
@@ -1853,27 +1831,27 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     

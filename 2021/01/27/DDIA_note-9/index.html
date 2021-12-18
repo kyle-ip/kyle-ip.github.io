@@ -535,7 +535,6 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
-
 <p>数据存储环境中可能存在各种出错的情况：软硬件失效、应用程序崩溃、节点间链接中断、多客户端并发写入数据覆盖、数据部分更新、边界条件竞争等。通过事务（成功提交或失败回滚）可以简化容错机制，使应用程序安全地重试，不必担心部分失败地情况，但也意味着牺牲系统部分性能和可用性。</p>
 <p>几乎所有的关系数据库和一些非关系数据库都支持事务处理，比如 MySQL、PostgreSQL、Oracle、SQL Server 等系统事务实现与 IBM System R 非常相似。</p>
 <p>NoSQL 则提供了新的数据模型、内置的复制和分区等手段改进关系模型。同时放弃了事务支持，或替换为更弱的保证。</p>
@@ -682,9 +681,7 @@ height:100vh;
 </li>
 </ul>
 <p>使用一级封锁协议可以解决 <strong>更新丢失</strong> 问题。</p>
-<h4 id="原子写操作"><a href="#原子写操作" class="headerlink" title="原子写操作"></a>原子写操作</h4><p>数据库内置原子操作可避免“读-修改-写回”操作，确保并发安全比如：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UPDATE <span class="keyword">table</span> </span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">value</span> <span class="operator">=</span> <span class="keyword">value</span> <span class="operator">+</span> <span class="number">1</span> </span><br><span class="line"><span class="keyword">WHERE</span> key <span class="operator">=</span> <span class="string">&#x27;foo&#x27;</span>; </span><br></pre></td></tr></table></figure>
-
+<h4 id="原子写操作"><a href="#原子写操作" class="headerlink" title="原子写操作"></a>原子写操作</h4><p>数据库内置原子操作可避免“读-修改-写回”操作，确保并发安全比如：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UPDATE <span class="keyword">table</span> </span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">value</span> <span class="operator">=</span> <span class="keyword">value</span> <span class="operator">+</span> <span class="number">1</span> </span><br><span class="line"><span class="keyword">WHERE</span> key <span class="operator">=</span> <span class="string">&#x27;foo&#x27;</span>; </span><br></pre></td></tr></table></figure></p>
 <ul>
 <li><p>通常采用对读取对象加独占锁实现，确保更新提交前不会被其他事务读取，有时也被称为 <strong>游标稳定性</strong>。另一种实现方式是强制所有原子操作都在单线程上执行。</p>
 </li>
@@ -696,7 +693,6 @@ height:100vh;
 <p>可借助快照级别隔离高效执行检查，如 PostgreSQL 的可重复读、Oracle 的可串行化、SQL Server 的快照级别隔离都能检测冲突并中止违规事务，但 MySQL InnoDB 的可重复读不支持。</p>
 <h4 id="原子比较和设置"><a href="#原子比较和设置" class="headerlink" title="原子比较和设置"></a>原子比较和设置</h4><p>对于不支持事务的数据库，有时会支持原子“比较和设置”操作以避免更新丢失：只有在上次读取的数据没有发生变化时才允许更新，否则回退到“读-修改-写回”方式：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UPDATE <span class="keyword">table</span></span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">value</span> <span class="operator">=</span> <span class="string">&#x27;new content&#x27;</span></span><br><span class="line"><span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="string">&#x27;id&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> <span class="keyword">value</span> <span class="operator">=</span> <span class="string">&#x27;old content&#x27;</span></span><br></pre></td></tr></table></figure>
-
 <h4 id="冲突解决与复制"><a href="#冲突解决与复制" class="headerlink" title="冲突解决与复制"></a>冲突解决与复制</h4><p>对于多副本的数据库，由于多节点上的数据副本、不同的节点可能会并发修改数据，必须采取一些额外的措施来防止丢失更新。</p>
 <ul>
 <li><p>加锁和原子修改都有个前提即只有一个最新的数据副本。多主节点或者无主节点的多副本数据库支持多个并发写，且通常以异步方式来同步更新，会有多个最新的数据副本，所以加锁和原子修改不适用。</p>
@@ -722,7 +718,6 @@ height:100vh;
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span> TRANSACTION;</span><br><span class="line"></span><br><span class="line"><span class="comment">--- FOR UPDATE 会通知数据库对返回的所有结果自动加锁</span></span><br><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">WHERE</span> ... <span class="keyword">FOR</span> UPDATE;</span><br><span class="line"></span><br><span class="line">UPDATE ... <span class="keyword">WHERE</span> ...;</span><br><span class="line"></span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
-
 <h4 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h4><p>写倾斜主要出现在两个事务请求的数据范围存在重叠，或两个事务都可单独安全执行、但无法叠加执行的情况，这种情况无法通过对单对象加锁解决。其出现的模式：</p>
 <ul>
 <li><p>访问满足条件的行。</p>
@@ -2047,27 +2042,27 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
