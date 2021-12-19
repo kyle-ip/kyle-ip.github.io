@@ -6,7 +6,7 @@
   <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-12-16T13:37:56.604Z</updated>
+  <updated>2021-12-19T08:51:35.372Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://yipwinghong.github.io/2021/12/10/Go_engineering-specification-design/"/>
     <id>https://yipwinghong.github.io/2021/12/10/Go_engineering-specification-design/</id>
     <published>2021-12-09T17:42:39.000Z</published>
-    <updated>2021-12-16T13:37:56.604Z</updated>
+    <updated>2021-12-19T08:51:35.372Z</updated>
     
     
     <summary type="html">关于 Go 工程化与企业级应用开发的总结，持续更新中。</summary>
@@ -40,7 +40,7 @@
     <link href="https://yipwinghong.github.io/2021/11/06/Go_modules_management/"/>
     <id>https://yipwinghong.github.io/2021/11/06/Go_modules_management/</id>
     <published>2021-11-06T12:42:39.000Z</published>
-    <updated>2021-11-05T16:47:18.308Z</updated>
+    <updated>2021-12-18T13:59:46.441Z</updated>
     
     
     <summary type="html">使用 Go Modules 实现 Go 包管理。</summary>
