@@ -457,11 +457,11 @@ height:100vh;
     <article class="article-entry">
         <h1 id="《凤凰架构》阅读笔记（五）：服务构建与流量治理"><a href="#《凤凰架构》阅读笔记（五）：服务构建与流量治理" class="headerlink" title="《凤凰架构》阅读笔记（五）：服务构建与流量治理"></a>《凤凰架构》阅读笔记（五）：服务构建与流量治理</h1><p>微服务架构是通过服务实现独立自治的组件，相比起在编译期静态链接到程序中的类库（Library），服务（Service）在进程间通过调用远程方法来实现功能，需要解决三大问题：</p>
 <ul>
-<li><p>消费者：如何定位服务提供者。</p>
+<li><p>  消费者：如何定位服务提供者。</p>
 </li>
-<li><p>生产者：以何种形式，暴露或隐藏内部服务，如何分配请求。</p>
+<li><p>  生产者：以何种形式，暴露或隐藏内部服务，如何分配请求。</p>
 </li>
-<li><p>调用过程：流量调度、服务质量与可靠性。</p>
+<li><p>  调用过程：流量调度、服务质量与可靠性。</p>
 </li>
 </ul>
 <h2 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h2><p>远程服务调用通过 <strong>全限定名</strong>（FQDN，域名+主机名，定位网络中的主机）、<strong>端口号</strong>（定位 TCP/UDP 服务程序）与 <strong>服务标识</strong>（定位程序中的方法入口）定位服务远程服务的精确坐标。</p>
@@ -470,30 +470,30 @@ height:100vh;
 <ul>
 <li><p><strong>服务注册</strong>：服务启动时应通过某些形式（如调用 API、产生事件消息、在 ZooKeeper/Etcd 的指定位置记录、存入数据库等）将自身坐标通知到服务注册中心。</p>
 <ul>
-<li><p>自注册：由应用程序本身来完成，比如 Spring Cloud 的<code>@EnableEurekaClient</code> 注解；</p>
+<li><p>  自注册：由应用程序本身来完成，比如 Spring Cloud 的<code>@EnableEurekaClient</code> 注解；</p>
 </li>
-<li><p>第三方注册：由容器编排框架或第三方注册工具来完成，比如 Kubernetes 和 Registrator。</p>
+<li><p>  第三方注册：由容器编排框架或第三方注册工具来完成，比如 Kubernetes 和 Registrator。</p>
 </li>
 </ul>
 </li>
-<li><p><strong>服务维护</strong>：服务发现框架保证服务列表的正确性，避免告知消费者服务的坐标后得到的服务无法使用。通过多种协议（HTTP、TCP 等）、多种方式（长连接、心跳、探针、进程状态等）监控服务健康状态，将不健康的服务从服务注册表中剔除。</p>
+<li><p>  <strong>服务维护</strong>：服务发现框架保证服务列表的正确性，避免告知消费者服务的坐标后得到的服务无法使用。通过多种协议（HTTP、TCP 等）、多种方式（长连接、心跳、探针、进程状态等）监控服务健康状态，将不健康的服务从服务注册表中剔除。</p>
 </li>
-<li><p><strong>服务发现</strong>：消费者从服务发现框架中，把符号（譬如 Eureka 中的 ServiceID、Nacos 中的服务名、或者通用的 FQDN）转换为服务实际坐标的过程，该过程一般通过 HTTP API 请求或 DNS Lookup 操作完成，也能通过诸如 Kubernetes 注入环境变量等方式实现。</p>
+<li><p>  <strong>服务发现</strong>：消费者从服务发现框架中，把符号（譬如 Eureka 中的 ServiceID、Nacos 中的服务名、或者通用的 FQDN）转换为服务实际坐标的过程，该过程一般通过 HTTP API 请求或 DNS Lookup 操作完成，也能通过诸如 Kubernetes 注入环境变量等方式实现。</p>
 </li>
 </ul>
 <p>以及其它可选功能：负载均衡、流量管控、键值存储、元数据管理、业务分组等。</p>
 <p>服务发现功能需要分布式部署，就要在可用性和可靠性之间取舍。但服务发现被所有服务依赖、且不依赖于其它服务（类似配置中心，因此两者功能可以集成在一起），一旦崩溃则整个系统都不可用，因此必须兼顾两者。两种实现方法：</p>
 <ul>
-<li><p>Eureka 优先保证高可用性。异步复制数据，新服务注册时在该服务发现节点宣告服务状态可见，但不保证其他节点上何时达到一致。旧服务下线或断网只由超时机制来实现从服务注册表中移除，而不会实时同步变动信息。服务端和客户端持有基于 TTL 机制更新的注册表缓存，即使注册中心崩溃仍维持最低限度的可用。这样对于节点关系相对固定，服务不会频繁上下线的系统很合适，以较小的同步代价换取了最高的可用性；当客户端拿到已发生变动的旧地址，也能通过 Ribbon 和 Hystrix 实现故障转移（Failover）或快速失败（Failfast）。</p>
+<li><p>  Eureka 优先保证高可用性。异步复制数据，新服务注册时在该服务发现节点宣告服务状态可见，但不保证其他节点上何时达到一致。旧服务下线或断网只由超时机制来实现从服务注册表中移除，而不会实时同步变动信息。服务端和客户端持有基于 TTL 机制更新的注册表缓存，即使注册中心崩溃仍维持最低限度的可用。这样对于节点关系相对固定，服务不会频繁上下线的系统很合适，以较小的同步代价换取了最高的可用性；当客户端拿到已发生变动的旧地址，也能通过 Ribbon 和 Hystrix 实现故障转移（Failover）或快速失败（Failfast）。</p>
 </li>
-<li><p>Consul 优先保证高可靠性。采用 <a target="_blank" rel="noopener" href="https://icyfenix.cn/distribution/consensus/raft.html">Raft 算法</a>，要求多数派节点写入成功后才算完成服务注册或变动，保证在集群外部读取结果必然一致；同时采用 Gossip 协议，支持多数据中心间大规模服务同步。由于它不像 Netflix OSS 全家桶式的微服务组件，无法为错误兜底。</p>
+<li><p>  Consul 优先保证高可靠性。采用 <a target="_blank" rel="noopener" href="https://icyfenix.cn/distribution/consensus/raft.html">Raft 算法</a>，要求多数派节点写入成功后才算完成服务注册或变动，保证在集群外部读取结果必然一致；同时采用 Gossip 协议，支持多数据中心间大规模服务同步。由于它不像 Netflix OSS 全家桶式的微服务组件，无法为错误兜底。</p>
 </li>
 </ul>
 <p>除了服务注册信息同步速度的差异，应考虑系统形成不同分区时，每个分区只能从该区域的服务发现节点获取该区域的服务坐标：</p>
 <ul>
-<li><p>没有太大影响甚至有可能有益，应倾向选择 AP 式。比如当两个分区都可以独立提供完整、正确的服务能力，甚至还带来链路优化的效果。</p>
+<li><p>  没有太大影响甚至有可能有益，应倾向选择 AP 式。比如当两个分区都可以独立提供完整、正确的服务能力，甚至还带来链路优化的效果。</p>
 </li>
-<li><p>如果影响甚至比系统宕机更严重，应倾向选择 CP 式。比如系统中大量依赖集中式缓存、消息总线、或者其他有状态服务。</p>
+<li><p>  如果影响甚至比系统宕机更严重，应倾向选择 CP 式。比如系统中大量依赖集中式缓存、消息总线、或者其他有状态服务。</p>
 </li>
 </ul>
 <h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><h4 id="分布式存储框架"><a href="#分布式存储框架" class="headerlink" title="分布式存储框架"></a>分布式存储框架</h4><p>基于分布式共识算法，利用软件自身完成服务注册与发现，但需要用户完成很多额外工作才能满足服务发现需求。</p>
@@ -511,29 +511,29 @@ height:100vh;
 </blockquote>
 <p>网关作为路由而言，需要考量： </p>
 <ul>
-<li><p><strong>网络协议层次</strong>：虽然在实现上与负载均衡器没有区别，但在目的上，负载均衡器根据均衡算法对流量进行平均路由，而网关则根据流量特征进行准确路由，因此对网关有支持后端服务工作所在的层次协议解析的要求（TCP、HTTP、WebSocket、SOAP 等）。</p>
+<li><p>  <strong>网络协议层次</strong>：虽然在实现上与负载均衡器没有区别，但在目的上，负载均衡器根据均衡算法对流量进行平均路由，而网关则根据流量特征进行准确路由，因此对网关有支持后端服务工作所在的层次协议解析的要求（TCP、HTTP、WebSocket、SOAP 等）。</p>
 </li>
-<li><p><strong>性能与可用性</strong>：作为服务对外地总出口，网关的路由性能将导致全局的、系统性的影响。性能与工作模式有关，比如 DSR 三角传输模式比代理模式强。但由于基于 HTTP 协议的服务接口一般是主流，网关默认支持七层路由，只能采用代理模式、无法直接进行流量转发。因此网关性能主要取决于网络 I/O 模型。</p>
+<li><p>  <strong>性能与可用性</strong>：作为服务对外地总出口，网关的路由性能将导致全局的、系统性的影响。性能与工作模式有关，比如 DSR 三角传输模式比代理模式强。但由于基于 HTTP 协议的服务接口一般是主流，网关默认支持七层路由，只能采用代理模式、无法直接进行流量转发。因此网关性能主要取决于网络 I/O 模型。</p>
 </li>
 </ul>
 <h3 id="网络-I-O-模型"><a href="#网络-I-O-模型" class="headerlink" title="网络 I/O 模型"></a>网络 I/O 模型</h3><h4 id="异步-I-O"><a href="#异步-I-O" class="headerlink" title="异步 I/O"></a>异步 I/O</h4><p>数据到达缓冲区后，不需要由调用进程主动从缓冲区复制数据，而由操作系统复制完成后向线程发送信号，所以是非阻塞。</p>
 <p>受限于操作系统，Windows NT 3.5+ 通过 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/IOCP">IOCP</a> 实现；Linux 2.6+ 后首次引入，但至今未完善（因此常用以 I/O 多路复用为主）。</p>
 <h4 id="同步-I-O"><a href="#同步-I-O" class="headerlink" title="同步 I/O"></a>同步 I/O</h4><p>即由发起调用的进程自行从缓冲区复制数据，共有四种情况：</p>
 <ul>
-<li><p><strong>阻塞 I/O</strong>：发起 I/O 调用后阻塞等待调用结果返回以及数据复制完成。最直观的 I/O 模型，逻辑清晰，节省 CPU 资源，缺点是线程休眠带来上下文切换，是需要切换到内核态的重负载操作，不应当频繁进行。</p>
+<li><p>  <strong>阻塞 I/O</strong>：发起 I/O 调用后阻塞等待调用结果返回以及数据复制完成。最直观的 I/O 模型，逻辑清晰，节省 CPU 资源，缺点是线程休眠带来上下文切换，是需要切换到内核态的重负载操作，不应当频繁进行。</p>
 </li>
-<li><p><strong>非阻塞 I/O</strong>：发起 I/O 调用后不断轮询，直到有返回结果就开始复制数据。能够避免线程休眠，对于很快就能返回结果的请求可以节省切换上下文切换的消耗，对于较长时间才能返回的请求则浪费 CPU 资源，目前不常用。</p>
+<li><p>  <strong>非阻塞 I/O</strong>：发起 I/O 调用后不断轮询，直到有返回结果就开始复制数据。能够避免线程休眠，对于很快就能返回结果的请求可以节省切换上下文切换的消耗，对于较长时间才能返回的请求则浪费 CPU 资源，目前不常用。</p>
 </li>
-<li><p><strong>多路复用 I/O</strong>：多路复用 I/O 本质上是阻塞 I/O 的一种，好处是在同阻塞线程上处理多个端口的监听，当其中任意一个就绪即开始复制数据，然后继续阻塞监听。是目前高并发网络应用的主流，其下可细分 select、epoll、kqueue 等不同实现。</p>
+<li><p>  <strong>多路复用 I/O</strong>：多路复用 I/O 本质上是阻塞 I/O 的一种，好处是在同阻塞线程上处理多个端口的监听，当其中任意一个就绪即开始复制数据，然后继续阻塞监听。是目前高并发网络应用的主流，其下可细分 select、epoll、kqueue 等不同实现。</p>
 </li>
-<li><p><strong>信号驱动 I/O</strong>：发起调用后即返回，当结果就绪后由系统发起信号通知应用前来执行复制操作。</p>
+<li><p>  <strong>信号驱动 I/O</strong>：发起调用后即返回，当结果就绪后由系统发起信号通知应用前来执行复制操作。</p>
 </li>
 </ul>
 <h3 id="网关分析"><a href="#网关分析" class="headerlink" title="网关分析"></a>网关分析</h3><p><strong>性能</strong>：七层服务网关处理一次请求代理时，需要处理作为服务端对外部请求的应答，和作为客户端对内部服务的请求。因此这两组网络操作采用何种网络模型决定了网关的性能。</p>
 <ul>
-<li><p>以 Zuul 为例：1.0 采用阻塞 I/O，每个线程对应一个连接来代理流量，因此有线程休眠以及上下文切换的成本。当后端服务普遍属于计算密集型（服务耗时比较长，主要消耗在 CPU 上）时，能相对节省网关 CPU 资源；而当普遍是 I/O 密集型（服务很快返回，主要消耗在 I/O 上），会频繁发生上下文切换而降低性能。2.0 改用异步 I/O，大幅度减少了线程数，有更高的性能和更低的延迟。</p>
+<li><p>  以 Zuul 为例：1.0 采用阻塞 I/O，每个线程对应一个连接来代理流量，因此有线程休眠以及上下文切换的成本。当后端服务普遍属于计算密集型（服务耗时比较长，主要消耗在 CPU 上）时，能相对节省网关 CPU 资源；而当普遍是 I/O 密集型（服务很快返回，主要消耗在 I/O 上），会频繁发生上下文切换而降低性能。2.0 改用异步 I/O，大幅度减少了线程数，有更高的性能和更低的延迟。</p>
 </li>
-<li><p>一些网关支持自行配置，或根据环境选择网络 I/O 模型，比如 Nginx 可在配置文件中指定 select、poll、epoll、kqueue 等并发模型。</p>
+<li><p>  一些网关支持自行配置，或根据环境选择网络 I/O 模型，比如 Nginx 可在配置文件中指定 select、poll、epoll、kqueue 等并发模型。</p>
 </li>
 </ul>
 <blockquote>
@@ -541,66 +541,69 @@ height:100vh;
 </blockquote>
 <p><strong>可用性</strong>：由于用户只通过一个地址访问系统，任何系统的网络调用过程中都至少会有一个单点存在。而作为后端服务代理和流量入口的网关很容易成为单点。且其地址是唯一的，无法像注册中心一样以多个节点处理请求。因此网关设计：</p>
 <ul>
-<li><p>应尽可能轻量。尽管网关作为统一出入口可实现安全、认证、授权、限流、监控等功能，但仍需要仔细权衡，取得功能性与可用性之间的平衡，避免过度增加网关的职责。</p>
+<li><p>  应尽可能轻量。尽管网关作为统一出入口可实现安全、认证、授权、限流、监控等功能，但仍需要仔细权衡，取得功能性与可用性之间的平衡，避免过度增加网关的职责。</p>
 </li>
-<li><p>尽可能选择成熟的产品实现，譬如 Nginx Ingress Controller、KONG、Zuul 等，而不能只考虑性能选择新产品。</p>
+<li><p>  尽可能选择成熟的产品实现，譬如 Nginx Ingress Controller、KONG、Zuul 等，而不能只考虑性能选择新产品。</p>
 </li>
-<li><p>需要高可用时，应考虑在网关前部署负载均衡器或 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Equal-cost_multi-path_routing">等价路由器</a>（ECMP），让更成熟健壮的设施充当系统入口地址，使网关也可以扩展。</p>
+<li><p>  需要高可用时，应考虑在网关前部署负载均衡器或 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Equal-cost_multi-path_routing">等价路由器</a>（ECMP），让更成熟健壮的设施充当系统入口地址，使网关也可以扩展。</p>
 </li>
 </ul>
 <h3 id="BFF-网关"><a href="#BFF-网关" class="headerlink" title="BFF 网关"></a>BFF 网关</h3><p>网关不必为所有的前端提供无差别服务，而针对不同的前端聚合不同的服务，提供不同的接口和网络访问协议支持。比如为浏览器的 Web 程序提供 HTTP 协议的服务，为桌面系统的程序部署另一套网关、提供高性能的 gRPC 协议的服务。</p>
 <p>在网关这种边缘节点上针对同一后端集群，裁剪、适配、聚合出适应不一样的前端服务，有助于后端稳定以及前端赋能。</p>
 <figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="title">[</span><span class="comment">Web</span> <span class="comment">APP</span><span class="title">]</span>    --<span class="literal">-</span><span class="literal">-</span><span class="comment">REST</span>--<span class="literal">-</span><span class="literal">-</span>&gt;  <span class="title">[</span><span class="comment">Web</span> <span class="comment">APP</span> <span class="comment">Gateway</span><span class="title">]</span>    --<span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="title">[</span><span class="comment">Warehouse</span> <span class="comment">Service</span><span class="title">]</span></span><br><span class="line">                                                      <span class="comment">|</span>--<span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">Acccout</span> <span class="comment">Service</span><span class="title">]</span></span><br><span class="line"><span class="title">[</span><span class="comment">Mobile</span> <span class="comment">APP</span><span class="title">]</span>  --<span class="literal">-</span><span class="literal">-</span><span class="comment">RMI</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">Mobile</span> <span class="comment">APP</span> <span class="comment">Gateway</span><span class="title">]</span>  --<span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="title">[</span><span class="comment">Payment</span> <span class="comment">Service</span><span class="title">]</span></span><br><span class="line">                                                      <span class="comment">|</span>--<span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">Security</span> <span class="comment">Service</span><span class="title">]</span></span><br><span class="line"><span class="title">[</span><span class="comment">Desktop</span> <span class="comment">APP</span><span class="title">]</span> --<span class="literal">-</span><span class="literal">-</span><span class="comment">gRPC</span>--<span class="literal">-</span><span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">Desktop</span> <span class="comment">APP</span> <span class="comment">Gateway</span><span class="title">]</span> --<span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="title">[</span><span class="string">.</span><span class="string">.</span><span class="string">.</span><span class="title">]</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="客户端负载均衡"><a href="#客户端负载均衡" class="headerlink" title="客户端负载均衡"></a>客户端负载均衡</h2><p>传统的网络调用过程一般涉及以下步骤：</p>
 <ul>
-<li><p><strong>服务发现</strong>：从客户端浏览器发起服务请求，由 DNS 服务器将请求优先分配给传输距离最短的机房集群处理（IP -&gt; 域名）。</p>
+<li><p>  <strong>服务发现</strong>：从客户端浏览器发起服务请求，由 DNS 服务器将请求优先分配给传输距离最短的机房集群处理（IP -&gt; 域名）。</p>
 </li>
-<li><p><strong>网关路由</strong>：服务网关将请求与配置中的特征比对，从 URL 中可得知该请求访问的服务，将请求的 IP 地址转换为内网服务集群入口地址。</p>
+<li><p>  <strong>网关路由</strong>：服务网关将请求与配置中的特征比对，从 URL 中可得知该请求访问的服务，将请求的 IP 地址转换为内网服务集群入口地址。</p>
 </li>
-<li><p><strong>负载均衡</strong>：集群中部署多个服务，负载均衡器根据一定规则从中选取一个响应本次调用。由于均衡器部署在服务集群的前端，因此称为 <strong>集中式负载均衡</strong>。</p>
+<li><p>  <strong>负载均衡</strong>：集群中部署多个服务，负载均衡器根据一定规则从中选取一个响应本次调用。由于均衡器部署在服务集群的前端，因此称为 <strong>集中式负载均衡</strong>。</p>
 </li>
-<li><p><strong>服务容错</strong>：如果访问失败、没有需要的结果，则抛出 500 错误；根据预置的故障转移（Failover）策略，重试将调用分配给能够提供该服务的其他节点，最终成功响应。</p>
+<li><p>  <strong>服务容错</strong>：如果访问失败、没有需要的结果，则抛出 500 错误；根据预置的故障转移（Failover）策略，重试将调用分配给能够提供该服务的其他节点，最终成功响应。</p>
 </li>
 </ul>
 <p>从最近机房内网发出服务请求，绕到了网络边缘的网关、负载均衡器等设施上，再分配回内网中另外一个服务去响应。</p>
 <h3 id="客户端均衡器"><a href="#客户端均衡器" class="headerlink" title="客户端均衡器"></a>客户端均衡器</h3><p>用于简化服务调用过程：区别于服务端均衡器，客户端均衡器和服务实例一一对应，与服务实例并存于同一个进程中。最具代表性的是 Ribbon 和 Spring Cloud Load Balancer。其具备以下优点：</p>
 <ul>
-<li><p><strong>进程内调用</strong>：均衡器与服务是进程内的方法调用，不存在额外的网络开销。</p>
+<li><p>  <strong>进程内调用</strong>：均衡器与服务是进程内的方法调用，不存在额外的网络开销。</p>
 </li>
-<li><p><strong>简化流程</strong>：不依赖集群边缘设施，内部流量仅在服务集群内部循环，避免复杂的调用过程，能节省带宽、提高性能、降低运维复杂度。</p>
+<li><p>  <strong>简化流程</strong>：不依赖集群边缘设施，内部流量仅在服务集群内部循环，避免复杂的调用过程，能节省带宽、提高性能、降低运维复杂度。</p>
 </li>
-<li><p><strong>避免单点</strong>：其带宽资源将不像集中式均衡器般敏感，在以七层均衡器为主流、不能通过 IP 隧道和三角传输节省带宽的微服务环境中显得更具优势。</p>
+<li><p>  <strong>避免单点</strong>：其带宽资源将不像集中式均衡器般敏感，在以七层均衡器为主流、不能通过 IP 隧道和三角传输节省带宽的微服务环境中显得更具优势。</p>
 </li>
-<li><p><strong>灵活配置</strong>：能针对每个服务实例单独设置均衡策略等参数，亲和性，选择服务的策略等，都可以单独设置而不影响其它服务。</p>
+<li><p>  <strong>灵活配置</strong>：能针对每个服务实例单独设置均衡策略等参数，亲和性，选择服务的策略等，都可以单独设置而不影响其它服务。</p>
 </li>
-<li><p>……</p>
+<li><p>  ……</p>
 </li>
 </ul>
 <p>但也有缺点：</p>
 <ul>
-<li>难实现技术异构：与服务运行于同一个进程内，意味着选型受服务编程语言的限制，要为每种语言实现对应的、能够支持复杂网络情况的均衡器非常困难。</li>
-<li>由于共用一个进程，均衡器稳定性会直接影响服务稳定性，CPU、内存等资源消耗也影响到服务可用资源。在服务数量达成千乃至上万规模时，均衡器消耗资源总量相当可观。</li>
-<li>请求来源可能是来自集群任一服务节点，使得内部网络安全和信任关系变得复杂，当攻破任一服务时更容易通过该服务突破集群中的其他部分。</li>
-<li>每个客户端均衡器必须持续跟踪其它服务的健康状况，实现服务上线下线、自动重连等功能。这些操作需要通过访问注册中心完成，数量庞大的客户端均衡器持续轮询服务注册中心，会为它带来不小的负担。</li>
-<li>……</li>
+<li>  难实现技术异构：与服务运行于同一个进程内，意味着选型受服务编程语言的限制，要为每种语言实现对应的、能够支持复杂网络情况的均衡器非常困难。</li>
+<li>  由于共用一个进程，均衡器稳定性会直接影响服务稳定性，CPU、内存等资源消耗也影响到服务可用资源。在服务数量达成千乃至上万规模时，均衡器消耗资源总量相当可观。</li>
+<li>  请求来源可能是来自集群任一服务节点，使得内部网络安全和信任关系变得复杂，当攻破任一服务时更容易通过该服务突破集群中的其他部分。</li>
+<li>  每个客户端均衡器必须持续跟踪其它服务的健康状况，实现服务上线下线、自动重连等功能。这些操作需要通过访问注册中心完成，数量庞大的客户端均衡器持续轮询服务注册中心，会为它带来不小的负担。</li>
+<li>  ……</li>
 </ul>
 <figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>  <span class="literal">+</span>--<span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">Svc2</span><span class="literal">-</span><span class="comment">1</span><span class="title">]</span></span><br><span class="line"><span class="comment">|</span> <span class="title">[</span><span class="comment">Svc1</span> <span class="literal">+</span> <span class="comment">LB</span><span class="title">]</span> <span class="literal">+</span>--<span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">Svc2</span><span class="literal">-</span><span class="comment">2</span><span class="title">]</span></span><br><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>  <span class="literal">+</span>--<span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">Svc2</span><span class="literal">-</span><span class="comment">3</span><span class="title">]</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="代理均衡器"><a href="#代理均衡器" class="headerlink" title="代理均衡器"></a>代理均衡器</h3><p>随着服务网格（Service Mesh）逐渐流行，代理均衡器开始备受关注。它以边车代理的方式实现均衡器，解决了客户端均衡器的多数缺陷。</p>
 <p>服务实例与代理均衡器之间通信要经过操作系统协议栈和网络协议栈。而 Kubernetes 可确保同一个 Pod 中的容器不会跨节点，因此置于同一个 Pod 中的服务实例和均衡器之间的交互本质上是本机回环设备的访问，开销比网络通信小得多。这种做法带来的收益：</p>
 <ul>
-<li><p>不受语言限制，可集中不同编程语言生态的优势，容易打造出能面对复杂网络情况的、高效健壮的均衡器。</p>
+<li><p>  不受语言限制，可集中不同编程语言生态的优势，容易打造出能面对复杂网络情况的、高效健壮的均衡器。</p>
 </li>
-<li><p>独立于服务进程的均衡器不会影响到服务进程稳定性。</p>
+<li><p>  独立于服务进程的均衡器不会影响到服务进程稳定性。</p>
 </li>
-<li><p>边车代理受控制平面统一管理，服务节点拓扑关系变化时，控制平面主动向边车代理发送更新服务清单的控制指令，避免客户端均衡器长期轮询注册中心造成浪费。</p>
+<li><p>  边车代理受控制平面统一管理，服务节点拓扑关系变化时，控制平面主动向边车代理发送更新服务清单的控制指令，避免客户端均衡器长期轮询注册中心造成浪费。</p>
 </li>
-<li><p>在安全性、可观测性上，由于边车代理都是一致的实现，有利于在服务间建立双向 TLS 通信，有利于对整个调用链路给出更详细的统计信息。</p>
+<li><p>  在安全性、可观测性上，由于边车代理都是一致的实现，有利于在服务间建立双向 TLS 通信，有利于对整个调用链路给出更详细的统计信息。</p>
 </li>
-<li><p>……</p>
+<li><p>  ……</p>
 </li>
 </ul>
 <p>目前这项技术相对较新，对操作系统、网络运维知识要求较高，但在微服务架构中很有发展前景。</p>
 <figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>  <span class="literal">+</span>--<span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">Svc2</span><span class="literal">-</span><span class="comment">1</span><span class="title">]</span></span><br><span class="line"><span class="comment">|</span> <span class="title">[</span><span class="comment">Svc1</span><span class="title">]</span> &lt;<span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">LB</span><span class="title">]</span><span class="literal">-</span><span class="literal">+</span>--<span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">Svc2</span><span class="literal">-</span><span class="comment">2</span><span class="title">]</span></span><br><span class="line"><span class="literal">+</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>  <span class="literal">+</span>--<span class="literal">-</span>&gt; <span class="title">[</span><span class="comment">Svc2</span><span class="literal">-</span><span class="comment">3</span><span class="title">]</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="地域与区域"><a href="#地域与区域" class="headerlink" title="地域与区域"></a>地域与区域</h3><p>…</p>
 <p>待续。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -1781,19 +1784,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
@@ -1803,11 +1806,11 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
+        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
         <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
-    
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
     
         <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
     
