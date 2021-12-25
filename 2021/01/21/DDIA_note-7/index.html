@@ -34,7 +34,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/quorum%20%E8%AF%BB%E5%86%99.jpg">
 <meta property="article:published_time" content="2021-01-21T11:37:00.000Z">
-<meta property="article:modified_time" content="2021-08-18T09:43:57.756Z">
+<meta property="article:modified_time" content="2021-12-25T08:11:56.675Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="设计">
@@ -506,6 +506,7 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
 <p>无主节点复制方案与多主节点复制方案都比单主节点复制方案更可靠，但代价也是系统的复杂性和弱一致性保证。</p>
 <p>客户端将写请求发送到多个节点上，读取时从多个节点上并行读取，并检测和纠正某些过期数据。</p>
 <ul>
@@ -543,7 +544,7 @@ height:100vh;
 <p>如果可用节点数小于所需的 w 或 r 则写入或读取就会返回错误。</p>
 <p>在 Dynamo 风格的数据库中， 参数 n、w、r 通常是可配置的。一个常见的选择是设置 n 为某奇数，w = r = (n + l) / 2。对于读多写少的负载，设置 w = n 和 r = l 则读取速度更快，但是一个节点失效就会使数据库所有写入因无法完成 Quorum 而失败。</p>
 <h2 id="Quorum-一致性的局限"><a href="#Quorum-一致性的局限" class="headerlink" title="Quorum 一致性的局限"></a>Quorum 一致性的局限</h2><p>Quorum 不一定是多数，<strong>读和写的节点集中有一个重叠的节点</strong> 才是最关键。</p>
-<p>当 w 和 r 配置的节点数较少，读取请求当中可能没有包含新值的节点，因此最终可能会返回过期的旧值，这样做可以获得更低的延迟、更高的可用性。只有当可用的副本数已经低于 w 或 r 时，数据库才会变得无法读/写。</p>
+<p>当 w 和 r 配置的节点数较少，读取请求当中可能没有包含新值的节点，因此最终可能会返回过期的旧值，可以获得更低的延迟、更高的可用性。只有当可用的副本数已经低于 w 或 r 时，数据库才会变得无法读/写。</p>
 <p>即使在 w + r &gt; n 的情况下，也可能存在返回旧值的边界条件：</p>
 <ul>
 <li><p>采用了 Sloppy Quorum，写操作的 w 节点和读取的 r 节点可能完全不同，因此无法保证读写请求一定存在重叠的节点。</p>
@@ -574,7 +575,7 @@ height:100vh;
 <li><p><strong>数据回传</strong>：是否应该接收该写请求，将它们暂时写入一些可访问的节点中（当网络问题恢复，临时节点需要把这期间的写入发送到原始主节点上）？</p>
 </li>
 </ul>
-<p>Sloppy 对于提高写入可用性特别有用：只要有 w 个节点可用，数据库就可以接收新的写入。但即使满足 w + r > n，除非回传结束，否则无法保证客户端一定能从 r 个节点读到新值。</p>
+<p>Sloppy 对于提高写入可用性特别有用：只要有 w 个节点可用，数据库就可以接收新的写入。但即使满足 w + r &gt; n，除非回传结束，否则无法保证客户端一定能从 r 个节点读到新值。</p>
 <h3 id="多数据中心"><a href="#多数据中心" class="headerlink" title="多数据中心"></a>多数据中心</h3><p>无主节点复制旨在更容忍并发写入冲突、网络中断和延迟尖峰等，因此也可适用于多数据中心操作。</p>
 <ul>
 <li><p>Cassandra 和 Voldemort 默认配置为无主节点模型，其跨数据中心操作：副本数量 n 是 <strong>包含所有数据中心的节点总数</strong>，可以指定各数据中心副本数。客户端的写入会发送到所有副本，但通常只等待来自本地数据中心内的 Quorum 节点数确认，以避免高延迟和跨数据中心可能导致的网络异常。</p>
@@ -602,7 +603,7 @@ height:100vh;
 </li>
 <li><p>当客户端读取主键时，服务端将返回所有未被覆盖的当前值以及最新的版本号，且要求写之前客户必须先发送读请求。</p>
 </li>
-<li><p>客户端写主键，写请求必须包含之前读到的版本号、读到的值和新值合并后的集合。写请求的响应可以像读操作一样，会返回所有当前值，这样就可以一步步链接起多个写入的值。</p>
+<li><p>客户端写主键，写请求必须包含之前读到的版本号、读到的值和新值合并后的集合。写请求的响应可以像读操作一样，会返回所有当前值，就可以一步步链接起多个写入的值。</p>
 </li>
 <li><p>当服务端收到带有特定版本号的写入时，覆盖该版本号或更低版本的所有值（因为知道这些值已经被合并到新传入的值集合中），但必须保存更高版本号的所有值（因为这些值与当前的写操作属于并发）。</p>
 </li>
@@ -1800,19 +1801,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     

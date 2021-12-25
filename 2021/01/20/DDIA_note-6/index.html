@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%A4%9A%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83.jpg">
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%A4%84%E7%90%86%E5%86%99%E5%86%B2%E7%AA%81.jpg">
 <meta property="article:published_time" content="2021-01-20T15:11:27.000Z">
-<meta property="article:modified_time" content="2021-08-18T09:43:41.803Z">
+<meta property="article:modified_time" content="2021-12-25T08:11:23.172Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="设计">
@@ -494,6 +494,9 @@ height:100vh;
 </li>
 </ul>
 </blockquote>
+
+
+
 <p>系统存在多个主节点，每个都可以接收写请求，客户端将写请求发送到其中的一个主节点上，由该主节点负责将数据更改事件同步到其他主节点和自己的从节点。</p>
 <p>每个主节点还可以同时扮演其他主节点的从节点。</p>
 <p>多主节点复制方案比单主节点复制方案更可靠，但代价是系统的复杂性和弱一致性保证。</p>
@@ -529,7 +532,7 @@ height:100vh;
 <h2 id="处理写冲突"><a href="#处理写冲突" class="headerlink" title="处理写冲突"></a>处理写冲突</h2><p>正常情况下主从复制只有主节点可以处理写请求，因此不会出现这种情况。但多主复制很可能发生写冲突：即异地请求都分别成功提交到本地主节点，在更改被异步复制到对方时发生冲突。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%A4%84%E7%90%86%E5%86%99%E5%86%B2%E7%AA%81.jpg" alt="处理写冲突"></p>
 <h3 id="同步-异步检测"><a href="#同步-异步检测" class="headerlink" title="同步/异步检测"></a>同步/异步检测</h3><ul>
-<li><p>同步：写请求等待完成对所有副本的同步，再返回通知写入成功，这样会失去多主节点允许每个主节点独立接收写请求的主要优势。</p>
+<li><p>同步：写请求等待完成对所有副本的同步，再返回通知写入成功，会失去多主节点允许每个主节点独立接收写请求的主要优势。</p>
 </li>
 <li><p>异步：如果在稍后的时间点上才能异步检测到冲突，要求用户层来解决冲突则为时已晚。</p>
 </li>
@@ -554,7 +557,7 @@ height:100vh;
 </li>
 </ul>
 <h3 id="写时-读时冲突解决"><a href="#写时-读时冲突解决" class="headerlink" title="写时/读时冲突解决"></a>写时/读时冲突解决</h3><ul>
-<li><p>写时冲突：只要数据库系统在复制变更日志时检测到冲突，就调用应用层的冲突处理程序。例如 Bucardo 支持编写一段 Perl 代码。这个处理程序通常不能在线提示用户，而只能在后台运行，这样速度更快。</p>
+<li><p>写时冲突：只要数据库系统在复制变更日志时检测到冲突，就调用应用层的冲突处理程序。例如 Bucardo 支持编写一段 Perl 代码。这个处理程序通常不能在线提示用户，而只能在后台运行，速度更快。</p>
 </li>
 <li><p>读时冲突：当检测到冲突时所有冲突写入值都会暂时保存下来。下一次读取数据时将数据的多个版本读返回给应用层。应用层可提示用户或自动解决冲突，将最后的结果返回到数据库（比如 CouchDB）。</p>
 </li>
@@ -1758,19 +1761,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     

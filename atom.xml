@@ -6,7 +6,7 @@
   <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
   
   <link href="https://yipwinghong.github.io/"/>
-  <updated>2021-12-24T08:41:42.185Z</updated>
+  <updated>2021-12-25T08:53:23.645Z</updated>
   <id>https://yipwinghong.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://yipwinghong.github.io/2021/12/10/Go_engineering-specification-design/"/>
     <id>https://yipwinghong.github.io/2021/12/10/Go_engineering-specification-design/</id>
     <published>2021-12-09T17:42:39.000Z</published>
-    <updated>2021-12-24T08:41:42.185Z</updated>
+    <updated>2021-12-25T08:53:23.645Z</updated>
     
     
     <summary type="html">关于 Go 工程化与企业级应用开发的总结，持续更新中。</summary>
@@ -59,7 +59,7 @@
     <link href="https://yipwinghong.github.io/2021/10/15/Go_concurrency_primitives/"/>
     <id>https://yipwinghong.github.io/2021/10/15/Go_concurrency_primitives/</id>
     <published>2021-10-15T11:42:39.000Z</published>
-    <updated>2021-12-14T13:36:48.472Z</updated>
+    <updated>2021-12-25T08:37:55.824Z</updated>
     
     
     <summary type="html">Go 标准库（sync）中提供了很多原生支持的并发原语，本文将简单讲解其基本用法。以及从 Go 标准库或第三方库扩展，实现更多复杂功能的并发原语。</summary>
@@ -135,7 +135,7 @@
     <link href="https://yipwinghong.github.io/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/"/>
     <id>https://yipwinghong.github.io/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/</id>
     <published>2021-09-05T15:44:56.000Z</published>
-    <updated>2021-09-08T14:39:09.225Z</updated>
+    <updated>2021-12-25T08:06:33.683Z</updated>
     
     
     <summary type="html">原文链接：https://benjamincongdon.me/blog/2021/08/17/B-Trees-More-Than-I-Thought-Id-Want-to-Know/</summary>
@@ -177,7 +177,7 @@
     <link href="https://yipwinghong.github.io/2021/08/10/Algorithm_reliable-distributed-timer/"/>
     <id>https://yipwinghong.github.io/2021/08/10/Algorithm_reliable-distributed-timer/</id>
     <published>2021-08-10T13:10:14.000Z</published>
-    <updated>2021-08-10T03:13:31.555Z</updated>
+    <updated>2021-12-25T08:03:44.254Z</updated>
     
     
     <summary type="html">原文链接：https://0x709394.me/How-To%20Design%20A%20Reliable%20Distributed%20Timer</summary>
@@ -196,7 +196,7 @@
     <link href="https://yipwinghong.github.io/2021/08/04/Go_engineering-standard/"/>
     <id>https://yipwinghong.github.io/2021/08/04/Go_engineering-standard/</id>
     <published>2021-08-04T00:11:03.000Z</published>
-    <updated>2021-08-11T15:26:32.240Z</updated>
+    <updated>2021-12-25T08:22:44.024Z</updated>
     
     
     <summary type="html">总结 Go 语言工程化标准（最佳）实践。</summary>
@@ -215,7 +215,7 @@
     <link href="https://yipwinghong.github.io/2021/07/31/Go_memory-model/"/>
     <id>https://yipwinghong.github.io/2021/07/31/Go_memory-model/</id>
     <published>2021-07-31T08:42:39.000Z</published>
-    <updated>2021-08-07T01:15:21.612Z</updated>
+    <updated>2021-12-25T08:23:36.973Z</updated>
     
     
     <summary type="html">原文链接：https://golang.org/ref/mem</summary>
@@ -234,7 +234,7 @@
     <link href="https://yipwinghong.github.io/2021/07/28/Go_channel-applications/"/>
     <id>https://yipwinghong.github.io/2021/07/28/Go_channel-applications/</id>
     <published>2021-07-28T11:40:09.000Z</published>
-    <updated>2021-12-05T03:01:03.792Z</updated>
+    <updated>2021-12-25T07:57:02.770Z</updated>
     
     
     <summary type="html">总结 Go 语言 Channel 的常见应用及最佳实践。</summary>
@@ -253,7 +253,7 @@
     <link href="https://yipwinghong.github.io/2021/07/25/Fenix_build-services/"/>
     <id>https://yipwinghong.github.io/2021/07/25/Fenix_build-services/</id>
     <published>2021-07-24T16:11:01.000Z</published>
-    <updated>2021-08-08T16:00:22.314Z</updated>
+    <updated>2021-12-25T08:16:52.343Z</updated>
     
     
     <summary type="html">《凤凰架构》阅读笔记（五）：服务构建与流量治理</summary>
@@ -295,7 +295,7 @@
     <link href="https://yipwinghong.github.io/2021/07/22/Fenix_transaction/"/>
     <id>https://yipwinghong.github.io/2021/07/22/Fenix_transaction/</id>
     <published>2021-07-22T00:44:27.000Z</published>
-    <updated>2021-10-05T14:56:30.376Z</updated>
+    <updated>2021-12-25T08:17:21.675Z</updated>
     
     
     <summary type="html">《凤凰架构》阅读笔记（三）：事务处理</summary>
@@ -337,7 +337,7 @@
     <link href="https://yipwinghong.github.io/2021/07/18/Go_error_handling/"/>
     <id>https://yipwinghong.github.io/2021/07/18/Go_error_handling/</id>
     <published>2021-07-18T08:42:39.000Z</published>
-    <updated>2021-08-01T07:55:26.923Z</updated>
+    <updated>2021-12-25T08:23:13.760Z</updated>
     
     
     <summary type="html">Go 语言的一大特点是其异常处理机制与其它语言很不一样，本文将探讨 Go 语言异常处理的最佳实践。</summary>
@@ -356,7 +356,7 @@
     <link href="https://yipwinghong.github.io/2021/07/15/Fenix_architecture-evolution/"/>
     <id>https://yipwinghong.github.io/2021/07/15/Fenix_architecture-evolution/</id>
     <published>2021-07-14T16:11:01.000Z</published>
-    <updated>2021-10-05T13:35:56.990Z</updated>
+    <updated>2021-12-25T08:15:55.821Z</updated>
     
     
     <summary type="html">《凤凰架构》阅读笔记（一）：软件架构演进</summary>
@@ -398,7 +398,7 @@
     <link href="https://yipwinghong.github.io/2021/07/09/Algorithm_max-flow-problem/"/>
     <id>https://yipwinghong.github.io/2021/07/09/Algorithm_max-flow-problem/</id>
     <published>2021-07-09T15:10:14.000Z</published>
-    <updated>2021-08-11T14:53:29.364Z</updated>
+    <updated>2021-12-25T08:31:51.022Z</updated>
     
     
     <summary type="html">这次还是有权图哈~</summary>

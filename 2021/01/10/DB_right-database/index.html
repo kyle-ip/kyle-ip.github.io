@@ -33,7 +33,7 @@
 <meta property="og:description" content="原文链接：https:&#x2F;&#x2F;blog.andyet.com&#x2F;2014&#x2F;10&#x2F;01&#x2F;right-database">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-01-10T08:41:00.000Z">
-<meta property="article:modified_time" content="2021-08-07T01:19:19.932Z">
+<meta property="article:modified_time" content="2021-12-25T08:34:03.830Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="数据库">
@@ -459,7 +459,7 @@ height:100vh;
 <p>原文链接：<a target="_blank" rel="noopener" href="https://blog.andyet.com/2014/10/01/right-database">Choosing the right database for the job</a></p>
 </blockquote>
 <h1 id="选择合适的数据库"><a href="#选择合适的数据库" class="headerlink" title="选择合适的数据库"></a>选择合适的数据库</h1><p>在数据库设计的领域中，NoSQL 由于具备很多有利因素（比如使用简单和可伸缩性）而被推动，因此在存储与检索的解决方案上有了更多的选择。可以选择针对特定需求而作优化的数据库，而不是采用一刀切的解决方案。</p>
-<p>如果不需要数据库集群，而且可以使用单个节点和快照备份来工作，那么几乎可以采用任何方案。否则就要根据需求选择合适的数据库。</p>
+<p>如果不需要数据库集群，而且可以使用单个节点和快照备份来工作，则几乎可以采用任何方案。否则就要根据需求选择合适的数据库。</p>
 <h2 id="CAP-理论"><a href="#CAP-理论" class="headerlink" title="CAP 理论"></a>CAP 理论</h2><p>假设需要集群来确保高可用性，那自然就要谈到 CAP 理论了，其指出在以下性质中，分布式数据库只能满足两条：</p>
 <ul>
 <li><p>一致性（写入操作是有序的，而且可以按此顺序在多台服务器中请求到相同的答案）。</p>
@@ -472,20 +472,20 @@ height:100vh;
 <p>实际上对于任何类型的数据库（任何存储类型的数据）都只有（且必须做出）两种选择：即选择一致性和分区容忍性（“CP”）或选择可用性和分区容忍性（“AP”）。而 “CA” 这种方案是不存在的，因为如果没有分区容忍性就无法实现可用性，至少这一点 Kelly Sommers 和 Aphyr 都是同意的。</p>
 <p>有一些数据库断言 CAP 理论不适用于它们。如果想知道数据库违反 CAP 理论的声明时会发生什么，可以去看看 Aphyr 的 “Call Me Maybe” 系列。并非所有违反 CAP 的数据库都是不好的实现，有时它们声称那是经过调优的 CP 数据库，比如 FoundationDB 或许是一种解决一致性问题的方案（但仍然需要谨慎和意识）。</p>
 <h2 id="CP-数据库的好处"><a href="#CP-数据库的好处" class="headerlink" title="CP 数据库的好处"></a>CP 数据库的好处</h2><p>大多数 SQL 数据库要求满足 CP，这就意味着它们是可以保证一致性的。可以在分区损坏的情况下对其执行读操作，而且对于任意的表，也许还可以写进某一单点。但这种情况下数据库是不可用的，如果主节点宕机，而且其他节点未能选出新主节点，就不能执行写操作。</p>
-<p>由于负载可以轻松地分配到多个节点，大多数 SQL 数据库的读取规模非常大，但是它们无法在确保一致性的前提下对写操作进行水平扩展。一个“主 - 主”集群必须解决时间同步或应用干预下的写冲突。在主节点高负载或主节点中断期间，数据库可能无法进行写操作。如果数据是以读为主的（产品数据库、用户数据库等），那么 SQL 数据库是一种不错的选择，并且对扩展有很好的支持。</p>
+<p>由于负载可以轻松地分配到多个节点，大多数 SQL 数据库的读取规模非常大，但是它们无法在确保一致性的前提下对写操作进行水平扩展。一个“主 - 主”集群必须解决时间同步或应用干预下的写冲突。在主节点高负载或主节点中断期间，数据库可能无法进行写操作。如果数据是以读为主的（产品数据库、用户数据库等），SQL 数据库是一种不错的选择，并且对扩展有很好的支持。</p>
 <p>但如果使用场景是协作型的，使用 SQL 数据库就必须将用户数据和交互数据划分到不同的集群中以满足写入的速度。对于协作型场景，写操作与读操作是一样多的。</p>
 <h2 id="考虑使用-AP-数据库"><a href="#考虑使用-AP-数据库" class="headerlink" title="考虑使用 AP 数据库"></a>考虑使用 AP 数据库</h2><p>这时候可以考虑一下 AP 型数据库。一些 AP 数据库集群的最佳实践是基于 Amazon  Dynamo 的白皮书。</p>
 <p>具备可用性的数据库集群意味着在对某段数据失去读写能力之前，大量的节点都要下线。通常具备可用性的数据库在多数据中心的场景下表现最好。AP 数据库还具备分区容忍性：允许节点之间停止相互通信时仍接收读写请求。</p>
 <p>正如 CAP 理论中提到，AP 数据库集群最大的缺点是不一致。这就意味着对于任何数据的请求，其结果因节点而异。通常来说这些数据库会收集结果，来保证最终每个节点的结果可达成一致。</p>
 <p>不一致的问题发生在一份数据被写入到两个不同的节点时（比如时间相近或因网络中断无法通信）。一些数据库具备 LWW（Last-Write-Wins）的配置项目（甚至是默认配置），但是需要注意，这可能会丢失一些已被确认写入的数据。</p>
 <p>不一致问题的最佳解决方案是在应用本身解决。比如在 API 服务中，应该提供处理读取数据返回多个版本结果这种一致性问题的功能。合并数据，选择其一覆盖其他，或创建一个新的数据对象都是可行的方案，并且对于每种类型的数据，采取何种方式解决都是可以手动选择的。</p>
-<h2 id="混合式解决方案"><a href="#混合式解决方案" class="headerlink" title="混合式解决方案"></a>混合式解决方案</h2><p>可能希望将单状态节点、CP 集群和 AP 集群合并在一起来支持不同类型的数据存储。如果因为 CAP 理论的限制需求变得复杂，那么混合式解决方案可以帮助开发者权衡取舍。这是可供参考的解决方案：</p>
+<h2 id="混合式解决方案"><a href="#混合式解决方案" class="headerlink" title="混合式解决方案"></a>混合式解决方案</h2><p>可能希望将单状态节点、CP 集群和 AP 集群合并在一起来支持不同类型的数据存储。如果因为 CAP 理论的限制需求变得复杂，混合式解决方案可以帮助开发者权衡取舍。这是可供参考的解决方案：</p>
 <ul>
-<li><p>单节点，非集群存储，快照备份，从节点：Redis</p>
+<li><p>  单节点，非集群存储，快照备份，从节点：Redis</p>
 </li>
-<li><p>数据一致，分区容忍，读多写少：PostgreSQL</p>
+<li><p>  数据一致，分区容忍，读多写少：PostgreSQL</p>
 </li>
-<li><p>高可用，分区容忍，水平扩展：Riak</p>
+<li><p>  高可用，分区容忍，水平扩展：Riak</p>
 </li>
 </ul>
 <p>不要局限于某种特定的技术，而选择最佳的工具来完成需求。</p>
@@ -1663,19 +1663,19 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
         <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
+    
+        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
