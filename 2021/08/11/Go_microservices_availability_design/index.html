@@ -463,44 +463,44 @@ height:100vh;
     <article class="article-entry">
         <h1 id="微服务可用性设计"><a href="#微服务可用性设计" class="headerlink" title="微服务可用性设计"></a>微服务可用性设计</h1><p>从单体架构到微服务架构，系统的复杂度变高。因此要接受系统出错的情况变得更频繁的现实，而由局部故障引起连锁反应的情况尤其需要重视。总的来说是要做到：</p>
 <ul>
-<li><p>  变更管理：大多数问题是由变更引起的，出错首先考虑回滚。</p>
+<li><p>变更管理：大多数问题是由变更引起的，出错首先考虑回滚。</p>
 </li>
-<li><p>  避免过载：过载保护（卸载部分流量）、流量调度（多集群）等。</p>
+<li><p>避免过载：过载保护（卸载部分流量）、流量调度（多集群）等。</p>
 </li>
-<li><p>  依赖管理：任何依赖都可能故障，需要做注入故障测试（chaos monkey testing）。</p>
+<li><p>依赖管理：任何依赖都可能故障，需要做注入故障测试（chaos monkey testing）。</p>
 </li>
-<li><p>  优雅降级：提供有损服务，避免核心链路依赖故障。</p>
+<li><p>优雅降级：提供有损服务，避免核心链路依赖故障。</p>
 </li>
-<li><p>  重试退避：结合退避算法和冻结时间，API retry detail 控制策略。</p>
+<li><p>重试退避：结合退避算法和冻结时间，API retry detail 控制策略。</p>
 </li>
-<li><p>  超时控制：结合进程内 + 服务间实现超时控制。</p>
+<li><p>超时控制：结合进程内 + 服务间实现超时控制。</p>
 </li>
-<li><p>  极限压测 + 故障演练：持续加压，观察服务在高负载时的表现（而不仅是能否支撑）。</p>
+<li><p>极限压测 + 故障演练：持续加压，观察服务在高负载时的表现（而不仅是能否支撑）。</p>
 </li>
-<li><p>  扩容 + 重启 + 消除有害流量。</p>
+<li><p>扩容 + 重启 + 消除有害流量。</p>
 </li>
 </ul>
 <h2 id="隔离设计"><a href="#隔离设计" class="headerlink" title="隔离设计"></a>隔离设计</h2><p>本质上是对系统或资源进行分割，从而实现当系统发生故障时能限定传播范围和影响范围，即发生故障后只有出问题的服务不可用，保证其他服务仍然可用。</p>
 <p>没有考虑隔离可能出现的问题：</p>
 <ul>
-<li><p>  转码集群被超大视频资源攻击，导致转码大量延迟。</p>
+<li><p>转码集群被超大视频资源攻击，导致转码大量延迟。</p>
 </li>
-<li><p>  缩略图服务，被大图实时缩略耗尽所有 CPU，导致正常缩略小图被丢弃。</p>
+<li><p>缩略图服务，被大图实时缩略耗尽所有 CPU，导致正常缩略小图被丢弃。</p>
 </li>
-<li><p>  数据库实例 cgroup 未隔离，导致大 SQL 引起集体故障。</p>
+<li><p>数据库实例 cgroup 未隔离，导致大 SQL 引起集体故障。</p>
 </li>
-<li><p>  INFO 日志量过大，导致异常 ERROR 日志采集延迟。</p>
+<li><p>INFO 日志量过大，导致异常 ERROR 日志采集延迟。</p>
 </li>
 </ul>
 <h3 id="服务隔离"><a href="#服务隔离" class="headerlink" title="服务隔离"></a>服务隔离</h3><p><strong>动静隔离</strong>：小到 CPU 的 cacheline false sharing、数据库表设计中为避免 buffer pool 频繁过期隔离动静表，大到架构设计中的图片、静态资源等缓存加速，本质上都体现动静隔离的思路，即加速/缓存访问变换频次小的资源。比如 CDN 场景中，将静态资源和动态 API 分离。</p>
 <ul>
-<li><p>  通过 CDN 访问静态文件，降低应用服务器负载。</p>
+<li><p>通过 CDN 访问静态文件，降低应用服务器负载。</p>
 </li>
-<li><p>  对象存储存储费用最低。</p>
+<li><p>对象存储存储费用最低。</p>
 </li>
-<li><p>  海量存储空间，无需考虑存储架构升级。</p>
+<li><p>海量存储空间，无需考虑存储架构升级。</p>
 </li>
-<li><p>  静态 CDN 带宽加速，延迟低。</p>
+<li><p>静态 CDN 带宽加速，延迟低。</p>
 </li>
 </ul>
 <p><strong>读写分离</strong>：MySQL BufferPool 用于缓存 DataPage（缓存表的行），如果频繁更新 DataPage 会不断置换，导致命中率下降。所以在表设计时可沿用类似的思路，分离主表和统计表，减少主表更新而更多地更新统计表。即便在上游 Cache 未命中而透穿到 MySQL，仍然能利用上 BufferPool 的缓存。</p>
@@ -509,20 +509,17 @@ height:100vh;
 </blockquote>
 <h3 id="轻重隔离"><a href="#轻重隔离" class="headerlink" title="轻重隔离"></a>轻重隔离</h3><p><strong>核心隔离</strong>：业务根据不同等级进行资源池划分（L0/L1/L2），根据核心/非核心的故障域的差异隔离（机器资源、依赖资源）；部署多集群（使用子集算法选取部分连接进行 RPC 建联），通过冗余资源来提升吞吐和容灾能力。</p>
 <p><strong>快慢隔离</strong>：服务吞吐类似蓄水池，当出现洪流时需要一定时间才能排放完，此时其他支流在池中停留的时间取决于前面的排放能力，耗时就会增加，从而对小请求产生延迟上的影响。比如在日志传输体系架构设计中，如果整个流都投放到单个 Kafka topic 中（实现更好的顺序 IO），流内区分不同的 logid、发送到指定的 sink 端（ES、HDFS deng1），则会出现差速（即消费能力的差异，比如 HDFS 抖动吞吐下降，ES 正常水位，全局数据就会整体反压），最终整体吞吐能力就被最慢的一端拉低。因此可以按照各种纬度隔离：sink、部门、业务、logid、重要性（S/A/B/C）等。而且业务日志也属于某个 logid，日志等级可以作为隔离通道。</p>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservices_availability_design.assets/image-20210808160550587.png" alt="image-20210808160550587" style="zoom: 67%;" />
-
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservices_availability_design.assets/image-20210808160550587.png" alt="image-20210808160550587" style="zoom: 67%;" /></p>
 <p><strong>热点隔离</strong>：热点即经常访问的数据，比如统计某个热点数据中访问频次最高的 Top K 数据，并对其访问进行缓存。</p>
 <ul>
-<li><p>  小表广播：从 remote cache 提升为 local cache，app 定时更新；甚至可让运营平台支持广播刷新 local cache。</p>
+<li><p>小表广播：从 remote cache 提升为 local cache，app 定时更新；甚至可让运营平台支持广播刷新 local cache。</p>
 </li>
-<li><p>  主动预热：比如某些页面高在线率情况下通过 bypass 监控主动防御。</p>
+<li><p>主动预热：比如某些页面高在线率情况下通过 bypass 监控主动防御。</p>
 </li>
 </ul>
 <h3 id="物理隔离"><a href="#物理隔离" class="headerlink" title="物理隔离"></a>物理隔离</h3><p><strong>线程隔离</strong>：主要通过线程池隔离（也是实现服务隔离的基础）。把业务分类并交给不同的线程池处理，当某个线程池处理某种业务请求发生问题时，不会将故障扩散和影响到其他线程池，保证服务可用。</p>
 <blockquote>
 <p>  正常调用不受影响，一旦出现故障、线程池的使用达到 maxSize，再次请求接口会触发 fallback 处理并进行熔断（除此之外还可以基于信号量）。</p>
-</blockquote>
-<blockquote>
 <p>  对于 Go 而言所有 I/O 都是非阻塞且托管给 Runtime 的，因此只会阻塞 Goroutine、不阻塞底层线程（协程被阻塞时，线程与协程解绑）。因此只需要考虑对 Goroutine 总量的控制，不需要考虑语言层面的线程隔离。</p>
 <p>  限制 Goroutine 的总量，可参考 <strong>自适应限流</strong>。</p>
 </blockquote>
@@ -531,169 +528,162 @@ height:100vh;
 <h2 id="超时控制"><a href="#超时控制" class="headerlink" title="超时控制"></a>超时控制</h2><p>超时控制本质上是快速失败（Failfast），以免等待断开的实例直到超时，引起连锁故障。</p>
 <p>挂起的请求和无响应浪费资源、降低用户体验，比如：</p>
 <ul>
-<li><p>  SLB 入口 Nginx 没配置超时导致连锁故障。</p>
+<li><p>SLB 入口 Nginx 没配置超时导致连锁故障。</p>
 </li>
-<li><p>  服务依赖数据库连接池漏配超时导致请求阻塞，最终服务集体 OOM。</p>
+<li><p>服务依赖数据库连接池漏配超时导致请求阻塞，最终服务集体 OOM。</p>
 </li>
-<li><p>  下游服务发版耗时增加，而上游服务配置超时过短，导致请求失败。</p>
+<li><p>下游服务发版耗时增加，而上游服务配置超时过短，导致请求失败。</p>
 </li>
 </ul>
 <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">                             <span class="keyword">Reset</span> ReadTimeout</span><br><span class="line">[<span class="keyword">Start</span>] —&gt; [<span class="keyword">Connect</span>] -&gt; [<span class="keyword">Write</span>] -&gt; [<span class="keyword">Read</span>] -&gt; [<span class="keyword">End</span>]</span><br><span class="line">                  <span class="keyword">Reset</span> WriteTimeout</span><br></pre></td></tr></table></figure>
-
 <p>良好的超时策略应尽可能避免服务堆积请求，尽快清空高延迟的请求、释放 Goroutine。服务互相调用，在延迟叠加前应注意防止超时操作。</p>
 <ul>
-<li><p>  关注网路传递的不确定性。</p>
+<li><p>关注网路传递的不确定性。</p>
 </li>
-<li><p>  客户端和服务端要设置一致的超时策略。</p>
+<li><p>客户端和服务端要设置一致的超时策略。</p>
 </li>
-<li><p>  设置合适的默认值（比如内网 RPC 不能超过 100ms、公网 1s）。</p>
+<li><p>设置合适的默认值（比如内网 RPC 不能超过 100ms、公网 1s）。</p>
 </li>
-<li><p>  高延迟服务导致客户端浪费资源等待。</p>
+<li><p>高延迟服务导致客户端浪费资源等待。</p>
 </li>
 </ul>
 <h3 id="超时策略"><a href="#超时策略" class="headerlink" title="超时策略"></a>超时策略</h3><p>超时设置不当会造成问题：不清楚依赖的微服务超时策略，或随着业务迭代耗时变化，意外导致依赖者出现超时。</p>
 <p>服务提供者应定义好 latency SLO、更新到 gRPC Proto 定义中，在后续迭代中应保证该 SLO。</p>
 <ul>
-<li><p>  在 kit 基础库配置默认超时兜底，配置防御保护，避免出现过大的超时策略。</p>
+<li><p>在 kit 基础库配置默认超时兜底，配置防御保护，避免出现过大的超时策略。</p>
 </li>
-<li><p>  配置中心设置公共模版，对于未配置的服务统一使用公共配置。</p>
+<li><p>配置中心设置公共模版，对于未配置的服务统一使用公共配置。</p>
 </li>
 </ul>
 <figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> google.example.library.v1;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">service</span> <span class="title">LibraryService</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Lagency SLO: 95th in 100ms, 99th in 150ms.</span></span><br><span class="line">    <span class="function"><span class="keyword">rpc</span> CreateBook(CreateBookRequest) <span class="keyword">returns</span> (Book)</span>; </span><br><span class="line">    <span class="function"><span class="keyword">rpc</span> GetBook(GetBookRequest) <span class="keyword">returns</span> Book)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">rpc</span> ListBooks(ListBooksRequest) <span class="keyword">returns</span> (ListBooksResponse)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>如何运用好超时监控？</p>
 <ul>
-<li><p>  双峰分布：比如 95% 的请求耗时在 100ms 内，5% 的请求可能永远不会完成（长超时）。</p>
+<li><p>双峰分布：比如 95% 的请求耗时在 100ms 内，5% 的请求可能永远不会完成（长超时）。</p>
 </li>
-<li><p>  不能只看均值，应参考耗时分布统计，比如 95th，99th。</p>
+<li><p>不能只看均值，应参考耗时分布统计，比如 95th，99th。</p>
 </li>
-<li><p>  设置合理的超时（通常还要加上 ping、2~3 个 TTL 的时间），拒绝超长请求，或当服务端不可用要主动失败。</p>
+<li><p>设置合理的超时（通常还要加上 ping、2~3 个 TTL 的时间），拒绝超长请求，或当服务端不可用要主动失败。</p>
 </li>
 </ul>
 <h3 id="超时传递"><a href="#超时传递" class="headerlink" title="超时传递"></a>超时传递</h3><p>指把当前服务剩余 quota 传递到下游服务中，继承超时策略，实现请求级别的全局超时控制（当上游服务已经超时返回错误，下游服务仍在执行，则会浪费资源）。</p>
 <p>要使策略生效，应该取当前剩下的 quota 与配置超时策略的最小值，才是允许执行的时间。</p>
 <figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">        <span class="selector-tag">1s</span>   <span class="selector-tag">100ms</span></span><br><span class="line"><span class="selector-tag">----</span>&gt; <span class="selector-attr">[SvcA]</span> <span class="selector-tag">----</span>&gt; <span class="selector-attr">[Redis]</span> (left <span class="number">900ms</span>)</span><br><span class="line">           | <span class="selector-tag">500ms</span></span><br><span class="line">           +<span class="selector-tag">-----</span>&gt; <span class="selector-attr">[SvcB]</span> (left <span class="number">400ms</span>)</span><br><span class="line"><span class="selector-tag">350ms</span></span><br><span class="line"><span class="selector-tag">min</span>(<span class="attribute">config</span>: <span class="number">500ms</span>, <span class="attribute">left</span>: <span class="number">400ms</span>)</span><br></pre></td></tr></table></figure>
-
 <p><strong>进程内超时控制</strong>：请求在每个阶段开始前就要检查是否有足够的时间来处理，以及继承该超时策略（可使用 Go 标准库 <code>context.WithTimeout</code>）。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *asiiConn)</span> <span class="title">Get</span><span class="params">(ctx context.Context, key <span class="keyword">string</span>)</span> <span class="params">(result *Item, err error)</span></span> &#123;</span><br><span class="line">	c.conn.SetWriteDeadline(shrinkDeadline(ctx, c.writeTimeout))</span><br><span class="line">	<span class="keyword">if</span> _, err = fmt.Fprintf(c.rw, <span class="string">&quot;gets %s\r\n&quot;</span>, key); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>在传递到某个环节发现剩余时间小于超时时间，应马上取消传递。在需要强制执行时，下游服务可覆盖上游超时传递和配额。</p>
 <blockquote>
 <p>  gRPC 框架依赖 gRPC Metadata Exchange，基于 HTTP2 的 Headers 传递 grpc-timeout 字段，自动传递到下游，构建带 timeout 的 context。</p>
-</blockquote>
-<blockquote>
 <p>  只有确保服务能运行，后续的限流、熔断、降级才有机会生效。</p>
 </blockquote>
 <h2 id="过载保护"><a href="#过载保护" class="headerlink" title="过载保护"></a>过载保护</h2><h3 id="静态限流"><a href="#静态限流" class="headerlink" title="静态限流"></a>静态限流</h3><p><strong>令牌桶算法</strong>：设置固定容量存放令牌的桶，按照固定速率往桶里添加令牌（/x/time/rate）。</p>
 <ul>
-<li><p>  比如限制 2req/s，则以 500ms 的速率往桶中添加令牌。</p>
+<li><p>比如限制 2req/s，则以 500ms 的速率往桶中添加令牌。</p>
 </li>
-<li><p>  桶中最多存放 b 个令牌，在桶满时新添加的令牌被丢弃。</p>
+<li><p>桶中最多存放 b 个令牌，在桶满时新添加的令牌被丢弃。</p>
 </li>
-<li><p>  当某 n 字节大的数据包到达，从桶中删除 n 个令牌，并允许发送数据包。</p>
+<li><p>当某 n 字节大的数据包到达，从桶中删除 n 个令牌，并允许发送数据包。</p>
 </li>
-<li><p>  如果桶中令牌不足 n 个，则不会删除令牌，该数据包被限流处理（丢弃或进入缓冲区等待）。</p>
+<li><p>如果桶中令牌不足 n 个，则不会删除令牌，该数据包被限流处理（丢弃或进入缓冲区等待）。</p>
 </li>
 </ul>
 <p><strong>漏桶算法</strong>：固定容量的漏桶作为计量工具，可用于流量整形或可以用于流量整形（/go.uber.org/ratelimit）。</p>
 <ul>
-<li><p>  按固定速率流出水滴（为空则没有流出）。</p>
+<li><p>按固定速率流出水滴（为空则没有流出）。</p>
 </li>
-<li><p>  允许以任意速率把水滴加入漏桶，超过桶容量时则丢弃。</p>
+<li><p>允许以任意速率把水滴加入漏桶，超过桶容量时则丢弃。</p>
 </li>
 </ul>
 <p>思路都是设定指标，在超过该指标后则阻止或减少流量进入，当系统负载降低到某一水平后再恢复。这些策略相对被动、难以适应流量变化，实际效果取决于阈值设置的合理性：</p>
 <ul>
-<li><p>  当集群增减机器要重新设置限流阈值。</p>
+<li><p>当集群增减机器要重新设置限流阈值。</p>
 </li>
-<li><p>  考虑设置限流阈值的依据。</p>
+<li><p>考虑设置限流阈值的依据。</p>
 </li>
-<li><p>  考虑如何降低人力运维成本。</p>
+<li><p>考虑如何降低人力运维成本。</p>
 </li>
-<li><p>  在调用方反馈故障后设置限流，但错过流量高峰再评估则没有意义。</p>
+<li><p>在调用方反馈故障后设置限流，但错过流量高峰再评估则没有意义。</p>
 </li>
 </ul>
 <h3 id="自适应限流"><a href="#自适应限流" class="headerlink" title="自适应限流"></a>自适应限流</h3><p><strong>过载保护</strong>：计算系统临近过载时的峰值吞吐量，作为限流阈值来进行流量控制，实现系统保护。在系统稳定时可保持吞吐量，当临近过载则主动抛弃一定量的负载以自保。常见做法：</p>
 <ul>
-<li><p>  <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Little%27s_law">利特尔法则</a>：在服务高峰时测量 QPS * latency，表示系统最大吞吐量。</p>
+<li><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Little%27s_law">利特尔法则</a>：在服务高峰时测量 QPS * latency，表示系统最大吞吐量。</p>
 </li>
-<li><p>  CPU、内存作为信号量进行节流。</p>
+<li><p>CPU、内存作为信号量进行节流。</p>
 </li>
-<li><p>  队列管理：队列长度、LIFO。</p>
+<li><p>队列管理：队列长度、LIFO。</p>
 </li>
-<li><p>  可控延迟算法：CoDel。</p>
+<li><p>可控延迟算法：CoDel。</p>
 </li>
 </ul>
 <p>考虑接近峰值时的系统吞吐：</p>
 <ul>
-<li><p>  CPU：使用独立的线程采样，每隔 250ms 触发一次测量，计算均值时使用滑动平均去除峰值的影响。</p>
+<li><p>CPU：使用独立的线程采样，每隔 250ms 触发一次测量，计算均值时使用滑动平均去除峰值的影响。</p>
 </li>
-<li><p>  Inflight：当前线上服务中进行请求的计量：比如设置一个共享变量，每接入一个请求数值 +1，处理完成 -1。</p>
+<li><p>Inflight：当前线上服务中进行请求的计量：比如设置一个共享变量，每接入一个请求数值 +1，处理完成 -1。</p>
 </li>
-<li><p>  Pass&amp;RT: 比如最近 5s，pass 为每 100ms 采样窗口内成功请求的数量，rt 为单个采样窗口中平均响应时间。</p>
+<li><p>Pass&amp;RT: 比如最近 5s，pass 为每 100ms 采样窗口内成功请求的数量，rt 为单个采样窗口中平均响应时间。</p>
 </li>
 </ul>
 <p>具体做法：</p>
 <ul>
-<li>  使用 CPU 滑动均值（如 CPU &gt; 800）作为启发阈值，一旦触发则进入过载保护：<code>pass * rt &lt; inflight</code>。</li>
-<li>  限流生效后 CPU 会在临界值（800）附近抖动。如果不使用冷却时间，短时间的 CPU 下降就可能导致大量请求被放行，严重时迅速占满 CPU。</li>
-<li>  设置冷却时间，在冷却后重新判断阈值（CPU &gt; 800 ），再决定是否持续进入过载保护。</li>
-<li>  合理的过载保护应该是无论接入多大压力，放行的请求数量都是恒定、延迟都是稳定的。</li>
+<li>使用 CPU 滑动均值（如 CPU &gt; 800）作为启发阈值，一旦触发则进入过载保护：<code>pass * rt &lt; inflight</code>。</li>
+<li>限流生效后 CPU 会在临界值（800）附近抖动。如果不使用冷却时间，短时间的 CPU 下降就可能导致大量请求被放行，严重时迅速占满 CPU。</li>
+<li>设置冷却时间，在冷却后重新判断阈值（CPU &gt; 800 ），再决定是否持续进入过载保护。</li>
+<li>合理的过载保护应该是无论接入多大压力，放行的请求数量都是恒定、延迟都是稳定的。</li>
 </ul>
 <h2 id="限流设计"><a href="#限流设计" class="headerlink" title="限流设计"></a>限流设计</h2><p>指在一段时间内，定义某个客户端或应用可接收或处理多少个请求。通过限流可以过滤产生流量峰值的客户端或微服务，或确保应用程序在自动扩展失效前不会出现过载的情况。由于拒绝请求也有成本，不能无限制地接入、然后拒绝（过载保护），因此必须引入限流。</p>
 <p>缺少限流措施：</p>
 <ul>
-<li><p>  二层缓存穿透、大量回源导致的核心服务故障。</p>
+<li><p>二层缓存穿透、大量回源导致的核心服务故障。</p>
 </li>
-<li><p>  异常客户端引起的服务故障：请求放大或资源数放大。</p>
+<li><p>异常客户端引起的服务故障：请求放大或资源数放大。</p>
 </li>
-<li><p>  用户重试导致的大面积故障。</p>
+<li><p>用户重试导致的大面积故障。</p>
 </li>
-<li><p>  …</p>
+<li><p>…</p>
 </li>
 </ul>
 <p>设计难点：</p>
 <ul>
-<li><p>  令牌桶、漏桶算法仅针对单个节点，无法实现分布式限流。</p>
+<li><p>令牌桶、漏桶算法仅针对单个节点，无法实现分布式限流。</p>
 </li>
-<li><p>  根据 QPS 限流：不同的请求可能需要不同数量的资源处理；某种静态 QPS 限流不太准确。</p>
+<li><p>根据 QPS 限流：不同的请求可能需要不同数量的资源处理；某种静态 QPS 限流不太准确。</p>
 </li>
-<li><p>  要为每个租户设置限制：全局过载发生时针对某些异常进行控制，且可能出现配额超售。</p>
+<li><p>要为每个租户设置限制：全局过载发生时针对某些异常进行控制，且可能出现配额超售。</p>
 </li>
-<li><p>  可根据优先级丢弃请求（不容易实现）。</p>
+<li><p>可根据优先级丢弃请求（不容易实现）。</p>
 </li>
-<li><p>  要考虑拒绝请求的成本。</p>
+<li><p>要考虑拒绝请求的成本。</p>
 </li>
 </ul>
 <h3 id="分布式限流"><a href="#分布式限流" class="headerlink" title="分布式限流"></a>分布式限流</h3><p>目的是控制某个应用全局的流量，而非只对单个节点处理。</p>
 <p>最简单的思路是使用 Redis，但存在以下问题：</p>
 <ul>
-<li><p>  单个大流量的接口，Redis 本身容易成为热点。</p>
+<li><p>单个大流量的接口，Redis 本身容易成为热点。</p>
 </li>
-<li><p>  pre-request 模式产生高频的网络往返，对性能有一定影响。</p>
+<li><p>pre-request 模式产生高频的网络往返，对性能有一定影响。</p>
 </li>
 </ul>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">                                 判断超限</span><br><span class="line">                                 +------------&gt; <span class="selector-attr">[限制算法模块]</span></span><br><span class="line">                                 ↓         逐条上报汇总</span><br><span class="line"><span class="selector-attr">[req1]</span><span class="selector-attr">[req2]</span>...<span class="selector-attr">[reqn]</span> ----&gt; <span class="selector-attr">[计数控制模块]</span> &lt;-----------&gt; <span class="selector-attr">[Redis]</span></span><br><span class="line">                                 ↑</span><br><span class="line">                                 +------------- <span class="selector-attr">[配置模块]</span></span><br><span class="line">                                 规则匹配</span><br></pre></td></tr></table></figure>
-
 <p>可以从获取单个速率 quota 升级为批量 quota，在本地使用令牌桶算法限制。</p>
 <ul>
-<li><p>  每次接收服务心跳后异步批量获取 quota，减少请求 Redis 的频次，获取后在本地消费，基于令牌桶实现拦截。</p>
+<li><p>每次接收服务心跳后异步批量获取 quota，减少请求 Redis 的频次，获取后在本地消费，基于令牌桶实现拦截。</p>
 </li>
-<li><p>  如果每次申请的 quota 是静态值则不够灵活（数值过大容易产生饥饿，过小则不够用）。可在最初使用时指定默认值，保留历史窗口数据，再基于窗口数据发起 quota 请求。</p>
+<li><p>如果每次申请的 quota 是静态值则不够灵活（数值过大容易产生饥饿，过小则不够用）。可在最初使用时指定默认值，保留历史窗口数据，再基于窗口数据发起 quota 请求。</p>
 </li>
 </ul>
 <figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">                               ↑ 丢弃或等待</span><br><span class="line">                               |       放行</span><br><span class="line"><span class="comment">[req1]</span><span class="comment">[req2]</span>...<span class="comment">[reqn]</span> ----&gt; <span class="comment">[拦截器]</span> -------&gt; </span><br><span class="line">                             ↑   |</span><br><span class="line">                             |   +--------+ 反馈统计信息</span><br><span class="line">                             |            ↓</span><br><span class="line">                    异步更新  +-----&gt; <span class="comment">[算法分配调度]</span> &lt;--- <span class="comment">[配额管理]</span></span><br><span class="line">              （每秒增加 n 个令牌）</span><br></pre></td></tr></table></figure>
-
 <p>基于单个节点按需申请要避免不公平，可基于 <strong>最大最小公平分享</strong>（Max-Min Fairness）分配资源：分配给每个用户想要的、可以满足的最小需求，并将没有使用的资源均匀分配给需要大资源的用户。其定义如下：</p>
 <ul>
-<li><p>  按照资源需求递增的顺序进行分配。</p>
+<li><p>按照资源需求递增的顺序进行分配。</p>
 </li>
-<li><p>  不存在用户得到的资源超过自身需求。</p>
+<li><p>不存在用户得到的资源超过自身需求。</p>
 </li>
-<li><p>  未被满足的用户等价的分享资源。</p>
+<li><p>未被满足的用户等价的分享资源。</p>
 </li>
 </ul>
 <p>假设每次分配 10 个资源给四个节点，其各自需求如下：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -705,7 +695,8 @@ height:100vh;
 <th>描述</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>第一次</td>
 <td>2.5</td>
 <td>2.5</td>
@@ -729,8 +720,11 @@ height:100vh;
 <td>2.7</td>
 <td>为避免饥饿，之后按此方案都如此分配。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>各种限流措施对比：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -740,7 +734,8 @@ height:100vh;
 <th>现有实现</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>单机限制</td>
 <td>实现简单<br />稳定可靠<br />性能高</td>
 <td>流量不均匀会引发错误<br />机器数量变化时，需要手动调整配额</td>
@@ -758,170 +753,170 @@ height:100vh;
 <td>实现较复杂<br />需要手动配置</td>
 <td>无</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h3 id="重要性"><a href="#重要性" class="headerlink" title="重要性"></a>重要性</h3><p>如果每个接口配置阈值会导致运营工作繁重，按服务级别配置则粒度太粗。最简单做法是配置服务级别 quota，更细粒度则根据不同重要性设定 quota，因此引入重要性（criticality）:</p>
 <ul>
-<li><p>  <strong>最重要</strong>（CRITICAL_PLUS）：最终的要求预留类型，拒绝这些请求会造成严重的用户可见性问题。</p>
+<li><p><strong>最重要</strong>（CRITICAL_PLUS）：最终的要求预留类型，拒绝这些请求会造成严重的用户可见性问题。</p>
 </li>
-<li><p>  <strong>重要</strong>（CRITICAL）：生产任务的默认请求类型。拒绝这些请求也会造成用户可见性问题（次重要）。</p>
+<li><p><strong>重要</strong>（CRITICAL）：生产任务的默认请求类型。拒绝这些请求也会造成用户可见性问题（次重要）。</p>
 </li>
-<li><p>  <strong>可丢弃</strong>（SHEDDABLE_PLUS）：可容忍某种程度不可用性，是批量任务的默认请求类型，通常可以过几分钟、几小时后重试。</p>
+<li><p><strong>可丢弃</strong>（SHEDDABLE_PLUS）：可容忍某种程度不可用性，是批量任务的默认请求类型，通常可以过几分钟、几小时后重试。</p>
 </li>
-<li><p>  <strong>可丢弃</strong>（SHEDDABLE）：可能会经常遇到部分不可用、偶尔会完全不可用的情况。</p>
-</li>
+<li><strong>可丢弃</strong>（SHEDDABLE）：可能会经常遇到部分不可用、偶尔会完全不可用的情况。</li>
 </ul>
 <p>gRPC 系统之间需要自动传递重要性信息：如果后端接收请求 A，在处理过程中发出请求 B 和 C 给其他后端，则这些请求会使用与 A 相同的重要性属性。</p>
 <ul>
-<li><p>  全局配额不足时优先拒绝较低优先级的。</p>
+<li><p>全局配额不足时优先拒绝较低优先级的。</p>
 </li>
-<li><p>  全局配额可按重要性分别设置。</p>
+<li><p>全局配额可按重要性分别设置。</p>
 </li>
-<li><p>  过载保护时低优先级请求先被拒绝。</p>
+<li><p>过载保护时低优先级请求先被拒绝。</p>
 </li>
 </ul>
 <h3 id="熔断"><a href="#熔断" class="headerlink" title="熔断"></a>熔断</h3><p>虽然使用超时限制操作的持续时间，防止挂起操作并保证系统响应，但由于环境是高度动态变化的，几乎不可能确定准确的、每种情况下都能正常工作的时间限制。</p>
 <p>当服务依赖的资源出现大量错误或某用户超过资源配额时，后端任务会快速拒绝请求、返回配额不足的错误。但由于拒绝回复仍然会消耗一定资源，有可能导致后端忙于发送拒绝请求导致过载。</p>
 <p>断路器（Circuit Breakers）：在客户端侧保护下游服务，阻止重复的故障，避免导致雪崩效应使整个系统崩溃。其一般有三个状态：</p>
 <ul>
-<li><p>  <strong>关闭</strong>（CLOSED）：默认状态，远程请求会真正发送给服务提供者。此后持续监视远程请求的数量和执行结果，决定是否要进入 OPEN 状态。</p>
+<li><p><strong>关闭</strong>（CLOSED）：默认状态，远程请求会真正发送给服务提供者。此后持续监视远程请求的数量和执行结果，决定是否要进入 OPEN 状态。</p>
 </li>
 <li><p><strong>开启</strong>（OPEN）：此时不会进行远程请求，直接给服务调用者返回调用失败信息，以实现快速失败策略。转变为 OPEN 的条件：</p>
 <ul>
-<li><p>  一段时间内请求数量达到一定阈值（比如 10s、20 个请求）。即如果请求本身很少就无需断路器介入。</p>
+<li><p>一段时间内请求数量达到一定阈值（比如 10s、20 个请求）。即如果请求本身很少就无需断路器介入。</p>
 </li>
-<li><p>  一段时间内（比如 10 秒）请求的故障率（发生失败、超时、拒绝的统计比例）到达一定阈值（比如 50%）。即如果请求本身能正确返回就不用断路器介入。</p>
+<li><p>一段时间内（比如 10 秒）请求的故障率（发生失败、超时、拒绝的统计比例）到达一定阈值（比如 50%）。即如果请求本身能正确返回就不用断路器介入。</p>
 </li>
 </ul>
 </li>
-<li><p>  <strong>半开启</strong>（HALF OPEN）：断路器必须带有自动故障恢复能力，进入 OPEN 状态一段时间后，将自动（下次请求触发）切换到该状态。先放行一次远程调用，根据调用结果转换为 CLOSED 或 OPEN 状态，以实现断路器的弹性恢复。</p>
+<li><p><strong>半开启</strong>（HALF OPEN）：断路器必须带有自动故障恢复能力，进入 OPEN 状态一段时间后，将自动（下次请求触发）切换到该状态。先放行一次远程调用，根据调用结果转换为 CLOSED 或 OPEN 状态，以实现断路器的弹性恢复。</p>
 </li>
 </ul>
 <h4 id="Gutter"><a href="#Gutter" class="headerlink" title="Gutter"></a>Gutter</h4><p>基于 Failover 思路解决可用性问题很普遍，但是完整的 Failover 需要翻倍的机器资源，在平时不接收流量时造成资源浪费；而且高负载情况下接管流量也不一定能完整接住。</p>
 <p>基于熔断的 Gutter Kafka 用于接管自动修复系统运行过程中的负载，只需要付出 10% 的资源就能解决部分系统可用性问题。利用熔断的思路把抛弃的流量转移到 Gutter 集群，Gutter 也接不住的流量再重新回抛到主集群（最大力度接收）。</p>
-<img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservices_availability_design.assets/image-20210809150151913.png" alt="image-20210809150151913" style="zoom:80%;" />
-
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_microservices_availability_design.assets/image-20210809150151913.png" alt="image-20210809150151913" style="zoom:80%;" /></p>
 <h3 id="客户端流控"><a href="#客户端流控" class="headerlink" title="客户端流控"></a>客户端流控</h3><p>一般客户端总是会积极重试，访问一个不可达的服务。要实现流控：</p>
 <ul>
-<li><p>  客户端需要限制请求频次，做一定的请求退让（retry backoff）。</p>
+<li><p>客户端需要限制请求频次，做一定的请求退让（retry backoff）。</p>
 </li>
-<li><p>  可通过接口级别的 error_details，挂载到每个 API 的响应。</p>
+<li><p>可通过接口级别的 error_details，挂载到每个 API 的响应。</p>
 </li>
 </ul>
 <h2 id="降级设计"><a href="#降级设计" class="headerlink" title="降级设计"></a>降级设计</h2><p>通过降级回复可减少工作量，或丢弃不重要的请求，保障用户体验。通常需要有能力区分不同的请求、了解可以降级的流量（比如降低回复质量来减少回复所需的计算量或时间）。</p>
 <p>缺少降级措施的例子：</p>
 <ul>
-<li><p>  客户端解析协议失败，app 奔溃。</p>
+<li><p>客户端解析协议失败，app 奔溃。</p>
 </li>
-<li><p>  客户端部分协议不兼容，导致页面失败。</p>
+<li><p>客户端部分协议不兼容，导致页面失败。</p>
 </li>
-<li><p>  local cache 数据源缓存，发版失效 + 依赖接口故障，引起白屏。</p>
+<li><p>local cache 数据源缓存，发版失效 + 依赖接口故障，引起白屏。</p>
 </li>
-<li><p>  没有 playbook，导致的 MTTR 上升。</p>
+<li><p>没有 playbook，导致的 MTTR 上升。</p>
 </li>
 </ul>
 <p>需要考虑：</p>
 <ul>
-<li><p>  流量评估和优雅降级的决定性指标（CPU、延迟、队列长度、线程数量、错误等）。</p>
+<li><p>流量评估和优雅降级的决定性指标（CPU、延迟、队列长度、线程数量、错误等）。</p>
 </li>
-<li><p>  进入降级模式时需要执行的动作。</p>
+<li><p>进入降级模式时需要执行的动作。</p>
 </li>
-<li><p>  一般在 BFF 层处理，如果由底层服务提供降级、上层再基于低质量数据做缓存会造成污染。</p>
+<li><p>一般在 BFF 层处理，如果由底层服务提供降级、上层再基于低质量数据做缓存会造成污染。</p>
 </li>
-<li><p>  优雅降级只在容量规划失误或出现意外的负载时触发，不应频繁出现。</p>
+<li><p>优雅降级只在容量规划失误或出现意外的负载时触发，不应频繁出现。</p>
 </li>
-<li><p>  充分的测试演练，平时不会触发和使用代码，需要定期针对一小部分流量进行演练，保证功能正常。</p>
+<li><p>充分的测试演练，平时不会触发和使用代码，需要定期针对一小部分流量进行演练，保证功能正常。</p>
 </li>
-<li><p>  足够简单。</p>
+<li><p>足够简单。</p>
 </li>
 </ul>
 <p>降级的本质是提供有损的服务：</p>
 <ul>
-<li><p>  模块化 UI ，对非核心模块降级。</p>
+<li><p>模块化 UI ，对非核心模块降级。</p>
 </li>
-<li><p>  页面上次缓存副本。</p>
+<li><p>页面上次缓存副本。</p>
 </li>
-<li><p>  设置默认值、热门推荐等。</p>
+<li><p>设置默认值、热门推荐等。</p>
 </li>
-<li><p>  流量拦截 + 定期数据缓存（过期副本策略）。</p>
+<li><p>流量拦截 + 定期数据缓存（过期副本策略）。</p>
 </li>
 </ul>
 <p>一般处理方法：</p>
 <ul>
-<li><p>  页面降级、延迟服务、写/读降级、缓存降级。</p>
+<li><p>页面降级、延迟服务、写/读降级、缓存降级。</p>
 </li>
-<li><p>  抛出异常、返回约定协议、Mock 数据、Fallback 处理。</p>
+<li><p>抛出异常、返回约定协议、Mock 数据、Fallback 处理。</p>
 </li>
 </ul>
 <h2 id="重试设计"><a href="#重试设计" class="headerlink" title="重试设计"></a>重试设计</h2><p>当请求返回错误（比如配额不足、超时、内部错误等），对于后端部分节点过载的情况，倾向于立刻重试（前提是该错误是否可以通过重试解决，比如鉴权失败则没有必要反复重试）。</p>
 <p>首先应确保接口幂等性：</p>
 <ul>
-<li><p>  遵循 RESTful 的通用原则，一般只有 POST 是非幂等。</p>
+<li><p>遵循 RESTful 的通用原则，一般只有 POST 是非幂等。</p>
 </li>
-<li><p>  全局唯一 ID：根据业务生成全局唯一 ID，在调用接口时会传入。接口提供方从存储系统中去检索该 ID 是否存在，如果存在则说明操作已经执行过，将拒绝本次服务请求；否则接收服务请求并将 ID 存入存储系统中，之后包含相同业务 ID 参数的请求将被拒绝。</p>
+<li><p>全局唯一 ID：根据业务生成全局唯一 ID，在调用接口时会传入。接口提供方从存储系统中去检索该 ID 是否存在，如果存在则说明操作已经执行过，将拒绝本次服务请求；否则接收服务请求并将 ID 存入存储系统中，之后包含相同业务 ID 参数的请求将被拒绝。</p>
 </li>
-<li><p>  去重表：适用于在业务中有唯一标识的插入场景。比如一个订单只能支付一次，可建立将订单 ID 作为唯一索引的去重表。在一个事务中完成支付和去重操作，当出现重复支付时抛出唯一约束异常，操作回滚。</p>
+<li><p>去重表：适用于在业务中有唯一标识的插入场景。比如一个订单只能支付一次，可建立将订单 ID 作为唯一索引的去重表。在一个事务中完成支付和去重操作，当出现重复支付时抛出唯一约束异常，操作回滚。</p>
 </li>
-<li><p>  多版本并发控制：适合对更新请求作幂等性控制。比如在更新接口中增加版本号实现幂等性控制。</p>
+<li><p>多版本并发控制：适合对更新请求作幂等性控制。比如在更新接口中增加版本号实现幂等性控制。</p>
 </li>
 </ul>
 <p>留意流量放大：</p>
 <ul>
-<li><p>  限制重试次数和基于重试分布的策略（重试比率：10%）。</p>
+<li><p>限制重试次数和基于重试分布的策略（重试比率：10%）。</p>
 </li>
-<li><p>  随机化、指数型递增的重试周期：exponential ackoff + jitter。</p>
+<li><p>随机化、指数型递增的重试周期：exponential ackoff + jitter。</p>
 </li>
-<li><p>  客户端记录重试次数直方图，传递到服务端进行分布判定，交由服务端判定拒绝。</p>
+<li><p>客户端记录重试次数直方图，传递到服务端进行分布判定，交由服务端判定拒绝。</p>
 </li>
-<li><p>  只在主路逻辑的关键服务上进行重试，非关键服务不建议首选重试，尤其不应同步重试。</p>
+<li><p>只在主路逻辑的关键服务上进行重试，非关键服务不建议首选重试，尤其不应同步重试。</p>
 </li>
-<li><p>  只应在失败层次进行重试，当重试仍然失败，返回全局约定错误码以避免级联重试。</p>
+<li><p>只应在失败层次进行重试，当重试仍然失败，返回全局约定错误码以避免级联重试。</p>
 </li>
 </ul>
 <p>重试要有明确的终止条件：</p>
 <ul>
-<li><p>  超时终止：重试模式更应配合超时机制使用，否则可能对系统有害。</p>
+<li><p>超时终止：重试模式更应配合超时机制使用，否则可能对系统有害。</p>
 </li>
-<li><p>  次数终止：不能无限制，一般只重试 2 至 5 次（可结合退避策略），或重试请求只占所有请求较小的比例。</p>
+<li><p>次数终止：不能无限制，一般只重试 2 至 5 次（可结合退避策略），或重试请求只占所有请求较小的比例。</p>
 </li>
 </ul>
 <p>重试设计不当的例子：</p>
 <ul>
-<li><p>  Nginx upstream retry 过大，导致服务雪崩。</p>
+<li><p>Nginx upstream retry 过大，导致服务雪崩。</p>
 </li>
-<li><p>  业务不幂等，重试导致数据重复。</p>
+<li><p>业务不幂等，重试导致数据重复。</p>
 </li>
-<li><p>  多层级重试传递，放大流量引起雪崩。</p>
+<li><p>多层级重试传递，放大流量引起雪崩。</p>
 </li>
 </ul>
 <h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>特指数据中心内部的负载均衡。在理想情况下，某个服务的负载会完全均匀地分发给所有后端任务，在任何时刻节点消耗同样数量的 CPU。目标是实现：</p>
 <ul>
-<li><p>  均衡的流量分发。</p>
+<li><p>均衡的流量分发。</p>
 </li>
-<li><p>  可靠地识别异常节点。</p>
+<li><p>可靠地识别异常节点。</p>
 </li>
-<li><p>  scale-out，增加同质节点扩容。</p>
+<li><p>scale-out，增加同质节点扩容。</p>
 </li>
-<li><p>  减少错误，提高可用性。</p>
+<li><p>减少错误，提高可用性。</p>
 </li>
 </ul>
 <p>有时 backend 之间的负载差异较大，一般是使用 JSQ（最闲轮询）算法、缺乏服务端全局视图带来的问题：</p>
 <ul>
-<li><p>  每个请求的处理成本不同。</p>
+<li><p>每个请求的处理成本不同。</p>
 </li>
-<li><p>  物理机环境的差异：服务器本身很难强同质性，以及存在共享资源争用的情况（内存缓存、带宽、I/O 等）。</p>
+<li><p>物理机环境的差异：服务器本身很难强同质性，以及存在共享资源争用的情况（内存缓存、带宽、I/O 等）。</p>
 </li>
-<li><p>  性能因素，比如 Java 的 FGC、JIT 等。</p>
+<li><p>性能因素，比如 Java 的 FGC、JIT 等。</p>
 </li>
 </ul>
 <p>因此目标需要综合考虑负载和可用性。参考《<a target="_blank" rel="noopener" href="http://www.eecs.harvard.edu/~michaelm/postscripts/tpds2001.pdf">The power of two choices in randomized load balancing</a>》，可采用 p2c 算法随机选取两个节点打分，选择更优的节点：</p>
 <ul>
-<li><p>  考虑服务端指标（CPU 等）和客户端指标（health、inflight、latency 等），使用简单的线性方程进行打分。</p>
+<li><p>考虑服务端指标（CPU 等）和客户端指标（health、inflight、latency 等），使用简单的线性方程进行打分。</p>
 </li>
-<li><p>  对新启动的节点使用常量惩罚值（penalty），以及使用探针方式最小化放量，目的是预热。</p>
+<li><p>对新启动的节点使用常量惩罚值（penalty），以及使用探针方式最小化放量，目的是预热。</p>
 </li>
-<li><p>  对于打分较低的节点，为避免进入黑名单而无法恢复，要使用统计衰减的方式，让节点指标逐渐恢复到初始状态（默认值）。</p>
+<li><p>对于打分较低的节点，为避免进入黑名单而无法恢复，要使用统计衰减的方式，让节点指标逐渐恢复到初始状态（默认值）。</p>
 </li>
-<li><p>  当前发出的请求超过了 predict lagtency，就会增加惩罚。</p>
+<li><p>当前发出的请求超过了 predict lagtency，就会增加惩罚。</p>
 </li>
 </ul>
 <blockquote>
@@ -929,29 +924,29 @@ height:100vh;
 <p>  其中 β 为若干次幂的倒数，即：Math.Exp((-span) / 600ms)。</p>
 </blockquote>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><p>  <a target="_blank" rel="noopener" href="http://www.360doc.com/content/16/1124/21/31263000_609259745.shtml">大神讲解微服务治理的技术演进和架构实践 (360doc.com)</a></p>
+<li><p><a target="_blank" rel="noopener" href="http://www.360doc.com/content/16/1124/21/31263000_609259745.shtml">大神讲解微服务治理的技术演进和架构实践 (360doc.com)</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://www.infoq.cn/article/basis-frameworkto-implement-micro-service/">实施微服务，我们需要哪些基础框架？-InfoQ</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/basis-frameworkto-implement-micro-service/">实施微服务，我们需要哪些基础框架？-InfoQ</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://www.infoq.cn/news/2017/04/linkerd-celebrates-one-year/">开源Linkerd项目庆祝一周年纪念日-InfoQ</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://www.infoq.cn/news/2017/04/linkerd-celebrates-one-year/">开源Linkerd项目庆祝一周年纪念日-InfoQ</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://netflixtechblog.com/netflix-edge-load-balancing-695308b5548c">Rethinking Netflix’s Edge Load Balancing | by Netflix Technology Blog | Netflix TechBlog</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://netflixtechblog.com/netflix-edge-load-balancing-695308b5548c">Rethinking Netflix’s Edge Load Balancing | by Netflix Technology Blog | Netflix TechBlog</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAwNjQwNzU2NQ==&mid=402841629&idx=1&sn=f598fec9b370b8a6f2062233b31122e0&mpshare=1&scene=23&srcid=0404qP0fH8zRiIiFzQBiuzuU#rd">亿级Web系统的容错性建设实践 (qq.com)</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAwNjQwNzU2NQ==&amp;mid=402841629&amp;idx=1&amp;sn=f598fec9b370b8a6f2062233b31122e0&amp;mpshare=1&amp;scene=23&amp;srcid=0404qP0fH8zRiIiFzQBiuzuU#rd">亿级Web系统的容错性建设实践 (qq.com)</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzIzMzk2NDQyMw==&mid=2247486641&idx=1&sn=1660fb41b0c5b8d8d6eacdfc1b26b6a6&source=41#wechat_redirect">阿里微服务之殇及分布式链路追踪技术原理 (qq.com)</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzIzMzk2NDQyMw==&amp;mid=2247486641&amp;idx=1&amp;sn=1660fb41b0c5b8d8d6eacdfc1b26b6a6&amp;source=41#wechat_redirect">阿里微服务之殇及分布式链路追踪技术原理 (qq.com)</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://blog.acolyer.org/2018/11/16/overload-control-for-scaling-wechat-microservices/">Overload control for scaling WeChat microservices | the morning paper (acolyer.org)</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://blog.acolyer.org/2018/11/16/overload-control-for-scaling-wechat-microservices/">Overload control for scaling WeChat microservices | the morning paper (acolyer.org)</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://www.cs.columbia.edu/~ruigu/papers/socc18-final100.pdf">Overload Control for Scaling WeChat Microservices (columbia.edu)</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://www.cs.columbia.edu/~ruigu/papers/socc18-final100.pdf">Overload Control for Scaling WeChat Microservices (columbia.edu)</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki">Home · alibaba/Sentinel Wiki (github.com)</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki">Home · alibaba/Sentinel Wiki (github.com)</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://blog.csdn.net/okiwilldoit/article/details/81738782">分布式系统常见负载均衡算法_罗布泊coding-CSDN博客_负载均衡算法</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/okiwilldoit/article/details/81738782">分布式系统常见负载均衡算法<em>罗布泊coding-CSDN博客</em>负载均衡算法</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="http://alex-ii.github.io/notes/2019/02/13/predictive_load_balancing.html">Predictive Load-Balancing: Unfair But Faster &amp; More Robust by Steve Gury Talk | Little Big Engineer (alex-ii.github.io)</a></p>
+<li><p><a target="_blank" rel="noopener" href="http://alex-ii.github.io/notes/2019/02/13/predictive_load_balancing.html">Predictive Load-Balancing: Unfair But Faster &amp; More Robust by Steve Gury Talk | Little Big Engineer (alex-ii.github.io)</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_38106113/article/details/81542863">深入解析TensorFlow中滑动平均模型与代码实现_Star_Platinum的博客-CSDN博客</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_38106113/article/details/81542863">深入解析TensorFlow中滑动平均模型与代码实现_Star_Platinum的博客-CSDN博客</a></p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -2122,9 +2117,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
     
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
     
         <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
     
@@ -2138,9 +2133,9 @@ top:100vh;
     
         <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
     
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
         <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
