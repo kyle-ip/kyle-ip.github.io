@@ -489,6 +489,7 @@ height:100vh;
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> xxx</span><br><span class="line"><span class="keyword">FROM</span> A</span><br><span class="line"><span class="keyword">JOIN</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> id</span><br><span class="line">    <span class="keyword">FROM</span> B</span><br><span class="line">    LIMIT <span class="number">10000000</span>, <span class="number">10</span></span><br><span class="line">) <span class="keyword">AS</span> tp</span><br></pre></td></tr></table></figure>
+
 <h4 id="缓存数据"><a href="#缓存数据" class="headerlink" title="缓存数据"></a>缓存数据</h4><p>当数据经常被重复查询时，缓存可避免每次都请求数据库，带来的性能提升非常明显。</p>
 <h4 id="切分大查询"><a href="#切分大查询" class="headerlink" title="切分大查询"></a>切分大查询</h4><p>当执行涉及大量数据的查询：</p>
 <ul>
@@ -503,8 +504,10 @@ height:100vh;
 </ul>
 <p>比如：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> messages </span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">create</span> <span class="operator">&lt;</span> DATE_SUB(NOW(), <span class="type">INTERVAL</span> <span class="number">3</span> <span class="keyword">MONTH</span>);</span><br></pre></td></tr></table></figure>
+
 <p>可在应用层优化：</p>
 <figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rows_affected = <span class="number">0</span></span><br><span class="line">do &#123;</span><br><span class="line">    rows_affected = do_query(<span class="string">&quot;<span class="keyword">DELETE</span> FROM messages WHERE create &lt; DATE_SUB(NOW(), INTERVAL 3 MONTH) LIMIT 10000&quot;</span>)</span><br><span class="line">&#125; while rows_affected &gt; <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="优化聚合"><a href="#优化聚合" class="headerlink" title="优化聚合"></a>优化聚合</h3><h4 id="分解关联"><a href="#分解关联" class="headerlink" title="分解关联"></a>分解关联</h4><p>将大连接查询分解成对多个单表查询，<strong>在应用层关联</strong>：</p>
 <ul>
 <li><p>减少锁竞争。</p>
@@ -524,7 +527,9 @@ height:100vh;
 </ul>
 <p>如果关联查询可改写为固定、少量的 IN 范围，可让 MySQL 按照 ID 顺序查询，将比随机连接更高效。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> tab</span><br><span class="line"><span class="keyword">JOIN</span> tag_post <span class="keyword">ON</span> tag_post.tag_id<span class="operator">=</span>tag.id</span><br><span class="line"><span class="keyword">JOIN</span> post <span class="keyword">ON</span> tag_post.post_id<span class="operator">=</span>post.id</span><br><span class="line"><span class="keyword">WHERE</span> tag.tag<span class="operator">=</span><span class="string">&#x27;mysql&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> tag </span><br><span class="line"><span class="keyword">WHERE</span> tag<span class="operator">=</span><span class="string">&#x27;mysql&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> tag_post </span><br><span class="line"><span class="keyword">WHERE</span> tag_id<span class="operator">=</span><span class="number">1234</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> post </span><br><span class="line"><span class="keyword">WHERE</span> post.id <span class="keyword">IN</span> (<span class="number">123</span>,<span class="number">456</span>,<span class="number">567</span>,<span class="number">9098</span>,<span class="number">8904</span>);</span><br></pre></td></tr></table></figure>
+
 <p>如无法避免关联，应考虑在被驱动表（右）的关联字段加上索引。</p>
 <h4 id="优化行数统计"><a href="#优化行数统计" class="headerlink" title="优化行数统计"></a>优化行数统计</h4><p>在不同的存储引擎中，<code>COUNT(*)</code> 有不同实现：</p>
 <ul>
@@ -567,6 +572,7 @@ height:100vh;
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> temporary <span class="keyword">TABLE</span> temp_t(</span><br><span class="line">    <span class="type">int</span> <span class="keyword">primary</span> key, </span><br><span class="line">    a <span class="type">int</span>, </span><br><span class="line">    b <span class="type">int</span>, index(b)</span><br><span class="line">) engine<span class="operator">=</span>innodb;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> temp_t </span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> t2 </span><br><span class="line"><span class="keyword">WHERE</span> b<span class="operator">&gt;=</span><span class="number">1</span> <span class="keyword">AND</span> b<span class="operator">&lt;=</span><span class="number">2000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> t1 </span><br><span class="line"><span class="keyword">JOIN</span> temp_t <span class="keyword">ON</span> (t1.b<span class="operator">=</span>temp_t.b);</span><br></pre></td></tr></table></figure>
+
 <h4 id="哈希关联"><a href="#哈希关联" class="headerlink" title="哈希关联"></a>哈希关联</h4><p>BNL 的 join_buffer 是无序数组，如果使用哈希表，就能以 N 次 hash 查找代替 M*N 次判断。由于 MySQL 不支持 Hash Join，可在应用层实现：</p>
 <ul>
 <li><p>取得驱动表的全部数据，在业务端存入哈希表。</p>
@@ -581,16 +587,20 @@ height:100vh;
 <h4 id="const"><a href="#const" class="headerlink" title="const"></a>const</h4><p>唯⼀键或主键。该表最多有一个匹配行，在查询开始时读取。其值可被优化器的其余部分视为常量。</p>
 <p>由于只被读取一次，速度非常快。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> tbl_name </span><br><span class="line"><span class="keyword">WHERE</span> primary_key<span class="operator">=</span><span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> tbl_name </span><br><span class="line"><span class="keyword">WHERE</span> primary_key_part1<span class="operator">=</span><span class="number">1</span> <span class="keyword">AND</span> primary_key_part2<span class="operator">=</span><span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
 <p>一种特殊情况是 <code>system</code>，其查询系统表，只有一行。</p>
 <h4 id="eq-ref"><a href="#eq-ref" class="headerlink" title="eq_ref"></a>eq_ref</h4><p>除了 <code>const</code> 和 <code>system</code> 以外最佳的连接方式，其中⼀个表⽤到了唯⼀键或主键。</p>
 <p>可用于使用 = 运算符比较的索引列。值可以是常量或表达式，该表达式使用在此表之前读取的表中的列。比如下列语句中的 ref_table：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> ref_table,other_table</span><br><span class="line"><span class="keyword">WHERE</span> ref_table.key_column<span class="operator">=</span>other_table.column;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> ref_table,other_table</span><br><span class="line"><span class="keyword">WHERE</span> ref_table.key_column_part1<span class="operator">=</span>other_table.column</span><br><span class="line"><span class="keyword">AND</span> ref_table.key_column_part2<span class="operator">=</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
 <h4 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h4><p>如果连接仅使用键最左前缀，或该字段非唯一索引（连接无法根据键值选择单行）则使用 <code>ref</code>。当只需匹配几行，这仍然是很好的连接类型。</p>
 <p><code>ref</code> 可用于使用运算符比较的索引列，比如下面语句的 ref_table：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> ref_table </span><br><span class="line"><span class="keyword">WHERE</span> key_column<span class="operator">=</span>expr;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> ref_table,other_table</span><br><span class="line"><span class="keyword">WHERE</span> ref_table.key_column<span class="operator">=</span>other_table.column;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> ref_table,other_table</span><br><span class="line"><span class="keyword">WHERE</span> ref_table.key_column_part1<span class="operator">=</span>other_table.column</span><br><span class="line"><span class="keyword">AND</span> ref_table.key_column_part2<span class="operator">=</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
 <h4 id="fulltext"><a href="#fulltext" class="headerlink" title="fulltext"></a>fulltext</h4><p>使用 FULLTEXT 索引时采用。</p>
 <h4 id="ref-or-null"><a href="#ref-or-null" class="headerlink" title="ref_or_null"></a>ref_or_null</h4><p>在 <code>ref</code> 的基础上，还会额外搜索包含 NULL 值的行，最常用于 <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/is-null-optimization.html">优化解析子查询</a>。比如下面语句的 ref_table：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> ref_tableWHERE key_column<span class="operator">=</span>expr <span class="keyword">OR</span> key_column <span class="keyword">IS</span> <span class="keyword">NULL</span>;</span><br></pre></td></tr></table></figure>
+
 <h4 id="index-merge"><a href="#index-merge" class="headerlink" title="index_merge"></a>index_merge</h4><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/index-merge-optimization.html">索引合并</a>：输出行中的列包含使用索引的列，key_len 包含所使用索引的最长键部分的列表。 </p>
 <blockquote>
 <p>  索引合并即使用到多个二级索引完成一次查询。比如查询条件涉及两个字段等值匹配（或在主键上进行范围匹配），可分别在两个二级索引上筛选出符合条件的记录（顺序 I/O），取其交集（并集等同理）后再回表取完整记录。</p>
@@ -600,33 +610,40 @@ height:100vh;
 <h4 id="unique-subquery"><a href="#unique-subquery" class="headerlink" title="unique_subquery"></a>unique_subquery</h4><p>一种索引查找函数，完全替换子查询以提高效率。</p>
 <p>对于以下形式的 IN 子查询，此类型替换 <code>eq_ref</code>：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">value</span> <span class="keyword">IN</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> primary_key </span><br><span class="line">    <span class="keyword">FROM</span> single_table </span><br><span class="line">    <span class="keyword">WHERE</span> some_expr</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
 <h4 id="index-subquery"><a href="#index-subquery" class="headerlink" title="index_subquery"></a>index_subquery</h4><p>类似于 <code>unique_subquery</code>，其取代了 IN 子查询，但只适用于以下形式的子查询中的非唯一索引：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">value</span> <span class="keyword">IN</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> key_column </span><br><span class="line">    <span class="keyword">FROM</span> single_table </span><br><span class="line">    <span class="keyword">WHERE</span> some_expr</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
 <h4 id="range"><a href="#range" class="headerlink" title="range"></a>range</h4><p>在给定范围内检索、使用索引选择行，在输出行中的键列指示使用的索引，key_len 包含使用过的最长的键部分。 此类型的 <code>ref</code> 列为 NULL。</p>
 <p>当使用比较运算符、IS NULL、BETWEEN、LIKE 或 IN 等运算符将键列与常量比较时适用：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> tbl_name</span><br><span class="line"><span class="keyword">WHERE</span> key_column <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> tbl_name</span><br><span class="line"><span class="keyword">WHERE</span> key_column <span class="keyword">BETWEEN</span> <span class="number">10</span> <span class="keyword">and</span> <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> tbl_name </span><br><span class="line"><span class="keyword">WHERE</span> key_column <span class="keyword">IN</span> (<span class="number">10</span>,<span class="number">20</span>,<span class="number">30</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> tbl_name</span><br><span class="line"><span class="keyword">WHERE</span> key_part1 <span class="operator">=</span> <span class="number">10</span> <span class="keyword">AND</span> key_part2 <span class="keyword">IN</span> (<span class="number">10</span>,<span class="number">20</span>,<span class="number">30</span>);</span><br></pre></td></tr></table></figure>
+
 <h4 id="index"><a href="#index" class="headerlink" title="index"></a>index</h4><p>当查询仅使用属于单个索引的列时，扫描索引树有两种方式：</p>
 <ul>
-<li><p>如果覆盖索引，则只扫描索引树。此时 Extra 列显示使用索引。由于索引的数据比表的数据少，这种情况 比 <code>all</code> 快。</p>
+<li><p>  如果覆盖索引，则只扫描索引树。此时 Extra 列显示使用索引。由于索引的数据比表的数据少，这种情况 比 <code>all</code> 快。</p>
 </li>
-<li><p>按索引顺序查找数据行，并全表扫描。使用的索引不在 Extra 列中出现。</p>
+<li><p>  按索引顺序查找数据行，并全表扫描。使用的索引不在 Extra 列中出现。</p>
 </li>
 </ul>
 <h4 id="all"><a href="#all" class="headerlink" title="all"></a>all</h4><p>性能最差的全表扫描，可通过添加索引来避免，索引支持基于常量值或早期表中的列值从表中检索行。</p>
 <hr>
 <p>如果打开 <code>optimizer_trace</code>，再执行 SQL 就可以查询 <code>information_schema.OPTIMIZER_TRACE</code> 表查看执行计划，最后可以关闭 <code>optimizer_trace</code> 功能：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> optimizer_trace<span class="operator">=</span>&quot;enabled=on&quot;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> person </span><br><span class="line"><span class="keyword">WHERE</span> NAME <span class="operator">&gt;</span><span class="string">&#x27;name84059&#x27;</span> <span class="keyword">AND</span> create_time<span class="operator">&gt;</span><span class="string">&#x27;2020-01-24 05:00:00&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> information_schema.OPTIMIZER_TRACE;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SET</span> optimizer_trace<span class="operator">=</span>&quot;enabled=off&quot;;</span><br></pre></td></tr></table></figure>
+
 <p>可见不同语句的执行成本：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN </span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> person </span><br><span class="line"><span class="keyword">WHERE</span> NAME<span class="operator">=</span><span class="string">&#x27;name1&#x27;</span>;</span><br><span class="line"># &quot;range_scan_alternatives&quot;: [</span><br><span class="line">#   &#123;</span><br><span class="line">#     &quot;index&quot;: &quot;name_score&quot;,</span><br><span class="line">#     &quot;ranges&quot;: [</span><br><span class="line">#       &quot;name1 &lt;= name &lt;= name1&quot;</span><br><span class="line">#     ] <span class="comment">/* ranges */</span>,</span><br><span class="line">#     &quot;index_dives_for_eq_ranges&quot;: <span class="literal">true</span>,</span><br><span class="line">#     &quot;rowid_ordered&quot;: <span class="literal">false</span>,</span><br><span class="line">#     &quot;using_mrr&quot;: <span class="literal">false</span>,</span><br><span class="line">#     &quot;index_only&quot;: <span class="literal">false</span>,</span><br><span class="line">#     &quot;rows&quot;: <span class="number">1</span>,</span><br><span class="line">#     &quot;cost&quot;: <span class="number">2.21</span>,</span><br><span class="line">#     &quot;chosen&quot;: <span class="literal">true</span></span><br><span class="line">#   &#125;</span><br><span class="line"># ]</span><br><span class="line"></span><br><span class="line">EXPLAIN </span><br><span class="line"><span class="keyword">SELECT</span> NAME,SCORE </span><br><span class="line"><span class="keyword">FROM</span> person </span><br><span class="line"><span class="keyword">WHERE</span> NAME<span class="operator">=</span><span class="string">&#x27;name1&#x27;</span>;</span><br><span class="line"># analyzing_range_alternatives&quot;: &#123;</span><br><span class="line">#   &quot;range_scan_alternatives&quot;: [</span><br><span class="line">#   &#123;</span><br><span class="line">#     &quot;index&quot;: &quot;name_score&quot;,</span><br><span class="line">#     &quot;ranges&quot;: [</span><br><span class="line">#       &quot;name1 <span class="operator">&lt;=</span> name <span class="operator">&lt;=</span> name1&quot;</span><br><span class="line">#     ] /* ranges */,</span><br><span class="line">#     &quot;index_dives_for_eq_ranges&quot;: true,</span><br><span class="line">#     &quot;rowid_ordered&quot;: false,</span><br><span class="line">#     &quot;using_mrr&quot;: false,</span><br><span class="line">#     &quot;index_only&quot;: true,</span><br><span class="line">#     &quot;<span class="keyword">rows</span>&quot;: 1,</span><br><span class="line">#     &quot;cost&quot;: 1.21,</span><br><span class="line">#     &quot;chosen&quot;: true</span><br><span class="line">#   &#125;</span><br><span class="line"># ]</span><br></pre></td></tr></table></figure>
+
 <p>关于 MySQL 优化器的工作，可以参考：<a target="_blank" rel="noopener" href="https://juejin.cn/book/6844733769996304392/section/6844733770059218951">MySQL 基于规则的优化</a>。</p>
 <h2 id="索引优化"><a href="#索引优化" class="headerlink" title="索引优化"></a>索引优化</h2><p>对于一个查询语句，选择索引的过程发生在优化器。强制指定索引分析查询结果：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> T FORCE INDEX(a)</span><br><span class="line"><span class="keyword">WHERE</span> a <span class="keyword">BETWEEN</span> <span class="number">10000</span> <span class="keyword">AND</span> <span class="number">20000</span>;</span><br></pre></td></tr></table></figure>
+
 <p>根据词法分析结果，得出候选的索引列表，依次判断每个索引需要扫描的行数。</p>
 <p>如使用 FORCE INDEX 指定的索引在候选列表中，则直接选择该索引，不评估执行代价。</p>
 <p>生产环境代码中不建议使用 FORCE INDEX，迁移到别的数据库可能不兼容、且不好维护。</p>
 <h3 id="索引选取规则"><a href="#索引选取规则" class="headerlink" title="索引选取规则"></a>索引选取规则</h3><p>在执行语句前不能准确知道查询包含记录数，只能根据统计信息估算。</p>
 <p>参考依据是区分度，即索引上不同的值的数量。可查看索引的统计基数（Cardinality）：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> INDEX;</span><br></pre></td></tr></table></figure>
+
 <p>基数（Cardinality）：InnoDB 执行采样统计。</p>
 <ul>
 <li><p>默认选择 N 个数据页，统计页面上不同的值，求出平均值后乘上页面数。</p>
@@ -643,31 +660,39 @@ height:100vh;
 </ul>
 <p>实际查询中，统计扫描行数还要加上 <strong>回表</strong> 的代价。当统计信息不准确可修正：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ANALYZE <span class="keyword">TABLE</span> t;</span><br></pre></td></tr></table></figure>
+
 <p>其它选取规则：是否使用临时表、排序方式等。</p>
 <p>一般情况下不需要自己计算索引的基数等统计信息，可以使用 <code>SHOW INDEX FROM t</code> 查看。</p>
 <p>同理，要查看访问某个表的统计信息可以使用 <code>SHOW TABLE STATUS LIKE &#39;t&#39;\G</code>。</p>
 <p>关于查询成本分析，可参考：<a target="_blank" rel="noopener" href="https://juejin.cn/book/6844733769996304392/section/6844733770055024647">MySQL 基于成本的优化</a>。</p>
 <h3 id="查询条件优化"><a href="#查询条件优化" class="headerlink" title="查询条件优化"></a>查询条件优化</h3><h4 id="避免函数或表达式"><a href="#避免函数或表达式" class="headerlink" title="避免函数或表达式"></a>避免函数或表达式</h4><p>比如对于交易记录表：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `trade_log` (</span><br><span class="line">    `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,    </span><br><span class="line">    `trade_id` <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,    </span><br><span class="line">    `operator` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,    </span><br><span class="line">    `t_modified` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,    </span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (`id`),    </span><br><span class="line">    KEY `trade_id` (`trade_id`),    </span><br><span class="line">    KEY `t_modified` (`t_modified`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
+
 <p>查询 7 月份的交易记录总数：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) </span><br><span class="line"><span class="keyword">FROM</span> trade_log </span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">MONTH</span>(t_modified) <span class="operator">=</span> <span class="number">7</span>;</span><br></pre></td></tr></table></figure>
+
 <p>由于条件字段为函数调用，则无法使用索引。</p>
 <p>优化器可选择遍历主键索引或 t_modified 索引。经过对比后发现索引 t_modified 更小，比遍历主键索引更快，因此选择 t_modified。</p>
 <p>由于 <code>MONTH()</code> 函数操作可能导致了全索引扫描（区别于精确查找某值，在遍历树时调用函数可能会破坏索引值的有序性，优化器会放弃优化）。</p>
 <p>要用上索引的快速定位能力，应把 SQL 语句改成基于字段本身的范围查询。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) </span><br><span class="line"><span class="keyword">FROM</span> trade_log </span><br><span class="line"><span class="keyword">WHERE</span>     </span><br><span class="line">	(t_modified <span class="operator">&gt;=</span> <span class="string">&#x27;2016-7-1&#x27;</span> <span class="keyword">AND</span> t_modified<span class="operator">&lt;</span><span class="string">&#x27;2016-8-1&#x27;</span>) <span class="keyword">OR</span>     	</span><br><span class="line">	(t_modified <span class="operator">&gt;=</span> <span class="string">&#x27;2017-7-1&#x27;</span> <span class="keyword">AND</span> t_modified<span class="operator">&lt;</span><span class="string">&#x27;2017-8-1&#x27;</span>) <span class="keyword">OR</span>      	 </span><br><span class="line">	(t_modified <span class="operator">&gt;=</span> <span class="string">&#x27;2018-7-1&#x27;</span> <span class="keyword">AND</span> t_modified<span class="operator">&lt;</span><span class="string">&#x27;2018-8-1&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
 <p>即使是不改变值的有序性的函数或表达式，优化器也会放弃使用索引。比如 <code>SELECT * FROM trade_log WHERE id + 1 = 10000;</code> 不会改变有序性，但是优化器还是不能用 id 索引快速定位到 9999。</p>
 <p>因此在写 SQL 语句时要改写成 <code>WHERE id = 10000 - 1</code>（前者类型为 <code>all</code>，后者为 <code>const</code>）。</p>
 <p>最好让索引列单独出现在表达式中。</p>
 <h4 id="避免类型转换和编码转换"><a href="#避免类型转换和编码转换" class="headerlink" title="避免类型转换和编码转换"></a>避免类型转换和编码转换</h4><p>对于上面的交易记录表，要取某条记录。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> trade_log </span><br><span class="line"><span class="keyword">WHERE</span> trade_id <span class="operator">=</span> <span class="number">110717</span>;</span><br></pre></td></tr></table></figure>
+
 <p>交易编号 trade_id 上有索引，而 trade_id 的类型是 varchar(32)，而参数是整型、需要做类型转换。该语句等价于：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> trade_log </span><br><span class="line"><span class="keyword">WHERE</span> <span class="built_in">CAST</span>(trade_id <span class="keyword">AS</span> signed <span class="type">int</span>) <span class="operator">=</span> <span class="number">110717</span>;</span><br></pre></td></tr></table></figure>
+
 <p>规则是当字符串与数字比较时会将字符串转换成数字，应该先自行转换好类型再传参。</p>
 <p>又比如引入交易记录细节表：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `trade_detail` (</span><br><span class="line">    `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,    </span><br><span class="line">    `trade_id` <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,    </span><br><span class="line">    `trade_step` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>, <span class="comment">/*操作步骤*/</span>    </span><br><span class="line">    `step_info` <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>, <span class="comment">/*步骤信息*/</span>    </span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (`id`),    </span><br><span class="line">    KEY `trade_id` (`trade_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> trade_log <span class="keyword">VALUES</span>(<span class="number">1</span>, <span class="string">&#x27;aaaaaaaa&#x27;</span>, <span class="number">1000</span>, now());</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> trade_log <span class="keyword">VALUES</span>(<span class="number">2</span>, <span class="string">&#x27;aaaaaaab&#x27;</span>, <span class="number">1000</span>, now());</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> trade_log <span class="keyword">VALUES</span>(<span class="number">3</span>, <span class="string">&#x27;aaaaaaac&#x27;</span>, <span class="number">1000</span>, now());</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> trade_detail <span class="keyword">VALUES</span>(<span class="number">1</span>, <span class="string">&#x27;aaaaaaaa&#x27;</span>, <span class="number">1</span>, <span class="string">&#x27;add&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> trade_detail <span class="keyword">VALUES</span>(<span class="number">2</span>, <span class="string">&#x27;aaaaaaaa&#x27;</span>, <span class="number">2</span>, <span class="string">&#x27;update&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> trade_detail <span class="keyword">VALUES</span>(<span class="number">3</span>, <span class="string">&#x27;aaaaaaaa&#x27;</span>, <span class="number">3</span>, <span class="string">&#x27;commit&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> trade_detail <span class="keyword">VALUES</span>(<span class="number">4</span>, <span class="string">&#x27;aaaaaaab&#x27;</span>, <span class="number">1</span>, <span class="string">&#x27;add&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> trade_detail <span class="keyword">VALUES</span>(<span class="number">5</span>, <span class="string">&#x27;aaaaaaab&#x27;</span>, <span class="number">2</span>, <span class="string">&#x27;update&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> trade_detail <span class="keyword">VALUES</span>(<span class="number">6</span>, <span class="string">&#x27;aaaaaaab&#x27;</span>, <span class="number">3</span>, <span class="string">&#x27;update again&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
 <p>要查询 id=2 的交易的所有操作步骤信息：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> d.<span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> trade_log l, trade_detail d </span><br><span class="line"><span class="keyword">WHERE</span> d.trade_id<span class="operator">=</span>l.trade_id <span class="keyword">AND</span> l.id<span class="operator">=</span><span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li><p>优化器先在 trade_log 上使用主键索引查到 id=2 的行，rows=1 表示只扫描一行。</p>
 </li>
@@ -677,10 +702,13 @@ height:100vh;
 <p>在执行计划中，从 trade_log 表（驱动表）中取 trade_id 字段再去 trade_detail 表（被驱动表）查询匹配字段。</p>
 <p>由于两表字符编码不同，关联字段在做比较时，会先把 utf8 字符串转成 utf8mb4（utf8 的超集）再做比较。上述语句等价于：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> trade_detail </span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">CONVERT</span>(trade_id <span class="keyword">USING</span> utf8mb4)<span class="operator">=</span>$L2.trade_id.value; </span><br></pre></td></tr></table></figure>
+
 <p>可以考虑把字段的字符集统一：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> trade_detail </span><br><span class="line">MODIFY trade_id <span class="type">varchar</span>(<span class="number">32</span>) <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8mb4 <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>;</span><br></pre></td></tr></table></figure>
+
 <p>如果数据量大不便于改表，可修改查询语句：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> d.<span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> trade_log l, trade_detail d </span><br><span class="line"><span class="keyword">WHERE</span> d.trade_id<span class="operator">=</span><span class="keyword">CONVERT</span>(l.trade_id <span class="keyword">USING</span> utf8) <span class="keyword">AND</span> l.id<span class="operator">=</span><span class="number">2</span>; </span><br></pre></td></tr></table></figure>
+
 <h4 id="合理安排索引顺序"><a href="#合理安排索引顺序" class="headerlink" title="合理安排索引顺序"></a>合理安排索引顺序</h4><p>根据 <strong>选择性</strong>：即不重复的索引值和记录总数的比值。</p>
 <ul>
 <li><p>最大值为 1，即每条记录都有唯一的索引与其对应，相应存储占用空间最大。</p>
@@ -690,7 +718,9 @@ height:100vh;
 </ul>
 <p>比如：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span>     </span><br><span class="line">    <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> staff_id)<span class="operator">/</span><span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">AS</span> staff_id_selectivity,       </span><br><span class="line">    <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> customer_id)<span class="operator">/</span><span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">AS</span> customer_id_selectivity,    </span><br><span class="line">    <span class="built_in">COUNT</span>(<span class="operator">*</span>)</span><br><span class="line"><span class="keyword">FROM</span> payment;</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">staff_id_selectivity</span>: <span class="number">0</span>.<span class="number">0001</span></span><br><span class="line"><span class="attribute">customer_id_selectivity</span>: <span class="number">0</span>.<span class="number">0373</span>               </span><br><span class="line"><span class="attribute">COUNT</span>(*): <span class="number">16049</span></span><br></pre></td></tr></table></figure>
+
 <p>customer_id 选择性比 staff_id 更高，应把 customer_id 列放在多列索引前面。</p>
 <p>当多列索引的区分度都很低时，会触发 <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/index-merge-optimization.html">索引合并</a>。</p>
 <h4 id="范围条件后置"><a href="#范围条件后置" class="headerlink" title="范围条件后置"></a>范围条件后置</h4><p>尽可能将范围查询的 <strong>字段放在最后</strong>：</p>
@@ -719,9 +749,9 @@ height:100vh;
 <hr>
 <p>因此选择索引时主要考虑两方面：</p>
 <ul>
-<li><p>针对用于搜索、排序或分组的列（结果集里的列则没有必要，除非能利用覆盖索引）。</p>
+<li><p>  针对用于搜索、排序或分组的列（结果集里的列则没有必要，除非能利用覆盖索引）。</p>
 </li>
-<li><p>考虑列的基数（选择性），列的基数越小，该列中的值越集中，排序、快速查找效果差（见“合理安排索引顺序”）。</p>
+<li><p>  考虑列的基数（选择性），列的基数越小，该列中的值越集中，排序、快速查找效果差（见“合理安排索引顺序”）。</p>
 </li>
 </ul>
 <h3 id="设计维护"><a href="#设计维护" class="headerlink" title="设计维护"></a>设计维护</h3><h4 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h4><p>使用自增 ID：插入新记录时不指定 ID 值，系统会获取当前 ID 最大值加 1 作为下一条记录的 ID 值。</p>
@@ -746,6 +776,7 @@ height:100vh;
 </ul>
 <p>比如把 actor_id 和 film_id 设置为多列索引：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> film_id, actor_ id </span><br><span class="line"><span class="keyword">FROM</span> sakila.film_actor</span><br><span class="line"><span class="keyword">WHERE</span> actor_id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">AND</span> film_id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
 <h4 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h4><p>索引中包含所有待查询字段的值，查询时只需要过滤二级索引，不需要回表、向引擎请求主键索引。</p>
 <ul>
 <li><p>相比起整行读取，只读取索引能大大减少数据访问量。</p>
@@ -757,12 +788,15 @@ height:100vh;
 </ul>
 <p>比如：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ID</span><br><span class="line"><span class="keyword">FROM</span> T</span><br><span class="line"><span class="keyword">WHERE</span> k <span class="keyword">BETWEEN</span> <span class="number">3</span> <span class="keyword">AND</span> <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
 <p>由于待取出 ID 的值已经在 k 树的叶节点，在访问 k 树时无需把 ID 带到 ID 树中去查找。</p>
 <h4 id="前缀索引"><a href="#前缀索引" class="headerlink" title="前缀索引"></a>前缀索引</h4><p>对于 BLOB、TEXT 和 VARCHAR 等字符串类型的列，必须使用前缀索引，即只索引开始的部分字符。</p>
 <p>需要根据索引选择性来确定前缀长度：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="keyword">user</span> <span class="keyword">ADD</span> INDEX index1(email(<span class="number">6</span>));</span><br></pre></td></tr></table></figure>
+
 <p>权衡记录扫描次数（区分度）和占用空间：数值越大表示区分度越高、损失比例越小，但占用空间越多，建议不小于 L * 95% 的值。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span>      </span><br><span class="line">    <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> email）<span class="keyword">AS</span> L,    </span><br><span class="line">    <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> <span class="keyword">LEFT</span>(email, <span class="number">4</span>)）<span class="keyword">AS</span> L4,    </span><br><span class="line">    <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> <span class="keyword">LEFT</span>(email, <span class="number">5</span>)）<span class="keyword">AS</span> L5,    </span><br><span class="line">    <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> <span class="keyword">LEFT</span>(email, <span class="number">6</span>)）<span class="keyword">AS</span> L6,    </span><br><span class="line">    <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> <span class="keyword">LEFT</span>(email, <span class="number">7</span>)）<span class="keyword">AS</span> L7</span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure>
+
 <p>使用合适长度的前缀索引，可节省空间又无需额外增加太多查询成本。</p>
 <ul>
 <li><p><strong>不能与覆盖索引同用</strong>：使用前缀索引（即使长度 100% 覆盖，系统不确定前缀索引的定义是否截断了完整信息）可能由于截取了列，不能避免回表。   </p>
@@ -775,7 +809,7 @@ height:100vh;
 </li>
 </ul>
 </li>
-<li><p>对于前缀索引（比如前 10 个字符），由于无法对前一部分字符相同、后半字符不同的记录排序，即无法支持使用索引对完整字段排序。</p>
+<li><p>  对于前缀索引（比如前 10 个字符），由于无法对前一部分字符相同、后半字符不同的记录排序，即无法支持使用索引对完整字段排序。</p>
 </li>
 </ul>
 <h4 id="锁优化"><a href="#锁优化" class="headerlink" title="锁优化"></a>锁优化</h4><p>Innodb 会锁住所有返回给 MySQL 的数据，即使 MySQL 后⾯会⽤ WHERE 过滤。</p>
@@ -783,8 +817,10 @@ height:100vh;
 <h4 id="空间维护"><a href="#空间维护" class="headerlink" title="空间维护"></a>空间维护</h4><p>首先索引列的类型尽量小：在查询时比较效率较高；而且因为占用空间较小，在一个页内可放下更多记录，减少磁盘 <code>I/O</code>，即在内存缓存更多的页，加快读写效率。</p>
 <p>要 <strong>及时清理</strong> 无必要的索引、节省空间，且 <strong>尽可能优化复用</strong> 现有索引以代替新建。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 一般索引</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> T <span class="keyword">DROP</span> INDEX k;</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> T <span class="keyword">ADD</span> INDEX(k);</span><br><span class="line"></span><br><span class="line"># 主键索引</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> T <span class="keyword">DROP</span> <span class="keyword">PRIMARY</span> KEY;</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> T <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY(id);</span><br></pre></td></tr></table></figure>
+
 <p>不论是删除还是创建主键，都会将整个表重建，所以重建主键是不必要的：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> T engine<span class="operator">=</span>InnoDB</span><br></pre></td></tr></table></figure>
+
 <p>InnoDB 索引容量容易膨胀，即使删除表部分记录，索引仍然存在、不会主动释放，只有重建表才能重建索引。</p>
 <h2 id="事务与锁优化"><a href="#事务与锁优化" class="headerlink" title="事务与锁优化"></a>事务与锁优化</h2><p>以上 SQL 优化和索引优化都是针对查询，对于增删改操作则涉及到事务与锁。</p>
 <h3 id="控制锁粒度"><a href="#控制锁粒度" class="headerlink" title="控制锁粒度"></a>控制锁粒度</h3><p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E5%B0%81%E9%94%81%E7%B2%92%E5%BA%A6.jpg" alt="封锁粒度.jpg"></p>
@@ -808,6 +844,7 @@ height:100vh;
 <p>因此在修改表（尤其大表）结构时要避免对其它 CRUD 操作造成阻塞。当事务提交前会占用 MDL 锁，还要尽量避免长事务（在 information_schema 库的 innodb_trx 表可查）。</p>
 <p>然而操作热点表时不能直接杀死事务，应考虑在 <code>ALTER TABLE</code> 语句中设定等待时间，获取 MDL 锁超时则失败、放弃，之后再通过重试命令重复该过程。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name NOWAIT <span class="keyword">ADD</span> <span class="keyword">column</span> ...</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name WAIT N <span class="keyword">ADD</span> <span class="keyword">column</span> ... </span><br></pre></td></tr></table></figure>
+
 <h4 id="行级锁"><a href="#行级锁" class="headerlink" title="行级锁"></a>行级锁</h4><p>行锁在引擎层由各个引擎自行实现的。比如 MyISAM 引擎就不支持行锁，至少要对整表加锁。</p>
 <p>在选择封锁粒度时，需要在锁开销和并发程度之间做权衡：</p>
 <ul>
@@ -818,12 +855,16 @@ height:100vh;
 </ul>
 <h4 id="间隙锁"><a href="#间隙锁" class="headerlink" title="间隙锁"></a>间隙锁</h4><p>间隙锁在 <strong>可重复读</strong> 下才生效，同时要解决可能造成数据和日志不一致问题，需要设置 <code>binlog_format=row</code>。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> c </span><br><span class="line"><span class="keyword">FROM</span> t </span><br><span class="line"><span class="keyword">WHERE</span> c <span class="keyword">BETWEEN</span> <span class="number">10</span> <span class="keyword">AND</span> <span class="number">20</span> <span class="keyword">FOR</span> UPDATE;</span><br></pre></td></tr></table></figure>
+
 <p>Record Locks 锁定一条记录上的索引而非记录本身，如果没有其它索引，则锁定聚簇索引。</p>
 <p>而 Next-Key Locks 是 Record Locks 和 Gap Locks 的结合，除了锁定一条记录上的索引之外，也锁定索引之间的间隙。例如索引包含值 10, 11, 13, 20，需锁定以下区间：</p>
 <figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">negative</span> infinity, <span class="number">10</span>]</span><br><span class="line">(<span class="number">10</span>, <span class="number">11</span>]</span><br><span class="line">(<span class="number">11</span>, <span class="number">13</span>]</span><br><span class="line">(<span class="number">13</span>, <span class="number">20</span>]</span><br><span class="line">(<span class="number">20</span>, <span class="keyword">positive</span> infinity)</span><br></pre></td></tr></table></figure>
+
 <p>间隙锁的引入可能导致更大的范围锁定，从而影响了并发度，因此只在必要时使用。</p>
 <h3 id="避免长事务"><a href="#避免长事务" class="headerlink" title="避免长事务"></a>避免长事务</h3><p>由于 MySQL 采用多版本并发控制（MVCC），当系统中保存大量事务视图，表示随时可能访问的事务期间的任何数据，在提交前要保留大量回滚记录，导致大量的空间占用；而且由于长时间占用锁资源，可能拖垮整个库。</p>
-<p>可以在 information_schema 库的 innodb_trx 表中查询长事务，比如查询持续时间超过 60s 的事务：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> information_schema.innodb_trx </span><br><span class="line"><span class="keyword">WHERE</span> TIME_TO_SEC(timediff(now(),trx_started))<span class="operator">&gt;</span><span class="number">60</span></span><br></pre></td></tr></table></figure></p>
+<p>可以在 information_schema 库的 innodb_trx 表中查询长事务，比如查询持续时间超过 60s 的事务：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> information_schema.innodb_trx </span><br><span class="line"><span class="keyword">WHERE</span> TIME_TO_SEC(timediff(now(),trx_started))<span class="operator">&gt;</span><span class="number">60</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="手动提交事务"><a href="#手动提交事务" class="headerlink" title="手动提交事务"></a>手动提交事务</h3><p>注意事务启动的方式：</p>
 <ul>
 <li><p>显式启动事务语句， begin 或 start transaction。配套的提交语句是 commit，回滚语句是 rollback。</p>
@@ -885,26 +926,29 @@ height:100vh;
 <p>通常以代理方式实现，代理服务器接收应用层传来的读写请求，再转发到具体服务器。</p>
 <p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E4%BB%8E%E4%BB%A3%E7%90%86.png" alt="master-slave-proxy.png"></p>
 <h3 id="分库中间件"><a href="#分库中间件" class="headerlink" title="分库中间件"></a>分库中间件</h3><ul>
-<li><p>Cobar：阿里 B2B 团队开发和开源，属于 Proxy 层方案，介于应用服务器和数据库服务器之间。应用程序通过 JDBC 驱动访问 cobar 集群，cobar 根据 SQL 和分库规则对 SQL 做分解，分发到 MySQL 集群不同的数据库实例上执行。不支持读写分离、存储过程、跨库 JOIN 和分页等操作。</p>
+<li><p>  Cobar：阿里 B2B 团队开发和开源，属于 Proxy 层方案，介于应用服务器和数据库服务器之间。应用程序通过 JDBC 驱动访问 cobar 集群，cobar 根据 SQL 和分库规则对 SQL 做分解，分发到 MySQL 集群不同的数据库实例上执行。不支持读写分离、存储过程、跨库 JOIN 和分页等操作。</p>
 </li>
-<li><p>TDDL：淘宝团队开发，属于 Client 层方案。支持基本的 CRUD 语法和读写分离，不支持 JOIN、多表查询等语法。目前使用不多，依赖于淘宝的 Diamond 配置管理系统。</p>
+<li><p>  TDDL：淘宝团队开发，属于 Client 层方案。支持基本的 CRUD 语法和读写分离，不支持 JOIN、多表查询等语法。目前使用不多，依赖于淘宝的 Diamond 配置管理系统。</p>
 </li>
-<li><p>Atlas：360 开源的 Proxy 层方案，基本上很少使用。</p>
+<li><p>  Atlas：360 开源的 Proxy 层方案，基本上很少使用。</p>
 </li>
-<li><p>Sharding-JDBC：当当开源的 Client 层方案。SQL 语法支持也比较多，没有太多限制，支持分库分表、读写分离、分布式 id 生成、柔性事务（最大努力送达型事务、TCC 事务）。</p>
+<li><p>  Sharding-JDBC：当当开源的 Client 层方案。SQL 语法支持也比较多，没有太多限制，支持分库分表、读写分离、分布式 id 生成、柔性事务（最大努力送达型事务、TCC 事务）。</p>
 </li>
-<li><p>Mycat：基于 Cobar 改造的 Proxy 层方案，支持的功能非常完善。</p>
+<li><p>  Mycat：基于 Cobar 改造的 Proxy 层方案，支持的功能非常完善。</p>
 </li>
 </ul>
 <h3 id="分区表"><a href="#分区表" class="headerlink" title="分区表"></a>分区表</h3><p>对业务透明，相对于用户分表来说使用分区表的业务代码更简洁。</p>
 <p>使用分区表可方便地清理历史数据，如按照时间分区，可使用 <code>ALTER TABLE t DROP PARTITION ...</code> 删除历史数据分区（速度快，对系统影响小）。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `t` (</span><br><span class="line">    `ftime` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    `c` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    KEY (`ftime`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>latin1 </span><br><span class="line"><span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (<span class="keyword">YEAR</span>(ftime))(</span><br><span class="line">    <span class="keyword">PARTITION</span> p_2017 <span class="keyword">VALUES</span> LESS THAN (<span class="number">2017</span>) ENGINE <span class="operator">=</span> InnoDB, </span><br><span class="line">    <span class="keyword">PARTITION</span> p_2018 <span class="keyword">VALUES</span> LESS THAN (<span class="number">2018</span>) ENGINE <span class="operator">=</span> InnoDB, </span><br><span class="line">    <span class="keyword">PARTITION</span> p_2019 <span class="keyword">VALUES</span> LESS THAN (<span class="number">2019</span>) ENGINE <span class="operator">=</span> InnoDB,</span><br><span class="line">    <span class="keyword">PARTITION</span> p_others <span class="keyword">VALUES</span> LESS THAN MAXVALUE ENGINE <span class="operator">=</span> InnoDB</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
 <p>会在磁盘上生成文件：</p>
 <figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">t.frm</span><br><span class="line">t#P#p_2017.ibd</span><br><span class="line">t#P#p_2018.ibd</span><br><span class="line">t#P#p_2019.ibd</span><br><span class="line">t#P#p_other.ibd</span><br></pre></td></tr></table></figure>
+
 <p>对于存储引擎层是 4 个表，对于 Server 层是 1 个表。</p>
 <h4 id="间隙表"><a href="#间隙表" class="headerlink" title="间隙表"></a>间隙表</h4><p>对于 InnoDB，使用间隙锁时在存储引擎层面只会针对区间所在的分区，而不会影响相邻的分区。</p>
 <p>比如在表中插入两条数据：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> t <span class="keyword">VALUES</span>(<span class="string">&#x27;2017-4-1&#x27;</span>,<span class="number">1</span>), (<span class="string">&#x27;2018-4-1&#x27;</span>,<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
 <p>在查询 <code>SELECT... WHERE ftime=&#39;2017-5-1&#39; FOR UPDATE</code> 时会对这两条记录之间的间隙加锁。如果是普通表，加锁范围是 2017-4-1 ~ 2018-4-1；如果是分区表，则加锁范围是分区 p_2018 的 2017-4-1 ~ end，而不会影响分区 p_2019。</p>
 <p>MyISAM 的表锁在引擎层实现，事务加表锁锁在分区上。因此值会阻塞该分区上的查询，而落在其他分区上的查询不会受影响。</p>
 <h4 id="分区策略"><a href="#分区策略" class="headerlink" title="分区策略"></a>分区策略</h4><p>每当第一次访问某分区表时，MySQL 需要把所有分区都访问一遍（即使操作时只需要访问某一分区）：如果一个表分区很多，MySQL 启动时 open_files_limit 参数使用的是默认值 1024，访问该表打开所有的文件，可能导致开启文件个数超过了上限而报错。</p>
@@ -971,8 +1015,7 @@ height:100vh;
 </li>
 </ul>
 <p>MySQL 还支持位类型，但将其看作字符串存储，应尽量避免使用。</p>
-<h4 id="时间日期"><a href="#时间日期" class="headerlink" title="时间日期"></a>时间日期</h4><div class="table-container">
-<table>
+<h4 id="时间日期"><a href="#时间日期" class="headerlink" title="时间日期"></a>时间日期</h4><table>
 <thead>
 <tr>
 <th></th>
@@ -980,8 +1023,7 @@ height:100vh;
 <th>TIMESTAMP</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>表示范围</td>
 <td>1001 年到 9999 年</td>
 <td>1970 年到 2038 年</td>
@@ -1001,9 +1043,7 @@ height:100vh;
 <td>无关</td>
 <td>有关</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <p>TIMESTAMP 空间效率更高，更建议使用。DATETIME 的优势是以可排序、无歧义的格式展示时间，比如 2008-01-16 223708，是 ANSI 标准定义的日期和时间表示方法。</p>
 <h3 id="反模式设计"><a href="#反模式设计" class="headerlink" title="反模式设计"></a>反模式设计</h3><h4 id="树形表"><a href="#树形表" class="headerlink" title="树形表"></a>树形表</h4><p>请参考：<a target="_blank" rel="noopener" href="https://www.yipwinghong.com/2021/01/01/DB_tree-table-design-summary/">树形表结构设计总结 · Kylo’s Notebook</a></p>
 <p>比如论坛网站留言、权限资源管理等功能，需要解决以下问题：</p>
@@ -1013,7 +1053,6 @@ height:100vh;
 <li><p>数据量庞大，难以一次性加载到内存中用代码处理。</p>
 </li>
 </ul>
-<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -1026,8 +1065,7 @@ height:100vh;
 <th>引用完整性</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>邻接表</td>
 <td>1</td>
 <td>简单</td>
@@ -1072,9 +1110,7 @@ height:100vh;
 <td>简单</td>
 <td>是</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <ul>
 <li><p>邻接表最易于实现，但 MySQL 不支持 WITH 或 CONNECT BY PRIOR 递归查询，相对低效。</p>
 </li>
@@ -1087,21 +1123,21 @@ height:100vh;
 </ul>
 <h4 id="反范式"><a href="#反范式" class="headerlink" title="反范式"></a>反范式</h4><p>在范式化的数据库中为严格规范，相同字段只出现在⼀处。在复杂查询中需要多表关联，开销很大。</p>
 <ul>
-<li><p><strong>冗余存储</strong>：如相同的字段存储在不同表中，目的是提高查询效率。但在更新时需要多重关联、多处更新。</p>
+<li><p>  <strong>冗余存储</strong>：如相同的字段存储在不同表中，目的是提高查询效率。但在更新时需要多重关联、多处更新。</p>
 </li>
-<li><p><strong>用时更新</strong>：对大型表的更新通常很慢，需要重写大量的行。可把要修改的字段设置默认为 NULL，在读取时填充（类似文档数据库）。</p>
+<li><p>  <strong>用时更新</strong>：对大型表的更新通常很慢，需要重写大量的行。可把要修改的字段设置默认为 NULL，在读取时填充（类似文档数据库）。</p>
 </li>
 </ul>
 <h4 id="反缓存"><a href="#反缓存" class="headerlink" title="反缓存"></a>反缓存</h4><p>主要的数据存储在内存，只有当内存放不下或需要持久化时才落盘。</p>
 <p>…</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.6/en/show-profile.html">MySQL :: MySQL 5.6 Reference Manual :: 13.7.5.31 SHOW PROFILE Statement</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.6/en/show-profile.html">MySQL :: MySQL 5.6 Reference Manual :: 13.7.5.31 SHOW PROFILE Statement</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.6/en/performance-schema-quick-start.html">MySQL :: MySQL 5.6 Reference Manual :: 22.1 Performance Schema Quick Start</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.6/en/performance-schema-quick-start.html">MySQL :: MySQL 5.6 Reference Manual :: 22.1 Performance Schema Quick Start</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/139">MySQL 实战 45 讲</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/139">MySQL 实战 45 讲</a></p>
 </li>
-<li><p>Bill Karwin. SQL Antipatterns [M]. Pragmatic Bookshelf, 2010.</p>
+<li><p>  Bill Karwin. SQL Antipatterns [M]. Pragmatic Bookshelf, 2010.</p>
 </li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">

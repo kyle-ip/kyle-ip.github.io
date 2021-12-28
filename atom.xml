@@ -59,7 +59,7 @@
     <link href="https://yipwinghong.github.io/2021/10/15/Go_concurrency_primitives/"/>
     <id>https://yipwinghong.github.io/2021/10/15/Go_concurrency_primitives/</id>
     <published>2021-10-15T11:42:39.000Z</published>
-    <updated>2021-12-27T14:06:27.424Z</updated>
+    <updated>2021-12-26T14:40:00.119Z</updated>
     
     
     <summary type="html">Go 标准库（sync）中提供了很多原生支持的并发原语，本文将简单讲解其基本用法。以及从 Go 标准库或第三方库扩展，实现更多复杂功能的并发原语。</summary>
