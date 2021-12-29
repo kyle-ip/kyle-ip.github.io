@@ -394,48 +394,48 @@
     <article class="article-entry">
         <h1 id="《凤凰架构》阅读笔记（五）：分布式共识算法"><a href="#《凤凰架构》阅读笔记（五）：分布式共识算法" class="headerlink" title="《凤凰架构》阅读笔记（五）：分布式共识算法"></a>《凤凰架构》阅读笔记（五）：分布式共识算法</h1><p>保障分布式系统数据不会丢失：</p>
 <ul>
-<li>  可靠性：多个节点拥有一致的数据副本。</li>
-<li>  可用性：在不可靠网络中，各节点之间数据可正确复制。</li>
+<li>可靠性：多个节点拥有一致的数据副本。</li>
+<li>可用性：在不可靠网络中，各节点之间数据可正确复制。</li>
 </ul>
 <p>数据复制方法：</p>
 <ul>
-<li>  状态转移（State Transfer）：把数据变化情况在各个节点间的复制视作事务性操作，系统里每个节点都反馈成功地完成写入后，数据变化才宣告成功。可通过 2PC/3PC 实现（比如 MySQL Cluster 全同步复制），然而会牺牲可用性。</li>
-<li>  操作转移（Operation Transfer）：即通过一连串操作（而非直接赋予目标状态），令所有源状态相同的节点转换到目标状态。不要求每条指令同时开始、同步完成，主要确保同步期间内部状态不能被外部观察，称为 <strong>状态机复制</strong>。</li>
+<li>状态转移（State Transfer）：把数据变化情况在各个节点间的复制视作事务性操作，系统里每个节点都反馈成功地完成写入后，数据变化才宣告成功。可通过 2PC/3PC 实现（比如 MySQL Cluster 全同步复制），然而会牺牲可用性。</li>
+<li>操作转移（Operation Transfer）：即通过一连串操作（而非直接赋予目标状态），令所有源状态相同的节点转换到目标状态。不要求每条指令同时开始、同步完成，主要确保同步期间内部状态不能被外部观察，称为 <strong>状态机复制</strong>。</li>
 </ul>
 <blockquote>
 <p>  能使用确定的操作，促使状态间产生确定的转移结果的计算模型，在计算机科学中被称为<strong>状态机</strong>（State Machine）：任何初始状态一样的状态机，执行的命令序列一样，则最终达到的状态也一样。</p>
 <p>  多参与者进行协商共识可理解为系统中存在多个完全相同的状态机（参与者），只要其起始状态和执行命令序列完全一致，它们最终就能保持一致。</p>
 </blockquote>
-<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Quorum_(distributed_computing)">Quorum 机制</a>：分布式环境下必然存在 <strong>分区</strong>，因此只要过半节点完成状态转换就认为数据变化已被正确存储到系统中，大多数节点达成一致，而容忍最多不超过半数节点失联（因此可以通过增加节点提高可用性），这样在外部看来始终表现为一致，这个过程称为 <strong>协商共识</strong>（Consensus）。</p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Quorum_(distributed_computing">Quorum 机制</a>)：分布式环境下必然存在 <strong>分区</strong>，因此只要过半节点完成状态转换就认为数据变化已被正确存储到系统中，大多数节点达成一致，而容忍最多不超过半数节点失联（因此可以通过增加节点提高可用性），这样在外部看来始终表现为一致，这个过程称为 <strong>协商共识</strong>（Consensus）。</p>
 <blockquote>
 <p>  作者认为共识（Consensus）与一致性（Consistency）是有区别的：前者指达成一致性的方法和过程，后者指数据不同副本之间的差异。</p>
 </blockquote>
 <h2 id="Paxos"><a href="#Paxos" class="headerlink" title="Paxos"></a>Paxos</h2><p>Paxos 算法是一种基于消息传递的协商共识算法（基于操作转移模型），<a target="_blank" rel="noopener" href="https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14">Raft</a>、ZAB 等算法都是在此基础上发展出来的。</p>
 <h3 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h3><p>有以下三种节点：</p>
 <ul>
-<li>  <strong>提案节点</strong>（Proposer）：发起 <strong>提案</strong>（Proposal），即对某个值进行设置操作（类比日志记录），设置成功就不会丢失（也不可变）。</li>
-<li>  <strong>决策节点</strong>（Acceptor）：应答提案，决定提案是否可被投票、可被接受。提案一旦得到过半数决策节点接受，则即被 <strong>批准</strong>（Accept），该值不能再被更改、不会丢失，被所有节点接受。应该被设定为奇数个，在系统初始化时每个节点都知道决策节点的数量、地址等信息。</li>
-<li>  <strong>记录节点</strong>（Learner）：不参与提案和决策，从提案、决策节点中学习已经达成共识的提案。比如少数派节点从网络分区中恢复时就称为 Learner。</li>
+<li><strong>提案节点</strong>（Proposer）：发起 <strong>提案</strong>（Proposal），即对某个值进行设置操作（类比日志记录），设置成功就不会丢失（也不可变）。</li>
+<li><strong>决策节点</strong>（Acceptor）：应答提案，决定提案是否可被投票、可被接受。提案一旦得到过半数决策节点接受，则即被 <strong>批准</strong>（Accept），该值不能再被更改、不会丢失，被所有节点接受。应该被设定为奇数个，在系统初始化时每个节点都知道决策节点的数量、地址等信息。</li>
+<li><strong>记录节点</strong>（Learner）：不参与提案和决策，从提案、决策节点中学习已经达成共识的提案。比如少数派节点从网络分区中恢复时就称为 Learner。</li>
 </ul>
 <p>所有节点平等、可承担一或多种角色。要实现各节点就某个提案达成一致，需要考虑：</p>
 <ul>
-<li>  节点间通信不可靠，提案或批准消息都可能延迟送达或丢失，但不存在消息传递错误的情况。</li>
-<li>  系统外部可由多名用户可并发访问（如只有一名用户或串行访问，基于 Quorum 机制即可保证正确读写）。</li>
+<li>节点间通信不可靠，提案或批准消息都可能延迟送达或丢失，但不存在消息传递错误的情况。</li>
+<li>系统外部可由多名用户可并发访问（如只有一名用户或串行访问，基于 Quorum 机制即可保证正确读写）。</li>
 </ul>
 <blockquote>
 <p>  <strong>读写操作既要考虑并发控制，还要考虑通信故障</strong>（如在某节点取得锁后、释放锁前失联，则导致整个操作被无限阻塞）因此引入抢占锁机制。</p>
 </blockquote>
 <h4 id="准备阶段（Prepare）"><a href="#准备阶段（Prepare）" class="headerlink" title="准备阶段（Prepare）"></a>准备阶段（Prepare）</h4><p>相当于抢占锁过程，某提案节点发起提案前，必须先向所有决策节点广播 Prepare 请求：附带全局唯一的数字 n 作为提案 ID，决策节点收到后给予提案节点：</p>
 <ul>
-<li><p>  <strong>两个承诺</strong>：不再接受提案 ID &lt;= n 的 Prepare 请求，以及提案 ID &lt; n 的 Accept 请求。</p>
+<li><p><strong>两个承诺</strong>：不再接受提案 ID &lt;= n 的 Prepare 请求，以及提案 ID &lt; n 的 Accept 请求。</p>
 </li>
-<li><p>  <strong>一个应答</strong>：不违背以前作出的承诺的前提下，回复已经批准过的提案中 ID 最大的一个所设定的值和提案 ID。如果该值从来没有被任何提案设定，则返回空值。如果违反此前承诺（收到的提案 ID 不是决策节点收到过的最大的），忽略此 Prepare 请求。</p>
+<li><p><strong>一个应答</strong>：不违背以前作出的承诺的前提下，回复已经批准过的提案中 ID 最大的一个所设定的值和提案 ID。如果该值从来没有被任何提案设定，则返回空值。如果违反此前承诺（收到的提案 ID 不是决策节点收到过的最大的），忽略此 Prepare 请求。</p>
 </li>
 </ul>
 <h4 id="批准阶段（Accept）"><a href="#批准阶段（Accept）" class="headerlink" title="批准阶段（Accept）"></a>批准阶段（Accept）</h4><p>当提案节点收到了多数派决策节点的 Promise  应答后有两种情况：</p>
 <ul>
-<li>  所有响应的决策节点此前都没有批准过该值，则它可随意决定设定值，将选定的值与提案 ID 构成二元组“(id, value)”的 Accept 请求广播给全部决策节点。</li>
-<li>  响应的决策节点中，已经有至少一个节点的应答中包含有值，则它必须从应答中找出并接受提案 ID 最大值，构成二元组“(id, maxAcceptValue)”的 Accept 请求，广播给全部的决策节点。</li>
+<li>所有响应的决策节点此前都没有批准过该值，则它可随意决定设定值，将选定的值与提案 ID 构成二元组“(id, value)”的 Accept 请求广播给全部决策节点。</li>
+<li>响应的决策节点中，已经有至少一个节点的应答中包含有值，则它必须从应答中找出并接受提案 ID 最大值，构成二元组“(id, maxAcceptValue)”的 Accept 请求，广播给全部的决策节点。</li>
 </ul>
 <p>当每个决策节点收到 Accept 请求，在不违背以前作出的承诺的前提下，接收并持久化对当前提案 ID 和提案附带的值。如果违反此前的承诺（收到的提案 ID 不是决策节点收到过的最大者），对此 Accept 请求不予理会。</p>
 <p>当提案节点收到了多数派决策节点的 Accepted  应答后协商结束，将共识决议发送给所有记录节点学习。</p>
@@ -1573,9 +1573,9 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
         <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
+    
+        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
