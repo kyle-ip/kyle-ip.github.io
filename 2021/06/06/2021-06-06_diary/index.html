@@ -3,26 +3,20 @@
     <!-- title -->
 
 
-
+    
 
 <!-- keywords -->
 
 
 
-
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="author" content="Kylo Yip">
     <meta name="renderer" content="webkit">
     <meta name="copyright" content="Kylo Yip">
-	
-	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="/live2d-widget/autoload.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
-	
     
-    <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
+        <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
     <meta name="description" content="It hasn&#39;t been an easy time during the first week.">
@@ -38,9 +32,119 @@
 <meta property="article:tag" content="杂事">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
     
     <title>Weekly Summary (2021-05-31_2021-06-06) · Kylo&#39;s Notebook</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -90,131 +194,20 @@
             transform: translate3d(0, 0, 0);
         }
     }
-
 </style>
 
-    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
     
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    
-    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
-/* This file is meant as a standalone workflow for
-- testing support for link[rel=preload]
-- enabling async CSS loading in browsers that do not support rel=preload
-- applying rel preload css once loaded, whether supported or not.
-*/ -->
-<script>
-(function( w ){
-	"use strict";
-	// rel=preload support test
-	if( !w.loadCSS ){
-		w.loadCSS = function(){};
-	}
-	// define on the loadCSS obj
-	var rp = loadCSS.relpreload = {};
-	// rel=preload feature support test
-	// runs once and returns a function for compat purposes
-	rp.support = (function(){
-		var ret;
-		try {
-			ret = w.document.createElement( "link" ).relList.supports( "preload" );
-		} catch (e) {
-			ret = false;
-		}
-		return function(){
-			return ret;
-		};
-	})();
-
-	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
-	// then change that media back to its intended value on load
-	rp.bindMediaToggle = function( link ){
-		// remember existing media attr for ultimate state, or default to 'all'
-		var finalMedia = link.media || "all";
-
-		function enableStylesheet(){
-			link.media = finalMedia;
-		}
-
-		// bind load handlers to enable media
-		if( link.addEventListener ){
-			link.addEventListener( "load", enableStylesheet );
-		} else if( link.attachEvent ){
-			link.attachEvent( "onload", enableStylesheet );
-		}
-
-		// Set rel and non-applicable media type to start an async request
-		// note: timeout allows this to happen async to let rendering continue in IE
-		setTimeout(function(){
-			link.rel = "stylesheet";
-			link.media = "only x";
-		});
-		// also enable media after 3 seconds,
-		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
-		setTimeout( enableStylesheet, 3000 );
-	};
-
-	// loop through link elements in DOM
-	rp.poly = function(){
-		// double check this to prevent external calls from running
-		if( rp.support() ){
-			return;
-		}
-		var links = w.document.getElementsByTagName( "link" );
-		for( var i = 0; i < links.length; i++ ){
-			var link = links[ i ];
-			// qualify links to those with rel=preload and as=style attrs
-			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
-				// prevent rerunning on link
-				link.setAttribute( "data-loadcss", true );
-				// bind listeners to toggle media back
-				rp.bindMediaToggle( link );
-			}
-		}
-	};
-
-	// if unsupported, run the polyfill
-	if( !rp.support() ){
-		// run once at least
-		rp.poly();
-
-		// rerun poly on an interval until onload
-		var run = w.setInterval( rp.poly, 500 );
-		if( w.addEventListener ){
-			w.addEventListener( "load", function(){
-				rp.poly();
-				w.clearInterval( run );
-			} );
-		} else if( w.attachEvent ){
-			w.attachEvent( "onload", function(){
-				rp.poly();
-				w.clearInterval( run );
-			} );
-		}
-	}
-
-
-	// commonjs
-	if( typeof exports !== "undefined" ){
-		exports.loadCSS = loadCSS;
-	}
-	else {
-		w.loadCSS = loadCSS;
-	}
-}( typeof global !== "undefined" ? global : this ) );
-</script>
-
-    <link rel="icon" href= "/assets/favicon.ico" />
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
-    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
-    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
-    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
-    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
-    
-    <!-- fancybox -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
     <!-- 谷歌统计  -->
@@ -222,60 +215,75 @@
 <meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
 </head>
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
     
         <body class="post-body">
     
-    
-<header class="header">
-
+        <!-- header -->
+        <header class="header header-mobile">
     <!-- top read progress line -->
     <div class="header-element">
-        
         <div class="read-progress"></div>
-        
     </div>
     <!-- sidebar menu button -->
     <div class="header-element">
         
-        <div class="header-sidebar-menu header-sidebar-menu-rounded">
+            <div class="header-sidebar-menu">
         
             
-            <i class="fas fa-bars"></i>
+                <div style="padding-left: 1px;">&#xe775;</div>
             
         </div>
     </div>
-    <!-- back to home page text -->
-    <a class="home-link header-element" href=/>Kylo's Notebook</a>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Kylo's Notebook</a>
+        </span>
+    </div>
     <!-- toggle banner for post layout -->
     
-    
-    <div class="banner">
-    
-        <div class="blog-title header-element">
-            <a href="/" >Kylo&#39;s Notebook</a>
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Kylo&#39;s Notebook</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Weekly Summary (2021-05-31_2021-06-06)</a>
+            </div>
         </div>
-        <div class="post-title header-element">
-            <a href="#" class="post-name">Weekly Summary (2021-05-31_2021-06-06)</a>
-        </div>
-    </div>
     
 </header>
-    
-<footer class="footer-fixed">
 
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
     <!-- back to top button -->
     <div class="footer-fixed-element">
         
-        <div class="back-top back-top-rounded">
+            <div class="back-top back-top-hidden">
         
-            
-            <i class="fas fa-chevron-up"></i>
-            
+        
+            <div>&#xe639;</div>
+        
         </div>
     </div>
 </footer>
-    <div class="wrapper">
-        <div class="site-intro" style="
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
 
 
 
@@ -283,12 +291,13 @@
 
 
 
-height:100vh;
+    height:0vh;
+
 ">
     
     <!-- 主页  -->
     
-    
+        
     <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
@@ -298,7 +307,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Weekly Summary (2021-05-31_2021-06-06)
+                Weekly Summary (2021-05-31_2021-06-06)
             <!-- 404 -->
             
         </h1>
@@ -306,20 +315,22 @@ height:100vh;
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-            
+                
             <!-- 404 -->
             
         </p>
-        <!-- 文章页meta -->
+        <!-- 文章页 meta -->
         
             <div class="post-intros">
                 <!-- 文章页标签  -->
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "杂事">杂事</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="杂事">杂事</a>
     
 </div>
+
                 
                 
                     <div class="post-intro-read">
@@ -327,18 +338,21 @@ height:100vh;
                     </div>
                 
                 <div class="post-intro-meta">
-                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
                     <span class="post-intro-time">2021/06/06</span>
+                    <!-- busuanzi -->
                     
-                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                        <span class="iconfont-archer">&#xe602;</span>
-                        <span id="busuanzi_value_page_pv"></span>
-                    </span>
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
                     
-                    <span class="shareWrapper">
-                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
-                        <span class="shareText">Share</span>
-                        <ul class="shareList">
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
                             <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
                                 <div class="share-qrcode"></div>
                             </li>
@@ -353,104 +367,133 @@ height:100vh;
         
     </div>
 </div>
-        <script>
- 
+
+            <script>
   // get user agent
-  var browser = {
-    versions: function () {
-      var u = window.navigator.userAgent;
-      return {
-        userAgent: u,
-        trident: u.indexOf('Trident') > -1, //IE内核
-        presto: u.indexOf('Presto') > -1, //opera内核
-        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
-        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
-        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
-        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
-        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
-        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
-        iPad: u.indexOf('iPad') > -1, //是否为iPad
-        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
-        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
-        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
-      };
-    }()
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
   }
-  console.log("userAgent:" + browser.versions.userAgent);
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
 
   // callback
   function fontLoaded() {
-    console.log('font loaded');
+    console.log('font loaded')
     if (document.getElementsByClassName('site-intro-meta')) {
-      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
-      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
       var postIntros = document.getElementsByClassName('post-intros')[0]
       if (postIntros) {
-        postIntros.classList.add('post-fade-in');
+        postIntros.classList.add('post-fade-in')
       }
     }
   }
 
   // UC不支持跨域，所以直接显示
-  function asyncCb(){
+  function asyncCb() {
     if (browser.versions.uc) {
-      console.log("UCBrowser");
-      fontLoaded();
+      console.log('UCBrowser')
+      fontLoaded()
     } else {
       WebFont.load({
         custom: {
-          families: ['Oswald-Regular']
+          families: ['Oswald-Regular'],
         },
-        loading: function () {  //所有字体开始加载
-          // console.log('loading');
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
         },
-        active: function () {  //所有字体已渲染
-          fontLoaded();
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
         },
-        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
-          console.log('inactive: timeout');
-          fontLoaded();
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
         },
-        timeout: 5000 // Set the timeout to two seconds
-      });
+        timeout: 5000, // Set the timeout to two seconds
+      })
     }
   }
 
-  function asyncErr(){
+  function asyncErr() {
     console.warn('script load from CDN failed, will load local script')
   }
 
   // load webfont-loader async, and add callback function
   function async(u, cb, err) {
-    var d = document, t = 'script',
+    var d = document,
+      t = 'script',
       o = d.createElement(t),
-      s = d.getElementsByTagName(t)[0];
-    o.src = u;
-    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
-    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
-    s.parentNode.insertBefore(o, s);
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
   }
 
-  var asyncLoadWithFallBack = function(arr, success, reject) {
-      var currReject = function(){
-        reject()
-        arr.shift()
-        if(arr.length)
-          async(arr[0], success, currReject)
-        }
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
 
-      async(arr[0], success, currReject)
+    async(arr[0], success, currReject)
   }
 
-  asyncLoadWithFallBack([
-    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
-    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
-    "/lib/webfontloader.min.js"
-  ], asyncCb, asyncErr)
-</script>        
-        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
-        <div class="container container-unloaded">
-            <main class="main post-page">
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
     <article class="article-entry">
         <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
   <script id="hbeData" type="hbeData" data-hmacdigest="e0b2e95adf6174ae1054a23b67014f470a3593c615e68f56e0e46df45c5d8d26">c8d95651b40ebee01ac90b4399e56a98df41de5d5cea53815752e9a9982dff40b38e081705788e1eb221397755711fb408a7d47586d3ba438b6c8b146c18a6ac31b0bf2bab08bf6c6bfcc047d0edb2d4852336dc47239a68843dd3ab73d1882c9ef833260e0dbf49a0d88baf4a0ad46784212954bfaee89a8ddcbdd76d72be7b88df8fce17b2d5f7aa31b7c2cbfbd392cee8151529918493e4cf3ca2ac0ed6fa5dfc10c78ae04f69a1fdde82c897ad4cd020205be4f1e44ad5ae45c76ebf648bea6787e7d9ce603729f2fa0da92c606692738480109ad85dee05a6a06fab8af2a66c2b06b84ce265ba6b2fab9f3d09a101119fb5c2279abbc1873adbd9ffd300d15c8323976b70c66795bd218131b5a5c7bf297b8ca9c6d12f94b463aed10dfab1968679400c171fec008a9a66235a75e84104645724ab1be213b69dab5f47d1bba45dfd9bb2b7bda925a17f8b4130a75760f867beb54a4fa29570752df4c9296354d60bdc3916ec6945d6ba2e8eb47ff08e92d2b6d7c3b69868710538bed57131f2773621993998733060e459d63ef19c72ebd3470fc8da90541d8d8b095dcaa149c4f20ab42bf8e96103374f9942f8adb002b8a10fcd6b3a742734dca94e49df77bbed3d49ce036da54d1d7fab0942c19d69fa111bc84f12eaf11d66943e39573021464e8cdd91a5901b5358f380ce294bbcf4dd9613bb36f7e7976ea2a2d51621f69a0ef22f0cff87aca9148e3a4b733c17d658ed305b1110928757b1725ea11657553fb6936b6a27c309fa7c371a9e89cc346a16506234259a41ebfa3620fe7319fa5d23547f385b91afa731b6176f1d81aacaf62e823514496f6899a6fe79aa5d8252ad1730f5684904b3ce21a32bd77cf30170110791610c9f3ed92fe59086d15ecc337265138990e8fa0983dfd5909333808400abea7049a464f2ebca82f8cc8cafcff7519f15439ddd9e8081e408f3731087d3fa1e663eb3474a3913dbdfb60de921813274e02de2f114799c37b91320f57d8d3bb77534c496402128ab6d97ed55daa3e78658cdd05bfa333d39ec934b2545d0c379ca55aa68e9a3981a55e09b620094c3307f2512abdc372fd55a48a698ab1cc44f60825e307642f2610b99c1395b27290bab17492da2af426293aa086e50328c9d74c12f57565988516868123c65204be57aa5d52f58082214fc761aedf32d176187861b1661247adb9f370d400bbde653cb729e29ded0061fe572a6f599d8a1962be1ff55604a236af136e384037069ba435d53df0708dd0f887be1a185aa79f14af3a7d929a06ed0da41f3fa7978c1e2d6172cd1c78dbedfbaae89a9c5912cc3183c94be125ccdaab5cc129683890704e2d514a0fc5eefeb1208d28371256e9c4887bf46cc2d929632efcc1f638a4e9935f2965fba34918a1bc7877fbe2f0813941988a3aa1f9333287ecf09930994f6aee8b78a5699d4c404ff72eb2bb8caf511f1e2835f3da34bb8f9c9556375b9e88cc6e5f8908543f20c4995c0a5d7e31d780687ebcf5016a3fffe345ace6b85a6a842165af544456840356fe1784535446f9babd5a3bddc38742f7a66527dad88f763c78aa7d7c9d1cdcdb3452a88d96930f387df87d19c0ab5e42d3c593f5a47f2fcd59e6e02ea3af07b8484745adeb62988c48bb0b02ae11fd150bffcfba02bc9e04d7f7c7cc03817df3e072569249c7180b387fe237f5d4494b877b02ebe79947cfd81fad80a50cb77b0a1086d0a8b2a123de47325599e913bddb6e6b4c185a54c02b79aaf7062af2b2e099a4ba99cb8d323c66c635dcf5810d74549026d60917977ac919b8104fb8630042c4d30665cb4535ea710c376c93314a4c6eedbe77faa919cb2f5e0844a12abd7c353db6ccbbab625d8508e365e147ebdbcc31f86248c313f31a4a68cca93a20a8ca06c59c7ea8c17ec7cc88943ed5814f89f9aa503158e1fb246c348589650037ad9540c0cd2dae652dea882b162c8c4a7ee1f3377c076757228df304bc9e482a45d5fa388506dcdcf6f87fe30c7147abfc89052d2f52ec355974d5b1737748b02d26bf12af6865de89af5968f1335f91e160801b3f8d277606659309d7b1b5164a3fdd4e6dc6876c297341c618b26f57b3e04a29a83addcc07bbb9f5c7db7414624ebce74aa4beb0966a7c1ed7a3d93424a22c3c6599434dbe2114a9fc541daeba2f2c6c8aa0194c73d90adfd67ea4496590f6438edc2264607a9abbb0011208e5d85897c1760156cb89f98684e063e2050040943922696e460a46163724850178c0e8946606b81e909dfe825f3428ae10d7c797afe507883d9fbfe277a7ef8a8b67a4ca021ef5d2f01e991e0e52fcae29455ad99bdcf6df4fe492dc775bb084968caea483e149f9a54889dfbfcd19841018326cbdde2413093ddd3aeee3cdc4f2a06e71ddb759e7d3e7ca7472577957069efc30a736bc71b72e70baa395e7c2c2aba609f3efd735bfafe007e9ca68834146ed16168a95ea16ca1e495c70fbf4ffeaf5112d1f6020e08fc6c37a23fa9d29cda67f210e1c61652b182fe2be3d43972fcfc670fee4bfd1fc298d80d224f82943ec0400d7477a2247b98dbc614c248192f8f97dea2c543ccf680fd06e48e5252cd4c7aa5cf9e6fbf7db79bbde11872553b380eb0ad3c99b7a411ebbda32713d124feb3f6f880306dfdd11449b501b0e95bcece49f5d09b5201b6a64121954e4fbb0d4973847955035e6f87a25316eb92f9e71ac23636a3761bbdba581207c0723fe713c33e1202f349284d8f7868daab21f52424349820dd6220708cde4beae09e4f2ff43d7314f31f00cf775b58dac1e1f61584a0553163074dd4671834b27a014898e98f745c67ca11a586835f4cef124ea15df685e5d135808baaed0d5671c19d908e8409c8215bdc20465e61c086f6fbd6df98b36fa3ce1ce086f62d2ccbdb556ecf699b79b7293bbf14229d87b183d768d0a3e20633990c4f04a2b181a0dd021a3f6552426899f97378c5cc5f7a79104a19012fadea2e2a0e3d9e53adb8892c9fa19de59b00cb566cbc4316d7dd37390d7e0ba18b8bd3eb14ff79040c7d62220114be4d1407239b8ffbcf3020c4a102e63d19a717a1cc87c1d6ece15238d64ee03839acd58a5426aa7b088217504831e35c8b3994e75c25939d95f0d68785ab533a9745a0ee86e828d33c210888130dd122b58c45488f7dbfda4c4c1837fa8dba69d09658da972b3adc7b931e83e9719cc7d37e68e6f29b4b59c692fda655b9c7ad0dbcd9679ee70985131072bb1b04de859103dd45fe97b68ef6ee2e488bdea9e7397e9a09d3c758cfded507b7bd4d8ef47a7f3fb7b28d138597bbe4fca69599879e298cbe3e71040a00afb3fa6cb1ae64cbf9912f2b2f7302ecd516bc8a0d8c0cbba47c115926910acf4c9e562f0e92111590a50ad6eae3d598ee9e045e80fd633440de3b78ea0e64c76520b10b0fc2e15c3602c9508b2ec1e9276f085c169948a7a1ddba351cedb410d32af9df4e83840fab77c4a0cfacc0533c29a79f4db89bb6abc2c223dd831505483e7a1a09994a391707e92b584c3f63a9c9628a2d65592eda730ab9dea831b7e6744aee5c077c242e03f4c1e41bdde09ec432356c8b0de345334e9774407cd53137dacb65b1b2503e20dbdb71859e05bc90fd68236b1ca1b77a3f53c6029830d1f7cea2f47bda0f1e66a97c71ec936e0adb360e12fef81cc83527b42ab1d407118ac0d10b16491e5770978cbb7dff2edac18bc6ab1d5e405549960bf2e0821a0ace49bdd554102340ea88e095a7af42b4eeb0b0365c438eee65b592e716a9282468b8a64f554465e1cfd40d3202d3608e388ba30be6e16bda7ddf9b6aceed764d366ad5ea76ec84b07817a3619927fc3732b41dbe51b9707042d0801fbe51463546f07c351d4e6997c219595ac67cd5ada07f8c9d463f5767ca852cd07d4592bd947b25412d6339c314e43b19d14cfc751eb12e1918505b3f7ec7d98fef3b2ed1c5a25f94ad18101e8b5590967915f9e1146e21f65c7e4fb3f5ee3efb4bf3ee6cf175e3dc95101ad7e77ac431f7107e899fee618e7d2db0038de6a0d4133cd1ba5155a59db365d7a4b1f3c15e0f31189730717e24598663442f68f2862b652d71e663549af217e190210552c62267932fd54ea4cbcae9b1ed1fbb4c087b86ba17dd8377292bcd4703915fed89e7f21330e77486de84b744133e0752ab56d440d0fd86cbc9d347a5fb7ace18f1faa03a1c252ef21e5fbfe347205049bfbcde95e6534937c862ef62aef1d4eba11a59482f5b06709d0e5f4fd284ae32574fbaf3cd7d0c84d1c7fa0e49873cf74754ad980ebaf6f1763756a93fdb129b163f48ba40cab2fe7f7c6a1a22df74da2a7e548da44908d639749f7db9692fca31c54c05d5fe0d063b2cf0fbcdb8aa58c1717af50722b5b55b2b262ae1440dfbef98458c07cdabcad590ebeb771c822f5377f4bddd09639c69c7eb11796ff512cec4191f352236d6cd3423df06aa67376fc440a8a9fc9b8177eb6d482b02e0f4c4fa945c65fa5bd8e21caf4d88d49d17456d2608abe21676a4bc76ec9fa0f01fd399e1f4eff473a1ed0ee0d1f843fcde7eb44a3a3d71cd44bf4530dd1c9d5d681327d80b814889023cc40cdc0e894488527a4c51be115cef41a1f61ec19b4224fe192a9bb48f3ac63e077a9aba454cff8e79a0e6639938ec13646ef766c9c63f1bfa8b0e2173a1fbb35cccc0c5329814</script>
@@ -465,14 +508,14 @@ height:100vh;
 </div>
 <script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
     </article>
-    <!-- license  -->
+    <!-- license -->
     
-    <!-- paginator  -->
+    <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/06/10/Go_a-tour-of-go/" title= "A tour of Go">
+                <a href="/2021/06/10/Go_a-tour-of-go/" title="A tour of Go">
                     <div class="nextTitle">A tour of Go</div>
                 </a>
             
@@ -480,14 +523,16 @@ height:100vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/06/05/2021-06-05_diary/" title= "基于记忆规律的学习方法">
+                <a href="/2021/06/05/2021-06-05_diary/" title="基于记忆规律的学习方法">
                     <div class="prevTitle">基于记忆规律的学习方法</div>
                 </a>
             
         </li>
     </ul>
-    <!-- 评论插件 -->
-    <!-- 来必力City版安装代码 -->
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
 
     <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
         <script type="text/javascript">
@@ -501,36 +546,45 @@ height:100vh;
                 e.parentNode.insertBefore(j, e);
             })(document, 'script');
         </script>
-        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
     </div>
 
-<!-- City版安装代码已完成 -->
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
     
-    
-     
-    <!-- utteranc评论 -->
-
-    <!-- partial('_partial/comment/changyan') -->
-    <!--PC版-->
-
-
-    
-    
-
-    <!-- 评论 -->
-
+    <!-- timeliness note -->
     <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
     
 </main>
 
-            <!-- profile -->
-            
-        </div>
-        <footer class="footer footer-unloaded">
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
     <!-- social  -->
     
-    <div class="social">
-        
+        <div class="social">
+            
     
         
             
@@ -596,7 +650,8 @@ height:100vh;
         
     
 
-    </div>
+
+        </div>
     
     <!-- powered by Hexo  -->
     <div class="copyright">
@@ -606,590 +661,591 @@ height:100vh;
     
     <!-- 不蒜子  -->
     
-    <div class="busuanzi-container">
-    
-     
-    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
-    
-    </div>
-    
-</footer>
-    </div>
-    <!-- toc -->
-    
-    <div class="toc-wrapper" style=
-    
-
-
-
-
-
-
-
-top:100vh;
-
-    >
-        <div class="toc-catalog">
-            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
         </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
         
-    </div>
-    
-    <div class="sidebar sidebar-hide">
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:0vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
         <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
         <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
         <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
     </ul>
     <div class="sidebar-content sidebar-content-show-archive">
-          <div class="sidebar-panel-archives">
-    <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
     
     
@@ -1204,545 +1260,690 @@ top:100vh;
     
     <div class="post-archive">
     
-    
-    
-    
-    <div class="archive-year"> 2021 </div>
-    <ul class="year-list">
-    
-    
+        
+            
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">12/10</span><a class="archive-post-title" href= "/2021/12/10/Go_engineering-specification-design/" >Go 工程化规范设计</a>
+            <span class="archive-post-date">12/10</span>
+            <a class="archive-post-title" href="/2021/12/10/Go_engineering-specification-design/">Go 工程化规范设计</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">11/06</span><a class="archive-post-title" href= "/2021/11/06/Go_modules_management/" >Go Modules 管理总结</a>
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2021/11/06/Go_modules_management/">Go Modules 管理总结</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2021/10/15/Go_concurrency_primitives/" >Go 并发原语</a>
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/10/15/Go_concurrency_primitives/">Go 并发原语</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2021/10/10/Design_data-lineage/" >数据血缘功能设计</a>
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2021/10/10/Design_data-lineage/">数据血缘功能设计</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/26</span><a class="archive-post-title" href= "/2021/09/26/2021-09-26_diary/" >迟来的一次复盘</a>
+            <span class="archive-post-date">09/26</span>
+            <a class="archive-post-title" href="/2021/09/26/2021-09-26_diary/">迟来的一次复盘</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2021/09/12/DB_mysql-optimization-basic/" >MySQL 性能优化基础</a>
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/DB_mysql-optimization-basic/">MySQL 性能优化基础</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+            <span class="archive-post-date">09/05</span>
+            <a class="archive-post-title" href="/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/">关于 B-Trees 的更多细节（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">08/11</span><a class="archive-post-title" href= "/2021/08/11/Go_microservices_availability_design/" >微服务可用性设计</a>
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2021/08/11/Go_microservices_availability_design/">微服务可用性设计</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">08/10</span><a class="archive-post-title" href= "/2021/08/10/Algorithm_reliable-distributed-timer/" >可靠的分布式计时器（译）</a>
+            <span class="archive-post-date">08/10</span>
+            <a class="archive-post-title" href="/2021/08/10/Algorithm_reliable-distributed-timer/">可靠的分布式计时器（译）</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">08/04</span><a class="archive-post-title" href= "/2021/08/04/Go_engineering-standard/" >Go 工程化标准实践</a>
+            <span class="archive-post-date">08/04</span>
+            <a class="archive-post-title" href="/2021/08/04/Go_engineering-standard/">Go 工程化标准实践</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/Go_memory-model/" >Go 内存模型（译）</a>
+            <span class="archive-post-date">07/31</span>
+            <a class="archive-post-title" href="/2021/07/31/Go_memory-model/">Go 内存模型（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/28</span><a class="archive-post-title" href= "/2021/07/28/Go_channel-applications/" >Go Channel 应用</a>
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2021/07/28/Go_channel-applications/">Go Channel 应用</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2021/07/25/Fenix_build-services/" >《凤凰架构》阅读笔记（五）：服务构建与流量治理</a>
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2021/07/25/Fenix_build-services/">《凤凰架构》阅读笔记（五）：服务构建与流量治理</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2021/07/23/Fenix_transparent-multilevel-diversion-system/" >《凤凰架构》阅读笔记（四）：透明多级分流系统</a>
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2021/07/23/Fenix_transparent-multilevel-diversion-system/">《凤凰架构》阅读笔记（四）：透明多级分流系统</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2021/07/22/Fenix_transaction/" >《凤凰架构》阅读笔记（三）：事务处理</a>
+            <span class="archive-post-date">07/22</span>
+            <a class="archive-post-title" href="/2021/07/22/Fenix_transaction/">《凤凰架构》阅读笔记（三）：事务处理</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/21</span><a class="archive-post-title" href= "/2021/07/21/Fenix_access-remote-service/" >《凤凰架构》阅读笔记（二）：访问远程服务</a>
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2021/07/21/Fenix_access-remote-service/">《凤凰架构》阅读笔记（二）：访问远程服务</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/Go_error_handling/" >Go 异常处理</a>
+            <span class="archive-post-date">07/18</span>
+            <a class="archive-post-title" href="/2021/07/18/Go_error_handling/">Go 异常处理</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/Fenix_architecture-evolution/" >《凤凰架构》阅读笔记（一）：软件架构演进</a>
+            <span class="archive-post-date">07/15</span>
+            <a class="archive-post-title" href="/2021/07/15/Fenix_architecture-evolution/">《凤凰架构》阅读笔记（一）：软件架构演进</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservices_governance/" >微服务概览与治理</a>
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2021/07/12/Go_microservices_governance/">微服务概览与治理</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/Algorithm_max-flow-problem/" >最大流问题</a>
+            <span class="archive-post-date">07/09</span>
+            <a class="archive-post-title" href="/2021/07/09/Algorithm_max-flow-problem/">最大流问题</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题</a>
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2021/07/08/Algorithm_minimum_spanning_tree_problem/">最小生成树问题</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题</a>
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2021/07/08/Algorithm_shortest-path-problem/">最短路径问题</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >分布式系统模式：Gossip 传播（译）</a>
+            <span class="archive-post-date">07/01</span>
+            <a class="archive-post-title" href="/2021/07/01/DistributedSystem_gossip-dissemination/">分布式系统模式：Gossip 传播（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >分布式系统模式：版本化值（译）</a>
+            <span class="archive-post-date">06/23</span>
+            <a class="archive-post-title" href="/2021/06/23/DistributedSystem_versioned-value/">分布式系统模式：版本化值（译）</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >一致性哈希（译）</a>
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2021/06/19/Algorithm_consistent-hashing/">一致性哈希（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/13</span><a class="archive-post-title" href= "/2021/06/13/Go_cheat-sheet/" >Go Cheat Sheet</a>
+            <span class="archive-post-date">06/13</span>
+            <a class="archive-post-title" href="/2021/06/13/Go_cheat-sheet/">Go Cheat Sheet</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/10</span><a class="archive-post-title" href= "/2021/06/10/Go_a-tour-of-go/" >A tour of Go</a>
+            <span class="archive-post-date">06/10</span>
+            <a class="archive-post-title" href="/2021/06/10/Go_a-tour-of-go/">A tour of Go</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/06</span><a class="archive-post-title" href= "/2021/06/06/2021-06-06_diary/" >Weekly Summary (2021-05-31_2021-06-06)</a>
+            <span class="archive-post-date">06/06</span>
+            <a class="archive-post-title" href="/2021/06/06/2021-06-06_diary/">Weekly Summary (2021-05-31_2021-06-06)</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/05</span><a class="archive-post-title" href= "/2021/06/05/2021-06-05_diary/" >基于记忆规律的学习方法</a>
+            <span class="archive-post-date">06/05</span>
+            <a class="archive-post-title" href="/2021/06/05/2021-06-05_diary/">基于记忆规律的学习方法</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2021/05/31/2021-05-31_diary/" >2021 下半年工作学习安排</a>
+            <span class="archive-post-date">05/31</span>
+            <a class="archive-post-title" href="/2021/05/31/2021-05-31_diary/">2021 下半年工作学习安排</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >如何用图论解决 Secret Santa 问题？（译）</a>
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/">如何用图论解决 Secret Santa 问题？（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库（译）</a>
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2021/05/12/DB_using-postgresql-as-a-data-warehouse/">把 PostgreSQL 用作数据仓库（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/28</span><a class="archive-post-title" href= "/2021/04/28/OS_linux-memory-monitoring/" >Linux 内存原理与分析</a>
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2021/04/28/OS_linux-memory-monitoring/">Linux 内存原理与分析</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2021/04/20/OS_linux-io-monitoring/" >Linux I/O 原理与分析</a>
+            <span class="archive-post-date">04/20</span>
+            <a class="archive-post-title" href="/2021/04/20/OS_linux-io-monitoring/">Linux I/O 原理与分析</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2021/04/10/OS_linux-cpu-monitoring/" >Linux CPU 原理与分析</a>
+            <span class="archive-post-date">04/10</span>
+            <a class="archive-post-title" href="/2021/04/10/OS_linux-cpu-monitoring/">Linux CPU 原理与分析</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/05</span><a class="archive-post-title" href= "/2021/04/05/OS_linux-network-monitoring/" >Linux 网络原理与分析</a>
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2021/04/05/OS_linux-network-monitoring/">Linux 网络原理与分析</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_system_initialization/" >Linux - 架构与系统初始化</a>
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2021/04/01/OS_system_initialization/">Linux - 架构与系统初始化</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >Java 程序员的 C++（译）</a>
+            <span class="archive-post-date">03/17</span>
+            <a class="archive-post-title" href="/2021/03/17/Java_cpp-for-java-programmers/">Java 程序员的 C++（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2021/02/24/DDIA_note-13/" >《DDIA》阅读笔记（九）：一致性与共识（共识问题）</a>
+            <span class="archive-post-date">02/24</span>
+            <a class="archive-post-title" href="/2021/02/24/DDIA_note-13/">《DDIA》阅读笔记（九）：一致性与共识（共识问题）</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2021/02/21/2021-02-21_diary/" >近期工作学习规划</a>
+            <span class="archive-post-date">02/21</span>
+            <a class="archive-post-title" href="/2021/02/21/2021-02-21_diary/">近期工作学习规划</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2021/02/19/DDIA_note-12/" >《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
+            <span class="archive-post-date">02/19</span>
+            <a class="archive-post-title" href="/2021/02/19/DDIA_note-12/">《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2021/02/13/DDIA_note-11/" >《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
+            <span class="archive-post-date">02/13</span>
+            <a class="archive-post-title" href="/2021/02/13/DDIA_note-11/">《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/06</span><a class="archive-post-title" href= "/2021/02/06/DDIA_note-10/" >《DDIA》阅读笔记（八）：分布式系统的挑战</a>
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2021/02/06/DDIA_note-10/">《DDIA》阅读笔记（八）：分布式系统的挑战</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2021/01/27/DDIA_note-9/" >《DDIA》阅读笔记（七）：事务</a>
+            <span class="archive-post-date">01/27</span>
+            <a class="archive-post-title" href="/2021/01/27/DDIA_note-9/">《DDIA》阅读笔记（七）：事务</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2021/01/22/DDIA_note-8/" >《DDIA》阅读笔记（六）：数据分区</a>
+            <span class="archive-post-date">01/22</span>
+            <a class="archive-post-title" href="/2021/01/22/DDIA_note-8/">《DDIA》阅读笔记（六）：数据分区</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-7/" >《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
+            <span class="archive-post-date">01/21</span>
+            <a class="archive-post-title" href="/2021/01/21/DDIA_note-7/">《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2021/01/20/DDIA_note-6/" >《DDIA》阅读笔记（五）：数据复制（多主节点）</a>
+            <span class="archive-post-date">01/20</span>
+            <a class="archive-post-title" href="/2021/01/20/DDIA_note-6/">《DDIA》阅读笔记（五）：数据复制（多主节点）</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >选择合适的数据库（译）</a>
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2021/01/10/DB_right-database/">选择合适的数据库（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2021/01/09/DDIA_note-5/" >《DDIA》阅读笔记（五）：数据复制（单主节点）</a>
+            <span class="archive-post-date">01/09</span>
+            <a class="archive-post-title" href="/2021/01/09/DDIA_note-5/">《DDIA》阅读笔记（五）：数据复制（单主节点）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2021/01/01/DB_tree-table-design-summary/" >树形表结构设计总结</a>
+            <span class="archive-post-date">01/01</span>
+            <a class="archive-post-title" href="/2021/01/01/DB_tree-table-design-summary/">树形表结构设计总结</a>
         </li>
-    
-    
-    
-    
     
-        </ul>
-    
-    <div class="archive-year"> 2020 </div>
-    <ul class="year-list">
-    
-    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2020/12/13/DDIA_note-3/" >《DDIA》阅读笔记（三）：数据存储与检索</a>
+            <span class="archive-post-date">12/13</span>
+            <a class="archive-post-title" href="/2020/12/13/DDIA_note-3/">《DDIA》阅读笔记（三）：数据存储与检索</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">12/04</span><a class="archive-post-title" href= "/2020/12/04/DDIA_note-2/" >《DDIA》阅读笔记（二）：数据模型与查询语言</a>
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2020/12/04/DDIA_note-2/">《DDIA》阅读笔记（二）：数据模型与查询语言</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2020/12/02/DDIA_note-1/" >《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
+            <span class="archive-post-date">12/02</span>
+            <a class="archive-post-title" href="/2020/12/02/DDIA_note-1/">《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2020/10/08/Maven_external_dependencies_management/" >Maven 打包依赖外置</a>
+            <span class="archive-post-date">10/08</span>
+            <a class="archive-post-title" href="/2020/10/08/Maven_external_dependencies_management/">Maven 打包依赖外置</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2020/10/04/Java_prod-analysis-cmd/" >Java 应用常用调试分析方法总结</a>
+            <span class="archive-post-date">10/04</span>
+            <a class="archive-post-title" href="/2020/10/04/Java_prod-analysis-cmd/">Java 应用常用调试分析方法总结</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_cheat-sheet/" >Kafka Cheat Sheet</a>
+            <span class="archive-post-date">09/24</span>
+            <a class="archive-post-title" href="/2020/09/24/Kafka_cheat-sheet/">Kafka Cheat Sheet</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2020/08/09/Arthas_cheat-sheet/" >Arthas Cheat Sheet</a>
+            <span class="archive-post-date">08/09</span>
+            <a class="archive-post-title" href="/2020/08/09/Arthas_cheat-sheet/">Arthas Cheat Sheet</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2020/07/12/Java_override-and-bridge-method/" >Java 多态、重写与桥接方法</a>
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2020/07/12/Java_override-and-bridge-method/">Java 多态、重写与桥接方法</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/Java_memory-area/" >Java 内存区域</a>
+            <span class="archive-post-date">06/30</span>
+            <a class="archive-post-title" href="/2020/06/30/Java_memory-area/">Java 内存区域</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">05/28</span><a class="archive-post-title" href= "/2020/05/28/DB_data-warehouse-design-basic/" >数据仓库设计基础</a>
+            <span class="archive-post-date">05/28</span>
+            <a class="archive-post-title" href="/2020/05/28/DB_data-warehouse-design-basic/">数据仓库设计基础</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/08</span><a class="archive-post-title" href= "/2020/04/08/2020-04-08_diary/" >关于使用思维导图做笔记</a>
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2020/04/08/2020-04-08_diary/">关于使用思维导图做笔记</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href= "/2020/03/28/Algorithm_leetcode-high-frequency-problems/" >LeetCode 高频面试题</a>
+            <span class="archive-post-date">03/28</span>
+            <a class="archive-post-title" href="/2020/03/28/Algorithm_leetcode-high-frequency-problems/">LeetCode 高频面试题</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">03/06</span><a class="archive-post-title" href= "/2020/03/06/InfoSecty_personal-infomation-security-guide/" >個人信息安全保護指南</a>
+            <span class="archive-post-date">03/06</span>
+            <a class="archive-post-title" href="/2020/03/06/InfoSecty_personal-infomation-security-guide/">個人信息安全保護指南</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2020/02/22/2020-02-22_diary/" >免费 JetBrains 全家桶</a>
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2020/02/22/2020-02-22_diary/">免费 JetBrains 全家桶</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/16</span><a class="archive-post-title" href= "/2020/02/16/Nginx_cheat-sheet/" >Nginx Cheat Sheet</a>
+            <span class="archive-post-date">02/16</span>
+            <a class="archive-post-title" href="/2020/02/16/Nginx_cheat-sheet/">Nginx Cheat Sheet</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_cheat-sheet/" >Git Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span>
+            <a class="archive-post-title" href="/2020/02/15/Git_cheat-sheet/">Git Cheat Sheet</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_cheat-sheet/" >Docker & K8S Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span>
+            <a class="archive-post-title" href="/2020/02/15/Docker&K8S_cheat-sheet/">Docker & K8S Cheat Sheet</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2020/02/03/Java_jstat-monitor-analysis/" >JVM jstat 监控分析</a>
+            <span class="archive-post-date">02/03</span>
+            <a class="archive-post-title" href="/2020/02/03/Java_jstat-monitor-analysis/">JVM jstat 监控分析</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/Java_GC-log-analysis/" >JVM GC 日志分析</a>
+            <span class="archive-post-date">02/01</span>
+            <a class="archive-post-title" href="/2020/02/01/Java_GC-log-analysis/">JVM GC 日志分析</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2020/01/01/Java_JVM_mindmap/" >Java 虚拟机与并发编程</a>
+            <span class="archive-post-date">01/01</span>
+            <a class="archive-post-title" href="/2020/01/01/Java_JVM_mindmap/">Java 虚拟机与并发编程</a>
         </li>
-    
-    
     
-    
-    
-        </ul>
-    
-    <div class="archive-year"> 2019 </div>
-    <ul class="year-list">
-    
-    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+            
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">12/05</span><a class="archive-post-title" href= "/2019/12/05/Design_design-patterns/" >设计模式与设计原则</a>
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2019/12/05/Design_design-patterns/">设计模式与设计原则</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2019/10/04/Python_async-programming/" >Python 异步编程总结</a>
+            <span class="archive-post-date">10/04</span>
+            <a class="archive-post-title" href="/2019/10/04/Python_async-programming/">Python 异步编程总结</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2019/09/19/Python_data-structure/" >Python 数据结构应用</a>
+            <span class="archive-post-date">09/19</span>
+            <a class="archive-post-title" href="/2019/09/19/Python_data-structure/">Python 数据结构应用</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator/" >Python 装饰器基本用法</a>
+            <span class="archive-post-date">09/13</span>
+            <a class="archive-post-title" href="/2019/09/13/Python_decorator/">Python 装饰器基本用法</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2019/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
+            <span class="archive-post-date">08/22</span>
+            <a class="archive-post-title" href="/2019/08/22/Python_OOP-summary/">Python 类与对象总结</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2019/06/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
+            <span class="archive-post-date">06/28</span>
+            <a class="archive-post-title" href="/2019/06/28/JavaScript_cheat-sheet/">JavaScript Cheat Sheet</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2019/06/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2019/06/02/JavaScript_ES6-grammar/">ES6 语法总结</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Vue_user-guide/" >Vue 学习笔记</a>
+            <span class="archive-post-date">05/20</span>
+            <a class="archive-post-title" href="/2019/05/20/Vue_user-guide/">Vue 学习笔记</a>
         </li>
     
     </div>
-  </div>
+</div>
+
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
-    
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
-        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
-    
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
-    
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
-        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
-    
-        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
-    
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
-        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
-    
-        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
-    
-        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
-        <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
-    
-        <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
-    
+        
+            <span class="sidebar-tag-name" data-tags="杂事">
+                <span class="iconfont-archer">&#xe606;</span>
+                杂事
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="技术">
+                <span class="iconfont-archer">&#xe606;</span>
+                技术
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="算法">
+                <span class="iconfont-archer">&#xe606;</span>
+                算法
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Java">
+                <span class="iconfont-archer">&#xe606;</span>
+                Java
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="数据库">
+                <span class="iconfont-archer">&#xe606;</span>
+                数据库
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="大数据">
+                <span class="iconfont-archer">&#xe606;</span>
+                大数据
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="设计">
+                <span class="iconfont-archer">&#xe606;</span>
+                设计
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="分布式系统">
+                <span class="iconfont-archer">&#xe606;</span>
+                分布式系统
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Docker">
+                <span class="iconfont-archer">&#xe606;</span>
+                Docker
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Kubernetes">
+                <span class="iconfont-archer">&#xe606;</span>
+                Kubernetes
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Go">
+                <span class="iconfont-archer">&#xe606;</span>
+                Go
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="信息安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                信息安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Maven">
+                <span class="iconfont-archer">&#xe606;</span>
+                Maven
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Nginx">
+                <span class="iconfont-archer">&#xe606;</span>
+                Nginx
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OS">
+                <span class="iconfont-archer">&#xe606;</span>
+                OS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Git">
+                <span class="iconfont-archer">&#xe606;</span>
+                Git
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="微服务">
+                <span class="iconfont-archer">&#xe606;</span>
+                微服务
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="JavaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                JavaScript
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="MySQL">
+                <span class="iconfont-archer">&#xe606;</span>
+                MySQL
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Kafka">
+                <span class="iconfont-archer">&#xe606;</span>
+                Kafka
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Vue">
+                <span class="iconfont-archer">&#xe606;</span>
+                Vue
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="前端">
+                <span class="iconfont-archer">&#xe606;</span>
+                前端
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
-    缺失模块。<br/>
-    1、请确保node版本大于6.2<br/>
-    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
-    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
-    3、在根目录_config.yml里添加配置：
-    <pre style="color: #787878; font-size: 0.6rem;">
-jsonContent:
-  meta: false
-  pages: false
-  posts:
-    title: true
-    date: true
-    path: true
-    text: false
-    raw: false
-    content: false
-    slug: false
-    updated: false
-    comments: false
-    link: false
-    permalink: false
-    excerpt: false
-    categories: true
-    tags: true</pre>
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
     </div> 
     <div class="sidebar-tags-list"></div>
 </div>
+
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《数据密集型应用系统设计》阅读笔记</span>
+        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》阅读笔记">
+            <span class="iconfont-archer">&#xe60a;</span>
+            《数据密集型应用系统设计》阅读笔记
+        </span>
     
-        <span class="sidebar-category-name" data-categories="《凤凰架构》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《凤凰架构》阅读笔记</span>
+        <span class="sidebar-category-name" data-categories="《凤凰架构》阅读笔记">
+            <span class="iconfont-archer">&#xe60a;</span>
+            《凤凰架构》阅读笔记
+        </span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
     <div class="sidebar-categories-list"></div>
 </div>
+
     </div>
-</div> 
-    <script>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
     var siteMeta = {
-        root: "/",
+        url: "https://yipwinghong.github.io",
+        root: siteMetaRoot,
         author: "Kylo Yip"
     }
 </script>
-    <!-- CDN failover -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-    <script type="text/javascript">
-        if (typeof window.$ === 'undefined')
-        {
-            console.warn('jquery load from jsdelivr failed, will load local script')
-            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
-        }
-    </script>
-    <script src="/scripts/main.js"></script>
-    <!-- algolia -->
-    
-    <!-- busuanzi  -->
-    
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    
-    <!-- CNZZ  -->
-    
-    </div>
-    <!-- async load share.js -->
-    
-        <script src="/scripts/share.js" async></script>    
-     
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         tex2jax: {
@@ -1760,5 +1961,3 @@ jsonContent:
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
-
-

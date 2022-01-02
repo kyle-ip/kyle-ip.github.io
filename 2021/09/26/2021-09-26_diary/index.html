@@ -3,26 +3,20 @@
     <!-- title -->
 
 
-
+    
 
 <!-- keywords -->
 
 
 
-
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="author" content="Kylo Yip">
     <meta name="renderer" content="webkit">
     <meta name="copyright" content="Kylo Yip">
-	
-	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="/live2d-widget/autoload.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
-	
     
-    <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
+        <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
     
     <meta name="description" content="">
     <meta name="description" content="What a melancholy life">
@@ -38,9 +32,119 @@
 <meta property="article:tag" content="杂事">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
     
     <title>迟来的一次复盘 · Kylo&#39;s Notebook</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -90,131 +194,20 @@
             transform: translate3d(0, 0, 0);
         }
     }
-
 </style>
 
-    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
     
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    
-    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
-/* This file is meant as a standalone workflow for
-- testing support for link[rel=preload]
-- enabling async CSS loading in browsers that do not support rel=preload
-- applying rel preload css once loaded, whether supported or not.
-*/ -->
-<script>
-(function( w ){
-	"use strict";
-	// rel=preload support test
-	if( !w.loadCSS ){
-		w.loadCSS = function(){};
-	}
-	// define on the loadCSS obj
-	var rp = loadCSS.relpreload = {};
-	// rel=preload feature support test
-	// runs once and returns a function for compat purposes
-	rp.support = (function(){
-		var ret;
-		try {
-			ret = w.document.createElement( "link" ).relList.supports( "preload" );
-		} catch (e) {
-			ret = false;
-		}
-		return function(){
-			return ret;
-		};
-	})();
-
-	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
-	// then change that media back to its intended value on load
-	rp.bindMediaToggle = function( link ){
-		// remember existing media attr for ultimate state, or default to 'all'
-		var finalMedia = link.media || "all";
-
-		function enableStylesheet(){
-			link.media = finalMedia;
-		}
-
-		// bind load handlers to enable media
-		if( link.addEventListener ){
-			link.addEventListener( "load", enableStylesheet );
-		} else if( link.attachEvent ){
-			link.attachEvent( "onload", enableStylesheet );
-		}
-
-		// Set rel and non-applicable media type to start an async request
-		// note: timeout allows this to happen async to let rendering continue in IE
-		setTimeout(function(){
-			link.rel = "stylesheet";
-			link.media = "only x";
-		});
-		// also enable media after 3 seconds,
-		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
-		setTimeout( enableStylesheet, 3000 );
-	};
-
-	// loop through link elements in DOM
-	rp.poly = function(){
-		// double check this to prevent external calls from running
-		if( rp.support() ){
-			return;
-		}
-		var links = w.document.getElementsByTagName( "link" );
-		for( var i = 0; i < links.length; i++ ){
-			var link = links[ i ];
-			// qualify links to those with rel=preload and as=style attrs
-			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
-				// prevent rerunning on link
-				link.setAttribute( "data-loadcss", true );
-				// bind listeners to toggle media back
-				rp.bindMediaToggle( link );
-			}
-		}
-	};
-
-	// if unsupported, run the polyfill
-	if( !rp.support() ){
-		// run once at least
-		rp.poly();
-
-		// rerun poly on an interval until onload
-		var run = w.setInterval( rp.poly, 500 );
-		if( w.addEventListener ){
-			w.addEventListener( "load", function(){
-				rp.poly();
-				w.clearInterval( run );
-			} );
-		} else if( w.attachEvent ){
-			w.attachEvent( "onload", function(){
-				rp.poly();
-				w.clearInterval( run );
-			} );
-		}
-	}
-
-
-	// commonjs
-	if( typeof exports !== "undefined" ){
-		exports.loadCSS = loadCSS;
-	}
-	else {
-		w.loadCSS = loadCSS;
-	}
-}( typeof global !== "undefined" ? global : this ) );
-</script>
-
-    <link rel="icon" href= "/assets/favicon.ico" />
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
-    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
-    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
-    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
-    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
-    
-    <!-- fancybox -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
     <!-- 谷歌统计  -->
@@ -222,60 +215,75 @@
 <meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
 </head>
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
     
         <body class="post-body">
     
-    
-<header class="header">
-
+        <!-- header -->
+        <header class="header header-mobile">
     <!-- top read progress line -->
     <div class="header-element">
-        
         <div class="read-progress"></div>
-        
     </div>
     <!-- sidebar menu button -->
     <div class="header-element">
         
-        <div class="header-sidebar-menu header-sidebar-menu-rounded">
+            <div class="header-sidebar-menu">
         
             
-            <i class="fas fa-bars"></i>
+                <div style="padding-left: 1px;">&#xe775;</div>
             
         </div>
     </div>
-    <!-- back to home page text -->
-    <a class="home-link header-element" href=/>Kylo's Notebook</a>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Kylo's Notebook</a>
+        </span>
+    </div>
     <!-- toggle banner for post layout -->
     
-    
-    <div class="banner">
-    
-        <div class="blog-title header-element">
-            <a href="/" >Kylo&#39;s Notebook</a>
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Kylo&#39;s Notebook</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">迟来的一次复盘</a>
+            </div>
         </div>
-        <div class="post-title header-element">
-            <a href="#" class="post-name">迟来的一次复盘</a>
-        </div>
-    </div>
     
 </header>
-    
-<footer class="footer-fixed">
 
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
     <!-- back to top button -->
     <div class="footer-fixed-element">
         
-        <div class="back-top back-top-rounded">
+            <div class="back-top back-top-hidden">
         
-            
-            <i class="fas fa-chevron-up"></i>
-            
+        
+            <div>&#xe639;</div>
+        
         </div>
     </div>
 </footer>
-    <div class="wrapper">
-        <div class="site-intro" style="
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
 
 
 
@@ -283,12 +291,13 @@
 
 
 
-height:100vh;
+    height:0vh;
+
 ">
     
     <!-- 主页  -->
     
-    
+        
     <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
@@ -298,7 +307,7 @@ height:100vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            迟来的一次复盘
+                迟来的一次复盘
             <!-- 404 -->
             
         </h1>
@@ -306,20 +315,22 @@ height:100vh;
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-            
+                
             <!-- 404 -->
             
         </p>
-        <!-- 文章页meta -->
+        <!-- 文章页 meta -->
         
             <div class="post-intros">
                 <!-- 文章页标签  -->
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "杂事">杂事</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="杂事">杂事</a>
     
 </div>
+
                 
                 
                     <div class="post-intro-read">
@@ -327,18 +338,21 @@ height:100vh;
                     </div>
                 
                 <div class="post-intro-meta">
-                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
                     <span class="post-intro-time">2021/09/26</span>
+                    <!-- busuanzi -->
                     
-                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                        <span class="iconfont-archer">&#xe602;</span>
-                        <span id="busuanzi_value_page_pv"></span>
-                    </span>
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
                     
-                    <span class="shareWrapper">
-                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
-                        <span class="shareText">Share</span>
-                        <ul class="shareList">
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
                             <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
                                 <div class="share-qrcode"></div>
                             </li>
@@ -353,104 +367,133 @@ height:100vh;
         
     </div>
 </div>
-        <script>
- 
+
+            <script>
   // get user agent
-  var browser = {
-    versions: function () {
-      var u = window.navigator.userAgent;
-      return {
-        userAgent: u,
-        trident: u.indexOf('Trident') > -1, //IE内核
-        presto: u.indexOf('Presto') > -1, //opera内核
-        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
-        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
-        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
-        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
-        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
-        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
-        iPad: u.indexOf('iPad') > -1, //是否为iPad
-        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
-        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
-        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
-      };
-    }()
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
   }
-  console.log("userAgent:" + browser.versions.userAgent);
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
 
   // callback
   function fontLoaded() {
-    console.log('font loaded');
+    console.log('font loaded')
     if (document.getElementsByClassName('site-intro-meta')) {
-      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
-      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
       var postIntros = document.getElementsByClassName('post-intros')[0]
       if (postIntros) {
-        postIntros.classList.add('post-fade-in');
+        postIntros.classList.add('post-fade-in')
       }
     }
   }
 
   // UC不支持跨域，所以直接显示
-  function asyncCb(){
+  function asyncCb() {
     if (browser.versions.uc) {
-      console.log("UCBrowser");
-      fontLoaded();
+      console.log('UCBrowser')
+      fontLoaded()
     } else {
       WebFont.load({
         custom: {
-          families: ['Oswald-Regular']
+          families: ['Oswald-Regular'],
         },
-        loading: function () {  //所有字体开始加载
-          // console.log('loading');
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
         },
-        active: function () {  //所有字体已渲染
-          fontLoaded();
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
         },
-        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
-          console.log('inactive: timeout');
-          fontLoaded();
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
         },
-        timeout: 5000 // Set the timeout to two seconds
-      });
+        timeout: 5000, // Set the timeout to two seconds
+      })
     }
   }
 
-  function asyncErr(){
+  function asyncErr() {
     console.warn('script load from CDN failed, will load local script')
   }
 
   // load webfont-loader async, and add callback function
   function async(u, cb, err) {
-    var d = document, t = 'script',
+    var d = document,
+      t = 'script',
       o = d.createElement(t),
-      s = d.getElementsByTagName(t)[0];
-    o.src = u;
-    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
-    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
-    s.parentNode.insertBefore(o, s);
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
   }
 
-  var asyncLoadWithFallBack = function(arr, success, reject) {
-      var currReject = function(){
-        reject()
-        arr.shift()
-        if(arr.length)
-          async(arr[0], success, currReject)
-        }
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
 
-      async(arr[0], success, currReject)
+    async(arr[0], success, currReject)
   }
 
-  asyncLoadWithFallBack([
-    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
-    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
-    "/lib/webfontloader.min.js"
-  ], asyncCb, asyncErr)
-</script>        
-        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
-        <div class="container container-unloaded">
-            <main class="main post-page">
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
     <article class="article-entry">
         <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
   <script id="hbeData" type="hbeData" data-hmacdigest="b1589195aa081a85db3d8158040b356daa029db919ca7bd0be7fe201326d15ad">c8d95651b40ebee01ac90b4399e56a98df41de5d5cea53815752e9a9982dff407417fae26e084616dc47e8c5e0ab66b2be1c06f8d84796d60b0a0bde8b3b3f9a82d9e618854c3f49edd3b0aea192f13c97610f3a734221749c1acd03fe6dad765739c4803810f06c781afe712998298bc7a169d4927aced55d46f20747cbb6688ba29709ecf02db396572b75277a5d85d7a481c8338c509a3e001887bef3302e8abc1abf1c9760491f766f65394042ed0447de995b99f91c54354f1476a500c21f97151f9ce0c44d30f63546e5751b9088985f1dcda1dc590f71e3229a06fe7768f9621d83e1d6c4be7b10c24e104241d1f8f02b4a653b8dd749769c31c03d04d9e552317e48e4634b06c9c6f9c61f301d55a8c51751e2ac9c05f1a9d48420a0192d64ccd54e2fa4f248ba4274f8115880e9f1497d0e2389ad9d6540a595c505b96e65cda6982651b9cd9d750d0657dd14c00b6f1f2d8b6f5d4ec2b80071e3906a43f3ebdd58a955a7e053d14f3c921f30bb919cf6559451fdd87b4c399faf0265e7fcac6ea8890848a1a1e3212b75d4ffff4bbf6d04cc53b9efb3da067653c592b80b5e8598418840a83a554cf73d88ebbedd445b9a54a50eed866dbaa8c671397ebd68c26d1bb423b275400cc3f978875f071a19f4c35543ed66d3640e0b9fede797d1ee714634f6e5d55312f283fe7e71ab53f806742b5ec794227bdcccdcc99f9cc9302ab63d747ff8f38ee98080cd902eb9192be599ebb7a8d7ff6217288c634b9fb095a27c5dfd2b7311939afacc731e6247b801b174a141f6c2f61a7d3109d75624bb8c73e57a5c85db9571ac96ca525b6a5f99defe55306c9353c392ceac1a8980ef03f6373e8f893895edf5cf1817d1ce0504d9270373aaf011bd31fc5059f8c2831aa803ecd9942e17ca3010391ffdc4b8c5ecbf2e730d16e272cfd7e1ad5589b6e5dc04b7746279108630f0611fa5026747aa38f0ed040746e42a0509206d5309f0f503c2be860ae0a799f58f86c3afc6cd25309b30e7a5997c52ca08b8c88149e359c2325645bdb99c6814e8d25ea335e4e14a2c5f35ed5c076e1c9f92383e04c46e1efba7bdf80e321548cc0e6e5d30e889d327ed3812b6609a642be812928f4035fbc5d8efb1609e55af9b8321ce9a9452e78d8cc0f49bf85beed2861260b45ede444665a92b1a8aef5bc6260e01ed966cfaa899379e755384f38925fbad562ecad69dc12aadbb9b4f1f3018e6a9927f580b259ae3e38fab00ab5ec8fea49cc47e236b00d462688807933fadb3bfe7c7ba60eead7f91c7b79890f139741f90cc2f8fd4bed59f5be1b2c8c42c3c233ffb8ce96c9187ee059056df6738fdf48096b1958aefe73b487e63e2bf0a846dae4db6c35a0ef4a67724ab2641342c3a760b8d22998fd2917af44219bcef4d8924360de8bb28b87f2790ef6531cd4ebe9ef7d6bffdbc700db50f388655f67b30c95e919b0aed33dec6656b869b9ed921107e8e49264a306d2923294901eae9df5182b7d3a8280c7d7aa180e71f63f8edc30369528138d892e02b46c7eeb9bcf7719a58e123f06e1030ba7192d9bf0015bbb4e3d59d935bcfeabadb5170d4bcec9d94d83bbc05160cd115b6f3ad080f28292746dd754cfbb754a4608816c80be6810b42aa512f68fa36e22dd314e61735088b94fa9f62c8e74b3260aba4283c45bfe50d37649442db7b0e2e7535a632e139caa61e60b782f222e4649e851b62d95b996e420eec31e40d951d70e58abff0809a1193c382cbf178419e906c83fcd0f7e73651be6baae939034ab9c839fe8c6a9a738dca98e356208e2d9f19addba94a098d57f16f08d0fbc289a9a0346e4c3dbc5e29344ef860c3eb7606f5faa232bdc55927d425a7ee23d35befd80fcad8dd016d7072e4b0f81b444ea71294f725755837418029885ea22b6a13de3bf590364ef58fcb98fd7f00e730462d86a3e508a0d41e6f82068464429e23c4d2662a9f826b83d421ccf2781f25542c0ff276282281a5f038f18dac4675b38ebf93ecaba9270bc932464c570f3b83bb0983ecc577ba0adaeee55983797cc294de93189c9db80e949832c5cedb50b80ba9419b51b42382b96f32272fb288b26dfc8153a117b4cc75a7f060113f3204c1a13a6bb0fdbd9127d1cd1466f54f4f7e4461c89dfc2fa0da496d159db8d482b25a12d997b39876730d6fcab8a4099d66a5df7af549df92da288d7e9980d0dd1aaea5dd7656c7063f6b83495adcf9ee7ee49240ceeefbd8131b779e3359dfc91e44164acc1e9923e033c4bbfece8ccc669859e3b88ab697f985aff577f73049a3ed05268d6fb87e277e4b31f16bf478a1931cec02fde5d899b8269c46c9c48e653fc4450b9b9869a7ae738a6461576e4a4c260aa9c950634bdf7839a63190b9590c9b879c7f6d3db411f076d4485707bb595b5950933e7d64714c9a6a68ea8c99c05d041168b31284da617de7ce5b85a6f27cf42cf52a240dd9e1ef23e4a0a3677cbba9716bbe2d242edbbb7f7c6236fc67258636e396b7514b24bd21ce1652483e3138c18407c23a19108af1bb28fa0863262c6b2a38bc039034ab14b58a753f19fbd03f64e01ef90bb4aa087190323286a51da23ff630c6ac1b649a9d2a2004feafbac9bbab2c4ef36b5b2aaf4f1932fa725af59b5cf1399c739bd72e56d5ba61a5966b75864aa03204742b5dc3b72e2c4575953a747384a4e45893c5831983d2b2c751b8135ad594fa3a5b8d5041a11f83027ef682ab1321f1a53f01f75c1d275328b256d40e5fd35963bb62360049e2b3234656fec13fb1c4b8869b3e8198dc10f2e65dda07cdcd82e5686577b7ab6de8f9732498ec59c4726ca908e2270a590a28e71296c06ef2eec66f80a992132eb199f80508316785b737332e0d4eccb6acaf0fa42d6579290eec6c13c12bcffa9581f47700fada69b00217af4ec3eb54a188b3e5b17aee60241724ab9f596882e5364e66bfb23d34b66b719fc58999c580ac68a778e156109bf803572386eb37963cee09131428143f5558ce8ef61b9c63eabc48f01e6b14791844cc0eb644495f9910f63d4a37a05ffc4e151cdfe364b4518809509c414edb1fa89679116d81a513f6d0cb6f0c8f86988f12c0d0af9124ff5bf243aaee176f53617bd6f21f98e8750ad1ab61f8c24b3e81f14284d4422139a47c0c2e4934b1421f5c583d70a82f87736384dc9ac97dd5803a48e6ea01f44025fd46b95b945850c3c396ace18b88f20692536a4a82db22fafb66c49c146174c5413ddc66ac6742753d5ba2c537454af026204bac1a0a83cd02f1e82d99a2c4e3737c2c9bf0e752f407d6e1b136494e8cb7354abb398dd4b22543aadc50df60ec9859a89db4170cae021d4f035b6c911e8d23ee09d82ac82443a5d67fa29eeeada356909cbd9a5594d5abdced36b0096bf1febc5171b50b66bc9f3cb2b17456f0781f9ec229e564248345789bcb1d56ffbadb9ff56d34e6d6d43d953443b3b9bfe119fc162d37f51804be4c8f6aacf9ee87ff1347fdbe36f6d1e45a2771a8215169f785c5d452db8c96d8a2940047f27f95f4960aa9ca9b6ab7bf3d4b6765411925c51b29c4bc48fade0a85b38ea06f8afc5a5e3768f74c91f6b1122abd2c581f3772a80abbd74112a784f47185c3d021cfbc122a3eee0d5772f6cd8fb6fd957f357fd1330c779fe8f53306f91647754969534a3da2217d3c5d83abd9ebd4b7a38f39e8a607adc1e70b418d2b077c78f6022706b62696bc3c6b664d8bd15ed3522017a6b7a34992cb61c5510b9ea57ae22da3846a8e954715216a6117972ce2d99f36e8bf6c03d8f63d9112d8c2063702be5eced29ca55ae873ef532a01704977a74979dc14e89982e0cfb51e422df4ad4add8bf6d75d8ac6c7ac2164f17f0f9770a3f404fae179d35a6230228d9c745ddc2072dc8099a4586c9004df714da43b763db39f5763d21d1c61e45f4178cdca8447d872182c5248014405e1031c52835342934e7956b4bdfba1b04f16556a89adceae9e335897e387d287e0be22424e66bb5bde98aa85f44271f9075eb70f39662fda6e65f320f04418120874a14a8a5f9e4e95b5db9ec162daaa93b9b0cafcc0c705af9a4fe20d63e1032ae45bb639d2d7a34e3d25c6345ee2bec88afb9a9da3ad0d527f1de3262a7643e3ec2d2ed067f1124f45929aca6c830af4792b4c9793be9d00d84d55e2761840f9a92964c3caeac79cff141fcd0f20dd1e6b09cbff9aa0d70a16026b2ace1ad51ba08deae27cbbf48460b8724ffe08afacb6335dce483c48b0dc2bb49b83cf71f49db4f8b92fa483f6b91cb1b19eaf7b0b39bf1e0e322fdeaf3054d1333046edee9f3aa57fb8d4e6c38836a43f8a8e3c00f578c5667942bb1709d7e130348e7ecd26331fd5cfae9a624cb56c32bd1afa6b4fdf135326bbda0ecc93b05ec0a5841e746d409141446fafb38377d318603d4993fcd2241ad445d6c4c685d74e36dd5983252e5d4dc228aca11f66822d3e312cc99a16872dd65050fa00627cc115f3f0848745f9326c8bb8c8921791e1d91d5888c918f3de89d4f62a292f067ae669880fd884ff9dbb6402681f308984bc39d126268f011baf8511ee5ef8794379d287e1b9278d34e41cfb02fe1e4c76311408091598d373d9a0ad0ce4560cdcdf12907b867d2e95f3e5529ce45fab09a4467dc8ac80a87ef6838ac1952d6e67e2b222e480d22814c9167c98719433a25a2f2d7fac66a64ba784e690338f3d795fa0e392ace2fafcb865d9f2149093e978123d1783efe404fc7ee4da18cb10d2cbec539b3fc95f38b152b4ea143578599df460d2bdbe90a05be67e704b0b1cf9350e5eb97a616f038e8eaafa23dc2dca36f5b7396446baa76e2e904172949bbe2140d27a00bf9f9e526d0e4f814b47da527d92e08f1c3fc1ed1886e18d47e90e2e4f69ac558a978a49e4f7a8b73a61c4c8d274426708d84075349c4ffcc145d14fd03763a29fd50155cff6cdf67a1ff230b918a1e846e2f01c4f4760db668f94e433d7114fb79902a56dd111bbb93cc90c3749f556a7c6550e39c595dd029d3c8772776c3e162645509ee0ae0bd8587e25582f6894b87249e874a716344313093fb47ed165d6863bc62c42f6be7c4befe3294b3054d791703f798f8d1904a58654e182f817b6b48e3e6ac1959bb6aa25440cc708bdcc21ca3b3eca099269dcac1dedae6f0533a306928f3f76f810d215076b21d69b2c51c2c419ca2d1f3324b39e9fd173e382d5dd1c0130fb776bdee171341c5d07496847ac3c088ffa270920c5fc16d3c93c639a416019dd1197a8af3a24490c3feea8402ba8fd8a857aa82ce650156d316d86afd0cd6fc6974eca985a4e29a49496d19e8cf79bf0811f9bacae7593d469ec805240b16ea637b053a9692b11dae4a612b72ee29c26a5a06786f219b906cc5a9225e6e495a8ed0dcd6e66b17cc6b100bba262a464c4f57f3ce640b2b3d2c7785a04046dfcb0675ba14124a4a56147cd917a08f8ac354a92d5ae226c6a2fc9e42cb869824183b6002b806870bd1af5a05a28c92b0cc4444ab22ce09eb469739f61360add8c77101ae74c40bb1aa2eda12bd5a6041e676fe0bc065b96d8a9fbbec1891be05ca8580cc1eeff740581e3326d32be7c165edf161c8c6a78632908baea957da387449bc850719554dc39b3a9e57e83e1c235edf46faa1811c4d61ceffbcc5214085450a7eeb97ec9231f8265bc53fcdf1b31776822059cb8ae6aa67cf9f98735b7a4595f8fea1b9f52344ed3e4e5cb1bcce76073c178f857e1d740d3bccf84d6dc2fd241983ea5ddea19abc9793ed3e1727510a3575c9fa188510d63e9499887a2f2448d888985f71d7d408c49fcdb1a42d7621935b82fe3a4966e5cea05b739e61309b68b27e18ed3af638c50d31c9262f1ce7227a4218a26b50e671d1be5593f78020f2a2d58f6eefaf9c374eee2f0e927c8240a862779c3edea7e350fe531c3b038d915081ef2ac433ada193174b58b530792e2c1880408c137af0b184f155a38981fb7e2497220bec5d6520ff9a53fb11b10c38057206ace44dcf2562c406b35867d7371cf235dc3aaa6fade31d422f7070d8cde8a8ad9a095a946e9a4bed935d6a518e913096426a98f987999330bc1512b1adfb124e397503b5f5a15dbf615b20adfa98d8ea3d2fed8b9b334ca9ab199fede571372502a4b03a4a69ef9171c6d96fc11b62a1e6b65e07b144ef0d8046d605924e6dd32ef82b1cafa0caa6c2e3e4a2800f916070fd9eea0d5ff017d7ad9d342b7e28172aa08573a85a7011ee6f1b95736445636ed877d8fb9931eba77888dcfbad8af8040119f0e1ec115bf41504ab3b6821f3bbb1e9e4bb56ff246097ed4b7219b17abc3893afa24923ab90d6dd223e324cb28cb0229c9b181a7b733173cd4f0bbe47993b0eb71262709099d659d693f4aca6da0a8aacf317de2ad3e777f83116e4cc5e828adec0da884e2fde6d8caebae0bb0539d84e813281a4e122783d236bfb27f2753f1fe7bf83d3311a8ec56e6e218749cb6e5c1800a95fbdbc146d0ae42612dd487e4d21904a8222ed8e4d26cc7d27181449e2bbe3b90484d39ed58271b2f708b3eefb45f5517e6d49039e75e1ec4c09a8fdc728aae3dd88a5f9453dac7ab8b1a93f9a518972780be00ed3c67bfc3f5707e82f18bc013e785a527ed80d1aceb6d6c3da780816d087f771927ff8001a8e3b74df04fec65061ddad64de2ae23250441ca548f4edebe48c0c8daa02cba95ed109f66e4b5a674ae1cc92c8d3a8b6378185a59a41bc505d36362a50c32d6a71bc0f17c470024aed6743ef4003580ea3ad153365ce83d314a3c154ab88369f14a7de9c817ed3f8a3f2b2b755e8f50c73cd3e23cd3bcdbfd82bf246a6b00acaa153bcf15a65f4df8e790aa787bdde26a263dbf3a079e8644b085c9909b90d13c3d9cd3c41476d3abaefc4e60931a2ed2d59916e8a52ad64c134f0a02bbfbe560129f63d2406a2e67a511d2998f88db325689f70421ea17fab1d314af13a2821ecce923bd6a46d921a783797dfd9460f586fbc0ba239a787eaa9174cc861d7ba6453655197b530e3d75000d7a2a40afec73b1ea11d111e3ac91db4a76961c85918048aa2118aa378b73df4bae3aefc57c379f61c8fe5ef0d6ce55195813a93fcd5d0df4d7508afc1454f29abc66204f6a012fbbc0ba35ef57b79d415bd877d0e4c283a6e70c4b4b1e98f3e0194789509dc8f4a382caa26192baf4b4e39386b890c1d70e32f2a59573ea1aa9661232390bf11884223d340ef77afad8285f24ca4ebcba20456dc96c7b2d51ce834da548da43bc758c39929fc36eb91476b9dedaa41a316f280e73bd188f3c85e92247a0007a54932a7d141b7f6d2087e18fe1048ba15c275997ea6e11c5d4d92ca284dce6947ea09fc31d96192bdd612deee18dc3676de53f3a8f0d71c1c29c6051224d46f15a844e0dc30299f67720fd2886ce595458c7386eadcc4b235631d2fe18f6ee4c7c5fa0bdd80ce6e5e70e39e143a0d670861478342383d7a6fc2db99c717b2413dd215d565be173bf98c10532a1c769982858abad5e6446eec9035ebfc6558544419ed4b49ac925fe75229af3673928264e4ef809a9f8d36540696af2538328f50b62965fa56a1c37919f7a2fbbd3424dba9344f28e982be29d470cae991d84927c375e474ce2682dda3df11bc002600c86093e6d101bd5ef18811ac665af44eef3a5964b45f4c7afc3f72231901b6519b2fb31d57260aa05b305ac883e4ed94d0944cb0168b22e89ecbd97bda023aefdb2f947ce1556ac581aaada5e69f832eef47d807939b7a0ff0945b5835967024329d1580c910d1f569be842ad8725c1742239b420bc73af9a803bb4a6060b862e68fa000f3d899e47e2f8f05e4f9b76ac81cd6a77239391b8db03c6b02fb4bc650103561de0b26da888b2bf3e5e8aa9e504825e74218dfcc64c8c21e10075412c0a4a4bdea4b0ce4082adee48bd86b6106bc6009c0dbcd745916a5f1d312088d97e10fe9265f6e84858d0b1d92e93718c9f2b8e5d209fef5d0a3b6a342842d224bd54f974cc43b1cda72d27d94bd7ab714ca0e183cf54343acf18ec4caa6a68e454e549aa5232c35b974fa68b232ae612001e27ea3c50b35ae153e3a2ce1a56d089ffee9733ddc742d8e2a6d80888a0bf250f8eb64f5d85f0ade1109b380a38b0f82e7e38655ee78c178f2ecb67a99199fc596e065dc3d45fe7e2da417ae37140eb5c92e52df9d4f994a28bb6bcf0f426f62fbe705a1d6b78e651cc8ff7876e3dc225fbc256d650ad108cb619eada44e8f5277ad6baa5e2620e255e5b60fb0674eb4a95e77d55b526a32f3b530614a730f9e29ad6747b2031b53f1805415d55b7f4bc5a2bfc6956aa5d105aaf53db1934f744eb0b85458ea16a86645e1d8a322aa0852003dca64d4445e459c4019e87da9151b3fed20a7fa7fd54aa23ab6ed7c1bc5ea28fefe3a8544da04c66c8a4653240508cc4268fc72189a04344c8f362a3e3c2a0d86796e107e20de7b394c1f5debddb548f8e4ad5ae754a5a37e5dc51d0cdaa14d0d587a82bd4e67851063d277aa96af6bd5fbe178abd910b0914e10b1bd2ea50987be2630d8970f1003c54bf40bca07a77e4e88ef50a12a4e75278b64bb5e8ea1762e8ca698631a5c7afcdaeac52d94d7a68b0564ce82e5d0a84f190da3027750709a4b5d1589cf56e5aa6031800c01cd408ee1c73fdf8c2bf21135f1fbb4c4b15ea7a2db283c67493087607efd57b93ca6fe8b709e6307429807a78183b38dc5c476593bf2ab23949def84674fa9cfdd4a397a9b630ad8e8ace7c88e70ed812323ef1acfd46d8da2e462fb5f4123470d00a0588ec53dff16d2eac56ed4afb4b213f4d7fcc518a08c28448041660552e561ddc5434e01dafd1d8ad3d9ecd5d949b68616edf85c535d2ce85cd8afb1ba11c480e21a0b2d5e790bc44905b7683ab0131f99c7c8dbf9e7ad7b761bc3bd7d0b413e089e7b12c35605da7312305bb3b549025d4e41e7c672ca28d8609f6b6a99150a1fbc3b4e5eeab13a152505ac1ff69cf7e54f456117e8b753769d1c8c3839eaea2d25f111520866134622e96423e0e54b2094a58b3d489cfd53dded9615af9976f66e9fd877fe3066778635fb1b11318e071b98d254ef94936684ea502f5472fb88ba66b3e182261919e72b93726a9d219ead4a818ec071c207960ad9fb798ac1a78f62d3f6f41dc6ca959be77e94fe87c1fbe05939bf2d8c9c23388318511cb3044a0c98ad35c3de47e79bed296e927f565af277cf2ec77694c687dd33a47aacc3c1441d78ca98b758e51cc74fe3ae2ab74b8463b3474f6ea4722028f0a2be201086fa60f3baedbf4fa19a63841a3584643263c4635daff229e58ed461feb3c72e17ac51e34060615d4d843ab1d339f71ed18ae8e56ebfb0125aa2fcd2a18d190a0af9c7387cc5393b9240664f94314a0f44a318809e6e939d441b2d2657138c313deedc40893566eec7bdf278ecc57eb760ad632364b94690cd7756e2364cde024e68f163e6548e28123d2859e3b68ec2a7d19d844f1a370b834bf720beb3075c60300cde705e5a8d1c5e0f11b69bab3ce24acc9d26212d501ae5b12356dd8555ba1cb6cb7570b2eacebc6a4a2ed9a248593f3627d0d567220be873fbc94ff6c8fa8ceb5172ab57c14c19572dd0c162b372252702aa8cc05082c256a73dbd8a0c686ae83a69e57e8cbc29af34f7c683204af67f70bc6e544d7ff9b5e64e9a45a28f219a06a04794f2f530a9be2211da0e2ecc669daf31b3b0f5ecaf8fbb5080007df2e35f88f5d6dbb6316683c6a98e65191dcc97bc2cf321debeeb4abc219676d009a0172f8b0ab760b8995205614edf9aba425d3a64fb28af3d39f21e7203ed707c109cd2ea751e3b4a3929e52926b453ca8cf7b53f81256d225ba8c3acd83f7fc447c4ffd61aea04b25b2e90fbae8b183bf582514db286bcb50dd270e46f13cd977c2d61f123f83fad92eb40d0304b1861f4168e9691c34206383a35132473fbcdb72a56b520bace0dca6f83e71e37f5562e40b8ef0e8fa1102da50ff8c273aac737c2519d41654c8cef49d00ad5932f4a3feefe65686ab9c0d74e03e8c5de26961ead3178adf794f4e4493d3b4ce447d48b565008163571c04d858054c47e40b5f4bd65842d42556046bbee240dd07cc363ba654134e661c5786c301b6b3110f2990ee112918b1532db7699c40e82e61568e4389c9c38bbf65c66335f91e5c6a7a2b4aa52bf8e71114883d14f4bef8f5b12e7e35e1de83e6ad0e91e2a1dd2d297b8099b9cafd2c9dc1830a3ba7214e02386a4bffb6dcfdc44f319b29ed50ad205cdf0ae47a30b5938c32e0bdf1201b87b9d0edc9ed0714060ea4e2458ff4ed6738426a60b43299310102ebbf612b102390a5e128afb490f233c16f1ffa90bd8ed771e4eab200111531f561ff40451ea03dbfc1088a6f633fbc46ad6af5857ec1b08440a117de12e20b3d21eedf5cc61be8c1ca1e68e72ef05f150f28b56589b5e5a528f426e4cdd183c859cf2f56796f4ce0eae08c8c390c3987002ea547f0abbcc5dc82d8c895ab884896639a3ac0f56afd273893def6c47b62932f7bd3f79e2db2990c1d99f62d6185a2f7367fb75349012ffcd048f9970355042c1604123030a754b148cce074d814e6deb4b01b8ac3dd45c8f506d89dd6d4a1937629b67dfc44a3f95dcc90b4e3c70d0e53e13ddbad9deca196d8bd7e03325b372af1139d8f72a10328a9940c028b0fa37de7bb1cfdd6df6e58450915a436900fa4022c34cc9ecceb892e8085a7db90975d71afd529c55e5be6f33e01c474ee9b8684c5d10d2cd90f74ed9338043f0a630a0d032e309b81bb3fcfdf6924507d92f585d8be1ecc4485c891771d454ae59f842c017a06f38fce7ee526bd71448ecfc5bd36156d3ce7e6cf0d4fefd40196b60aba170fad064bacae246a905b577e634eadd2ebe825c745d34dd27f8d9398668c5777e11c315aac6dd86520d6e2cb84c5f015f875329f63398f4df944ca50c632bde8f526a14b140e6479a4ed25647f3afd7cc10572c66a193d5962c8d5c0c06dec5c7ac1df55c6e18bf0547577aecff183d6779f1880d81cfab1737822ddf91248ae8b4962b4a261ab83c8cada74cb72bec3cc5e98fa4c2980ca52dec247f747235e59c46e8d0e6f2640c3ef2f91de381d3198b6bcf02eaa78b346ddf440a2278ae8b752caf842aefb9321fec2e0affeb610829ca411683ecd218240da414dca9ca5a637ad77fa256eff3e98a8cf5cc48bbed08b3b3dc0bdafed5ae174fcfafcb9a84c8b1c7c85be3005fdcb2b28dfdcce5b57d94fa2249108050f8a68d08e256d60e272dbbe46992e851116b1d3e6646cda60cb8e19900beb50743390212c5bae827fbd30f25c0303b7374aac1b768d46e315829ea7e99c3fbed6dc45fe3db42014616914a5686a8887ba9a0c74e05d0510ea9074ace6122f9d8f69462d1011ffe3895167b3da66f7ff66f1e88d9d62cb8325d9e61d5735c011f07c2f1ff8f428c9bd7b38bfd131a2ab6ab884945f15311049947ec631c4879b95c46ae187132cb7b02ccf1f3a4e37d39807c5450520159bb60cab47d29f2949cdad321636d236613b3c9b3c6f4114339d558c50ad7724b9ad5db0bef8cda17ea2d6549a6269e8a6f8df651522b781b7ff81cf2f8f81f1a063d36867aee4b8a524aeba7245a4b4c6f9f54cb43ad517ef4c9b94dbe97c32959152eb71ee32ee2a2e31168ec957e158cc244d327056bf45940e9f8b74e8b914bd74ba4ad45dfad3b0769141ced8bad8613705782b5d23b7c6ebca784f485032a4a26d06ead966099bc3667fe6b07b45f7f67a6434e1bf28d8eb722735084dfb4562131c8ced493680806682bedc2b10eff32e7d7f3b5821234d482daf45ed83c393b7592b6f1fd44c594bfb075f6dba9563b6f18a846a5a348b2bd6d189cc1cd8884484349f50fd2062ad3d2b70961ae0afe655c124a38e31708edfc7cc8f0adce58d2a32c6bf17dc5742aa906269ab77ab6b4f5a6460150c2a1f3a0ada05710f371272ede31756d66b50fdeb67b0a822c7a83c8f595ad846330fb073e781b2b17ec03ed57fe810153b120f648244d6381b002680769e375a8357c600daace07b233655d56efccdbf38880be6635848271a2114f2e336127bc6fd20d5615bb3ff6098db8222246b8f780dced4a89139c15b2ab0bea9010a385862e51999414a2946a97e10fae0f8ad667fe8f728c3e1c90f9ee95c9682ddebcac13e9a6495bf1c5ec0ca6c718d7fbf22613ff16926e0b84281c6673c2c275434fc092d4b4e1273d7eaf8c1e1a9947159889d87971e45066ccc95ede8305686f0791ac07b4028b79b8ebfd62ff014e9f0fa6feb63884d518991e58003d28d4cf07a6cb2a2c527643947677e523bc3efaf8a88bce346abf071c2850434301c4e013df827157f2b16ec484ab436bcb3aa3f7432bca2eeb5dc19211952d6728a7df299e25223f6bdc8351ebb6d7041d90fdcc80cfec410e2d37645fba5db8f31dc62c4966d2396b3f7bde4f05e3558152a7084156e3da2bfff08dfed0aba089315323bbe8535aea9ee1d50ffa8286cfb6a6a7b1354115241cff67a2a4b425ea02d11e7620485fe4316cfd9854fe85122ae9ab19eb33659bb8ddfec4f79c251a4ca38f64a43de316ba8ae1ca2aa0080136053f055e3651d044da89bf18e81f49d2992535927c723878f584ddf8b7916ec8ecdc0b02999762f129e6f0121af61ccc0cd5cf56b1e8c12b90862f3bfff76d19da69342175a296a2f902f1e160dd7c3120d4f1db02d812b87e08e71137327d5fea75a35d4f14c88e9c1275301177cc087483ffebd7b0fc089517c6c01f46b31300ec53ecede537d99d76446232fb69ea2f1a3c0b7dafd3d31345928d0e6a08cfa75f2158038be543bc050215ecef3ac43973ec172b8b0194fd5bcf3eaf6b86e7f255f9a13ee7ac3bb9b5f5e5c0cf849e5df12b6f09b82966766af2a8432fa81f8d8c337d8872fdc867928cc19f18f53e723ada9e00c8a6c8dc0c2ead716f0c9304f478ddc575021b10e32576591e55ca95afd4a94d5926003c3400ba79bc779d397cae203f5ff2051031efc439f76045986e8e8522fd0e8ed114014fb3331946713dda56d4610de81a313e5c11de6c0bb3ddcb838c246f6503c31a0d352684ffbefbdcc6bd45a94c1aa890d79aebc5b3aaeaa20403b5c78ecaf0600d2f93a07d74e4511c5752efd6905f6bc21f24f530b393b040d8d1a5f579ed9f245d56241b16956b1da44a7eb20dd232aaff0e3cfed19270b73d39b3e560b53e70865331f9dbacce0b5b239364f16eb68a16acde0cb8326c50022aea5639c6a3d43f02b48cb6f3e286cf74e1f2974ca411ce5d7747af9c860c180de601a919dead26f93519156ad046103a72b1b933f91fe98842b0ff401569c886316ac1ed99139796ea7b4a69158eb22e2d97ad789e79a6385dfe3e1b26485f1cf0ac70afce4c1f856e5ec5b2700197f01ec3c80636c1eaf44728521795eec57659f0aec0641ea4f7ab9c22cff94d46e152701b911da50ce687ff912d15f899ae54188ac401cde6a08c66208133dd79d419320fb4b647990de7d38a2c7b61dad8b002cf52adb9862338e79310e67faa26437b6cec0259aeb2a9d85a83864f74d6a8b64712351c0aedb6a8ce24c438d7c16442ad8914767d4398c92fd3ac3dea8710c01a7753b59ecc8b84e93add0bcde1a8e8898e7e787b8a1aa996ed85d932b7b88647360ada12e5abfb4a57cc1401d6e51ceedd720ccf404f59244711bf804f1cdfcc2c1853878d82c9a465117e35f5780e761c045b082382430cad1d6848e27ca904749f699b93c96f167499ea01d4e4cec16174d5ea3bec91cdd05ce8d764932b9a68fac9e2901db2fd5a62cb3d6d80cb95a8db73eecab9bfab093f00776c14bfdae52c8440344e858b27544bafafc5d4c44b093e31980fb23dcd49fc77f6ae358f659c6628d80689c85990928203c4fd1dd729fb9981604719eea2ea0e5e730c3f9fd6275a99ef82cac2ce1041ea43be9bfcd280ef47d9c31afaa2f9519a276f0971bf16bfa674d57505593f6a4e09355c01d017031b4f492f987e5215a163b170f6f7a89471cf79dccd73fdcf330121a28ca21c54b77a1e254bae419b28d32b023a7dc93efff1bef025aacc76728ba1bb0e7e4912a750da6996d97496edea0ffd681b37aab418c62a329276f664974685564495d8bf3e576b7e3b1511e7c18e2a343b78f79a615da67af9f052aa60ea69136c6a6d8ba9cbc810787bfa85c5366565e3c4897799c6873152f283707bbc502b9bbd68d2ecf73bef55b6e21bf2e3913330d243535b6943e6584cb90cb5656b6d02b58cf0368daa7e71941eb1214c93c54a366aba15f51724bdcb55f7c715bd66e2e99f9ed140a6ba65bcc2ef30cc7ab2b52d260789d4aa3bd8df8ebb18d8eb22313e8ef755e0a4c69590d8d8504dd485d50e7c738e61a015c5c8e5c5708c486c37f523b1515d0721e9ab2fc3d3e5760a5fb0125a531aa7dc2662d959f8bba1bf9c7ac81a7254ba31944433ea0f6cafb640cffd04f531349dd00261f734d79531fd039757972b6beaff41d9f06b7a131813edee6861a105b5965262fa01891fdf06ffe3e22b6f365d3f26027b28b8c9c76935345fdcd7285737e36f0e4c4927a6843b564f4fa9879bfb71b0c627bed6b3c86a3d86eeda1081414771893b8b04d9458dbbab6a78093bff0ca937704567678af070c50e4d622fd0494a7bc70f69758d1bb1800a7d890d9f767e21c87eae6ad96be4ac62ec6836392c045c4dce1b8f6d0b6af0303453959758a21f2cb6c3596b5c3e006b531bbd88f3b30087dfc155d6b97825a414bf27027819040be46f9095216bea774d05db813d6d7316c22f7f0930cc848329807e8a7e645ace8ddfc567f76cfcc301952399a6afe1f172c69e26e8621b42d31ecc19ffac3ed158aa39b3ecac3ce942a77f1f65316cb2c34607f5debf3a6dfb55205c7cf6f3ce3dfd24d3d700712c44228d7505551bae43c67e08013ea0ab11876278673310a91a86263e465f0f9c38c05c23838cee438a4f32ea0c7e39319d42a2801324348055f5b33389ee491dc7d2118275ba4cf22dad5197b753fc2e496ca8695a6d0c1065e23b979a59aea23e07e1bb09e293729851f2bfcbab6436e57094f9f2a0f00adc20104b36f6570520109704f2357114bd3d5fd2d3617f02fe5d68b6958e98000d8d775513b68022c8fa6bb831a5459cdfce08c2d7a0fc820f954c6dd9a23a54ab0d10e08f3556ff0287766cff77c0612e9b850571337c3510987f45cdfed0cf4086136687df871daa5004110104fcbea887bb12d06917531db919a342d365e9dd84c8e58c29260ce1f00fd8e90416e64afa4c54f356b1f1265885f8e732e7751fe657c5b7132b32eb317827891227cd5d9e16918b664d6a1ff5dc8be6efea5107495a3aaaf8ee1f8fbad7036bd554338ced29e1068f54b69242446e4cd7cf0491ab2780c6456428ec31cbdd96055c77023e462b87ff265f1bcbcc823221e3e29a8e6361d5beb5fadb3a2c8faee26bf0a8c977607b41f04d7e07bf3fd59379a4714c4f2ce4a578a3f5c15360cce495470795b9d9ee8c9c35ff72bccda1f361810860bbf8bef1db33f7b9cc16b375a60c6896d311c3a89c7f0935a6f8789e01d1aeeefc5edbd3efdbf620f1b875cd3d9d604e949f7698ff5fa741ffa305c42547b6f383a2fce91cd87eb00dc0490a667f1f71cdedda8e0463510e2c777ff8717ee18e09f5cee68f69c057f7f19810ea29f845f3d28766816da3430b5369096f97dcad6ea80b54da64e8172b68292b6c0f841e7b62ed8800a2ef67b9b1096850de5a82977968387b545fde4e86e78557a7b6a87a3cf525876febbb678a2dab1a90dbc50857ce82d94eb678d5edb9ae4c4f8d4d08446d1c2e45e6fb7055661006e56ef7ee56aef4a5708bf88ef279693883ec20b34affc85ed429e3aa82d21ad90633a2212edf46486dbd9cc92a409992eb01e59f77cc02a855f55000dce8a9e02761ca6e7b161127aacd2ecb0c8bce77db73ba1b5ef4a6a3e1456c7cd5c250355e65777d26446d76e99fb9c8fbfc0b94e82b316edb9e88b8510dfa1028936dee6928ea57e484794b3897711698da3760a2d2cb9de4d588ff677f7d8bf4012cd68531acf107ead619dc5296ce41014f011d2ac2dfae84ea6a6774e6d3a0a63d457d446a898cc5305daa3e00600e2d4f47bc541778164d3460d5351cfffcf9d5caf93fde0561f6e91f02e1eb7c31d7676a48c535c75fe3c80337786786d56990ed719a3eeb8f11a45597b8555af3af42f22287e09dcaf89dd08e7701cb03a4d06217cc07a7032a6b00c971a451a7ddd2e9d6b9f3a8b75cb0ebf6fe541f1aad29e6deeb7d0338b2a26c04e02de9b699d4d952d4075d00f9a883d90cad8b3749c71228fa0eff3b0cc94e8de0a166b7ccad31f2072e8fc9ee6a573b03c931525a0f49ac8f01b09b5000a64689ee59777e9128dd2f29ae9070ad8a8f919a6d10b38396836c1860255a25decae63c7409f5e48abd7fe49e4ed902a7dad7d1ad4685bc9e55c2f8ca4d992d4931153542b79b8f1586e6cda79bd56682510069266f3c07f4ddefae12345bf4b28aef4bf092adbed7d6b6d24fd51bb28317e6c03987741c13d27ff0070eceda59f650c52b53e3490fd6598390e947a127637d81b95be5a6746b567f44fd7a6edf9d6a5f7834d16b6fe1216526ac4fc2479b6a0a6da012dd6c50428214a3a4b38075748938df663dd34b46ffd6174bbf85ccf0bd38182237ca8b0b6e1d84ae4f6d3e93bbd1cb07588df33cd1b92be128497d9060f6f87a1bbc2e9b51473b733c4af597c2da54ea4e74182e33ca5980d03701aae8400d0e589f9a8e2e6d7a2eb23355b1a70d7e2b6f9e7b4b32b1fd22c023bc045ba361d821150796bf44f7c29af058892b0f65857c2657f477999a4b9c4503d4a85c46feee4036a714cee9a61e0832fcd4f6d6a199e2b16034696da54ee4e55dd3bd969724adae633a22f3845904d7cc27f62e8a654fa4730947f13ba11794192e9f2bb2ca66e39b39f6abbd2f510c6af30bcfa9c257e0d5bc30b82aeab7b4fa866d5f8a706b2fd5e88880b5d568947d696475d615c963f07213ec9e632769cdf4c23af32391ced37c8f99a1a6248196599d4637703553da78af6db5bcc4581ee17c3313a5485747292777b5cb99a3723cf1177503bfff1f908e95546a52580e6df1cdb25cabd9c007b967f665fa5720569efd796b8ebc687779033e64fa75fc4c17aa18ea41ada966e99ef0b2b988c0f7d485e1685429b74ac2352eba5f68d3189cab6bb1c80f43089eb83af26fd1524f80abe9bef448557e7f998a62338278df67a3f68b46f360fa525f9a626d7a17ceda4a3257675e1c94a63dfb45999e16e14059af0c6e84ee3750903b537596c659cd2051afee68c76dc222346344026d4af2b9add52da5b2a348ec0950ba3a54050900ef322f3d0b10bbffd16b352ee8fd46d41ec0188c9adfb2473af9ec85b9a743d7ba3c09e831c09e3f8eddd60c2e4c578d41b10e0a5b22b85d7f956be64a6d950b35ee6858c722c3e5655c5f5b4df55235cd2d5af9def7e19145c3ff4b060f9b12158f69427b1571dae7cba20c0b7a1ee57eab54085713be486be30172ae39b81de673db228ba8f5261bbf5834f0dd9ec1ae1db31a8325ec9dadc6b807ce2e3f2ecc9662878b5ff5e4c1bef6e0418157206c1bad18ba9507ba4fba9656848ef4c4ebfd4cc10c3e5774d37c9eed2e3e8df0dd8201369fe8abf94b5dfc9f97d348591d47605b5f3cc1acf3a49fa2f48ee732e6125e115ceef03809364322f495fc73934d91d05cd973d315b8c7d4c81e273ead094f5b4b9e44a21382d9a8f8f625e336d2b3f37e5410d6f7c8bcb74cc165a2dbd9bd5e2b6fbb8c9f6a5d6b6dbd2505b905d61ad348ef1a49a17784c968f184013eb77ba6592797677640e7600873bac35021aec53f299449f4eb62d2caca69db0ead790fe14de73ba875c0bfc58fbd0699155fc11a1e6d3aac7a03c86ce0067d66686283a5e2461ddf16317c71ebd6f3fe51342faf67f38eb805be8b1d351959a3e03aa8bbf169017cc20bd4d51078a7ca45b592a20d1a96d1cd22dff3537ee6781930cb4256bb0f038eb842435d686c947af5e0a7a53bff3ff857316d9bf6739d8f984c6e155aaace3a482e17becf142192bcfe013695c89126c87d841c010b0acc9501323f68eecab064bc9fc686bdc7a00c9f9daf6a3960be79404786356c8454b3d60203c412ec7a1b7ee2874e2d0c4d7640055f38fbf1e2c483cbbf2cc4a2522c23eb2809e55ee4a75bfc62fd49724dff41ef3712f4f91b34f894f419f5c77a0b54d30556d27f8a7bc6299b5d5f3eb72050c5c607a3a9418969e364ea2cb7e125d00398d254549f4a2e447d332c2d4bc6b4ed7315f704bd3be1145d5997cfbfa51f8f5f84f2e6ea49d0d5f77765890eb820ca906dc684791c85c1a1463535f366326a03280c1595de1b164f9efc8ba694645e4696123879bc21f20ee17670529cf8cc2b70352ba809426382d3325912645cfbede8befacd2e041b7d825d64ee9da67c17f1406abccb6c09011c4ba353aa7a3cda06b90569bf04b2cbceab0863740e805b536ca44e4383da0ae01acdba251f0747f1cd9da7072e74ce4057b7f76ccc661f23e997709b3ccdfae50665cc70ce17a7aee5be4c9d29506f6f699a81276548b87189cec7125e809ac821fb45695a2029d94a214b14dda91b08a198d286bef04a3744fec1e98171ec9f8585ddaafe0985e2abc602322d9ba54e1f73153cd059f28d48ad6b909a8508a051b4d25f6ca862ff8137cd2a98aa829a2b4fafc569a3fc36cbbf71ed93867e0baa7eb6d7897c1efcc5422dfd3c8816fbea869cf0d0b214d2beb3552f1002458085907caf1e9f495be6a132cf3acbac52dbdb039731ae5976adf14636c8665e71bcab770b6b1a6e9dc09819aaeaa7f60dcb33f97c937642fec976110070dd47acc1afbe21ca3b5145d51c9e6678b3aa2945aa6b0398bdc8e7d1730da42c0e6f2ef3914990871ecb5c31f1c7154ae7bfa009a4908907e1f863b53b551ed7296d071fd4559b0e5cde1218f67fff67ead8bc1fe8d077bf3e067ab9bc1e000cab14ec45f1f4bea60f481f42b4f88fedf621061f67ed6d594fb5f7506ef9817b49a4cb549d300c688f369584aa993496191d80adacea3b66dd1ed7bcba915940ba0454450567ee4dc0cad47cee528787d1efdb32bf2aeaf0fce8308fb872dfbb83d8cfad8adeec57d929e02412fcf2a1858c95c52e88860f3324f7bd21b00fcc425ee22ee89ae565fc25ca46ff070246c9afa4a444c1771d2e2d79d1d91f97d013dad57760ae3aba70cff58695aa09f8ce5d4579de1805c02af84b922d5c06c2f62eb6971648e5b5119b62a2765c200ea296e44a9effbe6a22c38e4ec2ef8b65f9f461ed126acbfca31ccb3865c3208140c1449127dfad97aa2e1cb5c12eee3d227769e4d720502b56a091029d90e465bdc949db18754fcd2bd4b9f826e025af37c86406cd92c009e757f6a40c0b0b7b17032acae193d81d7713e0fb3d9e0f22b8f60c971a5fbfbd0669ef8c8c7af3bad682e2c0044080ad025d7279281bbe602873c3cb390faf72a9924e4a4747a1eb18293a315bbb3027ae3fe8673710bacd406ce956098177d407944803f121852d2bbb2b7616ad933c405e19f100050fb67c035ff47b061fe914d421464ddc13c0377cb50d0243101f45c37984ebbfdb4a4bc219c99496039c9db6abfa41671527d7099cd1f37048d22a2d1e32346b53814ff3981726493467bde750a8f8cd58d1fde5846ada2823b1f4cd9fd2a983bbb024f260b8a11bed29d21271d8965d3bcd835c63e5668ce3e50a9ebac632606e74385e08d7f7512ba3f7dc12fff339bd82b32e672df5920a37b5fe1c601953f47a523003eb7a4cab123e01e96240fe6122f6bf6691edbfe23be1c26ce6abc9061d80eb5e20b4161c710d634194c327c987c44ebd38a0e42ece2283b3c0ecbc659f14a6c38a3d6e4883fb0013d4aa7adcade42d17e6457ea0cccc65fe15522a2320551216639a93557b60265ee3afef0dab6fecaa1da47563ea3f62be92b82cad0c4fb80ee4c5ac2df2b9df21a5f9aad3484d1d03a3bb8375669ec510cec8a7147fcf67cf8ebbf8dcbc17ba237ab106330412cf8b653bcb2a8fd7f067b5f9528aece0878e56a7e073d844049ca1fe903941e30fb69140cbd8bf9748cd43b8ebec7b90642b50d16d69122ae1b55509ccf99bcf190120c6e790109eef043cc1ab676a24bbfc82e2b4eab6bdbe9e88d23b94c0ffc86cea567516b5414f4bff5b39520ed34bfbcca895523fa95b0aa632b5a58920e1df7f49e15c37b40d76d95c889a18e73b7aef337aed7d3ad60053f31b89e4615d526b33340ef36b7ce952a611ac1dd18151ddde4d1a7cfa4b41cba37e6ed3c7582af47d44bddf109df45582e6cfa197d8cb14fa044266aa761a96ef7919c4adef8f6875e1903d508de17c33b</script>
@@ -465,14 +508,14 @@ height:100vh;
 </div>
 <script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
     </article>
-    <!-- license  -->
+    <!-- license -->
     
-    <!-- paginator  -->
+    <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/10/10/Design_data-lineage/" title= "数据血缘功能设计">
+                <a href="/2021/10/10/Design_data-lineage/" title="数据血缘功能设计">
                     <div class="nextTitle">数据血缘功能设计</div>
                 </a>
             
@@ -480,14 +523,16 @@ height:100vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/09/12/DB_mysql-optimization-basic/" title= "MySQL 性能优化基础">
+                <a href="/2021/09/12/DB_mysql-optimization-basic/" title="MySQL 性能优化基础">
                     <div class="prevTitle">MySQL 性能优化基础</div>
                 </a>
             
         </li>
     </ul>
-    <!-- 评论插件 -->
-    <!-- 来必力City版安装代码 -->
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
 
     <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
         <script type="text/javascript">
@@ -501,36 +546,45 @@ height:100vh;
                 e.parentNode.insertBefore(j, e);
             })(document, 'script');
         </script>
-        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
     </div>
 
-<!-- City版安装代码已完成 -->
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
     
-    
-     
-    <!-- utteranc评论 -->
-
-    <!-- partial('_partial/comment/changyan') -->
-    <!--PC版-->
-
-
-    
-    
-
-    <!-- 评论 -->
-
+    <!-- timeliness note -->
     <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
     
 </main>
 
-            <!-- profile -->
-            
-        </div>
-        <footer class="footer footer-unloaded">
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
     <!-- social  -->
     
-    <div class="social">
-        
+        <div class="social">
+            
     
         
             
@@ -596,7 +650,8 @@ height:100vh;
         
     
 
-    </div>
+
+        </div>
     
     <!-- powered by Hexo  -->
     <div class="copyright">
@@ -606,590 +661,591 @@ height:100vh;
     
     <!-- 不蒜子  -->
     
-    <div class="busuanzi-container">
-    
-     
-    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
-    
-    </div>
-    
-</footer>
-    </div>
-    <!-- toc -->
-    
-    <div class="toc-wrapper" style=
-    
-
-
-
-
-
-
-
-top:100vh;
-
-    >
-        <div class="toc-catalog">
-            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
         </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
         
-    </div>
-    
-    <div class="sidebar sidebar-hide">
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:0vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
         <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
         <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
         <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
     </ul>
     <div class="sidebar-content sidebar-content-show-archive">
-          <div class="sidebar-panel-archives">
-    <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
     
     
@@ -1204,545 +1260,690 @@ top:100vh;
     
     <div class="post-archive">
     
-    
-    
-    
-    <div class="archive-year"> 2021 </div>
-    <ul class="year-list">
-    
-    
+        
+            
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">12/10</span><a class="archive-post-title" href= "/2021/12/10/Go_engineering-specification-design/" >Go 工程化规范设计</a>
+            <span class="archive-post-date">12/10</span>
+            <a class="archive-post-title" href="/2021/12/10/Go_engineering-specification-design/">Go 工程化规范设计</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">11/06</span><a class="archive-post-title" href= "/2021/11/06/Go_modules_management/" >Go Modules 管理总结</a>
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2021/11/06/Go_modules_management/">Go Modules 管理总结</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2021/10/15/Go_concurrency_primitives/" >Go 并发原语</a>
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/10/15/Go_concurrency_primitives/">Go 并发原语</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2021/10/10/Design_data-lineage/" >数据血缘功能设计</a>
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2021/10/10/Design_data-lineage/">数据血缘功能设计</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/26</span><a class="archive-post-title" href= "/2021/09/26/2021-09-26_diary/" >迟来的一次复盘</a>
+            <span class="archive-post-date">09/26</span>
+            <a class="archive-post-title" href="/2021/09/26/2021-09-26_diary/">迟来的一次复盘</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2021/09/12/DB_mysql-optimization-basic/" >MySQL 性能优化基础</a>
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/DB_mysql-optimization-basic/">MySQL 性能优化基础</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/" >关于 B-Trees 的更多细节（译）</a>
+            <span class="archive-post-date">09/05</span>
+            <a class="archive-post-title" href="/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/">关于 B-Trees 的更多细节（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">08/11</span><a class="archive-post-title" href= "/2021/08/11/Go_microservices_availability_design/" >微服务可用性设计</a>
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2021/08/11/Go_microservices_availability_design/">微服务可用性设计</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">08/10</span><a class="archive-post-title" href= "/2021/08/10/Algorithm_reliable-distributed-timer/" >可靠的分布式计时器（译）</a>
+            <span class="archive-post-date">08/10</span>
+            <a class="archive-post-title" href="/2021/08/10/Algorithm_reliable-distributed-timer/">可靠的分布式计时器（译）</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">08/04</span><a class="archive-post-title" href= "/2021/08/04/Go_engineering-standard/" >Go 工程化标准实践</a>
+            <span class="archive-post-date">08/04</span>
+            <a class="archive-post-title" href="/2021/08/04/Go_engineering-standard/">Go 工程化标准实践</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/Go_memory-model/" >Go 内存模型（译）</a>
+            <span class="archive-post-date">07/31</span>
+            <a class="archive-post-title" href="/2021/07/31/Go_memory-model/">Go 内存模型（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/28</span><a class="archive-post-title" href= "/2021/07/28/Go_channel-applications/" >Go Channel 应用</a>
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2021/07/28/Go_channel-applications/">Go Channel 应用</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2021/07/25/Fenix_build-services/" >《凤凰架构》阅读笔记（五）：服务构建与流量治理</a>
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2021/07/25/Fenix_build-services/">《凤凰架构》阅读笔记（五）：服务构建与流量治理</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2021/07/23/Fenix_transparent-multilevel-diversion-system/" >《凤凰架构》阅读笔记（四）：透明多级分流系统</a>
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2021/07/23/Fenix_transparent-multilevel-diversion-system/">《凤凰架构》阅读笔记（四）：透明多级分流系统</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2021/07/22/Fenix_transaction/" >《凤凰架构》阅读笔记（三）：事务处理</a>
+            <span class="archive-post-date">07/22</span>
+            <a class="archive-post-title" href="/2021/07/22/Fenix_transaction/">《凤凰架构》阅读笔记（三）：事务处理</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/21</span><a class="archive-post-title" href= "/2021/07/21/Fenix_access-remote-service/" >《凤凰架构》阅读笔记（二）：访问远程服务</a>
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2021/07/21/Fenix_access-remote-service/">《凤凰架构》阅读笔记（二）：访问远程服务</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/Go_error_handling/" >Go 异常处理</a>
+            <span class="archive-post-date">07/18</span>
+            <a class="archive-post-title" href="/2021/07/18/Go_error_handling/">Go 异常处理</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/Fenix_architecture-evolution/" >《凤凰架构》阅读笔记（一）：软件架构演进</a>
+            <span class="archive-post-date">07/15</span>
+            <a class="archive-post-title" href="/2021/07/15/Fenix_architecture-evolution/">《凤凰架构》阅读笔记（一）：软件架构演进</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/Go_microservices_governance/" >微服务概览与治理</a>
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2021/07/12/Go_microservices_governance/">微服务概览与治理</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/Algorithm_max-flow-problem/" >最大流问题</a>
+            <span class="archive-post-date">07/09</span>
+            <a class="archive-post-title" href="/2021/07/09/Algorithm_max-flow-problem/">最大流问题</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_minimum_spanning_tree_problem/" >最小生成树问题</a>
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2021/07/08/Algorithm_minimum_spanning_tree_problem/">最小生成树问题</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/Algorithm_shortest-path-problem/" >最短路径问题</a>
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2021/07/08/Algorithm_shortest-path-problem/">最短路径问题</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2021/07/01/DistributedSystem_gossip-dissemination/" >分布式系统模式：Gossip 传播（译）</a>
+            <span class="archive-post-date">07/01</span>
+            <a class="archive-post-title" href="/2021/07/01/DistributedSystem_gossip-dissemination/">分布式系统模式：Gossip 传播（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/23</span><a class="archive-post-title" href= "/2021/06/23/DistributedSystem_versioned-value/" >分布式系统模式：版本化值（译）</a>
+            <span class="archive-post-date">06/23</span>
+            <a class="archive-post-title" href="/2021/06/23/DistributedSystem_versioned-value/">分布式系统模式：版本化值（译）</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2021/06/19/Algorithm_consistent-hashing/" >一致性哈希（译）</a>
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2021/06/19/Algorithm_consistent-hashing/">一致性哈希（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/13</span><a class="archive-post-title" href= "/2021/06/13/Go_cheat-sheet/" >Go Cheat Sheet</a>
+            <span class="archive-post-date">06/13</span>
+            <a class="archive-post-title" href="/2021/06/13/Go_cheat-sheet/">Go Cheat Sheet</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/10</span><a class="archive-post-title" href= "/2021/06/10/Go_a-tour-of-go/" >A tour of Go</a>
+            <span class="archive-post-date">06/10</span>
+            <a class="archive-post-title" href="/2021/06/10/Go_a-tour-of-go/">A tour of Go</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/06</span><a class="archive-post-title" href= "/2021/06/06/2021-06-06_diary/" >Weekly Summary (2021-05-31_2021-06-06)</a>
+            <span class="archive-post-date">06/06</span>
+            <a class="archive-post-title" href="/2021/06/06/2021-06-06_diary/">Weekly Summary (2021-05-31_2021-06-06)</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/05</span><a class="archive-post-title" href= "/2021/06/05/2021-06-05_diary/" >基于记忆规律的学习方法</a>
+            <span class="archive-post-date">06/05</span>
+            <a class="archive-post-title" href="/2021/06/05/2021-06-05_diary/">基于记忆规律的学习方法</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2021/05/31/2021-05-31_diary/" >2021 下半年工作学习安排</a>
+            <span class="archive-post-date">05/31</span>
+            <a class="archive-post-title" href="/2021/05/31/2021-05-31_diary/">2021 下半年工作学习安排</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/" >如何用图论解决 Secret Santa 问题？（译）</a>
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/">如何用图论解决 Secret Santa 问题？（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2021/05/12/DB_using-postgresql-as-a-data-warehouse/" >把 PostgreSQL 用作数据仓库（译）</a>
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2021/05/12/DB_using-postgresql-as-a-data-warehouse/">把 PostgreSQL 用作数据仓库（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/28</span><a class="archive-post-title" href= "/2021/04/28/OS_linux-memory-monitoring/" >Linux 内存原理与分析</a>
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2021/04/28/OS_linux-memory-monitoring/">Linux 内存原理与分析</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/20</span><a class="archive-post-title" href= "/2021/04/20/OS_linux-io-monitoring/" >Linux I/O 原理与分析</a>
+            <span class="archive-post-date">04/20</span>
+            <a class="archive-post-title" href="/2021/04/20/OS_linux-io-monitoring/">Linux I/O 原理与分析</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2021/04/10/OS_linux-cpu-monitoring/" >Linux CPU 原理与分析</a>
+            <span class="archive-post-date">04/10</span>
+            <a class="archive-post-title" href="/2021/04/10/OS_linux-cpu-monitoring/">Linux CPU 原理与分析</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/05</span><a class="archive-post-title" href= "/2021/04/05/OS_linux-network-monitoring/" >Linux 网络原理与分析</a>
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2021/04/05/OS_linux-network-monitoring/">Linux 网络原理与分析</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2021/04/01/OS_system_initialization/" >Linux - 架构与系统初始化</a>
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2021/04/01/OS_system_initialization/">Linux - 架构与系统初始化</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/2021/03/17/Java_cpp-for-java-programmers/" >Java 程序员的 C++（译）</a>
+            <span class="archive-post-date">03/17</span>
+            <a class="archive-post-title" href="/2021/03/17/Java_cpp-for-java-programmers/">Java 程序员的 C++（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2021/02/24/DDIA_note-13/" >《DDIA》阅读笔记（九）：一致性与共识（共识问题）</a>
+            <span class="archive-post-date">02/24</span>
+            <a class="archive-post-title" href="/2021/02/24/DDIA_note-13/">《DDIA》阅读笔记（九）：一致性与共识（共识问题）</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2021/02/21/2021-02-21_diary/" >近期工作学习规划</a>
+            <span class="archive-post-date">02/21</span>
+            <a class="archive-post-title" href="/2021/02/21/2021-02-21_diary/">近期工作学习规划</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2021/02/19/DDIA_note-12/" >《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
+            <span class="archive-post-date">02/19</span>
+            <a class="archive-post-title" href="/2021/02/19/DDIA_note-12/">《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2021/02/13/DDIA_note-11/" >《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
+            <span class="archive-post-date">02/13</span>
+            <a class="archive-post-title" href="/2021/02/13/DDIA_note-11/">《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/06</span><a class="archive-post-title" href= "/2021/02/06/DDIA_note-10/" >《DDIA》阅读笔记（八）：分布式系统的挑战</a>
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2021/02/06/DDIA_note-10/">《DDIA》阅读笔记（八）：分布式系统的挑战</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2021/01/27/DDIA_note-9/" >《DDIA》阅读笔记（七）：事务</a>
+            <span class="archive-post-date">01/27</span>
+            <a class="archive-post-title" href="/2021/01/27/DDIA_note-9/">《DDIA》阅读笔记（七）：事务</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2021/01/22/DDIA_note-8/" >《DDIA》阅读笔记（六）：数据分区</a>
+            <span class="archive-post-date">01/22</span>
+            <a class="archive-post-title" href="/2021/01/22/DDIA_note-8/">《DDIA》阅读笔记（六）：数据分区</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span><a class="archive-post-title" href= "/2021/01/21/DDIA_note-7/" >《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
+            <span class="archive-post-date">01/21</span>
+            <a class="archive-post-title" href="/2021/01/21/DDIA_note-7/">《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/2021/01/20/DDIA_note-6/" >《DDIA》阅读笔记（五）：数据复制（多主节点）</a>
+            <span class="archive-post-date">01/20</span>
+            <a class="archive-post-title" href="/2021/01/20/DDIA_note-6/">《DDIA》阅读笔记（五）：数据复制（多主节点）</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/10</span><a class="archive-post-title" href= "/2021/01/10/DB_right-database/" >选择合适的数据库（译）</a>
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2021/01/10/DB_right-database/">选择合适的数据库（译）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2021/01/09/DDIA_note-5/" >《DDIA》阅读笔记（五）：数据复制（单主节点）</a>
+            <span class="archive-post-date">01/09</span>
+            <a class="archive-post-title" href="/2021/01/09/DDIA_note-5/">《DDIA》阅读笔记（五）：数据复制（单主节点）</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2021/01/01/DB_tree-table-design-summary/" >树形表结构设计总结</a>
+            <span class="archive-post-date">01/01</span>
+            <a class="archive-post-title" href="/2021/01/01/DB_tree-table-design-summary/">树形表结构设计总结</a>
         </li>
-    
-    
-    
-    
     
-        </ul>
-    
-    <div class="archive-year"> 2020 </div>
-    <ul class="year-list">
-    
-    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2020/12/13/DDIA_note-3/" >《DDIA》阅读笔记（三）：数据存储与检索</a>
+            <span class="archive-post-date">12/13</span>
+            <a class="archive-post-title" href="/2020/12/13/DDIA_note-3/">《DDIA》阅读笔记（三）：数据存储与检索</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">12/04</span><a class="archive-post-title" href= "/2020/12/04/DDIA_note-2/" >《DDIA》阅读笔记（二）：数据模型与查询语言</a>
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2020/12/04/DDIA_note-2/">《DDIA》阅读笔记（二）：数据模型与查询语言</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2020/12/02/DDIA_note-1/" >《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
+            <span class="archive-post-date">12/02</span>
+            <a class="archive-post-title" href="/2020/12/02/DDIA_note-1/">《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2020/10/08/Maven_external_dependencies_management/" >Maven 打包依赖外置</a>
+            <span class="archive-post-date">10/08</span>
+            <a class="archive-post-title" href="/2020/10/08/Maven_external_dependencies_management/">Maven 打包依赖外置</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2020/10/04/Java_prod-analysis-cmd/" >Java 应用常用调试分析方法总结</a>
+            <span class="archive-post-date">10/04</span>
+            <a class="archive-post-title" href="/2020/10/04/Java_prod-analysis-cmd/">Java 应用常用调试分析方法总结</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2020/09/24/Kafka_cheat-sheet/" >Kafka Cheat Sheet</a>
+            <span class="archive-post-date">09/24</span>
+            <a class="archive-post-title" href="/2020/09/24/Kafka_cheat-sheet/">Kafka Cheat Sheet</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2020/08/09/Arthas_cheat-sheet/" >Arthas Cheat Sheet</a>
+            <span class="archive-post-date">08/09</span>
+            <a class="archive-post-title" href="/2020/08/09/Arthas_cheat-sheet/">Arthas Cheat Sheet</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2020/07/12/Java_override-and-bridge-method/" >Java 多态、重写与桥接方法</a>
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2020/07/12/Java_override-and-bridge-method/">Java 多态、重写与桥接方法</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2020/06/30/Java_memory-area/" >Java 内存区域</a>
+            <span class="archive-post-date">06/30</span>
+            <a class="archive-post-title" href="/2020/06/30/Java_memory-area/">Java 内存区域</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">05/28</span><a class="archive-post-title" href= "/2020/05/28/DB_data-warehouse-design-basic/" >数据仓库设计基础</a>
+            <span class="archive-post-date">05/28</span>
+            <a class="archive-post-title" href="/2020/05/28/DB_data-warehouse-design-basic/">数据仓库设计基础</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">04/08</span><a class="archive-post-title" href= "/2020/04/08/2020-04-08_diary/" >关于使用思维导图做笔记</a>
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2020/04/08/2020-04-08_diary/">关于使用思维导图做笔记</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span><a class="archive-post-title" href= "/2020/03/28/Algorithm_leetcode-high-frequency-problems/" >LeetCode 高频面试题</a>
+            <span class="archive-post-date">03/28</span>
+            <a class="archive-post-title" href="/2020/03/28/Algorithm_leetcode-high-frequency-problems/">LeetCode 高频面试题</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">03/06</span><a class="archive-post-title" href= "/2020/03/06/InfoSecty_personal-infomation-security-guide/" >個人信息安全保護指南</a>
+            <span class="archive-post-date">03/06</span>
+            <a class="archive-post-title" href="/2020/03/06/InfoSecty_personal-infomation-security-guide/">個人信息安全保護指南</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2020/02/22/2020-02-22_diary/" >免费 JetBrains 全家桶</a>
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2020/02/22/2020-02-22_diary/">免费 JetBrains 全家桶</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/16</span><a class="archive-post-title" href= "/2020/02/16/Nginx_cheat-sheet/" >Nginx Cheat Sheet</a>
+            <span class="archive-post-date">02/16</span>
+            <a class="archive-post-title" href="/2020/02/16/Nginx_cheat-sheet/">Nginx Cheat Sheet</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Git_cheat-sheet/" >Git Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span>
+            <a class="archive-post-title" href="/2020/02/15/Git_cheat-sheet/">Git Cheat Sheet</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span><a class="archive-post-title" href= "/2020/02/15/Docker&K8S_cheat-sheet/" >Docker & K8S Cheat Sheet</a>
+            <span class="archive-post-date">02/15</span>
+            <a class="archive-post-title" href="/2020/02/15/Docker&K8S_cheat-sheet/">Docker & K8S Cheat Sheet</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2020/02/03/Java_jstat-monitor-analysis/" >JVM jstat 监控分析</a>
+            <span class="archive-post-date">02/03</span>
+            <a class="archive-post-title" href="/2020/02/03/Java_jstat-monitor-analysis/">JVM jstat 监控分析</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2020/02/01/Java_GC-log-analysis/" >JVM GC 日志分析</a>
+            <span class="archive-post-date">02/01</span>
+            <a class="archive-post-title" href="/2020/02/01/Java_GC-log-analysis/">JVM GC 日志分析</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">01/01</span><a class="archive-post-title" href= "/2020/01/01/Java_JVM_mindmap/" >Java 虚拟机与并发编程</a>
+            <span class="archive-post-date">01/01</span>
+            <a class="archive-post-title" href="/2020/01/01/Java_JVM_mindmap/">Java 虚拟机与并发编程</a>
         </li>
-    
-    
     
-    
-    
-        </ul>
-    
-    <div class="archive-year"> 2019 </div>
-    <ul class="year-list">
-    
-    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+            
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">12/05</span><a class="archive-post-title" href= "/2019/12/05/Design_design-patterns/" >设计模式与设计原则</a>
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2019/12/05/Design_design-patterns/">设计模式与设计原则</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">10/04</span><a class="archive-post-title" href= "/2019/10/04/Python_async-programming/" >Python 异步编程总结</a>
+            <span class="archive-post-date">10/04</span>
+            <a class="archive-post-title" href="/2019/10/04/Python_async-programming/">Python 异步编程总结</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2019/09/19/Python_data-structure/" >Python 数据结构应用</a>
+            <span class="archive-post-date">09/19</span>
+            <a class="archive-post-title" href="/2019/09/19/Python_data-structure/">Python 数据结构应用</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2019/09/13/Python_decorator/" >Python 装饰器基本用法</a>
+            <span class="archive-post-date">09/13</span>
+            <a class="archive-post-title" href="/2019/09/13/Python_decorator/">Python 装饰器基本用法</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2019/08/22/Python_OOP-summary/" >Python 类与对象总结</a>
+            <span class="archive-post-date">08/22</span>
+            <a class="archive-post-title" href="/2019/08/22/Python_OOP-summary/">Python 类与对象总结</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2019/06/28/JavaScript_cheat-sheet/" >JavaScript Cheat Sheet</a>
+            <span class="archive-post-date">06/28</span>
+            <a class="archive-post-title" href="/2019/06/28/JavaScript_cheat-sheet/">JavaScript Cheat Sheet</a>
         </li>
     
-    
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2019/06/02/JavaScript_ES6-grammar/" >ES6 语法总结</a>
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2019/06/02/JavaScript_ES6-grammar/">ES6 语法总结</a>
         </li>
-    
     
+        
         <li class="archive-post-item">
-            <span class="archive-post-date">05/20</span><a class="archive-post-title" href= "/2019/05/20/Vue_user-guide/" >Vue 学习笔记</a>
+            <span class="archive-post-date">05/20</span>
+            <a class="archive-post-title" href="/2019/05/20/Vue_user-guide/">Vue 学习笔记</a>
         </li>
     
     </div>
-  </div>
+</div>
+
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
-    
-        <span class="sidebar-tag-name" data-tags="杂事"><span class="iconfont-archer">&#xe606;</span>杂事</span>
-    
-        <span class="sidebar-tag-name" data-tags="技术"><span class="iconfont-archer">&#xe606;</span>技术</span>
-    
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
-        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
-    
-        <span class="sidebar-tag-name" data-tags="大数据"><span class="iconfont-archer">&#xe606;</span>大数据</span>
-    
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
-        <span class="sidebar-tag-name" data-tags="设计"><span class="iconfont-archer">&#xe606;</span>设计</span>
-    
-        <span class="sidebar-tag-name" data-tags="分布式系统"><span class="iconfont-archer">&#xe606;</span>分布式系统</span>
-    
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kubernetes"><span class="iconfont-archer">&#xe606;</span>Kubernetes</span>
-    
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
-        <span class="sidebar-tag-name" data-tags="信息安全"><span class="iconfont-archer">&#xe606;</span>信息安全</span>
-    
-        <span class="sidebar-tag-name" data-tags="Nginx"><span class="iconfont-archer">&#xe606;</span>Nginx</span>
-    
-        <span class="sidebar-tag-name" data-tags="Maven"><span class="iconfont-archer">&#xe606;</span>Maven</span>
-    
-        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
-    
-        <span class="sidebar-tag-name" data-tags="OS"><span class="iconfont-archer">&#xe606;</span>OS</span>
-    
-        <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
-    
-        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
-    
-        <span class="sidebar-tag-name" data-tags="微服务"><span class="iconfont-archer">&#xe606;</span>微服务</span>
-    
-        <span class="sidebar-tag-name" data-tags="JavaScript"><span class="iconfont-archer">&#xe606;</span>JavaScript</span>
-    
-        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kafka"><span class="iconfont-archer">&#xe606;</span>Kafka</span>
-    
-        <span class="sidebar-tag-name" data-tags="Vue"><span class="iconfont-archer">&#xe606;</span>Vue</span>
-    
-        <span class="sidebar-tag-name" data-tags="前端"><span class="iconfont-archer">&#xe606;</span>前端</span>
-    
+        
+            <span class="sidebar-tag-name" data-tags="杂事">
+                <span class="iconfont-archer">&#xe606;</span>
+                杂事
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="技术">
+                <span class="iconfont-archer">&#xe606;</span>
+                技术
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="算法">
+                <span class="iconfont-archer">&#xe606;</span>
+                算法
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Java">
+                <span class="iconfont-archer">&#xe606;</span>
+                Java
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="数据库">
+                <span class="iconfont-archer">&#xe606;</span>
+                数据库
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="大数据">
+                <span class="iconfont-archer">&#xe606;</span>
+                大数据
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="设计">
+                <span class="iconfont-archer">&#xe606;</span>
+                设计
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="分布式系统">
+                <span class="iconfont-archer">&#xe606;</span>
+                分布式系统
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Docker">
+                <span class="iconfont-archer">&#xe606;</span>
+                Docker
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Kubernetes">
+                <span class="iconfont-archer">&#xe606;</span>
+                Kubernetes
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Go">
+                <span class="iconfont-archer">&#xe606;</span>
+                Go
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="信息安全">
+                <span class="iconfont-archer">&#xe606;</span>
+                信息安全
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Maven">
+                <span class="iconfont-archer">&#xe606;</span>
+                Maven
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Nginx">
+                <span class="iconfont-archer">&#xe606;</span>
+                Nginx
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OS">
+                <span class="iconfont-archer">&#xe606;</span>
+                OS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Git">
+                <span class="iconfont-archer">&#xe606;</span>
+                Git
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="微服务">
+                <span class="iconfont-archer">&#xe606;</span>
+                微服务
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="JavaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                JavaScript
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="MySQL">
+                <span class="iconfont-archer">&#xe606;</span>
+                MySQL
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Kafka">
+                <span class="iconfont-archer">&#xe606;</span>
+                Kafka
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Vue">
+                <span class="iconfont-archer">&#xe606;</span>
+                Vue
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="前端">
+                <span class="iconfont-archer">&#xe606;</span>
+                前端
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
-    缺失模块。<br/>
-    1、请确保node版本大于6.2<br/>
-    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
-    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
-    3、在根目录_config.yml里添加配置：
-    <pre style="color: #787878; font-size: 0.6rem;">
-jsonContent:
-  meta: false
-  pages: false
-  posts:
-    title: true
-    date: true
-    path: true
-    text: false
-    raw: false
-    content: false
-    slug: false
-    updated: false
-    comments: false
-    link: false
-    permalink: false
-    excerpt: false
-    categories: true
-    tags: true</pre>
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
     </div> 
     <div class="sidebar-tags-list"></div>
 </div>
+
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《数据密集型应用系统设计》阅读笔记</span>
+        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》阅读笔记">
+            <span class="iconfont-archer">&#xe60a;</span>
+            《数据密集型应用系统设计》阅读笔记
+        </span>
     
-        <span class="sidebar-category-name" data-categories="《凤凰架构》阅读笔记"><span class="iconfont-archer">&#xe60a;</span>《凤凰架构》阅读笔记</span>
+        <span class="sidebar-category-name" data-categories="《凤凰架构》阅读笔记">
+            <span class="iconfont-archer">&#xe60a;</span>
+            《凤凰架构》阅读笔记
+        </span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
     <div class="sidebar-categories-list"></div>
 </div>
+
     </div>
-</div> 
-    <script>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
     var siteMeta = {
-        root: "/",
+        url: "https://yipwinghong.github.io",
+        root: siteMetaRoot,
         author: "Kylo Yip"
     }
 </script>
-    <!-- CDN failover -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-    <script type="text/javascript">
-        if (typeof window.$ === 'undefined')
-        {
-            console.warn('jquery load from jsdelivr failed, will load local script')
-            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
-        }
-    </script>
-    <script src="/scripts/main.js"></script>
-    <!-- algolia -->
-    
-    <!-- busuanzi  -->
-    
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    
-    <!-- CNZZ  -->
-    
-    </div>
-    <!-- async load share.js -->
-    
-        <script src="/scripts/share.js" async></script>    
-     
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         tex2jax: {
@@ -1760,5 +1961,3 @@ jsonContent:
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
-
-
