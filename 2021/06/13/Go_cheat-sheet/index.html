@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/45/d3/45bdecc5fa873e06893d6658e447a8d3.jpeg?wh=1920x1080">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/46/a2/468323b3294cce2ea7f4c1da3699c5a2.png?wh=1242x670">
 <meta property="article:published_time" content="2021-06-13T06:42:39.000Z">
-<meta property="article:modified_time" content="2022-01-09T16:18:51.679Z">
+<meta property="article:modified_time" content="2022-01-12T14:51:31.784Z">
 <meta property="article:author" content="Kylo Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="Go">
@@ -785,14 +785,14 @@
 <p><code>range</code> 表达式求值结果会被复制，即被迭代的对象是表达式结果值的副本，实际迭代时不会使用原值（具体影响视乎结果值是值类型或引用类型）。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">numbers2 := [...]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;</span><br><span class="line">maxIndex2 := <span class="built_in">len</span>(numbers2) - <span class="number">1</span></span><br><span class="line"><span class="keyword">for</span> i, e := <span class="keyword">range</span> numbers2 &#123;</span><br><span class="line">    <span class="keyword">if</span> i == maxIndex2 &#123;</span><br><span class="line">        numbers2[<span class="number">0</span>] += e</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        numbers2[i+<span class="number">1</span>] += e</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(numbers2)</span><br><span class="line"><span class="comment">// 7, 3, 5, 7, 9, 11</span></span><br></pre></td></tr></table></figure>
 
-<p>如果遍历过程每次迭代都会执行依次赋值，当切片元素为 <code>string</code> 等，赋值会涉及内存拷贝，可使用下标访问来优化。</p>
+<p>每次迭代都会执行赋值，当切片元素为 <code>string</code> 等类型，赋值会涉及内存拷贝、开销较大，可使用下标访问来优化。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// bad</span></span><br><span class="line"><span class="keyword">for</span> _, v := <span class="keyword">range</span> s&#123;</span><br><span class="line">    <span class="keyword">if</span> v == <span class="string">&quot;xxx&quot;</span> &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// good</span></span><br><span class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> s &#123;</span><br><span class="line">    <span class="keyword">if</span> s[i] == <span class="string">&quot;xxx&quot;</span> &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h3><p>每个分支不需要加上 <code>break</code>，但必须有 <code>default</code> 分支。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// switch 声明</span></span><br><span class="line"><span class="keyword">switch</span> operatingSystem &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;darwin&quot;</span>:</span><br><span class="line">        fmt.Println(<span class="string">&quot;Mac OS Hipster&quot;</span>)</span><br><span class="line">        <span class="comment">// case 自动中断，默认情况下没有失败（不需要 break）</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;linux&quot;</span>:</span><br><span class="line">        fmt.Println(<span class="string">&quot;Linux Geek&quot;</span>)</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="comment">// Windows, BSD, ...</span></span><br><span class="line">        fmt.Println(<span class="string">&quot;Other&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>基本用法：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 与 for 和 if 一样，可以在 switch 值之前加一个赋值语句，并判断执行结果。 </span></span><br><span class="line"><span class="keyword">switch</span> os := runtime.GOOS; os &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="string">&quot;darwin&quot;</span>:</span><br><span class="line">    fmt.Println(<span class="string">&quot;OS X.&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="string">&quot;linux&quot;</span>:</span><br><span class="line">    fmt.Println(<span class="string">&quot;Linux.&quot;</span>)</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    <span class="comment">// freebsd, openbsd,</span></span><br><span class="line">    <span class="comment">// plan9, windows...</span></span><br><span class="line">    fmt.Printf(<span class="string">&quot;%s.\n&quot;</span>, os)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 与 for 和 if 一样，可以在 switch 值之前加一个赋值语句，并判断执行结果。 </span></span><br><span class="line"><span class="keyword">switch</span> os := runtime.GOOS; os &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;darwin&quot;</span>:</span><br><span class="line">        fmt.Println(<span class="string">&quot;OS X.&quot;</span>)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;linux&quot;</span>:</span><br><span class="line">        fmt.Println(<span class="string">&quot;Linux.&quot;</span>)</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="comment">// freebsd, openbsd,</span></span><br><span class="line">        <span class="comment">// plan9, windows...</span></span><br><span class="line">        fmt.Printf(<span class="string">&quot;%s.\n&quot;</span>, os)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 还可以在 switch case 中进行比较（if...else...的优雅写法）</span></span><br><span class="line">number := <span class="number">42</span></span><br><span class="line"><span class="keyword">switch</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> number &lt; <span class="number">42</span>:</span><br><span class="line">        fmt.Println(<span class="string">&quot;Smaller&quot;</span>)</span><br><span class="line">    <span class="keyword">case</span> number == <span class="number">42</span>:</span><br><span class="line">        fmt.Println(<span class="string">&quot;Equal&quot;</span>)</span><br><span class="line">    <span class="keyword">case</span> number &gt; <span class="number">42</span>:</span><br><span class="line">        fmt.Println(<span class="string">&quot;Greater&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -826,7 +826,7 @@
 <p>快速检错：利用 <code>default</code> 优先级较低的特性，只有在其它 <code>case</code> 不执行时才会被只需。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> err = &lt;-errCh:</span><br><span class="line">        <span class="comment">// 处理错误</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>Go 是静态强类型语言，不支持隐式类型转换，而别名和原有类型不能进⾏隐式类型转换。</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>Go 是静态强类型语言，不支持隐式类型转换（包括别名与原类型之间）。</p>
 <p>所有 Go 预先声明的标识符都在 <a target="_blank" rel="noopener" href="https://golang.org/pkg/builtin/">builtin</a> 包中定义。 </p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span>        <span class="comment">// 默认 false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">string</span>      <span class="comment">// 默认 &quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span>  <span class="keyword">int8</span>  <span class="keyword">int16</span>  <span class="keyword">int32</span>  <span class="keyword">int64</span>                <span class="comment">// 默认 0</span></span><br><span class="line"><span class="keyword">uint</span> <span class="keyword">uint8</span> <span class="keyword">uint16</span> <span class="keyword">uint32</span> <span class="keyword">uint64</span> <span class="keyword">uintptr</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">byte</span>        <span class="comment">// uint8 的别名</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">rune</span>        <span class="comment">// alias int32 ~= a character (Unicode code point) - very Viking</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">float32</span> <span class="keyword">float64</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">complex64</span> <span class="keyword">complex128</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestZeorValue</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> i <span class="keyword">int</span></span><br><span class="line">    <span class="keyword">var</span> f <span class="keyword">float64</span></span><br><span class="line">    <span class="keyword">var</span> b <span class="keyword">bool</span></span><br><span class="line">    <span class="keyword">var</span> s <span class="keyword">string</span></span><br><span class="line">    fmt.Printf(<span class="string">&quot;%v %v %v %q\n&quot;</span>, i, f, b, s)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1049,7 +1049,7 @@
 
 <p>Go 的内置集合中没有 Set，但可以利用 <code>map[type]bool</code> 实现。</p>
 <h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><p><code>error</code> 是可恢复的错误，<code>panic</code> 为不可恢复错误（退出前会执行 defer 的内容）。</p>
-<p>通常可能产生错误的函数会声明一个额外的 <code>error</code> 类型返回值（<a target="_blank" rel="noopener" href="https://golang.org/pkg/builtin/#error%EF%BC%89%EF%BC%8C%E4%B8%80%E8%88%AC%E6%98%AF%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E5%8F%82%E6%95%B0%E3%80%82">https://golang.org/pkg/builtin/#error），一般是最后一个参数。</a></p>
+<p>可能产生错误的函数通常会声明一个额外的 <code>error</code> 类型返回值（参考 <a target="_blank" rel="noopener" href="https://golang.org/pkg/builtin/#error">error</a>），一般是最后一个参数。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// bad</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">load</span><span class="params">()</span> <span class="params">(error, <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">  <span class="comment">// normal code</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// good</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">load</span><span class="params">()</span> <span class="params">(<span class="keyword">int</span>, error)</span></span> &#123;</span><br><span class="line">  <span class="comment">// normal code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>其中 <code>error</code> 类型实现了 <code>error</code> 接口，提供 <code>Error</code> 方法，并可以通过 <code>errors.New(&quot;xxx&quot;)</code> 创建错误实例。</p>
@@ -1136,7 +1136,8 @@
 
 <h3 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">sigs := <span class="built_in">make</span>(<span class="keyword">chan</span> os.Signal, <span class="number">1</span>)</span><br><span class="line">done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">bool</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    sig := &lt;-sigs</span><br><span class="line">    fmt.Println()</span><br><span class="line">    fmt.Println(sig)</span><br><span class="line">    done &lt;- <span class="literal">true</span></span><br><span class="line">&#125;()</span><br><span class="line"></span><br><span class="line">fmt.Println(<span class="string">&quot;awaiting signal&quot;</span>)</span><br><span class="line">&lt;-done</span><br><span class="line">fmt.Println(<span class="string">&quot;exiting&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// go run signals.go</span></span><br><span class="line"><span class="comment">// awaiting signal</span></span><br><span class="line"><span class="comment">// ^C</span></span><br><span class="line"><span class="comment">// interrupt</span></span><br><span class="line"><span class="comment">// exiting</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h2><p>协程是由 Go 管理的轻量级线程（stack 初始化为 2K，远远小于 Java Thread Stack 的 1M）。<br><code>go f(a, b)</code> 启动一个运行 <code>f</code> 函数的 goroutine。 </p>
+<h2 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h2><p>协程是由 Go 管理的轻量级线程（stack 初始化为 2K，远远小于 Java Thread Stack 的 1M）。</p>
+<p><code>go f()()</code> 启动一个运行 <code>f</code> 函数的 goroutine。 </p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 作为 goroutine 启动的函数 </span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">doStuff</span><span class="params">(s <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 在 goroutine 中使用命名函数 </span></span><br><span class="line">    <span class="keyword">go</span> doStuff(<span class="string">&quot;foobar&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在 goroutine 中使用匿名内部函数 </span></span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span> <span class="params">(x <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">    &#125;(<span class="number">42</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="状态协程"><a href="#状态协程" class="headerlink" title="状态协程"></a>状态协程</h3><p>即数据状态由单个协程拥有，保证数据不会因并发访问而破坏。</p>
@@ -2832,14 +2833,14 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
-            <span class="sidebar-tag-name" data-tags="技术">
-                <span class="iconfont-archer">&#xe606;</span>
-                技术
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="杂事">
                 <span class="iconfont-archer">&#xe606;</span>
                 杂事
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="技术">
+                <span class="iconfont-archer">&#xe606;</span>
+                技术
             </span>
         
             <span class="sidebar-tag-name" data-tags="算法">
@@ -2847,14 +2848,14 @@
                 算法
             </span>
         
-            <span class="sidebar-tag-name" data-tags="数据库">
-                <span class="iconfont-archer">&#xe606;</span>
-                数据库
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="Java">
                 <span class="iconfont-archer">&#xe606;</span>
                 Java
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="数据库">
+                <span class="iconfont-archer">&#xe606;</span>
+                数据库
             </span>
         
             <span class="sidebar-tag-name" data-tags="大数据">
@@ -3018,20 +3019,5 @@
         
         <!-- mermaid -->
         
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-</body>
+    </body>
 </html>
