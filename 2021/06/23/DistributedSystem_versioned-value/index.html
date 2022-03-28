@@ -12,18 +12,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="author" content="Kylo Yip">
+    <meta name="author" content="Kyle Yip">
     <meta name="renderer" content="webkit">
-    <meta name="copyright" content="Kylo Yip">
+    <meta name="copyright" content="Kyle Yip">
     
-        <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
+        <meta name="keywords" content="Kyle's Notebook,Kyle Yip">
     
     <meta name="description" content="">
     <meta name="description" content="原文链接：https:&#x2F;&#x2F;martinfowler.com&#x2F;articles&#x2F;patterns-of-distributed-systems&#x2F;versioned-value.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分布式系统模式：版本化值（译）">
 <meta property="og:url" content="https://yipwinghong.github.io/2021/06/23/DistributedSystem_versioned-value/index.html">
-<meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:site_name" content="Kyle&#39;s Notebook">
 <meta property="og:description" content="原文链接：https:&#x2F;&#x2F;martinfowler.com&#x2F;articles&#x2F;patterns-of-distributed-systems&#x2F;versioned-value.html">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://martinfowler.com/articles/patterns-of-distributed-systems/versioned-key-read.png">
@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://martinfowler.com/articles/patterns-of-distributed-systems/snapshot-isolation.png">
 <meta property="article:published_time" content="2021-06-23T15:05:19.000Z">
 <meta property="article:modified_time" content="2021-12-25T08:14:57.640Z">
-<meta property="article:author" content="Kylo Yip">
+<meta property="article:author" content="Kyle Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="分布式系统">
 <meta name="twitter:card" content="summary">
@@ -41,7 +41,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>分布式系统模式：版本化值（译） · Kylo&#39;s Notebook</title>
+    <title>分布式系统模式：版本化值（译） · Kyle&#39;s Notebook</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -218,7 +218,7 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kyle's Notebook" type="application/atom+xml">
 </head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
@@ -255,7 +255,7 @@
         </span>
         <!-- back to home page text -->
         <span class="home-link header-element">
-            <a href=/>Kylo's Notebook</a>
+            <a href=/>Kyle's Notebook</a>
         </span>
     </div>
     <!-- toggle banner for post layout -->
@@ -264,7 +264,7 @@
             <div class="banner">
         
             <div class="blog-title header-element">
-                <a href="/">Kylo&#39;s Notebook</a>
+                <a href="/">Kyle&#39;s Notebook</a>
             </div>
             <div class="post-title header-element">
                 <a href="#" class="post-name">分布式系统模式：版本化值（译）</a>
@@ -1967,7 +1967,7 @@
     var siteMeta = {
         url: "https://yipwinghong.github.io",
         root: siteMetaRoot,
-        author: "Kylo Yip"
+        author: "Kyle Yip"
     }
 </script>
 
@@ -1995,5 +1995,20 @@
         
         <!-- mermaid -->
         
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>

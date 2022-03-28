@@ -12,18 +12,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="author" content="Kylo Yip">
+    <meta name="author" content="Kyle Yip">
     <meta name="renderer" content="webkit">
-    <meta name="copyright" content="Kylo Yip">
+    <meta name="copyright" content="Kyle Yip">
     
-        <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
+        <meta name="keywords" content="Kyle's Notebook,Kyle Yip">
     
     <meta name="description" content="">
     <meta name="description" content="原文链接：https:&#x2F;&#x2F;www.narrator.ai&#x2F;blog&#x2F;using-postgresql-as-a-data-warehouse">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《DDIA》阅读笔记（八）：分布式系统的挑战">
 <meta property="og:url" content="https://yipwinghong.github.io/2021/02/06/DDIA_note-10/index.html">
-<meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:site_name" content="Kyle&#39;s Notebook">
 <meta property="og:description" content="原文链接：https:&#x2F;&#x2F;www.narrator.ai&#x2F;blog&#x2F;using-postgresql-as-a-data-warehouse">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/lichuang/lichuang.github.io/media/imgs/20190405-ddia-chapter08-the-trouble-with-distributed-system/8-1.jpg">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/lichuang/lichuang.github.io/media/imgs/20190405-ddia-chapter08-the-trouble-with-distributed-system/8-5.jpg">
 <meta property="article:published_time" content="2021-02-06T13:19:01.000Z">
 <meta property="article:modified_time" content="2021-12-25T08:41:51.435Z">
-<meta property="article:author" content="Kylo Yip">
+<meta property="article:author" content="Kyle Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="设计">
 <meta name="twitter:card" content="summary">
@@ -42,7 +42,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>《DDIA》阅读笔记（八）：分布式系统的挑战 · Kylo&#39;s Notebook</title>
+    <title>《DDIA》阅读笔记（八）：分布式系统的挑战 · Kyle&#39;s Notebook</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -219,7 +219,7 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kyle's Notebook" type="application/atom+xml">
 </head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
@@ -256,7 +256,7 @@
         </span>
         <!-- back to home page text -->
         <span class="home-link header-element">
-            <a href=/>Kylo's Notebook</a>
+            <a href=/>Kyle's Notebook</a>
         </span>
     </div>
     <!-- toggle banner for post layout -->
@@ -265,7 +265,7 @@
             <div class="banner">
         
             <div class="blog-title header-element">
-                <a href="/">Kylo&#39;s Notebook</a>
+                <a href="/">Kyle&#39;s Notebook</a>
             </div>
             <div class="post-title header-element">
                 <a href="#" class="post-name">《DDIA》阅读笔记（八）：分布式系统的挑战</a>
@@ -2101,7 +2101,7 @@
     var siteMeta = {
         url: "https://yipwinghong.github.io",
         root: siteMetaRoot,
-        author: "Kylo Yip"
+        author: "Kyle Yip"
     }
 </script>
 
@@ -2129,5 +2129,20 @@
         
         <!-- mermaid -->
         
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>

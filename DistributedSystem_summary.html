@@ -12,23 +12,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="author" content="Kylo Yip">
+    <meta name="author" content="Kyle Yip">
     <meta name="renderer" content="webkit">
-    <meta name="copyright" content="Kylo Yip">
+    <meta name="copyright" content="Kyle Yip">
     
-        <meta name="keywords" content="Kylo's Notebook,Kylo Yip">
+        <meta name="keywords" content="Kyle's Notebook,Kyle Yip">
     
     <meta name="description" content="">
     <meta name="description" content="分布式系统知识点总结协调与同步分布式互斥    集中式 分布式 令牌环    方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当参与">
 <meta property="og:type" content="website">
 <meta property="og:title" content="分布式系统知识点总结">
 <meta property="og:url" content="https://yipwinghong.github.io/DistributedSystem_summary.html">
-<meta property="og:site_name" content="Kylo&#39;s Notebook">
+<meta property="og:site_name" content="Kyle&#39;s Notebook">
 <meta property="og:description" content="分布式系统知识点总结协调与同步分布式互斥    集中式 分布式 令牌环    方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当参与">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-07-01T15:05:19.000Z">
 <meta property="article:modified_time" content="2021-08-18T16:08:30.425Z">
-<meta property="article:author" content="Kylo Yip">
+<meta property="article:author" content="Kyle Yip">
 <meta property="article:tag" content="分布式系统">
 <meta property="article:tag" content="技术">
 <meta name="twitter:card" content="summary">
@@ -36,7 +36,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>分布式系统知识点总结 · Kylo&#39;s Notebook</title>
+    <title>分布式系统知识点总结 · Kyle&#39;s Notebook</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -213,7 +213,7 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kylo's Notebook" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kyle's Notebook" type="application/atom+xml">
 </head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
@@ -248,7 +248,7 @@
         </span>
         <!-- back to home page text -->
         <span class="home-link header-element">
-            <a href=/>Kylo's Notebook</a>
+            <a href=/>Kyle's Notebook</a>
         </span>
     </div>
     <!-- toggle banner for post layout -->
@@ -2039,7 +2039,7 @@
     var siteMeta = {
         url: "https://yipwinghong.github.io",
         root: siteMetaRoot,
-        author: "Kylo Yip"
+        author: "Kyle Yip"
     }
 </script>
 
@@ -2065,5 +2065,20 @@
         
         <!-- mermaid -->
         
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>

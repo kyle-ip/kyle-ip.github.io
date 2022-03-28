@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Kylo&#39;s Notebook</title>
+  <title>Kyle&#39;s Notebook</title>
   
   <subtitle>do {eat(); sleep(); code();} while (isAlive);</subtitle>
   <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
@@ -10,7 +10,7 @@
   <id>https://yipwinghong.github.io/</id>
   
   <author>
-    <name>Kylo Yip</name>
+    <name>Kyle Yip</name>
     
   </author>
   
@@ -78,7 +78,7 @@
     <link href="https://yipwinghong.github.io/2021/10/10/Design_data-lineage/"/>
     <id>https://yipwinghong.github.io/2021/10/10/Design_data-lineage/</id>
     <published>2021-10-10T09:23:21.000Z</published>
-    <updated>2021-11-11T07:35:13.676Z</updated>
+    <updated>2022-03-28T10:40:54.543Z</updated>
     
     
     <summary type="html">大数据平台：数据血缘功能设计。</summary>
@@ -97,7 +97,7 @@
     <link href="https://yipwinghong.github.io/2021/09/26/2021-09-26_diary/"/>
     <id>https://yipwinghong.github.io/2021/09/26/2021-09-26_diary/</id>
     <published>2021-09-26T14:27:51.000Z</published>
-    <updated>2021-11-14T08:50:42.583Z</updated>
+    <updated>2022-03-28T10:40:33.863Z</updated>
     
     
     <summary type="html">What a melancholy life</summary>
