@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-standard.assets/image-20210801185711490.png">
 <meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Go_engineering-standard.assets/image-20210801185937316.png">
 <meta property="article:published_time" content="2021-08-04T00:11:03.000Z">
-<meta property="article:modified_time" content="2021-12-25T08:22:44.024Z">
+<meta property="article:modified_time" content="2022-04-02T11:37:24.926Z">
 <meta property="article:author" content="Kyle Yip">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="Go">
@@ -501,7 +501,11 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1 id="Go-工程化标准实践"><a href="#Go-工程化标准实践" class="headerlink" title="Go 工程化标准实践"></a>Go 工程化标准实践</h1><h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><h3 id="标准项目结构"><a href="#标准项目结构" class="headerlink" title="标准项目结构"></a>标准项目结构</h3><h4 id="cmd"><a href="#cmd" class="headerlink" title="/cmd"></a>/cmd</h4><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">|<span class="comment">-- cmd</span></span><br><span class="line">    |<span class="comment">-- demo</span></span><br><span class="line">        |<span class="comment">-- demo</span></span><br><span class="line">        +<span class="comment">-- main.go</span></span><br><span class="line">    +<span class="comment">-- demo1</span></span><br><span class="line">        |<span class="comment">-- demo1</span></span><br><span class="line">        +<span class="comment">-- main.go</span></span><br></pre></td></tr></table></figure>
+        <h1 id="Go-工程化标准实践"><a href="#Go-工程化标准实践" class="headerlink" title="Go 工程化标准实践"></a>Go 工程化标准实践</h1><p>本文参考 Go 微服务框架 <a target="_blank" rel="noopener" href="https://github.com/go-kratos/kratos">go-kratos/kratos</a> 的项目结构及相关最佳实践，更多技术分享可关注公众号 <strong>Kratos 开源社区</strong>。</p>
+<blockquote>
+<p>  Kratos 一套轻量级 Go 微服务框架，包含大量微服务相关功能及工具。</p>
+</blockquote>
+<h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><h3 id="标准项目结构"><a href="#标准项目结构" class="headerlink" title="标准项目结构"></a>标准项目结构</h3><h4 id="cmd"><a href="#cmd" class="headerlink" title="/cmd"></a>/cmd</h4><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">|<span class="comment">-- cmd</span></span><br><span class="line">    |<span class="comment">-- demo</span></span><br><span class="line">        |<span class="comment">-- demo</span></span><br><span class="line">        +<span class="comment">-- main.go</span></span><br><span class="line">    +<span class="comment">-- demo1</span></span><br><span class="line">        |<span class="comment">-- demo1</span></span><br><span class="line">        +<span class="comment">-- main.go</span></span><br></pre></td></tr></table></figure>
 
 <p>项目的主干，每个应用程序目录名与可执行文件的名称匹配。该目录不应放置太多代码。</p>
 <h4 id="internal"><a href="#internal" class="headerlink" title="/internal"></a>/internal</h4><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|<span class="comment">-- internal</span></span><br><span class="line">    +<span class="comment">-- demo</span></span><br><span class="line">        |<span class="comment">-- biz</span></span><br><span class="line">        |<span class="comment">-- service</span></span><br><span class="line">        +<span class="comment">-- data</span></span><br></pre></td></tr></table></figure>
@@ -981,7 +985,7 @@
 </li>
 <li><p>  <a target="_blank" rel="noopener" href="https://www.citerus.se/part-3-domain-driven-design-in-go/">Domain Driven Design in Go: Part 3 – Citerus</a></p>
 </li>
-<li><p>  <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/5732b69bd1a1">文章正在审核中… - 简书 (jianshu.com)</a></p>
+<li><p>  <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/5732b69bd1a1">当中台遇上DDD，我们该如何设计微服务？</a></p>
 </li>
 <li><p>  <a target="_blank" rel="noopener" href="https://www.cnblogs.com/qixuejia/p/10789612.html">领域驱动设计系列文章（1）——通过现实例子显示领域驱动设计的威力 - Cat Qi - 博客园 (cnblogs.com)</a></p>
 </li>
@@ -2228,7 +2232,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/15</span>
-            <a class="archive-post-title" href="/2020/02/15/Git_cheat-sheet/">Git Cheat Sheet</a>
+            <a class="archive-post-title" href="/2020/02/15/Git_Cheat-Sheet/">Git Cheat Sheet</a>
         </li>
     
         
@@ -2338,24 +2342,19 @@
                 Java
             </span>
         
-            <span class="sidebar-tag-name" data-tags="数据库">
-                <span class="iconfont-archer">&#xe606;</span>
-                数据库
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="大数据">
                 <span class="iconfont-archer">&#xe606;</span>
                 大数据
             </span>
         
+            <span class="sidebar-tag-name" data-tags="数据库">
+                <span class="iconfont-archer">&#xe606;</span>
+                数据库
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="设计">
                 <span class="iconfont-archer">&#xe606;</span>
                 设计
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="分布式系统">
-                <span class="iconfont-archer">&#xe606;</span>
-                分布式系统
             </span>
         
             <span class="sidebar-tag-name" data-tags="Docker">
@@ -2366,6 +2365,11 @@
             <span class="sidebar-tag-name" data-tags="Kubernetes">
                 <span class="iconfont-archer">&#xe606;</span>
                 Kubernetes
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="分布式系统">
+                <span class="iconfont-archer">&#xe606;</span>
+                分布式系统
             </span>
         
             <span class="sidebar-tag-name" data-tags="Go">
