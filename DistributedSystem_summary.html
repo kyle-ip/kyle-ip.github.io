@@ -19,12 +19,12 @@
         <meta name="keywords" content="Kyle's Notebook,Kyle Ip">
     
     <meta name="description" content="">
-    <meta name="description" content="分布式系统知识点总结协调与同步分布式互斥    集中式 分布式 令牌环    方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当参与">
+    <meta name="description" content="分布式系统知识点总结协调与同步分布式互斥     集中式 分布式 令牌环     方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当">
 <meta property="og:type" content="website">
 <meta property="og:title" content="分布式系统知识点总结">
 <meta property="og:url" content="https://yipwinghong.github.io/DistributedSystem_summary.html">
 <meta property="og:site_name" content="Kyle&#39;s Notebook">
-<meta property="og:description" content="分布式系统知识点总结协调与同步分布式互斥    集中式 分布式 令牌环    方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当参与">
+<meta property="og:description" content="分布式系统知识点总结协调与同步分布式互斥     集中式 分布式 令牌环     方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-07-01T15:05:19.000Z">
 <meta property="article:modified_time" content="2021-08-18T16:08:30.425Z">
@@ -213,8 +213,7 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kyle's Notebook" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script type="text/javascript">
@@ -428,7 +427,8 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1 id="分布式系统知识点总结"><a href="#分布式系统知识点总结" class="headerlink" title="分布式系统知识点总结"></a>分布式系统知识点总结</h1><h2 id="协调与同步"><a href="#协调与同步" class="headerlink" title="协调与同步"></a>协调与同步</h2><h3 id="分布式互斥"><a href="#分布式互斥" class="headerlink" title="分布式互斥"></a>分布式互斥</h3><table>
+        <h1 id="分布式系统知识点总结"><a href="#分布式系统知识点总结" class="headerlink" title="分布式系统知识点总结"></a>分布式系统知识点总结</h1><h2 id="协调与同步"><a href="#协调与同步" class="headerlink" title="协调与同步"></a>协调与同步</h2><h3 id="分布式互斥"><a href="#分布式互斥" class="headerlink" title="分布式互斥"></a>分布式互斥</h3><div class="table-container">
+<table>
 <thead>
 <tr>
 <th></th>
@@ -437,7 +437,8 @@
 <th>令牌环</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>方法</td>
 <td>引入协调者，对请求排序，最早请求的参与者取得临界资源。</td>
 <td>征求其它参与者同意后使用临界资源。</td>
@@ -461,8 +462,11 @@
 <td>临界资源使用频度较低且系统规模较小</td>
 <td>系统规模较小，且每个参与者使用资源频度较高、时间较短。</td>
 </tr>
-</tbody></table>
-<h3 id="分布式选举"><a href="#分布式选举" class="headerlink" title="分布式选举"></a>分布式选举</h3><table>
+</tbody>
+</table>
+</div>
+<h3 id="分布式选举"><a href="#分布式选举" class="headerlink" title="分布式选举"></a>分布式选举</h3><div class="table-container">
+<table>
 <thead>
 <tr>
 <th></th>
@@ -471,7 +475,8 @@
 <th>ZAB</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>选举原则</td>
 <td>节点 ID 最大的成为 Leader。</td>
 <td>少数服从多数，票数最多为主。</td>
@@ -495,8 +500,11 @@
 <td>中小规模系统，比如 Kubernetes。</td>
 <td>大规模系统，比如 ZooKeeper。</td>
 </tr>
-</tbody></table>
-<h3 id="分布式共识"><a href="#分布式共识" class="headerlink" title="分布式共识"></a>分布式共识</h3><table>
+</tbody>
+</table>
+</div>
+<h3 id="分布式共识"><a href="#分布式共识" class="headerlink" title="分布式共识"></a>分布式共识</h3><div class="table-container">
+<table>
 <thead>
 <tr>
 <th></th>
@@ -505,7 +513,8 @@
 <th>DPos</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>原理</td>
 <td>以每个节点计算能力竞争记账权，算力越高机会越大。</td>
 <td>由系统权益决定区块记账权，权益越大机会越大。</td>
@@ -529,8 +538,11 @@
 <td>以太坊、点点币</td>
 <td>以太股、EOS</td>
 </tr>
-</tbody></table>
-<h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><table>
+</tbody>
+</table>
+</div>
+<h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><div class="table-container">
+<table>
 <thead>
 <tr>
 <th></th>
@@ -539,7 +551,8 @@
 <th>最终一致性</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>思想</td>
 <td>事务管理器作为协调者，处理各本地事务的提交或回滚。资源管理器作为参与者。通过投票阶段和提交阶段协调事务操作。</td>
 <td>在 2PC 基础上，分为 CanCommit、PreCommit、DoCommit 三个阶段，引入超时和准备机制。</td>
@@ -557,8 +570,11 @@
 <td>数据不一致，性能较低。</td>
 <td>算法复杂度高，实现困难。</td>
 </tr>
-</tbody></table>
-<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><table>
+</tbody>
+</table>
+</div>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><div class="table-container">
+<table>
 <thead>
 <tr>
 <th></th>
@@ -567,7 +583,8 @@
 <th>ZooKeeper</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>实现</td>
 <td>在表上对临界资源做唯一性约束，通过增加记录对某资源上锁，释放时删除（也可以更新实现乐观锁）。</td>
 <td>使用 API setnx，设置锁 ID、当前时间 + 超时时间。</td>
@@ -591,8 +608,11 @@
 <td>高并发、性能要求高。</td>
 <td>大部分分布式场景，除非性能要求极高。</td>
 </tr>
-</tbody></table>
-<h2 id="管理与调度"><a href="#管理与调度" class="headerlink" title="管理与调度"></a>管理与调度</h2><h3 id="体系结构"><a href="#体系结构" class="headerlink" title="体系结构"></a>体系结构</h3><table>
+</tbody>
+</table>
+</div>
+<h2 id="管理与调度"><a href="#管理与调度" class="headerlink" title="管理与调度"></a>管理与调度</h2><h3 id="体系结构"><a href="#体系结构" class="headerlink" title="体系结构"></a>体系结构</h3><div class="table-container">
+<table>
 <thead>
 <tr>
 <th></th>
@@ -600,7 +620,8 @@
 <th>非集中式</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>简介</td>
 <td>一或多台中央服务器，存储系统内的所有数据、处理所有业务。中央服务器统一调度资源和任务，多个节点与中央服务器连接，汇报自身信息和执行结果。</td>
 <td>服务执行和数据存储被分散到不同的服务器集群，服务器集群间通过消息传递进行通信和协调。所有服务器地位平等。</td>
@@ -615,8 +636,11 @@
 <td>Borg、Kubernetes、Mesos。</td>
 <td>Akka、Redis、Cassandra。</td>
 </tr>
-</tbody></table>
-<h3 id="调度架构"><a href="#调度架构" class="headerlink" title="调度架构"></a>调度架构</h3><table>
+</tbody>
+</table>
+</div>
+<h3 id="调度架构"><a href="#调度架构" class="headerlink" title="调度架构"></a>调度架构</h3><div class="table-container">
+<table>
 <thead>
 <tr>
 <th></th>
@@ -625,7 +649,8 @@
 <th>共享状态调度</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>定义</td>
 <td>集群中只有一个节点运行调度进程，该节点对其它节点有访问权限，可搜集其它节点资源状态信息以便统一管理。根据用户下发的任务对资源的需求，在调度器中进行任务与资源匹配，再指派给其它节点。</td>
 <td>资源的使用状态同时由中央调度器和二层调度器管理。前者负责宏观、大规模资源分配，业务压力较小；后者负责任务与资源匹配，可以有多个、以支持不同任务类型。</td>
@@ -643,17 +668,19 @@
 <td>Mesos、YARN</td>
 <td>Google Omega</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h2 id="计算模型"><a href="#计算模型" class="headerlink" title="计算模型"></a>计算模型</h2><h3 id="分治"><a href="#分治" class="headerlink" title="分治"></a>分治</h3><p>将复杂且难以计算的大问题，分割成规模较小的、可直接求解的子问题。子问题之间相互独立且与原问题形式相同，通过递归求解子问题，最后将其结果合并得到原问题的解。</p>
 <p>特点：</p>
 <ul>
-<li><p>  规模较大或复杂。</p>
+<li><p>规模较大或复杂。</p>
 </li>
-<li><p>  可分解为规模较小、简单的同类问题。</p>
+<li><p>可分解为规模较小、简单的同类问题。</p>
 </li>
-<li><p>  子问题之间相互独立。</p>
+<li><p>子问题之间相互独立。</p>
 </li>
-<li><p>  子问题的解可合并得到原问题的解。</p>
+<li><p>子问题的解可合并得到原问题的解。</p>
 </li>
 </ul>
 <h4 id="Map-Reduce"><a href="#Map-Reduce" class="headerlink" title="Map Reduce"></a>Map Reduce</h4><h4 id="Fork-Join"><a href="#Fork-Join" class="headerlink" title="Fork Join"></a>Fork Join</h4><h3 id="流计算"><a href="#流计算" class="headerlink" title="流计算"></a>流计算</h3><h3 id="Actor"><a href="#Actor" class="headerlink" title="Actor"></a>Actor</h3><h3 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h3><h2 id="通信模型"><a href="#通信模型" class="headerlink" title="通信模型"></a>通信模型</h2><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
@@ -824,558 +851,14 @@
         <div class="sidebar-panel-archives">
     <!-- 在 ejs 中将 archive 按照时间排序 -->
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     
     
     
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 78
+        Total : 0
         </div>
         <!-- search  -->
         
@@ -1383,623 +866,11 @@
     
     <div class="post-archive">
     
-        
-            
-            
-            <div class="archive-year"> 2021 </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">12/10</span>
-            <a class="archive-post-title" href="/2021/12/10/Go_engineering-specification-design/">Go 工程化规范设计</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">11/06</span>
-            <a class="archive-post-title" href="/2021/11/06/Go_modules_management/">Go Modules 管理总结</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/15</span>
-            <a class="archive-post-title" href="/2021/10/15/Go_concurrency_primitives/">Go 并发原语</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/10</span>
-            <a class="archive-post-title" href="/2021/10/10/Design_data-lineage/">数据血缘功能设计</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">09/26</span>
-            <a class="archive-post-title" href="/2021/09/26/2021-09-26_diary/">迟来的一次复盘</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">09/12</span>
-            <a class="archive-post-title" href="/2021/09/12/DB_mysql-optimization-basic/">MySQL 性能优化基础</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">09/05</span>
-            <a class="archive-post-title" href="/2021/09/05/DB_b-trees-more-than-i-thought-id-want-to-know/">关于 B-Trees 的更多细节（译）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/11</span>
-            <a class="archive-post-title" href="/2021/08/11/Go_microservices_availability_design/">微服务可用性设计</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/10</span>
-            <a class="archive-post-title" href="/2021/08/10/Algorithm_reliable-distributed-timer/">可靠的分布式计时器（译）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/04</span>
-            <a class="archive-post-title" href="/2021/08/04/Go_engineering-standard/">Go 工程化标准实践</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/31</span>
-            <a class="archive-post-title" href="/2021/07/31/Go_memory-model/">Go 内存模型（译）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/28</span>
-            <a class="archive-post-title" href="/2021/07/28/Go_channel-applications/">Go Channel 应用</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/25</span>
-            <a class="archive-post-title" href="/2021/07/25/Fenix_build-services/">《凤凰架构》阅读笔记（五）：服务构建与流量治理</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/23</span>
-            <a class="archive-post-title" href="/2021/07/23/Fenix_transparent-multilevel-diversion-system/">《凤凰架构》阅读笔记（四）：透明多级分流系统</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/22</span>
-            <a class="archive-post-title" href="/2021/07/22/Fenix_transaction/">《凤凰架构》阅读笔记（三）：事务处理</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/21</span>
-            <a class="archive-post-title" href="/2021/07/21/Fenix_access-remote-service/">《凤凰架构》阅读笔记（二）：访问远程服务</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/18</span>
-            <a class="archive-post-title" href="/2021/07/18/Go_error_handling/">Go 异常处理</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/15</span>
-            <a class="archive-post-title" href="/2021/07/15/Fenix_architecture-evolution/">《凤凰架构》阅读笔记（一）：软件架构演进</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/12</span>
-            <a class="archive-post-title" href="/2021/07/12/Go_microservices_governance/">微服务概览与治理</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span>
-            <a class="archive-post-title" href="/2021/07/09/Algorithm_max-flow-problem/">最大流问题</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span>
-            <a class="archive-post-title" href="/2021/07/08/Algorithm_minimum_spanning_tree_problem/">最小生成树问题</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/08</span>
-            <a class="archive-post-title" href="/2021/07/08/Algorithm_shortest-path-problem/">最短路径问题</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/01</span>
-            <a class="archive-post-title" href="/2021/07/01/DistributedSystem_gossip-dissemination/">分布式系统模式：Gossip 传播（译）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/23</span>
-            <a class="archive-post-title" href="/2021/06/23/DistributedSystem_versioned-value/">分布式系统模式：版本化值（译）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/19</span>
-            <a class="archive-post-title" href="/2021/06/19/Algorithm_consistent-hashing/">一致性哈希（译）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/13</span>
-            <a class="archive-post-title" href="/2021/06/13/Go_cheat-sheet/">Go Cheat Sheet</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/10</span>
-            <a class="archive-post-title" href="/2021/06/10/Go_a-tour-of-go/">A tour of Go</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/06</span>
-            <a class="archive-post-title" href="/2021/06/06/2021-06-06_diary/">Weekly Summary (2021-05-31_2021-06-06)</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/05</span>
-            <a class="archive-post-title" href="/2021/06/05/2021-06-05_diary/">基于记忆规律的学习方法</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/31</span>
-            <a class="archive-post-title" href="/2021/05/31/2021-05-31_diary/">2021 下半年工作学习安排</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/16</span>
-            <a class="archive-post-title" href="/2021/05/16/Algorithm_how-to-solve-the-secret-santa-problem-using-graph-theory/">如何用图论解决 Secret Santa 问题？（译）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/12</span>
-            <a class="archive-post-title" href="/2021/05/12/DB_using-postgresql-as-a-data-warehouse/">把 PostgreSQL 用作数据仓库（译）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/28</span>
-            <a class="archive-post-title" href="/2021/04/28/OS_linux-memory-monitoring/">Linux 内存原理与分析</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/20</span>
-            <a class="archive-post-title" href="/2021/04/20/OS_linux-io-monitoring/">Linux I/O 原理与分析</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/10</span>
-            <a class="archive-post-title" href="/2021/04/10/OS_linux-cpu-monitoring/">Linux CPU 原理与分析</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/05</span>
-            <a class="archive-post-title" href="/2021/04/05/OS_linux-network-monitoring/">Linux 网络原理与分析</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/01</span>
-            <a class="archive-post-title" href="/2021/04/01/OS_system_initialization/">Linux - 架构与系统初始化</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">03/17</span>
-            <a class="archive-post-title" href="/2021/03/17/Java_cpp-for-java-programmers/">Java 程序员的 C++（译）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/24</span>
-            <a class="archive-post-title" href="/2021/02/24/DDIA_note-13/">《DDIA》阅读笔记（九）：一致性与共识（共识问题）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/21</span>
-            <a class="archive-post-title" href="/2021/02/21/2021-02-21_diary/">近期工作学习规划</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/19</span>
-            <a class="archive-post-title" href="/2021/02/19/DDIA_note-12/">《DDIA》阅读笔记（九）：一致性与共识（顺序保证）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/13</span>
-            <a class="archive-post-title" href="/2021/02/13/DDIA_note-11/">《DDIA》阅读笔记（九）：一致性与共识（可线性化）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/06</span>
-            <a class="archive-post-title" href="/2021/02/06/DDIA_note-10/">《DDIA》阅读笔记（八）：分布式系统的挑战</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span>
-            <a class="archive-post-title" href="/2021/01/27/DDIA_note-9/">《DDIA》阅读笔记（七）：事务</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/22</span>
-            <a class="archive-post-title" href="/2021/01/22/DDIA_note-8/">《DDIA》阅读笔记（六）：数据分区</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/21</span>
-            <a class="archive-post-title" href="/2021/01/21/DDIA_note-7/">《DDIA》阅读笔记（五）：数据复制（无主节点）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span>
-            <a class="archive-post-title" href="/2021/01/20/DDIA_note-6/">《DDIA》阅读笔记（五）：数据复制（多主节点）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/10</span>
-            <a class="archive-post-title" href="/2021/01/10/DB_right-database/">选择合适的数据库（译）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span>
-            <a class="archive-post-title" href="/2021/01/09/DDIA_note-5/">《DDIA》阅读笔记（五）：数据复制（单主节点）</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/01</span>
-            <a class="archive-post-title" href="/2021/01/01/DB_tree-table-design-summary/">树形表结构设计总结</a>
-        </li>
-    
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> 2020 </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">12/13</span>
-            <a class="archive-post-title" href="/2020/12/13/DDIA_note-3/">《DDIA》阅读笔记（三）：数据存储与检索</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">12/04</span>
-            <a class="archive-post-title" href="/2020/12/04/DDIA_note-2/">《DDIA》阅读笔记（二）：数据模型与查询语言</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">12/02</span>
-            <a class="archive-post-title" href="/2020/12/02/DDIA_note-1/">《DDIA》阅读笔记（一）：可靠、可扩展与可维护的应用系统</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/08</span>
-            <a class="archive-post-title" href="/2020/10/08/Maven_external_dependencies_management/">Maven 打包依赖外置</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/04</span>
-            <a class="archive-post-title" href="/2020/10/04/Java_prod-analysis-cmd/">Java 应用常用调试分析方法总结</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">09/24</span>
-            <a class="archive-post-title" href="/2020/09/24/Kafka_cheat-sheet/">Kafka Cheat Sheet</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/09</span>
-            <a class="archive-post-title" href="/2020/08/09/Arthas_cheat-sheet/">Arthas Cheat Sheet</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/12</span>
-            <a class="archive-post-title" href="/2020/07/12/Java_override-and-bridge-method/">Java 多态、重写与桥接方法</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/30</span>
-            <a class="archive-post-title" href="/2020/06/30/Java_memory-area/">Java 内存区域</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/28</span>
-            <a class="archive-post-title" href="/2020/05/28/DB_data-warehouse-design-basic/">数据仓库设计基础</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/08</span>
-            <a class="archive-post-title" href="/2020/04/08/2020-04-08_diary/">关于使用思维导图做笔记</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">03/28</span>
-            <a class="archive-post-title" href="/2020/03/28/Algorithm_leetcode-high-frequency-problems/">LeetCode 高频面试题</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">03/06</span>
-            <a class="archive-post-title" href="/2020/03/06/InfoSecty_personal-infomation-security-guide/">個人信息安全保護指南</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/22</span>
-            <a class="archive-post-title" href="/2020/02/22/2020-02-22_diary/">免费 JetBrains 全家桶</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/16</span>
-            <a class="archive-post-title" href="/2020/02/16/Nginx_cheat-sheet/">Nginx Cheat Sheet</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span>
-            <a class="archive-post-title" href="/2020/02/15/Git_Cheat-Sheet/">Git Cheat Sheet</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/15</span>
-            <a class="archive-post-title" href="/2020/02/15/Docker&K8S_cheat-sheet/">Docker & K8S Cheat Sheet</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/03</span>
-            <a class="archive-post-title" href="/2020/02/03/Java_jstat-monitor-analysis/">JVM jstat 监控分析</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/01</span>
-            <a class="archive-post-title" href="/2020/02/01/Java_GC-log-analysis/">JVM GC 日志分析</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/01</span>
-            <a class="archive-post-title" href="/2020/01/01/Java_JVM_mindmap/">Java 虚拟机与并发编程</a>
-        </li>
-    
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> 2019 </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">12/05</span>
-            <a class="archive-post-title" href="/2019/12/05/Design_design-patterns/">设计模式与设计原则</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/04</span>
-            <a class="archive-post-title" href="/2019/10/04/Python_async-programming/">Python 异步编程总结</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">09/19</span>
-            <a class="archive-post-title" href="/2019/09/19/Python_data-structure/">Python 数据结构应用</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">09/13</span>
-            <a class="archive-post-title" href="/2019/09/13/Python_decorator/">Python 装饰器基本用法</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/22</span>
-            <a class="archive-post-title" href="/2019/08/22/Python_OOP-summary/">Python 类与对象总结</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/28</span>
-            <a class="archive-post-title" href="/2019/06/28/JavaScript_cheat-sheet/">JavaScript Cheat Sheet</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/02</span>
-            <a class="archive-post-title" href="/2019/06/02/JavaScript_ES6-grammar/">ES6 语法总结</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/20</span>
-            <a class="archive-post-title" href="/2019/05/20/Vue_user-guide/">Vue 学习笔记</a>
-        </li>
-    
     </div>
 </div>
 
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
-        
-            <span class="sidebar-tag-name" data-tags="杂事">
-                <span class="iconfont-archer">&#xe606;</span>
-                杂事
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="技术">
-                <span class="iconfont-archer">&#xe606;</span>
-                技术
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="算法">
-                <span class="iconfont-archer">&#xe606;</span>
-                算法
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Java">
-                <span class="iconfont-archer">&#xe606;</span>
-                Java
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="数据库">
-                <span class="iconfont-archer">&#xe606;</span>
-                数据库
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="大数据">
-                <span class="iconfont-archer">&#xe606;</span>
-                大数据
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="设计">
-                <span class="iconfont-archer">&#xe606;</span>
-                设计
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="分布式系统">
-                <span class="iconfont-archer">&#xe606;</span>
-                分布式系统
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Docker">
-                <span class="iconfont-archer">&#xe606;</span>
-                Docker
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Kubernetes">
-                <span class="iconfont-archer">&#xe606;</span>
-                Kubernetes
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Go">
-                <span class="iconfont-archer">&#xe606;</span>
-                Go
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="信息安全">
-                <span class="iconfont-archer">&#xe606;</span>
-                信息安全
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Maven">
-                <span class="iconfont-archer">&#xe606;</span>
-                Maven
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Nginx">
-                <span class="iconfont-archer">&#xe606;</span>
-                Nginx
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Linux">
-                <span class="iconfont-archer">&#xe606;</span>
-                Linux
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="OS">
-                <span class="iconfont-archer">&#xe606;</span>
-                OS
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Python">
-                <span class="iconfont-archer">&#xe606;</span>
-                Python
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Git">
-                <span class="iconfont-archer">&#xe606;</span>
-                Git
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="微服务">
-                <span class="iconfont-archer">&#xe606;</span>
-                微服务
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="JavaScript">
-                <span class="iconfont-archer">&#xe606;</span>
-                JavaScript
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="MySQL">
-                <span class="iconfont-archer">&#xe606;</span>
-                MySQL
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Kafka">
-                <span class="iconfont-archer">&#xe606;</span>
-                Kafka
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Vue">
-                <span class="iconfont-archer">&#xe606;</span>
-                Vue
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="前端">
-                <span class="iconfont-archer">&#xe606;</span>
-                前端
-            </span>
         
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -2011,16 +882,6 @@
 
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
-    
-        <span class="sidebar-category-name" data-categories="《数据密集型应用系统设计》阅读笔记">
-            <span class="iconfont-archer">&#xe60a;</span>
-            《数据密集型应用系统设计》阅读笔记
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="《凤凰架构》阅读笔记">
-            <span class="iconfont-archer">&#xe60a;</span>
-            《凤凰架构》阅读笔记
-        </span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

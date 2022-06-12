@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Kyle Ip">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Kyle Ip">
+    
+        <meta name="keywords" content="Kyle's Notebook,Kyle Ip">
+    
+    <meta name="description" content="">
+    <meta name="description" content="《凤凰架构》阅读笔记（四）：透明多级分流系统">
+<meta property="og:type" content="website">
+<meta property="og:title" content="《凤凰架构》阅读笔记（四）：透明多级分流系统">
+<meta property="og:url" content="https://yipwinghong.github.io/bak/Fenix_transparent-multilevel-diversion-system.html">
+<meta property="og:site_name" content="Kyle&#39;s Notebook">
+<meta property="og:description" content="《凤凰架构》阅读笔记（四）：透明多级分流系统">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transparent-multilevel-diversion-system.assets/1626942984.jpg">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transparent-multilevel-diversion-system.assets/1626942969.jpg">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transparent-multilevel-diversion-system.assets/Circular_Buffer_Animation.c3d3d834.gif">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transparent-multilevel-diversion-system.assets/multilevel-cache.png">
+<meta property="article:published_time" content="2021-07-22T16:33:01.000Z">
+<meta property="article:modified_time" content="2021-10-05T14:32:37.116Z">
+<meta property="article:author" content="Kyle Ip">
+<meta property="article:tag" content="设计">
+<meta property="article:tag" content="技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transparent-multilevel-diversion-system.assets/1626942984.jpg">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>《凤凰架构》阅读笔记（四）：透明多级分流系统 · Kyle&#39;s Notebook</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Kyle's Notebook</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+">
+    
+    <!-- 主页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="《凤凰架构》阅读笔记（四）：透明多级分流系统"><a href="#《凤凰架构》阅读笔记（四）：透明多级分流系统" class="headerlink" title="《凤凰架构》阅读笔记（四）：透明多级分流系统"></a>《凤凰架构》阅读笔记（四）：透明多级分流系统</h1><blockquote>
+<p>  在对系统进行流量规划时，应充分理解各层次的部件和设施，并遵循两道原则：尽可能减少单点部件；奥卡姆剃刀原则。</p>
+</blockquote>
+<h2 id="客户端缓存"><a href="#客户端缓存" class="headerlink" title="客户端缓存"></a>客户端缓存</h2><p>HTTP 协议设计初衷是 <strong>无状态</strong> 交互，为服务端水平扩展预留空间。</p>
+<p>为了减少每个独立请求携带的数据量，设计了客户端缓存机制。在演进过程中出现了 <strong>状态缓存</strong>、<strong>强制缓存</strong> 和 <strong>协商缓存</strong>。</p>
+<h3 id="状态缓存"><a href="#状态缓存" class="headerlink" title="状态缓存"></a>状态缓存</h3><p>客户端不经过服务器直接根据缓存信息对目标网站的状态判断，包括 301 永久重定向和 HSTS 机制。</p>
+<h3 id="强制缓存"><a href="#强制缓存" class="headerlink" title="强制缓存"></a>强制缓存</h3><p>在某个时点之前资源的内容和状态不会被改变，客户端不发请求，一直持有使用该资源的本地缓存副本（在浏览器的地址输入、页面链接跳转、新开窗口、前进和后退时都有效，但在主动刷新页面时会失效）。</p>
+<p>HTTP Header：</p>
+<ul>
+<li><p>Expires：服务端承诺在此之前资源不会发送改动。浏览器可缓存数据、不再发出请求。其受限于客户端时间，且无法处理不允许 Proxy 和 CDN 缓存用户私有资源，也无法指示“不缓存”。</p>
+</li>
+<li><p>Cache-Control：提供多种功能语义，包括：</p>
+<ul>
+<li><p>max-age 和 s-maxage：自 Date Header 以后缓存有效的相对时间（单位 s）；允许 Proxy、CDN 缓存的有效时间。</p>
+</li>
+<li><p>public 和 private：是否用户私有资源。</p>
+</li>
+<li><p>no-cache 和 no-store：禁止缓存；禁止缓存但不强制重复获取。</p>
+</li>
+<li><p>no-transform：禁止修改（比如禁止压缩、修改编码等）。</p>
+</li>
+<li><p>(Request Header) min-fresh 和 only-if-cached：建议服务端返回缓存时间不少于该值的资源；不必返回资源具体内容（此时仅靠客户端缓存，不命中就 503）。</p>
+</li>
+<li><p>must-revalidate 和 proxy-revalidate：资源过期必须从服务端获取，后者用于提示 Proxy 和 CDN。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h3><p>基于变化检测的缓存机制：</p>
+<ul>
+<li><p>比强制缓存有更好的一致性，但需要一次变化检测的交互开销。</p>
+</li>
+<li><p>与强制缓存不互斥，可同时使用。</p>
+</li>
+<li><p>可根据资源修改时间或唯一标识是否变化检查。</p>
+</li>
+<li><p>在各种浏览器操作后依然有效，只有用户强制刷新或明确禁用缓存时失效（<code>Cache-Control: no-cache</code>）。</p>
+</li>
+</ul>
+<p>HTTP Header：</p>
+<ul>
+<li><p>(Response Header) Last-Modified 和 If-Modified-Since：前者是资源最后修改时间，客户端再请求时会通过后者把之前收到的资源最后修改时间发给服务端。如果服务端发现此后未被修改，返回 304 响应（无消息体）即可；否则返回 200 响应。</p>
+</li>
+<li><p>(Response Header) Etag 和 If-None-Match：前者是资源唯一标识。客户端再请求时会通过后者把唯一标识发给服务端，如果服务端发现资源唯一标识不变，返回 304 响应；否则返回 200 响应。</p>
+</li>
+</ul>
+<p>Etag 一致性最强，资源有改变就必然能识别；但性能最差，每次要计算哈希值。</p>
+<h4 id="内容协商"><a href="#内容协商" class="headerlink" title="内容协商"></a>内容协商</h4><p>HTTP 提供了 Accept* 和 Content-* 的 Header 参数处理同一资源的不同版本（语言、格式编码、压缩方式等）。</p>
+<p>Vary Header：当一个 URL 要获取多个资源，缓存根据 Vary Header 获知根据什么内容来对同一个 URL 返回给用户正确的资源。比如 <code>Vary: Accept, User-Agent</code>，表示根据 MIME 类型和浏览器类型缓存资源。</p>
+<h2 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h2><p>DNS 服务器采用 UDP 传输，将域名转换为 IP：</p>
+<ul>
+<li><p>还原为标准域名：<code>www.icyfenix.com</code> =&gt; <code>www.icyfenix.com.</code></p>
+</li>
+<li><p>客户端检查本地缓存，查看域名地址记录是否存活（DNS 以存活时间（TTL）衡量缓存是否有效，不能由服务器主动通知刷新）。</p>
+</li>
+<li><p>客户端将地址发送给操作系统配置的本地 DNS（手工配置或 DHCP 获取），递归查询。</p>
+</li>
+<li><p>本地 DNS 收到查询请求后，按是否有 <code>icyfenix.com</code>、<code>com</code> 的权威服务器依次查询自己的地址记录，直到根域名服务器。再通过根域名服务器，依次得到能解析  <code>com</code>、<code>icyfenix.com</code> 的权威服务器，最后通过完整域名的权威服务器地址查询地址记录（IPv4 是 A 记录，其余可参考 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/List_of_DNS_record_types">RPC 规范</a>）。</p>
+<ul>
+<li><p>权威域名服务器：多个层级，实现域名翻译（可根据来访机器、网络链路、服务内容等各种信息）。</p>
+</li>
+<li><p>根域名服务器：固定、无需查询的顶级域名服务器，全球有 13 组（未分片的 UDP 包在 IPv4 下最大有效值为 512 字节，可存放 13 组地址）。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>每种记录类型中还可以包括多条记录，权威域名服务器可根据策略（地理位置、服务商）选择合适的记录，将访问者路由到最合适的数据中心。</p>
+<p>DNS 预取（DNS Prefetch）：如网站后续要使用其他域的资源，在网页加载时生成一个 link 请求，促使浏览器提前对该域名进行预解释，比如 <code>&lt;link rel=&quot;dns-prefetch&quot; href=&quot;//domain.not-icyfenx.cn&quot;&gt;</code>。</p>
+<blockquote>
+<p>  HTTPDNS：基于 HTTPS 协议的查询服务，由程序代替操作系统从权威 DNS 或可靠的 Local DNS 获取解析数据，绕过传统 Local DNS。可避免底层域名劫持，避免 Local DNS 不可靠导致域名生效缓慢、来源 IP 不准确产生的智能线路切换错误等问题。</p>
+</blockquote>
+<h2 id="传输链路"><a href="#传输链路" class="headerlink" title="传输链路"></a>传输链路</h2><p>主要是 HTTP 协议的优化。</p>
+<h3 id="连接数优化"><a href="#连接数优化" class="headerlink" title="连接数优化"></a>连接数优化</h3><p>TCP 三次握手（数百 ms）和慢启动，本身是面向长时间、大数据传输设计的，与 HTTP 传输对象数量多、时间短、资源小、切换快的特点相矛盾。</p>
+<p><strong>前端优化</strong>：通过各种前端的 Tricks 减少消耗 TCP 连接数，比如 <a target="_blank" rel="noopener" href="https://developer.yahoo.com/performance/rules.html">雅虎 YSlow-23 条规则</a>。但都会有相应的 <a target="_blank" rel="noopener" href="https://icyfenix.cn/architect-perspective/general-architecture/diversion-system/transmission-optimization.html">副作用</a>（缓存失效等），甚至是反模式。</p>
+<p><strong>连接复用</strong>：HTTP/1.1 默认开启，也称为 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Keepalive">Keep-Alive 机制</a>。让客户端对同一个域名长期持有一或多个 TCP 连接。客户端维护一个 FIFO 队列、每次取完数据后保留连接待获取下个资源时复用。存在 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Head-of-line_blocking">队首阻塞</a> 的问题：即第队首资源就已经让服务器陷入长时间运算，结果返回前后面的资源都被阻塞；而如果并行处理请求就无法按顺序返回。</p>
+<p><strong>HTTP 管道</strong>：在服务器中管理 FIFO 队列，一次过接收资源名单，安排返回顺序。服务端能准确评估资源消耗情况，更紧凑地安排资源传输，甚至做到并行化传输，从而提升链路传输的效率。缺点是需要多方共同支持，难以协调。</p>
+<p><a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7540#page-15"><strong>多路复用</strong></a>：HTTP/2 传输的最小单位是帧（Frame），每个帧附带一个 ID 标识所属的流，以便在同一个 TCP 连接的多个帧中根据流 ID 重组出 HTTP 报文。对每个域名都可以只维护一个连接（浏览器对每个域名最多 6 个连接数），同时不必再承担压缩 HTTP 请求、减少请求数的副作用。</p>
+<blockquote>
+<p>  HTTP/2 还考虑过如何压缩 Header，但通过合并资源、减少请求数对节省 Header 没有太大帮助：</p>
+<ul>
+<li><p>Header 的传输成本在 Ajax 等只返回少量数据的比重较大，但在图片、样式、脚本等静态资源请求中不占主要。</p>
+</li>
+<li><p>HTTP/2 基于字典编码信息复用压缩 Header，同一个连接上产生的请求和响应越多、动态字典积累越全，头部压缩效果越好。对于 <strong>单域名单连接</strong> 的机制，合并资源和域名分片对性能提升反而不利。</p>
+</li>
+<li><p>HTTP/2 适合传输小资源、大资源反而不利，一是因为 TCP 连接数量（相当于多点下载），更多是 TCP 协议 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Reliable_transmission">可靠传输机制</a> 导致（错误的 TCP 包导致所有流等待包重传成功），因此合并资源没有好处。</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="传输压缩"><a href="#传输压缩" class="headerlink" title="传输压缩"></a>传输压缩</h3><p>HTTP 支持 GZip 压缩，能自动根据 MIME 判断是否应该对资源做压缩，也能避免重复压缩空耗性能。</p>
+<p>压缩与持久连接有冲突。服务器采用 <a target="_blank" rel="noopener" href="https://www.usenix.org/legacy/publications/library/proceedings/jvm01/full_papers/hovemeyer/hovemeyer_html/node7.html">即时压缩</a>，在内存数据流中完成压缩、不等待压缩完成就返回响应，可提高 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Time_to_first_byte">首字节时间</a>。连接被重用来向同一域名请求多个资源，启用压缩后无法给出 Content-Length（返回时服务器不知道压缩资源大小，同理还有 Ajax、PHP、JSP 等动态内容），客户端也无法判断资源何时传递完毕。</p>
+<p>解决方法：HTTP/1.1 中引入 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Chunked_transfer_encoding">分块传输编码</a> 用于资源结束判断，即在响应 Header 中加入 <code>Transfer-Encoding: chunked</code> ，明确表示报文采用分块编码，解码即可。</p>
+<h3 id="快速-UDP-网络连接"><a href="#快速-UDP-网络连接" class="headerlink" title="快速 UDP 网络连接"></a>快速 UDP 网络连接</h3><p>HTTP/3 使用 QUIC（Quick UDP Internet Connections）代替 TCP：以 UDP 为基础并自行提供可靠传输能力。优势是单独控制每个流，如果在一个流中发生错误，协议栈仍可独立地为其他流提供服务。</p>
+<p>其面向移动设备提供专门支持，在网络切换时的响应速度上很快（TCP 需超时、中断、重建的漫长过程）：使用连接标识符唯一标识客户端与服务器的连接（而非 IP），切换网络后只需向服务端发送包含此标识符的数据包即可重用原连接。</p>
+<blockquote>
+<p>  互联网基础设施多是面向 TCP 建造、甚至会阻止 UDP 流量，Chromium 的网络协议栈中同时启用 QUIC 和 TCP 连接，在 QUIC 连接失败时能以零延迟回退到 TCP 连接。</p>
+</blockquote>
+<h2 id="内容分发网络"><a href="#内容分发网络" class="headerlink" title="内容分发网络"></a>内容分发网络</h2><p>互联网系统的速度取决于：</p>
+<ul>
+<li><p>网站服务器接入网络运营商的链路所能提供的出口带宽。</p>
+</li>
+<li><p>用户客户端接入网络运营商的链路所能提供的入口带宽。</p>
+</li>
+<li><p>从网站到用户之间经过的不同运营商之间互联节点的带宽。</p>
+</li>
+<li><p>从网站到用户之间的物理链路传输时延（比带宽更重要）。</p>
+</li>
+</ul>
+<p>其中 1、3、4 都是内容分发网络（CDN）的优化对象。</p>
+<h3 id="路由解析"><a href="#路由解析" class="headerlink" title="路由解析"></a>路由解析</h3><p>从客户端到服务端，请求、响应解析过程：</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transparent-multilevel-diversion-system.assets/1626942984.jpg" alt="1626942984" style="zoom:80%;" /></p>
+<p>引入 CDN：</p>
+<ul>
+<li><p>架设服务器，将 IP 地址在 CDN 服务商上注册为源站，得到 CNAME。</p>
+</li>
+<li><p>购买域名，在 DNS 服务商上注册 CNAME 记录。</p>
+</li>
+<li><p>当用户来访站点、命中一条无缓存的 DNS 查询，DNS 服务商解析出 CNAME 返回给本地 DNS。</p>
+</li>
+<li><p>本地 DNS 查询 CNAME，由 CDN 服务商的权威 DNS 解析：根据均衡策略选择 CDN 缓存节点，将其 IP 代替源站 IP 返回给本地 DNS。</p>
+</li>
+<li><p>浏览器从本地 DNS 拿到 IP，即可访问 CDN（而不是源站），由 CDN 代替源站提供资源。</p>
+</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transparent-multilevel-diversion-system.assets/1626942969.jpg" alt="1626942969" style="zoom:80%;" /></p>
+<h3 id="内容分发"><a href="#内容分发" class="headerlink" title="内容分发"></a>内容分发</h3><p>在 DNS 服务器协助下，内容分发网络对服务端和客户端都是透明的。其中获取和管理源站资源有以下分发方式。</p>
+<h4 id="主动分发"><a href="#主动分发" class="headerlink" title="主动分发"></a>主动分发</h4><p>源站将内容从源站或其它资源库推送到用户侧的 CDN 缓存节点上。可基于与更新策略匹配的方式（HTTP、FTP、P2P 等）、策略（定时、人工等）、时间来推送。</p>
+<p>需要源站、CDN 服务双方提供程序 API 接口层面的配合，对用户侧单向透明。一般用于网站要预载大量资源的场景，特别常用的资源甚至可直接缓存到用户本地。</p>
+<h4 id="被动回源"><a href="#被动回源" class="headerlink" title="被动回源"></a>被动回源</h4><p>当某个资源首次被用户请求时，CDN 缓存节点从源站中获取，因此有 CDN 取资源和缓存的开销（所幸 CDN 网络条件远高于用户）。</p>
+<p>由用户访问触发全自动、双向透明的资源缓存过程。不适合应用于数据量较大的资源，适用于非自建 CDN、小型站点。</p>
+<blockquote>
+<p>  CDN 管理资源没有统一标准，是否遵循 HTTP 协议的 Header 参数也取决于 CDN 本身的实现策略（完全按照 Header 控制更新反而相当差），所以不存在通用准则。</p>
+</blockquote>
+<h3 id="CDN-应用"><a href="#CDN-应用" class="headerlink" title="CDN 应用"></a>CDN 应用</h3><ul>
+<li><p>加速静态资源。</p>
+</li>
+<li><p>安全防御：如 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-tw/阻斷服務攻擊">DDoS 攻击</a>。</p>
+</li>
+<li><p>协议升级：CDN 提供商同时对接（代售 CA 的）SSL 证书服务，对外由 CDN 开放基于 HTTPS 的访问，也由可提供与源站不同的协议（IPv6、HTTP/3 等）。</p>
+</li>
+<li><p>状态缓存：缓存源站的资源和状态，比如缓存 301/302 跳转、任意状态码。或通过 CDN 开启 <a target="_blank" rel="noopener" href="https://es.wikipedia.org/wiki/HTTP_Strict_Transport_Security">HSTS</a>、开启 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/OCSP装订">OCSP 装订</a> 加速 SSL 证书访问等（在网站状态发生改变时要及时刷新缓存）。</p>
+</li>
+<li><p>修改资源：在返回资源时修改内容。比如对源站资源自动压缩并修改 Content-Encoding，以节省用户网络带宽消耗；对源站内容自动加上缓存 Header，启用客户端缓存；修改 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Glossary/CORS">CORS </a>相关 Header，为源站资源提供跨域能力等。</p>
+</li>
+<li><p>访问控制：实现 IP 黑/白名单，根据来访 IP 提供响应结果，根据 IP 访问流量实现 QoS 控制、根据 HTTP Referer 实现防盗链等。</p>
+</li>
+<li><p>注入功能：不修改代码为源站注入各种功能，比如 Google Analytics、PACE、Hardenize 等应用。</p>
+</li>
+</ul>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>指当流量进入数据中心后，调度后方机器，对外提供统一接口的组件（不包括 DNS 智能线路、内容分发网络等组件）。对于工作在不同网络层次的负载均衡，低层次性能高（在前），高层次功能强（在后）。</p>
+<blockquote>
+<p>  作者认为常说的四层负载均衡指的是维持同一个 TCP 连接，而不是只工作在第四层。对于 OSI 网络模型而言，下三层是媒体层，上四层是主机层，当流量到达目标主机就不能 <strong>转发</strong>，而是 <strong>代理</strong>。</p>
+</blockquote>
+<h3 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h3><p>均衡器修改用户发来的以太网帧中的 MAC 目标地址，由交换机转发到集群中的真实服务器上。在响应阶段则由真实服务器返回给客户端。被称为 <strong>单臂模式</strong>。</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">                 request</span><br><span class="line">[Client] -&gt; [<span class="keyword">Load</span> Balancer] -&gt; [Real Server]</span><br><span class="line">   ↑                                |</span><br><span class="line">   <span class="type">+--------------------------------+</span></span><br><span class="line"><span class="type">                response</span></span><br></pre></td></tr></table></figure>
+<p>要求 <strong>真实服务器 IP 地址</strong> 与 <strong>数据包目标 IP 地址</strong> 一致，因此要把真实物理服务器集群所有机器的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Virtual_IP_address">虚拟 IP 地址</a>（Virtual IP Address，VIP）配置成与负载均衡器虚拟 IP 一样，数据包才能被正确处理。</p>
+<p>性能高（不经过上层协议解析、响应时没有转发开销），但无法感知上层协议信息，且要求主机在二层可达，即必须在同一子网。适合用于数据中心第一级负载均衡。</p>
+<h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><p>负载均衡器针对源 IP 和 目的 IP 有两种修改模式。</p>
+<h4 id="IP-隧道（IP-Tunnel）"><a href="#IP-隧道（IP-Tunnel）" class="headerlink" title="IP 隧道（IP Tunnel）"></a>IP 隧道（IP Tunnel）</h4><p>均衡器新创建数据包，原数据包整体作为新数据包的 Payload，在新数据包 Headers 中写入真实服务器 IP 作为目的地址再发出，经由三层交换机转发到达真实服务器再拆包。</p>
+<p>打包拆包引入了开销，性能比直接路由稍低。但由于没有修改包中的信息，转发模式仍然是单臂模式（三角传输）；而且因为工作在网络层、可以跨越 VLAN。</p>
+<p>要求真实服务器额外支持 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Encapsulation_(networking">IP 隧道协议</a>)（Linux 基本上都支持），且需要人工配置真实服务器与均衡器为相同的虚拟 IP 地址（以虚拟 IP 为源 IP，否则客户端无法解析），无法透明。</p>
+<h4 id="网络地址转换（NAT）"><a href="#网络地址转换（NAT）" class="headerlink" title="网络地址转换（NAT）"></a>网络地址转换（NAT）</h4><p>当有多个服务共用一台物理服务器时，需要考虑修改数据包。</p>
+<p>均衡器把数据包 Headers 中目标 IP 改为真实服务器 IP，修改后数据包被三层交换机转发送到真实服务器上；响应时真实服务器的应答包发送到均衡器上，由均衡器把源 IP 修改为自身 IP 再转发给客户端。</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">                 request</span><br><span class="line">[Client] -&gt; [<span class="keyword">Load</span> Balancer] -&gt; [Real Server]</span><br><span class="line">    ↑           |      <span class="type">↑           |</span></span><br><span class="line"><span class="type">    +-----------+      +-----------+</span></span><br><span class="line"><span class="type">                 response</span></span><br></pre></td></tr></table></figure>
+<p>运维简单，真实服务器的网关地址设置为均衡器地址即可，然而流量压力大时性能损失较大。</p>
+<p>SNAT（Source NAT）：均衡器在转发时修改目标 IP 和源 IP，真实服务器无须配置网关就能够让应答流量经过三层路由回到均衡器上，但也因此无法获取客户端 IP。</p>
+<h3 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h3><p>前面的负载均衡模式都属于 <strong>转发</strong>，即将承载 TCP 报文的底层数据格式转发到真实服务器上，客户端到真实服务器维持同一条 TCP 通道；但四层及以上只能通过 <strong>代理</strong> 实现，即建立新的 TCP 通道。</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Redirect:</span><br><span class="line">                   TCP</span><br><span class="line">[Client] &lt;-------- [LB] --------&gt; [Server]</span><br><span class="line"></span><br><span class="line">Proxy:</span><br><span class="line">            TCP            TCP</span><br><span class="line">[Client] &lt;-------&gt; [LB] &lt;-------&gt; [Server]</span><br></pre></td></tr></table></figure>
+<p>七层负载均衡器属于反向代理：服务端设置、代表服务端与客户端通信的代理服务（正向代理则是相反，对服务端透明）。</p>
+<p>需要多一轮 TCP 三次握手，与 NAT 转发一样有带宽问题，而且解析层次更高（耗费 CPU），性能远比不上以上几种。而当站点性能瓶颈不在网络，使用七层均衡器可实现更多高级功能：</p>
+<ul>
+<li><p>类似 CDN：静态资源缓存、协议升级、安全防护、访问控制等。</p>
+</li>
+<li><p>路由：根据 Session 路由实现亲和性集群，根据 URL 路由实现专职化服务（网关），根据用户身份路由实现对特殊服务等。</p>
+</li>
+<li><p>安全：实现多种策略过滤特定报文。比如阻止 SQL 注入、抵御 SYN Flood 攻击。</p>
+</li>
+<li><p>链路治理：感知应用层面的故障，实现服务降级、熔断、异常注入等。</p>
+</li>
+</ul>
+<h3 id="均衡策略与实现"><a href="#均衡策略与实现" class="headerlink" title="均衡策略与实现"></a>均衡策略与实现</h3><p>均衡策略：</p>
+<ul>
+<li><p><strong>轮循</strong>（Round Robin）：轮流分配请求，适合于所有服务器配置相同服务请求均衡的情况。</p>
+</li>
+<li><p><strong>权重轮循</strong>（Weighted Round Robin）：为服务器分配不同的权值，使其能够接受相应权值数的服务请求。能确保高性能的服务器得到更多的使用率，避免低性能的服务器负载过重。</p>
+</li>
+<li><p><strong>随机</strong>（Random）：随机分配请求，在数据足够大的场景下能达到相对均衡的分布。</p>
+</li>
+<li><p><strong>权重随机</strong>（Weighted Random）：带权值的随机分配。</p>
+</li>
+<li><p><strong>一致性哈希</strong>（Consistency Hash）：根据请求中某些数据（MAC、IP 地址，上层协议中的参数信息）作为特征值来计算响应节点，一般保证同一特征值每次都落在相同服务器上。</p>
+</li>
+<li><p><strong>响应速度</strong>（Response Time）：均衡器对内部服务器发出探测请求，选出响应最快的一台处理客户端请求，能较好的反映服务器状态（不是客户端与服务器间的响应时间）。</p>
+</li>
+<li><p><strong>最少连接数</strong>（Least Connection）：为内部每台服务器记录其当前连接数量，将客户端请求分配给连接数最少的服务器，使均衡更符合实际情况，适合长时处理的请求服务（比如 FTP）。</p>
+</li>
+<li><p>…</p>
+</li>
+</ul>
+<p>实现：</p>
+<ul>
+<li><p>软件：有直接建设在系统内核的 LVS（Linux Virtual Server），无须在内核空间和应用空间中来回复制，性能更好；有应用程序 Nginx、HAProxy、KeepAlived 等，使用更方便，功能不受限于内核版本。</p>
+</li>
+<li><p>硬件：使用 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Application-specific_integrated_circuit">应用专用集成电路</a>（Application Specific Integrated Circuit，ASIC）实现，由专门的芯片处理，可避免系统层面的损耗，比如 F5 和 A10 的产品。</p>
+</li>
+</ul>
+<h2 id="服务端缓存"><a href="#服务端缓存" class="headerlink" title="服务端缓存"></a>服务端缓存</h2><p>以空间换时间，缓解压力：</p>
+<ul>
+<li><p>CPU：如存储方法运行结果、提前准备实时计算的内容、复用公用数据，可以节省 CPU 算力，顺带提升响应性能。</p>
+</li>
+<li><p>I/O：把网络、磁盘访问变为内存访问，把对单点部件（如数据库）的读写访问变为对可扩缩部件（如缓存中间件）的访问，顺带提升响应性能。</p>
+</li>
+</ul>
+<p>根据奥卡姆剃刀原则，解决问题更好的方案是升级硬件，优于引入缓存后带来的风险：</p>
+<ul>
+<li><p>开发：提高系统复杂度（需考虑失效、更新、一致性等问题）。</p>
+</li>
+<li><p>运维：掩盖一些缺陷，让问题在更久的时间以后、在距离发生现场更远的位置上出现。</p>
+</li>
+<li><p>安全：可能导致保密数据泄漏，也是容易受到攻击的薄弱点。</p>
+</li>
+</ul>
+<h3 id="缓存属性"><a href="#缓存属性" class="headerlink" title="缓存属性"></a>缓存属性</h3><p>需要考虑的维度：</p>
+<ul>
+<li><p><strong>吞吐量</strong>：即 OPS 值（每秒操作数，ops/s），反映缓存并发读写效率。</p>
+</li>
+<li><p><strong>命中率</strong>：即成功从缓存中返回结果次数与总请求次数的比值，反映了引入缓存的价值高低。</p>
+</li>
+<li><p><strong>扩展功能</strong>：除了基本读写功能外还提供哪些额外管理功能（最大容量、失效时间、失效事件、命中率统计等）。</p>
+</li>
+<li><p><strong>分布式支持</strong>：进程内缓存只为节点本身提供服务，无网络访问操作，速度快，但不能在各个节点共享。分布式缓存则相反。</p>
+</li>
+</ul>
+<h4 id="吞吐量"><a href="#吞吐量" class="headerlink" title="吞吐量"></a>吞吐量</h4><p>并发读写的场景中，吞吐量受多方面因素的共同影响：</p>
+<ul>
+<li><p>设计尽可能避免数据竞争的数据结构。</p>
+</li>
+<li><p>存在竞争风险时处理同步的策略（悲观，乐观）。</p>
+</li>
+<li><p>如何避免 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/False_sharing">伪共享现象</a>（False Sharing）。</p>
+</li>
+<li><p>…</p>
+</li>
+</ul>
+<p>读写缓存总是伴随进行（比如读取同时更新数据的最近访问时间和访问计数器状态，以实现内存淘汰策略；读取同时判断数据过期时间，以实现失效重加载等功能）。</p>
+<ul>
+<li><p><strong>同步处理</strong>：访问数据时一并完成缓存淘汰、统计、失效等状态变更操作，通过分段加锁等优化手段来减少竞争。</p>
+</li>
+<li><p><strong>异步处理</strong>：将数据读写数据视作操作日志提交过程。日志本身也有竞争，但异步提交日志将在 Map 内的锁转移到日志的追加写操作上，优化余地比在 Map 中要大得多。</p>
+</li>
+</ul>
+<blockquote>
+<h4 id="环形缓冲"><a href="#环形缓冲" class="headerlink" title="环形缓冲"></a>环形缓冲</h4><p>  有读写两个指针的数据复用结构，读写可以一起进行：读指针之前的位置均可重复使用，理想情况下只要读指针不落后于写指针一整圈，缓冲区就可以持续工作，能容纳无限多条记录。否则必须阻塞写入操作，等待读取清空缓冲区。</p>
+<p>  <img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transparent-multilevel-diversion-system.assets/Circular_Buffer_Animation.c3d3d834.gif" alt=""></p>
+</blockquote>
+<p>参考 Caffeine 的设计：</p>
+<ul>
+<li><p>设有 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Circular_buffer">环形缓冲区</a>（Ring Buffer）记录数据读取产生的状态变动日志。为进一步减少竞争，给每条线程（对线程取 Hash，哈希值相同的使用同一个缓冲区）都设置专用的环形缓冲区。</p>
+</li>
+<li><p>读取：数据在内部的 Map 中直接返回，数据状态信息变更存入环形缓冲中，由后台线程异步处理。如果异步处理速度跟不上状态变更速度导致缓冲区满，此后接收的状态变更信息直接丢弃，直至缓冲区重新富余。通过环形缓冲和容忍有损失的状态变更，大幅降低由于数据读取而导致的垃圾收集和锁竞争。</p>
+</li>
+<li><p>写入：使用传统有界队列来存放状态变更信息，写入带来的状态变是不允许丢失的，考虑到许多状态的默认值必须通过写入操作完成初始化，写入会有一定的性能损失。</p>
+</li>
+</ul>
+<h4 id="命中率与淘汰策略"><a href="#命中率与淘汰策略" class="headerlink" title="命中率与淘汰策略"></a>命中率与淘汰策略</h4><p>基础淘汰策略：</p>
+<ul>
+<li><p><strong>FIFO</strong>（First In First Out）：优先淘汰最早进入被缓存的数据。优点是实现简单，但一般越是频繁被用到的数据，往往会越早被存入缓存之中，FIFO 很可能会大幅降低缓存的命中率。</p>
+</li>
+<li><p><strong>LRU</strong>（Least Recent Used）：优先淘汰最久未被使用访问过的数据。通常采用哈希表和双向链表实现，以哈希表提供访问接口，保证常量时间复杂度的读取性能；以双向链表的元素顺序来表示数据的时间顺序，缓存命中时把返回对象调整到表头，缓存淘汰时从表尾清理数据。适用于处理短时间内频繁访问的热点对象，存在问题：当热点数据在系统中被频繁访问，但最近一段时间未被访问，依然要被淘汰。</p>
+</li>
+<li><p><strong>LFU</strong>（Least Frequently Used）：优先淘汰最不经常使用的数据。每个数据添有一个计数器，每次访问加 1，淘汰时清理数值最小的数据。可解决 LRU 热点数据间隔一段时间不访问就被淘汰的问题，但引入新的问题：</p>
+<ul>
+<li><p>为缓存数据维护计数器，每次变更修改状态带来的开销会影响吞吐量。</p>
+</li>
+<li><p>不便于处理随时间变化的热度变化，如某个曾经频繁访问的数据不再需要，则很难被自动清理。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>高级淘汰策略：</p>
+<ul>
+<li><p><strong>TinyLFU</strong>（Tiny Least Frequently Used）：LFU 的改进版本。</p>
+<ul>
+<li><p>缓解 LFU 每次访问都要修改计数器所带来的性能负担。采用 Sketch 结构对访问数据进行分析（用少量样本数据估计全体数据特征）。借助 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Count–min_sketch">Count–Min Sketch</a> 算法（ <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Bloom_filter">布隆过滤器 </a>的一种变种结构），以小得多的记录频率和空间来找出缓存中的低价值数据。</p>
+</li>
+<li><p>解决 LFU 不便于处理随时间变化的热度变化的问题。采用了基于“滑动时间窗”的热度衰减算法，每隔一段时间便会把计数器的数值减半以便清理旧热点数据。</p>
+</li>
+<li><p>无法应对稀疏突发访问（一些绝对频率较小，但突发访问频率很高的数据，比如运维操作）。</p>
+</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1512.00727.pdf"><strong>W-TinyLFU</strong></a>（Windows-TinyLFU）：TinyLFU 的改进版本，整体上是 LFU，局部上是 LRU。</p>
+<ul>
+<li><p>新记录暂时放入 Window Cache（前端 LRU 缓存）中累积热度。</p>
+</li>
+<li><p>如果通过 TinyLFU 的过滤器，再进入 Main Cache（LFU 主缓存）存储。</p>
+</li>
+<li><p>Main Cache 根据数据访问频繁程度分为不同的段（只分两段），但单独某一段局部来看是基于 LRU 实现（称为 Segmented LRU）。</p>
+</li>
+<li><p>当前一段缓存满，则将低价值数据淘汰到后一段中存储，最后一段满则数据被彻底清理。</p>
+</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Adaptive_replacement_cache">ARC</a>（Adaptive Replacement Cache）</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/LIRS_caching_algorithm">LIRS</a>（Low Inter-Reference Recency Set）</p>
+</li>
+</ul>
+<h4 id="扩展功能"><a href="#扩展功能" class="headerlink" title="扩展功能"></a>扩展功能</h4><ul>
+<li><p><strong>加载器</strong>：主动加载指定 Key 值的数据，也是自动刷新的基础前提。</p>
+</li>
+<li><p><strong>淘汰策略</strong>：支持用户选择不同的淘汰策略。</p>
+</li>
+<li><p><strong>失效策略</strong>：要求缓存在一定时间后自动失效或者自动刷新。</p>
+</li>
+<li><p><strong>事件通知</strong>：提供事件监听器在数据状态变动（失效刷新移除）时进行额外操作。还可监视缓存数据（Watch 功能）。</p>
+</li>
+<li><p><strong>并发级别</strong>：对于通过分段加锁来实现的缓存提供并发级别的设置。</p>
+</li>
+<li><p><strong>容量控制</strong>：缓存通常都支持指定初始容量（减少扩容频率）和最大容量（自动清理）。</p>
+</li>
+<li><p><strong>引用方式</strong>：将数据设置为软引用或者弱引用，便于垃圾回收。</p>
+</li>
+<li><p><strong>统计信息</strong>：提供诸如缓存命中率、平均加载时间、自动回收计数等统计。</p>
+</li>
+<li><p><strong>持久化</strong>：将缓存内容存储到数据库或者磁盘中（对于分布式缓存意义较大）。</p>
+</li>
+</ul>
+<h4 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h4><p>由于网络传输、数据复制、序列化等导致延迟要比内存访问高。</p>
+<ul>
+<li><p><strong>复制式缓存</strong>：数据在集群每个节点都有副本，读取数据时直接从当前节点的进程中返回，因此性能高；数据变化时遵循复制协议将变更同步到每个节点，性能随着节点增加而下降（比如 JBossCache）；可允许用户配置复制的副本数量，缓存总容量更大，当访问数据不在本地缓存中，则通过感知网络拓扑结构，在目标节点中寻找数据（比如 Infinispan）。</p>
+</li>
+<li><p><strong>集中式缓存</strong>：</p>
+<ul>
+<li><p>读写通过网络访问，不会随着节点数量增加而产生额外负担，但读写性能远不如进程内缓存。</p>
+</li>
+<li><p>使用缓存的应用分处在独立的进程空间中，能为异构语言提供服务；但只能靠序列化支撑复杂类型，有序列化成本，且容易导致传输成本显著增加（因此更提倡缓存原始数据类型）。</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>  缓存有集群部署的需求，就要考虑是 AP 系统还是 CP 系统。比如 Redis 是 AP 系统，高性能高可用但不保证强一致性（另外还支持多种数据结构，因此很常用）。</p>
+</blockquote>
+<p>它与进程内缓存搭配构成透明多级缓存（Transparent Multilevel Cache，TMC）：前者作为二级缓存，后者作为一级缓存。</p>
+<ul>
+<li><p>如在一级缓存中查询到结果就直接返回，否则到二级缓存中查询，再将二级缓存结果回填到一级缓存。如果二级缓存也查不到，就查询数据源，将结果回填到一、二级缓存中。</p>
+</li>
+<li><p>代码侵入性大，由开发者承担多次查询、多次回填工作，不便于管理，如超时、刷新等策略都要设置多遍，数据更新也容易出现数据不一致。</p>
+</li>
+<li><p><strong>变更以分布式缓存数据为准，访问以进程内缓存数据优先</strong>。当数据发生变动时，发送推送通知（比如 Redis PUB/SUB，或 ZooKeeper、Etcd）让各节点一级缓存相应数据失效。当访问缓存时提供统一封装好的一、二级缓存联合查询接口：只查询一次，接口内部自动实现优先分级查询逻辑。</p>
+</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Fenix_transparent-multilevel-diversion-system.assets/multilevel-cache.png" alt="multilevel-cache"></p>
+<h3 id="缓存风险"><a href="#缓存风险" class="headerlink" title="缓存风险"></a>缓存风险</h3><h4 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h4><p>数据在数据库和缓存中都不存在，请求每次都不会命中缓存、直接触及数据源。</p>
+<ul>
+<li><p>一定时间内对返回为空（正常返回但结果为空，而不是抛出异常）的 Key 值进行缓存，使缓存最多被穿透一次。后续业务在数据库插入该 Key 值的新记录时，应主动清理缓存 Key 值，也可设置较短的超时时间自动清理。</p>
+</li>
+<li><p>缓存前设置布隆过滤器避免恶意攻击，可以最小代价判断元素是否存在于集合中，不存在则不经缓存直接返回。</p>
+</li>
+</ul>
+<h4 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h4><p>缓存中某些热点数据忽然失效（比如超时），此时有多个针对该数据的请求同时过来，直接到达数据源。</p>
+<ul>
+<li><p>以请求数据的 Key 值为锁，使得只有第一个请求可流入数据库，其他请求线程阻塞或重试。进程内缓存可使用普通互斥锁，分布式缓存则使用分布式锁。</p>
+</li>
+<li><p>热点数据由代码手动管理，直接由开发者实现有计划的更新、失效，避免由缓存策略自动管理。</p>
+</li>
+</ul>
+<h4 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h4><p>短时间内大批数据一并失效，大批请求直接到达数据源。</p>
+<ul>
+<li><p>提升缓存系统可用性，建设分布式缓存的集群。</p>
+</li>
+<li><p>启用透明多级缓存，各个服务节点一级缓存设置不同的加载时间，分散过期时间。可改为时间段内的随机值（比如原一小时过期，对不同数据随机设置 55 ~ 65 分钟）。</p>
+</li>
+<li><p>缓存数据快速恢复：比如 Redis 持久化。</p>
+</li>
+</ul>
+<h4 id="缓存污染"><a href="#缓存污染" class="headerlink" title="缓存污染"></a>缓存污染</h4><p>更新操作不规范可能导致缓存数据与数据源数据不一致。可遵循模式：Cache Aside、Read/Write Through、Write Behind Caching 等。其中最简单、成本最低又相对可靠的 Cache Aside 模式：</p>
+<ul>
+<li><p>读数据：先读缓存，缓存没有再读数据源，将数据放入缓存后再响应请求。</p>
+</li>
+<li><p>写数据：先写数据源，然后使缓存失效。</p>
+</li>
+</ul>
+<blockquote>
+<p>  如果先使缓存失效后写数据源，就会有缓存已删除但数据源还未修改完成的情况。</p>
+<p>  此时新的查询请求到来，缓存未能命中就会直接流到数据源中。请求读到的依然是旧数据，随后又回填到缓存中。</p>
+<p>  当数据源修改完成后，结果就成了在数据源中是新数据的，缓存中是旧数据的情况。</p>
+<p>  如果写时更新缓存，更新过程中数据源又被其他请求再次修改，缓存又要面临处理多次赋值的时序问题。</p>
+</blockquote>
+<p>不能绝对地保证一致性：如果数据从未被缓存，请求会直接流到数据源中，如果数据源的写操作发生在查询请求之后、结果回填到缓存之前，也会导致缓存数据与数据库数据不一致（概率很低）。</p>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 0
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://yipwinghong.github.io",
+        root: siteMetaRoot,
+        author: "Kyle Ip"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+        <!-- mermaid -->
+        
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

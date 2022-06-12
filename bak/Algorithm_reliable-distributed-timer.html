@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Kyle Ip">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Kyle Ip">
+    
+        <meta name="keywords" content="Kyle's Notebook,Kyle Ip">
+    
+    <meta name="description" content="">
+    <meta name="description" content="原文链接：https:&#x2F;&#x2F;0x709394.me&#x2F;How-To%20Design%20A%20Reliable%20Distributed%20Timer">
+<meta property="og:type" content="website">
+<meta property="og:title" content="可靠的分布式计时器（译）">
+<meta property="og:url" content="https://yipwinghong.github.io/bak/Algorithm_reliable-distributed-timer.html">
+<meta property="og:site_name" content="Kyle&#39;s Notebook">
+<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;0x709394.me&#x2F;How-To%20Design%20A%20Reliable%20Distributed%20Timer">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103302.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103527.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103357.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195209.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195227.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806105745.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806114120.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806142855.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806152334.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806161123.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806203653.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806202724.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195302.png">
+<meta property="og:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806202140.png">
+<meta property="article:published_time" content="2021-08-10T13:10:14.000Z">
+<meta property="article:modified_time" content="2021-12-25T08:03:44.254Z">
+<meta property="article:author" content="Kyle Ip">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103302.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>可靠的分布式计时器（译） · Kyle&#39;s Notebook</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Kyle's Notebook</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+">
+    
+    <!-- 主页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p>  原文链接：<a target="_blank" rel="noopener" href="https://0x709394.me/How-To%20Design%20A%20Reliable%20Distributed%20Timer">https://0x709394.me/How-To%20Design%20A%20Reliable%20Distributed%20Timer</a></p>
+<p>  在最近的几个月，作者一直在维护一个遗留的、用于处理一些重要的支付业务（10 亿个/天，峰值 2 万个/秒）的分布式计时器。尽管这是一段古老且充满黑魔法的代码，但也能看出设计者深厚的洞察力、设计之巧妙，因此作者把设计思路总结为下文。</p>
+<p>  不包含实际代码，也许只有数值和图解，毕竟一图胜千言。</p>
+</blockquote>
+<h1 id="可靠的分布式计时器"><a href="#可靠的分布式计时器" class="headerlink" title="可靠的分布式计时器"></a>可靠的分布式计时器</h1><h2 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h2><p>实现计时器的算法有红黑树、最小堆和时间轮等，其中最有效、最常用的算法是时间轮，因此备受关注。</p>
+<p>基于时间轮的计时器建模，分为两个内部操作：</p>
+<ul>
+<li><p><strong>单位计数</strong>：类似时钟的每个“滴答”。 如果设置计时器的粒度是 T 个时间单位（比如 1s），则每 T 个时间单位就会发生一次单位计数。这会检查是否存在未完成、已过期的计时器，是则把它删除并调用过期处理。</p>
+</li>
+<li><p><strong>到期处理</strong>：调用用户提供的回调函数（或其他用户请求操作，取决于模型设计）。 </p>
+</li>
+</ul>
+<h3 id="简单时间轮"><a href="#简单时间轮" class="headerlink" title="简单时间轮"></a>简单时间轮</h3><p>即维护一个大的定时轮，其中有 8 个槽位，每个槽位挂载即将到期的任务。假设每个槽位表示 1s，则当前槽位就是 slot1，如果要添加一个需要 2s 后触发的任务，则这个任务就会被插入到 slot3 中。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103302.png" alt="img"></p>
+<p>单位计数的时间复杂度为 O(1)。但由于只有 8 个槽位，无法添加一个 20s 后启动的任务。如果有大周期的定时任务，则必须维护有大量槽位的时间轮，这需要指数级的内存。</p>
+<h3 id="哈希时间轮"><a href="#哈希时间轮" class="headerlink" title="哈希时间轮"></a>哈希时间轮</h3><p>在以上设计中，如果计时器周期较大，则会消耗大量资源。经过改进后，可以使用散列代替每个时间单位使用一个槽位的做法。构造一个固定槽位数的环形缓冲区（比如 8 个）。 如果当前槽位为 0，要存储 3s 后的任务，可以插入 slot3；如果想要存储 9s 后的任务，则可以插入 slot1（9 % 8 = 1）。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103527.png" alt="img"></p>
+<p>单位计数的时间复杂度为 O(1) - O(n)，这是一种以时间换空间的权衡策略。</p>
+<h3 id="分层时间轮"><a href="#分层时间轮" class="headerlink" title="分层时间轮"></a>分层时间轮</h3><p>以上两种做法具有时间或空间效率上的缺点。Varghese 和 Lauck 在 1987 年曾发表过一篇论文，介绍了 <a target="_blank" rel="noopener" href="http://www.cs.columbia.edu/~nahum/w6998/papers/sosp87-timing-wheels.pdf">分层计时轮</a>（Hierarchical Timing Wheels），为了更好地理解它，可以参考旧水表：第一级轮（秒轮）旋转一圈，触发第二级（分轮）打一个槽，第三级（时轮）同理。 因此要表示一天（60*60*24s）则需要 60+60+24 个槽位；要表示一个月，则只需要一个有 30 个槽位的四级轮（月轮）。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806103357.png" alt="img"></p>
+<p>单位计数的时间复杂度为 O(1) - O(n)。</p>
+<h2 id="单位计数"><a href="#单位计数" class="headerlink" title="单位计数"></a>单位计数</h2><p>介绍完时间轮算法，回到设计可靠的分布式计时器的话题，其中决定如何存储计时器任务至关重要。需要权衡实现复杂度和时间、空间，因此选择散列时间轮算法。</p>
+<h3 id="插入任务"><a href="#插入任务" class="headerlink" title="插入任务"></a>插入任务</h3><p>使用 TableKV 实现散列时间轮算法：假设有 10m 个桶，当前时间为 2021:08:05 11:17:33 +08=（UNIX 时间戳：1628176653）。有一个任务将在 10s 后触发（<code>`start_time = 1628176653 + 10</code>，或 <code>start_time = 1628176653 + 10 + 100000000</code> 即 100000010s 后），这些任务都将存储到桶 <code>start_time % 1006060030</code> 中。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195209.png" alt="img"></p>
+<h3 id="取出任务"><a href="#取出任务" class="headerlink" title="取出任务"></a>取出任务</h3><p>随着时间到了 2021:08:05 11:17:43 +08（UNIX 时间戳：1628176663），需要通过计算桶号来从槽位中取出任务：<code>current_timestamp(1628176663) % 100000000 = 2817663</code> 定位桶号，在桶 28176663 中找到满足 <code>start_time &lt;= current_timestamp</code> 的任务，即为所有预期的到期任务。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195227.png" alt="img"></p>
+<h2 id="全局时钟与锁"><a href="#全局时钟与锁" class="headerlink" title="全局时钟与锁"></a>全局时钟与锁</h2><p>当在到达当前时间时获取所有到期任务，如果服务在分布式系统上运行，通常会有多个主机（物理机或 docker），在其机器上有多个 <code>current_time</code>。不能保证多台主机的所有时钟都由同一个网络时间服务器同步，则所有时钟可能会略有不同。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806105745.png" alt="img"></p>
+<p>为了得到正确的时间，需要维护一个单调的全局时钟（也有其它方法处理时间和顺序）。 由于只关心 Unix 时间戳，可以维护一个由 Unix 时间戳表示的全局系统时钟。所有机器每秒请求全局时钟以获取当前时间，再获取到期得任务。</p>
+<p>但又有新的问题：如果所有机器都可以获取到期任务，将会导致这些任务被处理多次。因此还需要一个互斥锁来保证只有一台机器可以获取到期任务。可以使用乐观锁策略实现全局时钟和互斥锁。</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806114120.png" alt="img"></p>
+<p>步骤如下：</p>
+<ul>
+<li><p>所有机器获取带版本的全局时间戳（tA）。</p>
+</li>
+<li><p>所有机器都增加时间戳（tB）和更新版本（乐观锁，只有一台机器会成功）。</p>
+</li>
+<li><p>获得互斥锁的机器被授权去取 tA 的过期任务，其他没有获得互斥锁的机器被挂起等待 1s。</p>
+</li>
+<li><p>基于 tB 循环回到步骤 1。 </p>
+</li>
+</ul>
+<p>可以将不断获取锁和获取到期数据的功能封装在一个 scheduler  组件中。 </p>
+<h2 id="过期处理"><a href="#过期处理" class="headerlink" title="过期处理"></a>过期处理</h2><p>用于调用用户提供的回调函数或其他用户请求的操作。在分布式计算中，通过 RPC 执行一个过程调用是很常见的，比如在计时器任务到期时发起一个 RPC 请求，从计时器服务到回调服务。因此在触发计时器任务时，调用者需要把参数和服务信息提供给计时器。</p>
+<p>可以将服务元信息和参数数据打包并序列化为二进制数据，发送给计时器。 当从插槽中拉出数据时，定时器可以重构 Request/Response/Client 类型并设置为自定义数据，然后直接执行即可。</p>
+<p> <img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806142855.png" alt="img"></p>
+<p>如果需要触发的过期任务很多、要尽可能多地处理，可以创建线程池、进程池、协程池来并发执行 RPC。 </p>
+<h2 id="服务解耦"><a href="#服务解耦" class="headerlink" title="服务解耦"></a>服务解耦</h2><p>如果回调函数包含大量操作（100ms+），即使已经有线程/进程/协程池来处理定时器任务也难免会宕，导致吞吐量下降。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806152334.png" alt="img"></p>
+<p>使用消息队列可显着简化解耦服务编码，同时提高性能、可靠性和可扩展性。</p>
+<p>通常将消息队列与发布/订阅的消息传递设计模式结合，计时器可将任务数据发布为消息，并订阅相同主题的消息，使用消息队列作为缓冲区。在订阅者中 RPC 客户端执行回调请求。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806161123.png" alt="img"></p>
+<p>此时计时器的状态机如下：</p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806203653.png" alt="img"></p>
+<p>有了消息队列，就能实现缓冲、重试或批量工作，并为工作负载削峰。</p>
+<h2 id="高可用问题"><a href="#高可用问题" class="headerlink" title="高可用问题"></a>高可用问题</h2><h3 id="错过到期任务"><a href="#错过到期任务" class="headerlink" title="错过到期任务"></a>错过到期任务</h3><p>调度进程被关闭、崩溃或其他未知问题可能会导致任务错过到期。定位遗漏的任务并重新执行是一项重要的工作。由于使用全局 <code>current_timestamp</code> 获取到期任务，可以用另一个调度程序来使用 <code>delay10mintimestamp</code> 来获取错过的到期任务。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806202724.png" alt="img"></p>
+<p>为了在任务集合中找到错过的到期任务，需要设置一个范围（延迟 10min - 当前时间），并在批量地 cross 桶查找。找到错过的任务后，计时器再将它们作为消息发布到消息队列。一些开源分布式定时器项目（如 Quartz）提供了处理丢失任务的指令：Misfire。</p>
+<p>如果 NoSQL 组件不支持 find-cross-buckets 功能，还可以逐个查找范围内的所有桶。</p>
+<h3 id="回调执行错误"><a href="#回调执行错误" class="headerlink" title="回调执行错误"></a>回调执行错误</h3><p>由于分布式系统是无共享系统，其通过消息在网络中进行通信（异步或同步），由于网络不可靠，调用用户提供的回调时如果网络暂时中断或回调服务暂时关闭，RPC 请求可能会失败。</p>
+<p>可利用重试处理暂时性错误（暂时出现、可能很快消失）。通过允许系统重复发送请求直到得到明确的响应来帮助实现弹性。利用消息队列可获得免费的重试能力，同时计时器也可以处理用户请求重试。 </p>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806195302.png" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>综上所述，计时器的整体架构如下：</p>
+<ul>
+<li><p>添加附带指定元信息和任务信息的计时器任务。</p>
+</li>
+<li><p>通过散列时间轮算法将任务插入到桶中（状态设置为 pending）。</p>
+</li>
+<li><p>时间同步调度器尝试获取锁并获取全局当前时间。</p>
+</li>
+<li><p>取锁调度器获取预期的到期任务数据。</p>
+</li>
+<li><p>使用线程池将任务数据作为消息发布到消息队列，将任务状态设置为 delivered。</p>
+</li>
+<li><p>消息订阅者从消息队列拉取消息。</p>
+</li>
+<li><p>向回调服务发送 RPC 请求，并设置任务状态为 success 或 fail。</p>
+</li>
+<li><p>如有必要则执行重试。</p>
+</li>
+</ul>
+<p><img src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/Algorithm_reliable-distributed-timer.assets/20210806202140.png" alt="img"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="http://www.cs.columbia.edu/~nahum/w6998/papers/ton97-timing-wheels.pdf">Hashed And Hierarchical Timing Wheels: Efficient Data Structures For Implementing A Timer Facility</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.acolyer.org/2015/11/23/hashed-and-hierarchical-timing-wheels/">Hashed and Hierarchical Timing Wheels: Data Structures for the Efficient Implementation of a Timer Facility</a></p>
+</li>
+</ul>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 0
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://yipwinghong.github.io",
+        root: siteMetaRoot,
+        author: "Kyle Ip"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+        <!-- mermaid -->
+        
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

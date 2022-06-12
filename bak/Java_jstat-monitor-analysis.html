@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Kyle Ip">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Kyle Ip">
+    
+        <meta name="keywords" content="Kyle's Notebook,Kyle Ip">
+    
+    <meta name="description" content="">
+    <meta name="description" content="在开发及测试阶段需要对程序进行部分预估性的优化，这时候可以使用 JDK 提供的一些脚本和工具，本文主要讲述 jstat 命令的基本用法和使用场景。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="JVM jstat 监控分析">
+<meta property="og:url" content="https://yipwinghong.github.io/bak/Java_jstat-monitor-analysis.html">
+<meta property="og:site_name" content="Kyle&#39;s Notebook">
+<meta property="og:description" content="在开发及测试阶段需要对程序进行部分预估性的优化，这时候可以使用 JDK 提供的一些脚本和工具，本文主要讲述 jstat 命令的基本用法和使用场景。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-02-03T06:41:50.000Z">
+<meta property="article:modified_time" content="2021-12-09T17:19:01.426Z">
+<meta property="article:author" content="Kyle Ip">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="技术">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>JVM jstat 监控分析 · Kyle&#39;s Notebook</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Kyle's Notebook</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+">
+    
+    <!-- 主页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="JVM-jstat-监控分析"><a href="#JVM-jstat-监控分析" class="headerlink" title="JVM jstat 监控分析"></a>JVM jstat 监控分析</h1><h2 id="jstat-基本用法"><a href="#jstat-基本用法" class="headerlink" title="jstat 基本用法"></a>jstat 基本用法</h2><p>jstat 是 JDK 提供的 JVM 统计信息监控工具，可用于查看各 JVM 内存占用与垃圾收集的统计信息。</p>
+<p>如每 250ms 查询一次 2764 进程的统计信息、共 20 次，可执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gc 2764 250 20</span><br></pre></td></tr></table></figure>
+<p>运行输出：<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">S0C</span>    S<span class="number">1</span>C    S<span class="number">0</span>U    S<span class="number">1</span>U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT</span><br><span class="line"><span class="attribute">0</span>.<span class="number">0</span>   <span class="number">4096</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">4096</span>.<span class="number">0</span> <span class="number">656384</span>.<span class="number">0</span> <span class="number">126976</span>.<span class="number">0</span>  <span class="number">388096</span>.<span class="number">0</span>   <span class="number">160782</span>.<span class="number">0</span>  <span class="number">41856</span>.<span class="number">0</span> <span class="number">37421</span>.<span class="number">6</span> <span class="number">5504</span>.<span class="number">0</span> <span class="number">4997</span>.<span class="number">2</span>    <span class="number">264</span>    <span class="number">2</span>.<span class="number">640</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">2</span>.<span class="number">640</span> <span class="number">0</span>.<span class="number">0</span>   <span class="number">4096</span>.<span class="number">0</span>  </span><br><span class="line"><span class="attribute">0</span>.<span class="number">0</span>   <span class="number">4096</span>.<span class="number">0</span> <span class="number">656384</span>.<span class="number">0</span> <span class="number">126976</span>.<span class="number">0</span>  <span class="number">388096</span>.<span class="number">0</span>   <span class="number">160782</span>.<span class="number">0</span>  <span class="number">41856</span>.<span class="number">0</span> <span class="number">37421</span>.<span class="number">6</span> <span class="number">5504</span>.<span class="number">0</span> <span class="number">4997</span>.<span class="number">2</span>    <span class="number">264</span>    <span class="number">2</span>.<span class="number">640</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">2</span>.<span class="number">640</span></span><br></pre></td></tr></table></figure></p>
+<p>其中每个字段的含义：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>S0C</td>
+<td>新生代中第一个 survivor 的容量（字节）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>S1C</td>
+<td>新生代中第二个 survivor 的容量（字节）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>S0U</td>
+<td>新生代中第一个 survivor 目前已使用空间（字节）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>S1U</td>
+<td>新生代中第二个survivor 目前已使用空间（字节）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>EC</td>
+<td>新生代中 Eden 的容量（字节）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>EU</td>
+<td>新生代中 Eden 目前已使用空间（字节）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>OC</td>
+<td>Old 的容量（字节）</td>
+</tr>
+<tr>
+<td>8</td>
+<td>OU</td>
+<td>Old 目前已使用空间（字节）</td>
+</tr>
+<tr>
+<td>9</td>
+<td>PC</td>
+<td>Perm 的容量（字节）</td>
+</tr>
+<tr>
+<td>10</td>
+<td>PU</td>
+<td>Perm 目前已使用空间（字节）</td>
+</tr>
+<tr>
+<td>11</td>
+<td>YGC</td>
+<td>从应用程序启动到采样时 Young GC 次数</td>
+</tr>
+<tr>
+<td>12</td>
+<td>YGCT</td>
+<td>从应用程序启动到采样时 Young GC 所用时间（秒）</td>
+</tr>
+<tr>
+<td>13</td>
+<td>FGC</td>
+<td>从应用程序启动到采样时 Full GC 次数</td>
+</tr>
+<tr>
+<td>14</td>
+<td>FGCT</td>
+<td>从应用程序启动到采样时 Full GC 所用时间（秒）</td>
+</tr>
+<tr>
+<td>15</td>
+<td>GCT</td>
+<td>从应用程序启动到采样时 GC 用的总时间（秒）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>其他选项的用法直接在命令行输入 jstat 查看提示即可，此处不再赘述。</p>
+</blockquote>
+<h2 id="Young-GC"><a href="#Young-GC" class="headerlink" title="Young GC"></a>Young GC</h2><h3 id="JVM-参数"><a href="#JVM-参数" class="headerlink" title="JVM 参数"></a>JVM 参数</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>参数</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>-XX:NewSize=104857600<br />-XX:MaxNewSize=104857600</td>
+<td>新生代初始值和最大值：100MB</td>
+</tr>
+<tr>
+<td>2</td>
+<td>-XX:InitialHeapSize=209715200<br />-XX:MaxHeapSize=209715200</td>
+<td>堆初始值和最大值：200MB</td>
+</tr>
+<tr>
+<td>3</td>
+<td>-XX:PretenureSizeThreshold=3145728</td>
+<td>进入老年代的对象内存阈值：3MB</td>
+</tr>
+<tr>
+<td>4</td>
+<td>-XX:MaxTenuringThreshold</td>
+<td>进入老年代的对象年龄阈值：15</td>
+</tr>
+<tr>
+<td>5</td>
+<td>-XX:SurvivorRatio=8</td>
+<td>新生代 Eden 占比（Eden 80% 即 80MB，Survivor 各 10% 即 10 MB）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>-XX:+UseParNewGC</td>
+<td>使用 ParNew 收集器（新生代）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>-XX:+UseConcMarkSweepGC</td>
+<td>使用 CMS 收集器</td>
+</tr>
+<tr>
+<td>8</td>
+<td>-XX:+PrintGCDetails<br />-XX:+PrintGCTimeStamps<br />-Xloggc:gc.log</td>
+<td>输出日志</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Thread.sleep(<span class="number">30000</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            loadData();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadData</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">50</span>; i++) &#123;</span><br><span class="line">            data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">200</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        data = <span class="keyword">null</span>;</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>启动：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar -XX:NewSize=104857600 -XX:MaxNewSize=104857600 -XX:InitialHeapSize=209715200 -XX:MaxHeapSize=209715200 -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=3145728 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log Demo.jar</span><br></pre></td></tr></table></figure>
+<p>使用 jstat 查看 JVM 统计信息（可以先用 jps 找到具体进程号）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gc pid 1000 1000</span><br></pre></td></tr></table></figure>
+<p>有以下输出：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="attribute">S0C</span>    S<span class="number">1</span>C    S<span class="number">0</span>U    S<span class="number">1</span>U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT</span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>   <span class="number">6553</span>.<span class="number">7</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>   <span class="number">6553</span>.<span class="number">7</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">16354</span>.<span class="number">4</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">26355</span>.<span class="number">2</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">36356</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">46356</span>.<span class="number">8</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">56357</span>.<span class="number">6</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">66358</span>.<span class="number">4</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">76359</span>.<span class="number">1</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">1010</span>.<span class="number">6</span> <span class="number">81920</span>.<span class="number">0</span>   <span class="number">4773</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3836</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">1</span>    <span class="number">0</span>.<span class="number">001</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">001</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">1010</span>.<span class="number">6</span> <span class="number">81920</span>.<span class="number">0</span>  <span class="number">14773</span>.<span class="number">8</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3836</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">1</span>    <span class="number">0</span>.<span class="number">001</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">001</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">1010</span>.<span class="number">6</span> <span class="number">81920</span>.<span class="number">0</span>  <span class="number">24774</span>.<span class="number">5</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3836</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">1</span>    <span class="number">0</span>.<span class="number">001</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">001</span></span><br></pre></td></tr></table></figure>
+<p>留意 S1U、EU、YGC、YGCT 列：</p>
+<ul>
+<li><p>Eden 使用空间从 76359 下降到 4773 时发生了一次 Young GC，用时 0.001s，回收了 70MB 的对象；</p>
+</li>
+<li><p>再根据从 6553.7 到 76359.1 增长所需 8s，可推断出这个程序每过 8s 就需要发生一次用时 0.001s 的 YGC；</p>
+</li>
+<li><p>留意 S1U 列，之前一直是 0.0，发生一次 YGC 后变成 1010.6，表示存活的对象约 1MB，可轻松放入 10MB 的 Survivor（下次 YGC 发生后会迁到另一个 Survivor，因此完全够用）。</p>
+</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="attribute">S1U</span>       EU    YGC    YGCT    </span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>     <span class="number">6553</span>.<span class="number">7</span>   <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>     <span class="number">6553</span>.<span class="number">7</span>   <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">16354</span>.<span class="number">4</span>   <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">26355</span>.<span class="number">2</span>   <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">36356</span>.<span class="number">0</span>   <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">46356</span>.<span class="number">8</span>   <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">56357</span>.<span class="number">6</span>   <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">66358</span>.<span class="number">4</span>   <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">76359</span>.<span class="number">1</span>   <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">1010</span>.<span class="number">6</span>   <span class="number">4773</span>.<span class="number">0</span>   <span class="number">1</span>    <span class="number">0</span>.<span class="number">001</span></span><br><span class="line"><span class="attribute">1010</span>.<span class="number">6</span>  <span class="number">14773</span>.<span class="number">8</span>   <span class="number">1</span>    <span class="number">0</span>.<span class="number">001</span></span><br><span class="line"><span class="attribute">1010</span>.<span class="number">6</span>  <span class="number">24774</span>.<span class="number">5</span>   <span class="number">1</span>    <span class="number">0</span>.<span class="number">001</span></span><br></pre></td></tr></table></figure>
+<h2 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h2><h3 id="JVM-参数-1"><a href="#JVM-参数-1" class="headerlink" title="JVM 参数"></a>JVM 参数</h3><p>基本同上一节，并把大对象阈值 20MB，避免分配的对象直接存入老年代：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>参数</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>-XX:PretenureSizeThreshold=20971520</td>
+<td>进入老年代的对象内存阈值：20MB</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="测试代码-1"><a href="#测试代码-1" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Thread.sleep(<span class="number">30000</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            loadData();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadData</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">            data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] data1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] data2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] data3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        data3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>启动：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar -XX:NewSize=104857600 -XX:MaxNewSize=104857600 -XX:InitialHeapSize=209715200 -XX:MaxHeapSize=209715200 -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=20971520 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log Demo.jar</span><br></pre></td></tr></table></figure>
+<p>使用 jstat 查看 JVM 统计信息（可以先用 jps 找到具体进程号）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gc pid 1000 1000</span><br></pre></td></tr></table></figure>
+<p>有以下输出：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="attribute">S0C</span>    S<span class="number">1</span>C    S<span class="number">0</span>U    S<span class="number">1</span>U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT</span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>   <span class="number">6553</span>.<span class="number">7</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">803</span>.<span class="number">1</span>  <span class="number">81920</span>.<span class="number">0</span>  <span class="number">10240</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">30722</span>.<span class="number">1</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">0</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">1</span>    <span class="number">0</span>.<span class="number">016</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">016</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span> <span class="number">1161</span>.<span class="number">5</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">23630</span>.<span class="number">5</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">51204</span>.<span class="number">2</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">3</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">2</span>    <span class="number">0</span>.<span class="number">027</span>   <span class="number">1</span>      <span class="number">0</span>.<span class="number">001</span>    <span class="number">0</span>.<span class="number">027</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">1280</span>.<span class="number">8</span> <span class="number">81920</span>.<span class="number">0</span>  <span class="number">32252</span>.<span class="number">2</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">61446</span>.<span class="number">2</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">3</span>    <span class="number">0</span>.<span class="number">032</span>   <span class="number">1</span>      <span class="number">0</span>.<span class="number">001</span>    <span class="number">0</span>.<span class="number">033</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span> <span class="number">1022</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">42517</span>.<span class="number">4</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">30726</span>.<span class="number">2</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">4</span>    <span class="number">0</span>.<span class="number">033</span>   <span class="number">2</span>      <span class="number">0</span>.<span class="number">002</span>    <span class="number">0</span>.<span class="number">036</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">1152</span>.<span class="number">2</span> <span class="number">81920</span>.<span class="number">0</span>  <span class="number">52773</span>.<span class="number">6</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">40966</span>.<span class="number">2</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">5</span>    <span class="number">0</span>.<span class="number">035</span>   <span class="number">2</span>      <span class="number">0</span>.<span class="number">002</span>    <span class="number">0</span>.<span class="number">038</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span> <span class="number">1278</span>.<span class="number">4</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">63024</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">51206</span>.<span class="number">2</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">6</span>    <span class="number">0</span>.<span class="number">037</span>   <span class="number">2</span>      <span class="number">0</span>.<span class="number">002</span>    <span class="number">0</span>.<span class="number">039</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">1013</span>.<span class="number">4</span> <span class="number">81920</span>.<span class="number">0</span>  <span class="number">73270</span>.<span class="number">7</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">61446</span>.<span class="number">2</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">7</span>    <span class="number">0</span>.<span class="number">039</span>   <span class="number">3</span>      <span class="number">0</span>.<span class="number">003</span>    <span class="number">0</span>.<span class="number">042</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">1260</span>.<span class="number">0</span> <span class="number">81920</span>.<span class="number">0</span>  <span class="number">10240</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">40966</span>.<span class="number">2</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">9</span>    <span class="number">0</span>.<span class="number">056</span>   <span class="number">4</span>      <span class="number">0</span>.<span class="number">004</span>    <span class="number">0</span>.<span class="number">060</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span> <span class="number">999</span>.<span class="number">8</span>   <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">22079</span>.<span class="number">4</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">61448</span>.<span class="number">3</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>      <span class="number">10</span>    <span class="number">0</span>.<span class="number">059</span>   <span class="number">5</span>      <span class="number">0</span>.<span class="number">004</span>    <span class="number">0</span>.<span class="number">064</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">1104</span>.<span class="number">2</span> <span class="number">81920</span>.<span class="number">0</span>  <span class="number">32320</span>.<span class="number">6</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">71688</span>.<span class="number">3</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>      <span class="number">11</span>    <span class="number">0</span>.<span class="number">061</span>   <span class="number">5</span>      <span class="number">0</span>.<span class="number">004</span>    <span class="number">0</span>.<span class="number">066</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span> <span class="number">1082</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">81920</span>.<span class="number">0</span>  <span class="number">42561</span>.<span class="number">3</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">30728</span>.<span class="number">2</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>      <span class="number">12</span>    <span class="number">0</span>.<span class="number">062</span>   <span class="number">6</span>      <span class="number">0</span>.<span class="number">006</span>    <span class="number">0</span>.<span class="number">068</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">1119</span>.<span class="number">4</span> <span class="number">81920</span>.<span class="number">0</span>  <span class="number">52801</span>.<span class="number">8</span>   <span class="number">102400</span>.<span class="number">0</span>   <span class="number">40968</span>.<span class="number">2</span>   <span class="number">4864</span>.<span class="number">0</span> <span class="number">3831</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>      <span class="number">13</span>    <span class="number">0</span>.<span class="number">066</span>   <span class="number">6</span>      <span class="number">0</span>.<span class="number">006</span>    <span class="number">0</span>.<span class="number">072</span></span><br></pre></td></tr></table></figure>
+<p>重点关注以下几列：</p>
+<ul>
+<li><p>可见除了 S0U、S1U 以外，OU 也不断变更，这是因为每次 GC 都有超过 10MB 的对象存活，Survivor 区放不下，直接被迁到老年代；</p>
+</li>
+<li><p>由于老年代也不够用，会频繁发生 Full GC，每次清理后仍有约 3MB；</p>
+</li>
+<li><p>此时也可以发现随着 Full GC 的发生， YGCT 耗时也慢了很多，因为每次 Full GC 都是由 Young GC 触发的（Young GC 后迁入老年代，但老年代不足，要先清理），Young GC 需要等待 Full GC 执行完毕才能把存活对象放入老年代。</p>
+</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">S0U</span>     S<span class="number">1</span>U       EU       OU     YGC   YGCT   FGC  FGCT     GCT</span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>     <span class="number">6553</span>.<span class="number">7</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">803</span>.<span class="number">1</span>   <span class="number">10240</span>.<span class="number">0</span>   <span class="number">30722</span>.<span class="number">1</span>   <span class="number">1</span>    <span class="number">0</span>.<span class="number">016</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">016</span></span><br><span class="line"><span class="attribute">1161</span>.<span class="number">5</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">23630</span>.<span class="number">5</span>   <span class="number">51204</span>.<span class="number">2</span>   <span class="number">2</span>    <span class="number">0</span>.<span class="number">027</span>   <span class="number">1</span>   <span class="number">0</span>.<span class="number">001</span>    <span class="number">0</span>.<span class="number">027</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">1280</span>.<span class="number">8</span>  <span class="number">32252</span>.<span class="number">2</span>   <span class="number">61446</span>.<span class="number">2</span>   <span class="number">3</span>    <span class="number">0</span>.<span class="number">032</span>   <span class="number">1</span>   <span class="number">0</span>.<span class="number">001</span>    <span class="number">0</span>.<span class="number">033</span></span><br><span class="line"><span class="attribute">1022</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">42517</span>.<span class="number">4</span>   <span class="number">30726</span>.<span class="number">2</span>   <span class="number">4</span>    <span class="number">0</span>.<span class="number">033</span>   <span class="number">2</span>   <span class="number">0</span>.<span class="number">002</span>    <span class="number">0</span>.<span class="number">036</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">1152</span>.<span class="number">2</span>  <span class="number">52773</span>.<span class="number">6</span>   <span class="number">40966</span>.<span class="number">2</span>   <span class="number">5</span>    <span class="number">0</span>.<span class="number">035</span>   <span class="number">2</span>   <span class="number">0</span>.<span class="number">002</span>    <span class="number">0</span>.<span class="number">038</span></span><br><span class="line"><span class="attribute">1278</span>.<span class="number">4</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">63024</span>.<span class="number">0</span>   <span class="number">51206</span>.<span class="number">2</span>   <span class="number">6</span>    <span class="number">0</span>.<span class="number">037</span>   <span class="number">2</span>   <span class="number">0</span>.<span class="number">002</span>    <span class="number">0</span>.<span class="number">039</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">1013</span>.<span class="number">4</span>  <span class="number">73270</span>.<span class="number">7</span>   <span class="number">61446</span>.<span class="number">2</span>   <span class="number">7</span>    <span class="number">0</span>.<span class="number">039</span>   <span class="number">3</span>   <span class="number">0</span>.<span class="number">003</span>    <span class="number">0</span>.<span class="number">042</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">1260</span>.<span class="number">0</span>  <span class="number">10240</span>.<span class="number">0</span>   <span class="number">40966</span>.<span class="number">2</span>   <span class="number">9</span>    <span class="number">0</span>.<span class="number">056</span>   <span class="number">4</span>   <span class="number">0</span>.<span class="number">004</span>    <span class="number">0</span>.<span class="number">060</span></span><br><span class="line"><span class="attribute">999</span>.<span class="number">8</span>   <span class="number">0</span>.<span class="number">0</span>    <span class="number">22079</span>.<span class="number">4</span>   <span class="number">61448</span>.<span class="number">3</span>  <span class="number">10</span>    <span class="number">0</span>.<span class="number">059</span>   <span class="number">5</span>   <span class="number">0</span>.<span class="number">004</span>    <span class="number">0</span>.<span class="number">064</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">1104</span>.<span class="number">2</span>  <span class="number">32320</span>.<span class="number">6</span>   <span class="number">71688</span>.<span class="number">3</span>  <span class="number">11</span>    <span class="number">0</span>.<span class="number">061</span>   <span class="number">5</span>   <span class="number">0</span>.<span class="number">004</span>    <span class="number">0</span>.<span class="number">066</span></span><br><span class="line"><span class="attribute">1082</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">42561</span>.<span class="number">3</span>   <span class="number">30728</span>.<span class="number">2</span>  <span class="number">12</span>    <span class="number">0</span>.<span class="number">062</span>   <span class="number">6</span>   <span class="number">0</span>.<span class="number">006</span>    <span class="number">0</span>.<span class="number">068</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">1119</span>.<span class="number">4</span>  <span class="number">52801</span>.<span class="number">8</span>   <span class="number">40968</span>.<span class="number">2</span>  <span class="number">13</span>    <span class="number">0</span>.<span class="number">066</span>   <span class="number">6</span>   <span class="number">0</span>.<span class="number">006</span>    <span class="number">0</span>.<span class="number">072</span></span><br></pre></td></tr></table></figure>
+<p>优化：只需要增加 Survivor 内存，使其可以存放每次 Young GC 后存活的对象即可（此处为使效果更明显，增大了堆和新生代内存）。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>参数</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>-XX:NewSize=209715200<br />-XX:MaxNewSize=209715200</td>
+<td>新生代初始值和最大值：200MB</td>
+</tr>
+<tr>
+<td>2</td>
+<td>-XX:InitialHeapSize=314572800<br />-XX:MaxHeapSize=314572800</td>
+<td>堆初始值和最大值：300MB</td>
+</tr>
+<tr>
+<td>5</td>
+<td>-XX:SurvivorRatio=2</td>
+<td>新生代 Eden 占比（Eden 50% 即 100MB，Survivor 各 25% 即 50 MB）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>重新运行后输出日志：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="attribute">S0C</span>    S<span class="number">1</span>C    S<span class="number">0</span>U    S<span class="number">1</span>U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT</span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span>  <span class="number">8192</span>.<span class="number">1</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span>  <span class="number">8192</span>.<span class="number">1</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span> <span class="number">90112</span>.<span class="number">2</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4480</span>.<span class="number">0</span> <span class="number">775</span>.<span class="number">1</span>  <span class="number">384</span>.<span class="number">0</span>   <span class="number">76</span>.<span class="number">4</span>       <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">11037</span>.<span class="number">3</span> <span class="number">102400</span>.<span class="number">0</span> <span class="number">73644</span>.<span class="number">5</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">1</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">1</span>    <span class="number">0</span>.<span class="number">007</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">007</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span> <span class="number">11302</span>.<span class="number">1</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span> <span class="number">65399</span>.<span class="number">2</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">5</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">2</span>    <span class="number">0</span>.<span class="number">013</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">013</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">11334</span>.<span class="number">0</span> <span class="number">102400</span>.<span class="number">0</span> <span class="number">53129</span>.<span class="number">6</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">3</span>    <span class="number">0</span>.<span class="number">015</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">015</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span> <span class="number">1028</span>.<span class="number">8</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span> <span class="number">42916</span>.<span class="number">3</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">4</span>    <span class="number">0</span>.<span class="number">016</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">016</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">11369</span>.<span class="number">4</span> <span class="number">102400</span>.<span class="number">0</span> <span class="number">32693</span>.<span class="number">5</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">5</span>    <span class="number">0</span>.<span class="number">017</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">017</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span> <span class="number">21517</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span> <span class="number">22464</span>.<span class="number">6</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">6</span>    <span class="number">0</span>.<span class="number">024</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">024</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">31851</span>.<span class="number">7</span> <span class="number">102400</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">7</span>    <span class="number">0</span>.<span class="number">038</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">038</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">31851</span>.<span class="number">7</span> <span class="number">102400</span>.<span class="number">0</span> <span class="number">94151</span>.<span class="number">8</span>   <span class="number">102400</span>.<span class="number">0</span>     <span class="number">0</span>.<span class="number">0</span>     <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">7</span>    <span class="number">0</span>.<span class="number">038</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">038</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span> <span class="number">83916</span>.<span class="number">3</span>   <span class="number">102400</span>.<span class="number">0</span>    <span class="number">826</span>.<span class="number">8</span>    <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">8</span>    <span class="number">0</span>.<span class="number">042</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">042</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">10240</span>.<span class="number">0</span> <span class="number">102400</span>.<span class="number">0</span> <span class="number">73679</span>.<span class="number">2</span>   <span class="number">102400</span>.<span class="number">0</span>    <span class="number">826</span>.<span class="number">8</span>    <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>       <span class="number">9</span>    <span class="number">0</span>.<span class="number">044</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">044</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span> <span class="number">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">102400</span>.<span class="number">0</span> <span class="number">63441</span>.<span class="number">1</span>   <span class="number">102400</span>.<span class="number">0</span>    <span class="number">826</span>.<span class="number">8</span>    <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>      <span class="number">10</span>    <span class="number">0</span>.<span class="number">046</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">046</span></span><br><span class="line"><span class="attribute">51200</span>.<span class="number">0</span> <span class="number">51200</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>   <span class="number">10240</span>.<span class="number">0</span> <span class="number">102400</span>.<span class="number">0</span> <span class="number">53202</span>.<span class="number">3</span>   <span class="number">102400</span>.<span class="number">0</span>    <span class="number">826</span>.<span class="number">8</span>    <span class="number">4864</span>.<span class="number">0</span> <span class="number">3833</span>.<span class="number">6</span> <span class="number">512</span>.<span class="number">0</span>  <span class="number">427</span>.<span class="number">1</span>      <span class="number">11</span>    <span class="number">0</span>.<span class="number">048</span>   <span class="number">0</span>      <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">048</span></span><br></pre></td></tr></table></figure>
+<p>可见已经不会发生 Full GC，每次 Young GC 后存活的对象都只在 Survivor 之间移动，老年代也稳定在 826.8KB。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="attribute">S0U</span>    S<span class="number">1</span>U       EU       OU    YGC    YGCT  FGC  FGCT     GCT</span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>     <span class="number">8192</span>.<span class="number">1</span>    <span class="number">0</span>.<span class="number">0</span>     <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>     <span class="number">8192</span>.<span class="number">1</span>    <span class="number">0</span>.<span class="number">0</span>     <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>    <span class="number">90112</span>.<span class="number">2</span>    <span class="number">0</span>.<span class="number">0</span>     <span class="number">0</span>    <span class="number">0</span>.<span class="number">000</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">000</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">11037</span>.<span class="number">3</span>  <span class="number">73644</span>.<span class="number">5</span>   <span class="number">0</span>.<span class="number">0</span>     <span class="number">1</span>    <span class="number">0</span>.<span class="number">007</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">007</span></span><br><span class="line"><span class="attribute">11302</span>.<span class="number">1</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">65399</span>.<span class="number">2</span>   <span class="number">0</span>.<span class="number">0</span>     <span class="number">2</span>    <span class="number">0</span>.<span class="number">013</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">013</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">11334</span>.<span class="number">0</span>  <span class="number">53129</span>.<span class="number">6</span>   <span class="number">0</span>.<span class="number">0</span>     <span class="number">3</span>    <span class="number">0</span>.<span class="number">015</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">015</span></span><br><span class="line"><span class="attribute">1028</span>.<span class="number">8</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">42916</span>.<span class="number">3</span>    <span class="number">0</span>.<span class="number">0</span>     <span class="number">4</span>    <span class="number">0</span>.<span class="number">016</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">016</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">11369</span>.<span class="number">4</span>  <span class="number">32693</span>.<span class="number">5</span>   <span class="number">0</span>.<span class="number">0</span>     <span class="number">5</span>    <span class="number">0</span>.<span class="number">017</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">017</span></span><br><span class="line"><span class="attribute">21517</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">22464</span>.<span class="number">6</span>   <span class="number">0</span>.<span class="number">0</span>     <span class="number">6</span>    <span class="number">0</span>.<span class="number">024</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">024</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">31851</span>.<span class="number">7</span>  <span class="number">10240</span>.<span class="number">0</span>   <span class="number">0</span>.<span class="number">0</span>     <span class="number">7</span>    <span class="number">0</span>.<span class="number">038</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">038</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">31851</span>.<span class="number">7</span>  <span class="number">94151</span>.<span class="number">8</span>   <span class="number">0</span>.<span class="number">0</span>     <span class="number">7</span>    <span class="number">0</span>.<span class="number">038</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">038</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>    <span class="number">0</span>.<span class="number">0</span>    <span class="number">83916</span>.<span class="number">3</span>   <span class="number">826</span>.<span class="number">8</span>    <span class="number">8</span>    <span class="number">0</span>.<span class="number">042</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">042</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">10240</span>.<span class="number">0</span>  <span class="number">73679</span>.<span class="number">2</span>  <span class="number">826</span>.<span class="number">8</span>    <span class="number">9</span>    <span class="number">0</span>.<span class="number">044</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">044</span></span><br><span class="line"><span class="attribute">10240</span>.<span class="number">0</span>  <span class="number">0</span>.<span class="number">0</span>    <span class="number">63441</span>.<span class="number">1</span>  <span class="number">826</span>.<span class="number">8</span>   <span class="number">10</span>    <span class="number">0</span>.<span class="number">046</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">046</span></span><br><span class="line"> <span class="attribute">0</span>.<span class="number">0</span>   <span class="number">10240</span>.<span class="number">0</span>  <span class="number">53202</span>.<span class="number">3</span>  <span class="number">826</span>.<span class="number">8</span>   <span class="number">11</span>    <span class="number">0</span>.<span class="number">048</span>   <span class="number">0</span>   <span class="number">0</span>.<span class="number">000</span>    <span class="number">0</span>.<span class="number">048</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这里只是简单举例讲解了最基本的用法，实际上可以总结为：</p>
+<ul>
+<li><p>重点关注新生代对象增长速率，Young GC 触发频率、耗时、存活对象、进入老年代的对象，老年代对象增长速率，Full GC 触发频率、耗时；</p>
+</li>
+<li><p>对于一般系统，老年代对象增长速度很慢（比如每 n 分钟发生一次 YGC，老年代增长 xMB），如果每次 Young GC 发生后老年代增长较快，则很可能是每次 Young GC 存活对象太多、触发动态年龄判断规则，或 Survivor 太小放不下存活对象；</p>
+</li>
+<li><p>从 Young GC 发生频率得出老年代增长速度，从而可以推断出 Full GC 发生频率。</p>
+</li>
+</ul>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 0
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://yipwinghong.github.io",
+        root: siteMetaRoot,
+        author: "Kyle Ip"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+        <!-- mermaid -->
+        
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
