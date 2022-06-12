@@ -29,7 +29,25 @@
   </url>
   
   <url>
+    <loc>https://yipwinghong.github.io/2021/09/26/2021-09-26_diary/</loc>
+    
+    <lastmod>2022-03-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/bak/2021-09-26_diary.html</loc>
+    
+    <lastmod>2022-03-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2021/06/06/2021-06-06_diary/</loc>
     
     <lastmod>2022-03-28</lastmod>
     
@@ -47,7 +65,25 @@
   </url>
   
   <url>
+    <loc>https://yipwinghong.github.io/2021/05/31/2021-05-31_diary/</loc>
+    
+    <lastmod>2022-03-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/bak/2021-05-31_diary.html</loc>
+    
+    <lastmod>2022-03-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2021/02/21/2021-02-21_diary/</loc>
     
     <lastmod>2022-03-28</lastmod>
     
@@ -101,7 +137,25 @@
   </url>
   
   <url>
+    <loc>https://yipwinghong.github.io/2021/06/05/2021-06-05_diary/</loc>
+    
+    <lastmod>2021-12-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/bak/2021-06-05_diary.html</loc>
+    
+    <lastmod>2021-12-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/2020/02/22/2020-02-22_diary/</loc>
     
     <lastmod>2021-12-25</lastmod>
     
@@ -803,6 +857,15 @@
   </url>
   
   <url>
+    <loc>https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/</loc>
+    
+    <lastmod>2021-06-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://yipwinghong.github.io/2020-02-15_diary.html</loc>
     
     <lastmod>2021-06-21</lastmod>
@@ -855,6 +918,20 @@
     <priority>1.0</priority>
   </url>
 
+  
+  <url>
+    <loc>https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
   
 
   
