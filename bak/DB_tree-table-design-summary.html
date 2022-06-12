@@ -453,7 +453,6 @@
 </li>
 </ul>
 <p>这类功能常见的设计方法如下：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -465,8 +464,7 @@
 <th>引用完整</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>邻接表</td>
 <td>简单</td>
 <td>困难（除非支持递归查询）</td>
@@ -498,13 +496,13 @@
 <td>简单</td>
 <td>是</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <h2 id="邻接表（Adjacency-List）"><a href="#邻接表（Adjacency-List）" class="headerlink" title="邻接表（Adjacency List）"></a>邻接表（Adjacency List）</h2><p>邻接表是最广泛使用的设计方法，其使用 <code>parent_id</code> 字段引用同一张表的其他记录，并建立外键约束维护关系。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Comments (</span><br><span class="line">  comment_id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">  parent_id <span class="type">BIGINT</span> UNSIGNED,</span><br><span class="line">  comment TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="keyword">FOREIGN</span> KEY (parent_id) <span class="keyword">REFERENCES</span> Comments(comment_id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
 <p>查询一条评论和它的直接后代：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> c1.<span class="operator">*</span>, c2.<span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> Comments c1 </span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> Comments c2 <span class="keyword">ON</span> c2.parent_id <span class="operator">=</span> c1.comment_id;</span><br><span class="line"><span class="comment">--- LEFT JOIN Comments c3 ON c3.parent_id = c2.comment_id;</span></span><br><span class="line"><span class="comment">--- ...</span></span><br><span class="line"><span class="comment">--- LEFT JOIN Comments cn ON cn.parent_id = cm.comment_id;</span></span><br></pre></td></tr></table></figure>
+
 <p>这种做法存在以下问题：</p>
 <ul>
 <li><p><strong>扩展性差</strong>：每增加一层查询都要额外扩展一个关联（通过 ORM 框架或在业务代码中生成动态 SQL 则这种情况能有所缓解）。</p>
@@ -524,11 +522,15 @@
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> parent_id</span><br><span class="line"><span class="keyword">FROM</span> Comments </span><br><span class="line"><span class="keyword">WHERE</span> comment_id <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">UPDATE Comments </span><br><span class="line"><span class="keyword">SET</span> parent_id <span class="operator">=</span> <span class="number">4</span> </span><br><span class="line"><span class="keyword">WHERE</span> parent_id <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> Comments</span><br><span class="line"><span class="keyword">WHERE</span> comment_id <span class="operator">=</span> <span class="number">6</span>;</span><br></pre></td></tr></table></figure>
+
 <p>这种做法也有好处，即增加或修改节点比较方便，只需要指定 <code>parent_id</code>：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> Comments (parent_id, comment) </span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">7</span>, <span class="string">&#x27;OK!&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UPDATE Comments </span><br><span class="line"><span class="keyword">SET</span> parent_id <span class="operator">=</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">WHERE</span> comment_id <span class="operator">=</span> <span class="number">6</span>;</span><br></pre></td></tr></table></figure>
+
 <h3 id="递归查询（Recursive-Query）"><a href="#递归查询（Recursive-Query）" class="headerlink" title="递归查询（Recursive Query）"></a>递归查询（Recursive Query）</h3><p>邻接表存在难以实现扩展查询，但一些关系型数据库（比如 Microsoft SQL Server 2005、Oracle 11gR2、IBM DB2 和 PostgreSQL 8.4 ）提供了递归查询（符合 SQL-99 标准）的支持，能有效解决这种问题：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WITH</span> CommentTree (comment_id, parent_id, comment, depth)</span><br><span class="line"><span class="keyword">AS</span> (</span><br><span class="line">  <span class="keyword">SELECT</span> <span class="operator">*</span>, <span class="number">0</span> <span class="keyword">AS</span> depth</span><br><span class="line">  <span class="keyword">FROM</span> Comments</span><br><span class="line">  <span class="keyword">WHERE</span> parent_id <span class="keyword">IS</span> <span class="keyword">NULL</span></span><br><span class="line">  <span class="keyword">UNION</span> <span class="keyword">ALL</span></span><br><span class="line">  <span class="keyword">SELECT</span> c.<span class="operator">*</span>, ct.depth <span class="operator">+</span> <span class="number">1</span> <span class="keyword">AS</span> depth</span><br><span class="line">  <span class="keyword">FROM</span> CommentTree ct</span><br><span class="line">  <span class="keyword">JOIN</span> Comments c <span class="keyword">ON</span> (ct.comment <span class="operator">=</span> c.parent_id)</span><br><span class="line">)</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> CommentTree <span class="keyword">WHERE</span> comment_id <span class="operator">=</span> <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
 <p>MySQL、SQLite、Infomix、Oracle 10g 则不支持递归查询。</p>
 <blockquote>
 <p>Oracle 9i 和 10g 支持 <code>WITH</code> 子句，但不是在递归查询时使用。它们有着自己特殊的语法定义：<code>START WITH</code> 和 <code>CONNECT BY PRIOR</code>。</p>
@@ -536,11 +538,14 @@
 </blockquote>
 <h2 id="枚举路径（Path-Enumeration）"><a href="#枚举路径（Path-Enumeration）" class="headerlink" title="枚举路径（Path Enumeration）"></a>枚举路径（Path Enumeration）</h2><p>路径枚举的将所有祖先的信息组合成类似 <strong>Linux 绝对路径</strong> 的字符串，分隔符相邻两个节点间距离是 1，并保存为每个节点的属性，能很巧妙地解决了邻接表 <strong>从树中获取一个给定节点的所有祖先的开销很大</strong> 的问题。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Comments (</span><br><span class="line">  comment_id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">  parent_id <span class="type">BIGINT</span> UNSIGNED,</span><br><span class="line">  comment TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  path <span class="type">VARCHAR</span>(<span class="number">1000</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
 <p>比如 <code>comment_id</code> 为 2 的评论是 <code>comment_id</code> 为 1（<code>path</code> 的值为“1/”）的回复，则其 <code>path</code> 可记为“1/2/”；<code>comment_id</code> 为 3 的评论是 <code>comment_id</code> 为 2 的回复，则可以记为“1/2/3”。</p>
 <p>通过比较每个节点的路径，可以查询一个节点的祖先（比如评论 7 的祖先，可匹配“1/4/6/%”、“1/4/5”、“1/%”）或后代（比如评论 4 的后代，可匹配“1/4/5”、“1/4/6”、“1/4/6/7”）：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> Comments <span class="keyword">AS</span> c</span><br><span class="line"><span class="keyword">WHERE</span> <span class="string">&#x27;1/4/6/7/&#x27;</span> <span class="keyword">LIKE</span> c.path <span class="operator">||</span> <span class="string">&#x27;%&#x27;</span>;</span><br></pre></td></tr></table></figure>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> Comments <span class="keyword">AS</span> c</span><br><span class="line"><span class="keyword">WHERE</span> c.path <span class="keyword">LIKE</span> <span class="string">&#x27;1/4/&#x27;</span> <span class="operator">||</span> <span class="string">&#x27;%&#x27;</span>;</span><br></pre></td></tr></table></figure>
-<p>计算一棵子树所有节点的值的总和、统计数量等操作同样也只需要使用 <code>LIKE</code>：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>)</span><br><span class="line"><span class="keyword">FROM</span> Comments <span class="keyword">AS</span> c</span><br><span class="line"><span class="keyword">WHERE</span> c.path <span class="keyword">LIKE</span> <span class="string">&#x27;1/4/&#x27;</span> <span class="operator">||</span> <span class="string">&#x27;%&#x27;</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> comment;</span><br></pre></td></tr></table></figure><br>在树中插入节点时无需修改任何其他的行：</p>
+<p>计算一棵子树所有节点的值的总和、统计数量等操作同样也只需要使用 <code>LIKE</code>：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>)</span><br><span class="line"><span class="keyword">FROM</span> Comments <span class="keyword">AS</span> c</span><br><span class="line"><span class="keyword">WHERE</span> c.path <span class="keyword">LIKE</span> <span class="string">&#x27;1/4/&#x27;</span> <span class="operator">||</span> <span class="string">&#x27;%&#x27;</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> comment;</span><br></pre></td></tr></table></figure>
+<p>在树中插入节点时无需修改任何其他的行：</p>
 <ul>
 <li><p>复制一份要插入节点的逻辑上的父亲节点的路径，将这个新节点的 ID 追加到路径末尾。</p>
 </li>
@@ -548,6 +553,7 @@
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> Comments (comment) <span class="keyword">VALUES</span> (<span class="string">&#x27;OK!&#x27;</span>);</span><br><span class="line"></span><br><span class="line">UPDATE Comments </span><br><span class="line"><span class="keyword">SET</span> path <span class="operator">=</span> (</span><br><span class="line">  <span class="keyword">SELECT</span> path</span><br><span class="line">  <span class="keyword">FROM</span> Comments</span><br><span class="line">  <span class="keyword">WHERE</span> comment_id <span class="operator">=</span> <span class="number">7</span></span><br><span class="line">) <span class="operator">||</span> LAST_INSERT_ID() <span class="operator">||</span> <span class="string">&#x27;/&#x27;</span></span><br><span class="line"><span class="keyword">WHERE</span> comment_id <span class="operator">=</span> LAST_INSERT_ID();</span><br></pre></td></tr></table></figure>
+
 <p>这种设计也存在问题：</p>
 <ul>
 <li><p>没有外键约束不能确保路径格式总是正确、路径中的节点确实存在，依赖于应用程序的逻辑代码维护路径字符串。</p>
@@ -592,6 +598,7 @@
 </ul>
 <p>假设新插入的节点是一个叶子节点，以下语句可以更新每个需要更新的地方：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">UPDATE Comments</span><br><span class="line"><span class="keyword">SET</span> nsleft <span class="operator">=</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> nsleft <span class="operator">&gt;=</span> <span class="number">8</span> <span class="keyword">THEN</span> nsleft <span class="operator">+</span> <span class="number">2</span> <span class="keyword">ELSE</span> nsleft <span class="keyword">END</span>,</span><br><span class="line">nsright <span class="operator">=</span> nsright<span class="operator">+</span><span class="number">2</span>;</span><br><span class="line"><span class="keyword">WHERE</span> nsright <span class="operator">&gt;=</span> <span class="number">7</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> Comments (nsleft, nsright, comment) <span class="keyword">VALUES</span> (<span class="number">8</span>, <span class="number">9</span>, <span class="string">&#x27;OK!&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
 <p>嵌套集设计能实现简单快速的查询（给定节点的祖先和后代），比操作单独的节点简单，但由于增删改太复杂，总的来说还是不太推荐。</p>
 <h2 id="闭包表（Closure-Table）"><a href="#闭包表（Closure-Table）" class="headerlink" title="闭包表（Closure Table）"></a>闭包表（Closure Table）</h2><p>闭包表是我最喜欢的一种设计：</p>
 <ul>
@@ -605,11 +612,16 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Comments (</span><br><span class="line">  comment_id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">  comment TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> TreePaths (</span><br><span class="line">  ancestor <span class="type">BIGINT</span> UNSIGNED <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  descendant <span class="type">BIGINT</span> UNSIGNED <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  path_length <span class="type">BIGINT</span> UNSIGNED <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (ancestor, descendant),</span><br><span class="line">  <span class="keyword">FOREIGN</span> KEY (ancestor) <span class="keyword">REFERENCES</span> Comments(comment_id),</span><br><span class="line">  <span class="keyword">FOREIGN</span> KEY (descendant) <span class="keyword">REFERENCES</span> Comments(comment_id),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 <p>查询直接子节点很简单：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> TreePaths</span><br><span class="line"><span class="keyword">WHERE</span> ancestor <span class="operator">=</span> <span class="number">4</span> <span class="keyword">AND</span> path_length <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
 <p>搜索所有后代或祖先也只需要关联路径表：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> c.<span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> Comments <span class="keyword">AS</span> c</span><br><span class="line"><span class="keyword">JOIN</span> TreePaths <span class="keyword">AS</span> t <span class="keyword">ON</span> c.comment_id <span class="operator">=</span> t.descendant</span><br><span class="line"><span class="keyword">WHERE</span> t.ancestor <span class="operator">=</span> <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> c.<span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> Comments <span class="keyword">AS</span> c</span><br><span class="line"><span class="keyword">JOIN</span> TreePaths <span class="keyword">AS</span> t <span class="keyword">ON</span> c.comment_id <span class="operator">=</span> t.descendant</span><br><span class="line"><span class="keyword">WHERE</span> t.descendant <span class="operator">=</span> <span class="number">4</span>;</span><br></pre></td></tr></table></figure>
-<p>插入新的叶子节点时，比如 5 的子节点（ID 为 8），应首先插入一条自己到自己的关系，然后搜索 <code>TreePath</code> 表中后代为 5 的节点，增加该节点和新插入节点的“祖先-后代”关系，包括 5 的自我引用。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> TreePaths (ancestor, descendant)</span><br><span class="line"><span class="keyword">SELECT</span> t.ancestor, <span class="number">8</span></span><br><span class="line"><span class="keyword">FROM</span> TreePaths <span class="keyword">AS</span> t</span><br><span class="line"><span class="keyword">WHERE</span> t.descendant <span class="operator">=</span> <span class="number">5</span></span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">ALL</span> </span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">8</span>, <span class="number">8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> Comments (<span class="number">8</span>, <span class="string">&#x27;OK&#x27;</span>);</span><br></pre></td></tr></table></figure><br>该模式下删除数据为逻辑删除（只是删除关系，节点还存在），要删除一个叶子节点，比如 ID 为 7，应删除 <code>TreePaths</code> 表中后代为 7 的行。</p>
+<p>插入新的叶子节点时，比如 5 的子节点（ID 为 8），应首先插入一条自己到自己的关系，然后搜索 <code>TreePath</code> 表中后代为 5 的节点，增加该节点和新插入节点的“祖先-后代”关系，包括 5 的自我引用。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> TreePaths (ancestor, descendant)</span><br><span class="line"><span class="keyword">SELECT</span> t.ancestor, <span class="number">8</span></span><br><span class="line"><span class="keyword">FROM</span> TreePaths <span class="keyword">AS</span> t</span><br><span class="line"><span class="keyword">WHERE</span> t.descendant <span class="operator">=</span> <span class="number">5</span></span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">ALL</span> </span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">8</span>, <span class="number">8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> Comments (<span class="number">8</span>, <span class="string">&#x27;OK&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>该模式下删除数据为逻辑删除（只是删除关系，节点还存在），要删除一个叶子节点，比如 ID 为 7，应删除 <code>TreePaths</code> 表中后代为 7 的行。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> TreePaths <span class="keyword">WHERE</span> descendant <span class="operator">=</span> <span class="number">7</span>;</span><br></pre></td></tr></table></figure>
-<p>要删除一棵完整的子树，比如 ID 为 4 的记录及其后代，可删除所有在 <code>TreePath</code> 表中后代为 4 的行：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> TreePaths</span><br><span class="line"><span class="keyword">WHERE</span> descendant <span class="keyword">IN</span> (</span><br><span class="line">  <span class="keyword">SELECT</span> descendant</span><br><span class="line">  <span class="keyword">FROM</span> TreePaths</span><br><span class="line">  <span class="keyword">WHERE</span> ancestor <span class="operator">=</span> <span class="number">4</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure><br>要从一个地方移动一棵子树到另一地方相对复杂，但也有固定的算法：</p>
+<p>要删除一棵完整的子树，比如 ID 为 4 的记录及其后代，可删除所有在 <code>TreePath</code> 表中后代为 4 的行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> TreePaths</span><br><span class="line"><span class="keyword">WHERE</span> descendant <span class="keyword">IN</span> (</span><br><span class="line">  <span class="keyword">SELECT</span> descendant</span><br><span class="line">  <span class="keyword">FROM</span> TreePaths</span><br><span class="line">  <span class="keyword">WHERE</span> ancestor <span class="operator">=</span> <span class="number">4</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>要从一个地方移动一棵子树到另一地方相对复杂，但也有固定的算法：</p>
 <ul>
 <li><p><strong>断开这棵子树和它的祖先们的关系</strong>。需要找到这棵子树的顶点，删除它的所有子节点和它的所有祖先节点间的关系。</p>
 </li>
@@ -617,6 +629,7 @@
 </li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> TreePaths</span><br><span class="line"><span class="keyword">WHERE</span> descendant <span class="keyword">IN</span> (</span><br><span class="line">  <span class="keyword">SELECT</span> descendant</span><br><span class="line">  <span class="keyword">FROM</span> TreePaths</span><br><span class="line">  <span class="keyword">WHERE</span> ancestor <span class="operator">=</span> <span class="number">6</span></span><br><span class="line">) <span class="keyword">AND</span> ancestor <span class="keyword">IN</span> (</span><br><span class="line">  <span class="keyword">SELECT</span> ancestor</span><br><span class="line">  <span class="keyword">FROM</span> TreePaths</span><br><span class="line">  <span class="keyword">WHERE</span> descendant <span class="operator">=</span> <span class="number">6</span> <span class="keyword">AND</span> ancestor <span class="operator">!=</span> descendant</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> TreePaths (ancestor, descendant)</span><br><span class="line"><span class="keyword">SELECT</span> supertree.ancestor, subtree.descendant</span><br><span class="line"><span class="keyword">FROM</span> TreePaths <span class="keyword">AS</span> supertree</span><br><span class="line"><span class="keyword">CROSS</span> <span class="keyword">JOIN</span> TreePaths <span class="keyword">AS</span> subtree</span><br><span class="line"><span class="keyword">WHERE</span> supertree.descendant <span class="operator">=</span> <span class="number">3</span> <span class="keyword">AND</span> subtree.ancestor <span class="operator">=</span> <span class="number">6</span>;</span><br></pre></td></tr></table></figure>
+
 <p>未完待续（结构图解和性能测试）。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><p>邻接表最易于实现，如果数据库支持 <code>WITH</code> 或者 <code>CONNECT BY PRIOR</code> 递归查询，则会更高效（对递归查询性能存疑，有待测试）。</p>
@@ -629,7 +642,7 @@
 </li>
 </ul>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li>Bill Karwin. SQL Antipatterns [M]. Pragmatic Bookshelf, 2010.</li>
+<li>  Bill Karwin. SQL Antipatterns [M]. Pragmatic Bookshelf, 2010.</li>
 </ul>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
     </article>
@@ -814,35 +827,7 @@
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -853,7 +838,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 7
+        Total : 3
         </div>
         <!-- search  -->
         
@@ -869,32 +854,8 @@
             
         
         <li class="archive-post-item">
-            <span class="archive-post-date">09/26</span>
-            <a class="archive-post-title" href="/2021/09/26/2021-09-26_diary/">迟来的一次复盘</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/06</span>
-            <a class="archive-post-title" href="/2021/06/06/2021-06-06_diary/">Weekly Summary (2021-05-31_2021-06-06)</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
             <span class="archive-post-date">06/05</span>
             <a class="archive-post-title" href="/2021/06/05/2021-06-05_diary/">基于记忆规律的学习方法</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/31</span>
-            <a class="archive-post-title" href="/2021/05/31/2021-05-31_diary/">2021 下半年工作学习安排</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/21</span>
-            <a class="archive-post-title" href="/2021/02/21/2021-02-21_diary/">近期工作学习规划</a>
         </li>
     
         
