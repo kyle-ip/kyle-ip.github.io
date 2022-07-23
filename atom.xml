@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Kyle&#39;s Notebook</title>
+  
+  <subtitle>do {eat(); sleep(); code();} while (isAlive);</subtitle>
+  <link href="https://yipwinghong.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://yipwinghong.github.io/"/>
+  <updated>2021-12-25T08:53:02.374Z</updated>
+  <id>https://yipwinghong.github.io/</id>
+  
+  <author>
+    <name>Kyle Ip</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>基于记忆规律的学习方法</title>
+    <link href="https://yipwinghong.github.io/2021/06/05/2021-06-05_diary/"/>
+    <id>https://yipwinghong.github.io/2021/06/05/2021-06-05_diary/</id>
+    <published>2021-06-05T13:46:57.000Z</published>
+    <updated>2021-12-25T08:53:02.374Z</updated>
+    
+    
+    <summary type="html">《考试脑科学》阅读笔记</summary>
+    
+    
+    
+    
+    <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于使用思维导图做笔记</title>
+    <link href="https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/"/>
+    <id>https://yipwinghong.github.io/2020/04/08/2020-04-08_diary/</id>
+    <published>2020-04-07T16:40:08.000Z</published>
+    <updated>2021-06-21T23:57:57.481Z</updated>
+    
+    
+    <summary type="html">ProcessON 是个好工具~</summary>
+    
+    
+    
+    
+    <category term="技术" scheme="https://yipwinghong.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>免费 JetBrains 全家桶</title>
+    <link href="https://yipwinghong.github.io/2020/02/22/2020-02-22_diary/"/>
+    <id>https://yipwinghong.github.io/2020/02/22/2020-02-22_diary/</id>
+    <published>2020-02-21T16:40:08.000Z</published>
+    <updated>2021-12-25T08:52:40.810Z</updated>
+    
+    
+    <summary type="html">在提交申请的第二周，我终于收到 JetBrains 的邮件，成功免费获取全家桶~</summary>
+    
+    
+    
+    
+    <category term="杂事" scheme="https://yipwinghong.github.io/tags/%E6%9D%82%E4%BA%8B/"/>
+    
+  </entry>
+  
+</feed>

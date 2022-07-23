@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Kyle Ip">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Kyle Ip">
+    
+        <meta name="keywords" content="Kyle's Notebook,Kyle Ip">
+    
+    <meta name="description" content="">
+    <meta name="description" content="Alibaba 开源的 Java 诊断工具">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Arthas Cheat Sheet">
+<meta property="og:url" content="https://yipwinghong.github.io/bak/Arthas_cheat-sheet.html">
+<meta property="og:site_name" content="Kyle&#39;s Notebook">
+<meta property="og:description" content="Alibaba 开源的 Java 诊断工具">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-09T13:45:17.000Z">
+<meta property="article:modified_time" content="2021-07-09T09:11:57.388Z">
+<meta property="article:author" content="Kyle Ip">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="技术">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Arthas Cheat Sheet · Kyle&#39;s Notebook</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kyle's Notebook" type="application/atom+xml">
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Kyle's Notebook</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+">
+    
+    <!-- 主页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p>Arthas 是 Alibaba 开源的 Java 诊断工具，可用于在线诊断、动态跟踪 Java 程序，实时监控 JVM 状态（详情参考 <a target="_blank" rel="noopener" href="https://arthas.aliyun.com/doc">官方用户文档</a> 介绍）。</p>
+<p>阿里云知行动手实验室提供了 <a target="_blank" rel="noopener" href="https://start.aliyun.com/handson-lab?category=arthas">在线教程</a>，本文将基于该教程整理了基本用法，可为日常使用提供更方便的参考。</p>
+</blockquote>
+<h1 id="Arthas-Cheat-Sheet"><a href="#Arthas-Cheat-Sheet" class="headerlink" title="Arthas Cheat Sheet"></a>Arthas Cheat Sheet</h1><h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>下载 Arthas 启动程序，选择监控的 Java 进程：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://arthas.aliyun.com/arthas-boot.jar</span><br><span class="line">java -jar arthas-boot.jar</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<p>基本命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">help                # 帮助信息</span><br><span class="line"><span class="meta">#</span><span class="bash"> cmd -h</span></span><br><span class="line"></span><br><span class="line">keymap              # 快捷键</span><br><span class="line"></span><br><span class="line">dashboard           # 监控面板（q/Ctrl+C 退出）</span><br><span class="line"></span><br><span class="line">jvm                 # JVM 详细信息</span><br><span class="line"></span><br><span class="line">thread 1            # 线程 1 的栈信息</span><br><span class="line"><span class="meta">#</span><span class="bash"> thread 1 | grep <span class="string">&#x27;main(&#x27;</span>    线程 1 的 main class</span></span><br><span class="line"></span><br><span class="line">sc -d * MathGame    # 已加载的类</span><br><span class="line"></span><br><span class="line">jad demo.MathGame   # 反编译（包名.类名）</span><br><span class="line"></span><br><span class="line">watch demo.MathGame primeFactors returnObj    # 函数的参数/返回值/异常信息。</span><br><span class="line"></span><br><span class="line">history             # 历史命令</span><br><span class="line"></span><br><span class="line">exot/stop           # 退出当前 Session / Arthas</span><br></pre></td></tr></table></figure>
+<p>要监控 Spring Boot 程序，可指定目标 ip、Java 进程。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java -jar arthas-boot.jar --target-ip 0.0.0.0</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<p>各种变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sysprop             # System Properties</span><br><span class="line"><span class="meta">#</span><span class="bash"> sysprop java.version</span>    </span><br><span class="line"><span class="meta">#</span><span class="bash"> sysprop | grep java.version    指定单个 key</span></span><br><span class="line">sysprop key value   # 设置新的值</span><br><span class="line"></span><br><span class="line">sysenv              # 环境变量</span><br></pre></td></tr></table></figure>
+<p>类和方法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sc javax.servlet.Filter    # 已加载的类（如果是接口，则查看所有实现类）</span><br><span class="line"><span class="meta">#</span><span class="bash"> sc -d *Filter    类的详细信息</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"></span><br><span class="line">sm java.math.RoundingMode  # 类的方法、属性等</span><br><span class="line"><span class="meta">#</span><span class="bash"> sm -d java.math.RoundingMode</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sm java.math.RoundingMode &lt;init&gt;</span></span><br></pre></td></tr></table></figure>
+<p>反编译</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jad com.example.demo.arthas.user.UserController    </span><br><span class="line"><span class="meta">#</span><span class="bash"> --source-only    只打印源码</span> </span><br></pre></td></tr></table></figure>
+<p>动态执行：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://commons.apache.org/proper/commons-ognl/language-guide.html">OGNL 表达式</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/alibaba/arthas/issues/71">特殊用法</a></p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ognl &#x27;@java.lang.System@out.println(&quot;hello ognl&quot;)&#x27;    # 在被监控进程中执行代码</span><br><span class="line"></span><br><span class="line">sc -d com.example.demo.arthas.user.UserController | grep classLoaderHash    # 查找 UserController 的 ClassLoader（查找其 hashcode）</span><br><span class="line">ognl -c 1be6f5c3 @com.example.demo.arthas.user.UserController@logger</span><br><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader  @org.springframework.boot.SpringApplication@logger</span><br><span class="line"></span><br><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader [-x 2] @com.example.demo.arthas.user.UserController@logger    # 查看静态字段</span><br><span class="line"></span><br><span class="line">ognl &#x27;#value1=@System@getProperty(&quot;java.home&quot;), #value2=@System@getProperty(&quot;java.runtime.name&quot;), &#123;#value1, #value2&#125;&#x27;    # 执行多行表达式，赋值给临时变量，返回一个 List</span><br></pre></td></tr></table></figure>
+<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><h3 id="排查函数调用异常"><a href="#排查函数调用异常" class="headerlink" title="排查函数调用异常"></a>排查函数调用异常</h3><p>调用接口返回 500 错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:61000/user/0</span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">&quot;timestamp&quot;</span>:<span class="number">1550223186170</span>,<span class="attr">&quot;status&quot;</span>:<span class="number">500</span>,<span class="attr">&quot;error&quot;</span>:<span class="string">&quot;Internal Server Error&quot;</span>,<span class="attr">&quot;exception&quot;</span>:<span class="string">&quot;java.lang.IllegalArgumentException&quot;</span>,<span class="attr">&quot;message&quot;</span>:<span class="string">&quot;id &lt; 1&quot;</span>,<span class="attr">&quot;path&quot;</span>:<span class="string">&quot;/user/0&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>该接口相关的 <code>Controller</code> 是 <code>UserController</code>，使用 Arthas 启动监控（参考 <a target="_blank" rel="noopener" href="https://arthas.aliyun.com/doc/advice-class.html">返回值表达式</a>）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">watch com.example.demo.arthas.user.UserController * &#x27;&#123;params, throwExp&#125;&#x27;    </span><br><span class="line"><span class="meta">#</span><span class="bash"> 类名 方法名 返回值表达式（OGNL，支持 loader, clazz, method, target, params, returnObj, throwExp, isBefore, isThrow, isReturn）</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 只捕获抛出异常时的请求</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> watch com.example.demo.arthas.user.UserController * <span class="string">&quot;&#123;params[0],throwExp&#125;&quot;</span> -e</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 按照耗时进行过滤</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> watch com.example.demo.arthas.user.UserController * <span class="string">&#x27;&#123;params, returnObj&#125;&#x27;</span> <span class="string">&#x27;#cost&gt;200&#x27;</span></span></span><br></pre></td></tr></table></figure>
+<p>再次请求接口，在 Arthas 窗口有异常信息打印：</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Affect(<span class="keyword">class</span> count: <span class="number">1</span> , <span class="function"><span class="keyword">method</span> <span class="title">count</span>:</span> <span class="number">2</span>) cost <span class="keyword">in</span> <span class="number">53</span> ms, listenerId: <span class="number">3</span></span><br><span class="line"><span class="function"><span class="keyword">method</span>=<span class="title">com</span>.<span class="title">example</span>.<span class="title">demo</span>.<span class="title">arthas</span>.<span class="title">user</span>.<span class="title">UserController</span>.<span class="title">findUserById</span> <span class="title">location</span>=<span class="title">AtExceptionExit</span></span></span><br><span class="line"><span class="function"><span class="title">ts</span>=2021-03-06 20:</span><span class="number">41</span>:<span class="number">43</span>; [cost=<span class="number">0.402354</span>ms] <span class="keyword">result</span>=@ArrayList[</span><br><span class="line">    @Integer[<span class="number">0</span>],</span><br><span class="line">    @IllegalArgumentException[java.lang.IllegalArgumentException: id &lt; <span class="number">1</span>],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h3 id="热更新代码"><a href="#热更新代码" class="headerlink" title="热更新代码"></a>热更新代码</h3><p>接上，对于上述报错的 <code>UserController</code>，使用 Arthas 反编译，输出到 <code>/tmp/UserController.java</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jad --source-only com.example.demo.arthas.user.UserController &gt; /tmp/UserController.java</span><br></pre></td></tr></table></figure>
+<p>查找 <code>UserController</code> 的 ClassLoader：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc -d *UserController | grep classLoaderHash</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">classLoaderHash   19469ea2</span><br><span class="line"><span class="meta">#</span><span class="bash"> 可见是 LaunchedURLClassLoader@1be6f5c3 加载 UserController</span></span><br></pre></td></tr></table></figure>
+<p>修改 <code>/tmp/UserController.java</code> 使之满足条件不再抛出 <code>IllegalArgumentException</code>。</p>
+<p>编译修改好的 <code>UserController</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mc --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader /tmp/UserController.java -d /tmp</span><br><span class="line"><span class="meta">#</span><span class="bash"> 或 mc -c 19469ea2 /tmp/UserController.java -d /tmp</span></span><br></pre></td></tr></table></figure>
+<p>重新加载编译好的 <code>UserController.class</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redefine /tmp/com/example/demo/arthas/user/UserController.class</span><br></pre></td></tr></table></figure>
+<p>再次请求接口，可见已正常返回：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:61000/user/0</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;id&quot;:0,&quot;name&quot;:&quot;name0&quot;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="设置日志级别"><a href="#设置日志级别" class="headerlink" title="设置日志级别"></a>设置日志级别</h3><p>查找 ClassLoader：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc -d com.example.demo.arthas.user.UserController | grep classLoaderHash</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">classLoaderHash</span>   <span class="number">1</span>be<span class="number">6</span>f<span class="number">5</span>c<span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>获取 logger：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader &#x27;@com.example.demo.arthas.user.UserController@logger&#x27;</span><br></pre></td></tr></table></figure>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@Logger</span>[</span><br><span class="line">    serialVersionUID=<span class="variable">@Long</span>[<span class="number">5454405123156820674</span>],</span><br><span class="line">    FQCN=<span class="variable">@String</span>[ch.qos.logback.classic.Logger],</span><br><span class="line">    name=<span class="variable">@String</span>[com.example.demo.arthas.user.UserController],</span><br><span class="line">    level=null,</span><br><span class="line">    effectiveLevelInt=<span class="variable">@Integer</span>[<span class="number">20000</span>],</span><br><span class="line">    parent=<span class="variable">@Logger</span>[Logger[com.example.demo.arthas.user]],</span><br><span class="line">    childrenList=null,</span><br><span class="line">    aai=null,</span><br><span class="line">    additive=<span class="variable">@Boolean</span>[true],</span><br><span class="line">    loggerContext=<span class="variable">@LoggerContext</span>[ch.qos.logback.classic.LoggerContext[default]],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>可见实际使用的日志模块是 logback，level 为 null（最终 level 是从root logger里来的）。单独设置 UserController 的 logger level 为 DEBUG：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader &#x27;@com.example.demo.arthas.user.UserController@logger.setLevel(@ch.qos.logback.classic.Level@DEBUG)&#x27;</span><br></pre></td></tr></table></figure>
+<p>修改全局 logger lever：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ognl --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader &#x27;@org.slf4j.LoggerFactory@getLogger(&quot;root&quot;).setLevel(@ch.qos.logback.classic.Level@DEBUG)&#x27;</span><br></pre></td></tr></table></figure>
+<h2 id="应用案例"><a href="#应用案例" class="headerlink" title="应用案例"></a>应用案例</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-ognl-update-logger-level-cn">动态更新应用 Logger Level</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-web-console-cn">Web Console</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-watch-method-exception-cn">排查函数调用异常</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-thread-cn">查找 Top N 线程</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-save-log-cn">执行结果存日志</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-logger-config-problem-cn">排查 logger 冲突问题</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-jad-mc-redefine-cn">热更新代码</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-http-api-cn">Http API 案例</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-http-404-cn">排查 HTTP 请求返回 404</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-http-401-cn">排查 HTTP 请求返回 401</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-get-spring-context-cn">获取 Spring 上下文</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-classloader-cn">ClassLoader 相关</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-async-jobs-cn">后台异步任务</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://start.aliyun.com/handson/arthas/case-boot-details-cn">arthas-boot 支持的参数</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/alibaba/arthas/issues?q=label%3Auser-case">用户案例</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzU2MTY2MjE4OQ==&amp;action=getalbum&amp;album_id=1430941903897460741&amp;scene=173&amp;from_msgid=2247483693&amp;from_itemidx=1&amp;count=3#wechat_redirect">…</a></p>
+</li>
+</ul>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 3
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/05</span>
+            <a class="archive-post-title" href="/2021/06/05/2021-06-05_diary/">基于记忆规律的学习方法</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2020/04/08/2020-04-08_diary/">关于使用思维导图做笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2020/02/22/2020-02-22_diary/">免费 JetBrains 全家桶</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="杂事">
+                <span class="iconfont-archer">&#xe606;</span>
+                杂事
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="技术">
+                <span class="iconfont-archer">&#xe606;</span>
+                技术
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://yipwinghong.github.io",
+        root: siteMetaRoot,
+        author: "Kyle Ip"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+        <!-- mermaid -->
+        
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

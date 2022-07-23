@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Kyle Ip">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Kyle Ip">
+    
+        <meta name="keywords" content="Kyle's Notebook,Kyle Ip">
+    
+    <meta name="description" content="">
+    <meta name="description" content="分布式系统知识点总结协调与同步分布式互斥     集中式 分布式 令牌环     方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当">
+<meta property="og:type" content="website">
+<meta property="og:title" content="分布式系统知识点总结">
+<meta property="og:url" content="https://yipwinghong.github.io/DistributedSystem_summary.html">
+<meta property="og:site_name" content="Kyle&#39;s Notebook">
+<meta property="og:description" content="分布式系统知识点总结协调与同步分布式互斥     集中式 分布式 令牌环     方法 引入协调者，对请求排序，最早请求的参与者取得临界资源。 征求其它参与者同意后使用临界资源。 参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。   优点 简单，通信高效，易于实现。 可用性高。 可用性高，单个参与者通信效率高。   缺点 可用性低，协调者是性能瓶颈（单点）。 通信成本高，复杂度高。 当">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-07-01T15:05:19.000Z">
+<meta property="article:modified_time" content="2021-08-18T16:08:30.425Z">
+<meta property="article:author" content="Kyle Ip">
+<meta property="article:tag" content="分布式系统">
+<meta property="article:tag" content="技术">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>分布式系统知识点总结 · Kyle&#39;s Notebook</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kyle's Notebook" type="application/atom+xml">
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Kyle's Notebook</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+">
+    
+    <!-- 主页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="分布式系统知识点总结"><a href="#分布式系统知识点总结" class="headerlink" title="分布式系统知识点总结"></a>分布式系统知识点总结</h1><h2 id="协调与同步"><a href="#协调与同步" class="headerlink" title="协调与同步"></a>协调与同步</h2><h3 id="分布式互斥"><a href="#分布式互斥" class="headerlink" title="分布式互斥"></a>分布式互斥</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>集中式</th>
+<th>分布式</th>
+<th>令牌环</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>方法</td>
+<td>引入协调者，对请求排序，最早请求的参与者取得临界资源。</td>
+<td>征求其它参与者同意后使用临界资源。</td>
+<td>参与者组成一个环，轮流使用资源（不需要使用就传递给下一位）。</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>简单，通信高效，易于实现。</td>
+<td>可用性高。</td>
+<td>可用性高，单个参与者通信效率高。</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>可用性低，协调者是性能瓶颈（单点）。</td>
+<td>通信成本高，复杂度高。</td>
+<td>当参与者对资源使用频率较低，带来较多无用通信。</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>协调者可靠性和性能有一定保障。</td>
+<td>临界资源使用频度较低且系统规模较小</td>
+<td>系统规模较小，且每个参与者使用资源频度较高、时间较短。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="分布式选举"><a href="#分布式选举" class="headerlink" title="分布式选举"></a>分布式选举</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Bully</th>
+<th>Raft</th>
+<th>ZAB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>选举原则</td>
+<td>节点 ID 最大的成为 Leader。</td>
+<td>少数服从多数，票数最多为主。</td>
+<td>倾向于让数据最新或 ID 最大的节点成为主。</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>容易理解，选举速度快，算法复杂度低，易于实现。</td>
+<td>选举速度快，算法复杂度低，易于实现。</td>
+<td>性能高，对系统无特殊要求。</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>信息存储量大（每个节点存储所有节点信息），易频繁换主，不适用于大规模系统。</td>
+<td>要求系统全连接，消息通信量大，不适用于大规模系统。</td>
+<td>选举时间长，复杂度高。</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>小规模系统，比如 MongoDB。</td>
+<td>中小规模系统，比如 Kubernetes。</td>
+<td>大规模系统，比如 ZooKeeper。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="分布式共识"><a href="#分布式共识" class="headerlink" title="分布式共识"></a>分布式共识</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>PoW</th>
+<th>PoS</th>
+<th>DPos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原理</td>
+<td>以每个节点计算能力竞争记账权，算力越高机会越大。</td>
+<td>由系统权益决定区块记账权，权益越大机会越大。</td>
+<td>持有币则可进行投票，选举出节点作为代表记账。</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>相对公平，有容错机制，完全去中心化，简单易于实现。</td>
+<td>资源消耗低，达成共识周期短，交易服务费低。</td>
+<td>能耗更低，每秒完成交易量高，无垄断，交易服务费低，更安全。</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>不适合私有链或联盟链，共识效率低、每秒完成交易量少，存在阻塞问题，资源浪费严重，交易服务费高。</td>
+<td>每秒完成交易量较低，容易被垄断，无法处理分叉链情况。</td>
+<td>持币者投票积极性不高，故障解决效率低，易出现安全隐患。</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>比特币</td>
+<td>以太坊、点点币</td>
+<td>以太股、EOS</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>2PC</th>
+<th>3PC</th>
+<th>最终一致性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>思想</td>
+<td>事务管理器作为协调者，处理各本地事务的提交或回滚。资源管理器作为参与者。通过投票阶段和提交阶段协调事务操作。</td>
+<td>在 2PC 基础上，分为 CanCommit、PreCommit、DoCommit 三个阶段，引入超时和准备机制。</td>
+<td>将事务以保存在本地文件、数据库或消息队列中的消息或日志异步执行，通过业务规则进行重试。</td>
+</tr>
+<tr>
+<td>特点</td>
+<td>强一致性，同步执行，简单易实现。</td>
+<td>强一致性，同步执行，简单易实现。相对 2PC 而言缓解了阻塞和单点故障问题。</td>
+<td>最终一致性，异步执行，性能高，无阻塞和单点故障问题。</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>同步阻塞，单点故障，数据不一致，性能低。</td>
+<td>数据不一致，性能较低。</td>
+<td>算法复杂度高，实现困难。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>关系型数据库</th>
+<th>Redis</th>
+<th>ZooKeeper</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实现</td>
+<td>在表上对临界资源做唯一性约束，通过增加记录对某资源上锁，释放时删除（也可以更新实现乐观锁）。</td>
+<td>使用 API setnx，设置锁 ID、当前时间 + 超时时间。</td>
+<td>在持久节点 shared_lock 目录下为每个进程创建临时顺序节点，创建最小编号的节点的进程获得锁，否则等待较小的编号节点释放锁。</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>容易理解、实现。</td>
+<td>性能高，可跨集群部署、无单点故障，易于实现。</td>
+<td>无单点故障，可重入，无死锁，可靠性高。</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>单点故障，性能低，可靠性低。</td>
+<td>锁失效时间控制不稳定，可靠性低，较复杂。</td>
+<td>性能较低，实现复杂。</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>并发量低、性能要求低。</td>
+<td>高并发、性能要求高。</td>
+<td>大部分分布式场景，除非性能要求极高。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="管理与调度"><a href="#管理与调度" class="headerlink" title="管理与调度"></a>管理与调度</h2><h3 id="体系结构"><a href="#体系结构" class="headerlink" title="体系结构"></a>体系结构</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>集中式</th>
+<th>非集中式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>简介</td>
+<td>一或多台中央服务器，存储系统内的所有数据、处理所有业务。中央服务器统一调度资源和任务，多个节点与中央服务器连接，汇报自身信息和执行结果。</td>
+<td>服务执行和数据存储被分散到不同的服务器集群，服务器集群间通过消息传递进行通信和协调。所有服务器地位平等。</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>部署结构简单，中央服务器统一管理任务调度，无需考虑对任务的多节点部署，节点之间无需通信和协作，</td>
+<td>降低了某一个或者某一簇计算机集群的压力，在解决了单点瓶颈和单点故障问题的同时，还提升了系统的并发度，比较适合大规模集群的管理。</td>
+</tr>
+<tr>
+<td>应用</td>
+<td>Borg、Kubernetes、Mesos。</td>
+<td>Akka、Redis、Cassandra。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="调度架构"><a href="#调度架构" class="headerlink" title="调度架构"></a>调度架构</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>单体调度</th>
+<th>两层调度</th>
+<th>共享状态调度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>定义</td>
+<td>集群中只有一个节点运行调度进程，该节点对其它节点有访问权限，可搜集其它节点资源状态信息以便统一管理。根据用户下发的任务对资源的需求，在调度器中进行任务与资源匹配，再指派给其它节点。</td>
+<td>资源的使用状态同时由中央调度器和二层调度器管理。前者负责宏观、大规模资源分配，业务压力较小；后者负责任务与资源匹配，可以有多个、以支持不同任务类型。</td>
+<td>将单体调度器分解为多个调度器，每个调度器都有全局资源状态信息，从而实现最优任务调度。</td>
+</tr>
+<tr>
+<td>特点</td>
+<td>以单个实例的集中式调度器为中心管理资源和调度任务，单体调度器拥有全局资源和全局任务视图，可容易实现对任务的约束并实施全局性调度策略。</td>
+<td>解决了单体调度架构中，中央服务器的单点瓶颈问题，且提升了调度效率，支持多种类型任务。</td>
+<td>分布式结构，共享集群状态，乐观并发调度，类似数据库中的事务操作。可解决单体调度架构中中央服务器的单点瓶颈问题、解决两层调度架构中任务匹配无法达到全局最优的问题。但存在潜在的资源冲突问题，且实现比较复杂。</td>
+</tr>
+<tr>
+<td>应用</td>
+<td>Borg、Kubernetes。</td>
+<td>Mesos、YARN</td>
+<td>Google Omega</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="计算模型"><a href="#计算模型" class="headerlink" title="计算模型"></a>计算模型</h2><h3 id="分治"><a href="#分治" class="headerlink" title="分治"></a>分治</h3><p>将复杂且难以计算的大问题，分割成规模较小的、可直接求解的子问题。子问题之间相互独立且与原问题形式相同，通过递归求解子问题，最后将其结果合并得到原问题的解。</p>
+<p>特点：</p>
+<ul>
+<li><p>规模较大或复杂。</p>
+</li>
+<li><p>可分解为规模较小、简单的同类问题。</p>
+</li>
+<li><p>子问题之间相互独立。</p>
+</li>
+<li><p>子问题的解可合并得到原问题的解。</p>
+</li>
+</ul>
+<h4 id="Map-Reduce"><a href="#Map-Reduce" class="headerlink" title="Map Reduce"></a>Map Reduce</h4><h4 id="Fork-Join"><a href="#Fork-Join" class="headerlink" title="Fork Join"></a>Fork Join</h4><h3 id="流计算"><a href="#流计算" class="headerlink" title="流计算"></a>流计算</h3><h3 id="Actor"><a href="#Actor" class="headerlink" title="Actor"></a>Actor</h3><h3 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h3><h2 id="通信模型"><a href="#通信模型" class="headerlink" title="通信模型"></a>通信模型</h2><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80ODYzMi8yNTEyNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:yipwinghong@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/yipwinghong" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="https://ywh-oss.oss-cn-shenzhen.aliyuncs.com/WeChat.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.v2ex.com/member/yipwinghong" class="iconfont-archer v2ex" target="_blank" title=v2ex></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 3
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/05</span>
+            <a class="archive-post-title" href="/2021/06/05/2021-06-05_diary/">基于记忆规律的学习方法</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2020/04/08/2020-04-08_diary/">关于使用思维导图做笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2020/02/22/2020-02-22_diary/">免费 JetBrains 全家桶</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="杂事">
+                <span class="iconfont-archer">&#xe606;</span>
+                杂事
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="技术">
+                <span class="iconfont-archer">&#xe606;</span>
+                技术
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://yipwinghong.github.io",
+        root: siteMetaRoot,
+        author: "Kyle Ip"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+        <!-- mermaid -->
+        
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
