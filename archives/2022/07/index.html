@@ -207,7 +207,7 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Kyle's Notebook" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Kyle's Notebook" type="application/atom+xml">
 </head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
@@ -434,7 +434,7 @@
                 <span class="abstract-title-text">404 File not found</span>
             </a>
             <div class="abstract-content">
-                deploy: Sun Jul 24 10:16:18 CST 2022deploy: Sun Jul 24 10:19:56 CST 2022deploy: Sun Jul 24 12:17:22 CST 2022deploy: Sun Jul 24 13:10:26 CST 2022deploy: Sun Jul 24 13:10:53 CST 2022deploy: Sun Jul 24 13:31:22 CST 2022deploy: Sun Jul 24 13:32:33 CST 2022
+                deploy: Sun Jul 24 10:16:18 CST 2022deploy: Sun Jul 24 10:19:56 CST 2022deploy: Sun Jul 24 12:17:22 CST 2022deploy: Sun Jul 24 13:10:26 CST 2022deploy: Sun Jul 24 13:10:53 CST 2022deploy: Sun Jul 24 13:31:22 CST 2022deploy: Sun Jul 24 13:32:33 CST 2022deploy: Sun Jul 24 13:59:29 CST 2022
 
             </div>
             <!-- read more -->
@@ -653,5 +653,20 @@
         
         <!-- mermaid -->
         
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
